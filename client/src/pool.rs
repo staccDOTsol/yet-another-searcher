@@ -10,7 +10,7 @@ use anchor_client::Cluster;
 
 #[derive(Debug)]
 pub struct PoolDir {
-    pub tipe: PoolType,
+    pub pool_type: PoolType,
     pub dir_path: String,
 }
 
@@ -23,8 +23,8 @@ pub enum PoolType {
     SerumPoolType,
 }
 
-pub fn pool_factory(tipe: &PoolType, json_str: &String) -> Box<dyn PoolOperations> {
-    match tipe {
+pub fn pool_factory(pool_type: &PoolType, json_str: &String) -> Box<dyn PoolOperations> {
+    match pool_type {
         PoolType::OrcaPoolType => {
             let pool: OrcaPool = serde_json::from_str(json_str).unwrap();
             Box::new(pool)

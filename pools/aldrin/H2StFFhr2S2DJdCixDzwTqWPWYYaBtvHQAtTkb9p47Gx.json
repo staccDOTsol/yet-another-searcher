@@ -1,0 +1,42 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "DzR8teM55txh3Zci4TQMnW829ba4Ttp9JR3XUncygRj1",
+  "poolMint": "H2StFFhr2S2DJdCixDzwTqWPWYYaBtvHQAtTkb9p47Gx",
+  "baseTokenVault": "JBmoNdKMLpvJMP3SSpcrieH9CTG46x8BNT7rTfKgXQ7x",
+  "baseTokenMint": "7bzpxU9RS9DNBgvRDGGYwoPcHjAYU8AyGjKB4eDQQuHm",
+  "quoteTokenVault": "AMc2yEFLSoQFkv1XsULFKroLo3Z9sdB8cWzAkztQjpHP",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "B5XUpzb7zgx6ey5Z57ukgMEwfNPucfPPJ1fnHjBxUc5j",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "DfEnBbUUmbSVNG2u1PaoSYsPGvEJ9GcJHyQPkTsAQWdP",
+  "feeBaseAccount": "6f7FTVnUeW421BPBysr3LWEpyaPtpVCR8maWCqL2utvv",
+  "feeQuoteAccount": "8mJm1afEHFSjAt1AiAqRTg8kvZtvk3vhzwz9u3CRhTAX",
+  "feePoolTokenAccount": "8ci6UHg4dtgYnVQCuCPcdjfdb5WgjBC5XBhWCcWu4AX3",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "BSnJwuxZpU1ogDLyZwDJzygxsgjptW7NQVgfBohjdMEE",
+  "poolPublicKey": "GEjFaxAPzscBR2hS827EL2XjQuAjjojdpB2CwVsA61JP",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+}

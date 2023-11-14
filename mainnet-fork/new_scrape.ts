@@ -46,7 +46,7 @@ export const AccountLayout = struct<token.AccountInfo>([
 
 async function main() {    
     
-    let connection = new web3.Connection("https://ssc-dao.genesysgo.net");
+    let connection = new web3.Connection("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9");
     let programs = [];
     let accounts = [];
     let mints = [];
@@ -58,7 +58,7 @@ async function main() {
     programs.push(orca_pid) 
 
     let orca_pools = "../pools/orca/";
-    let orca_pool_names: string[] = await read_dir_names(orca_pools);
+    let orca_pool_names: string[] = fs.readdirSync(orca_pools);
     var orca_count = 0;
     orca_pool_names.forEach(name => {
         let pool = JSON.parse(fs.readFileSync(orca_pools+name));
@@ -78,44 +78,39 @@ async function main() {
     })
     console.log("orca count", orca_count)
 
-    // MERCURIAL POOL SETUP 
-    let mercurial_pid = "MERLuDFBMmsHnsBPZw2sDQZHvXFMwp8EdjudcU2HKky";
-    programs.push(mercurial_pid) 
-    
-    let mercurial_pools = "../pools/mercurial/";
-    let mercurial_pool_names: string[] = await read_dir_names(mercurial_pools);
-    let mercurial_count = 0;
-    mercurial_pool_names.forEach(n => {
-        let pool = JSON.parse(fs.readFileSync(mercurial_pools+n));
-        mercurial_count += 1 
-        accounts.push(pool.pool_account)
-        pool.token_ids.forEach(mintId => {
-            accounts.push(pool.tokens[mintId].addr)
-            mints.push(mintId)
-        });
-    })
-    console.log("mercurial_count", mercurial_count)
 
     // SABER POOL SETUP 
     let saber_pid = "SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ";
     programs.push(saber_pid) 
     // read testing pool 
     let saber_pools = "../pools/saber/";
-    let saber_pool_names = await read_dir_names(saber_pools);
+    let saber_pool_names = fs.readdirSync(saber_pools);
+    console.log(saber_pool_names)
     let saber_count = 0; 
-    saber_pool_names.forEach(name => {
-        let pool = JSON.parse(fs.readFileSync(saber_pools+name));
+    for (var name of saber_pool_names) {
+        let pool = JSON.parse(fs.readFileSync(saber_pools+"/"+name));
         saber_count += 1;
         // console.log(pool)
         accounts.push(pool.pool_account)
         accounts.push(pool.pool_token_mint)
+        for (var item of Object.keys(pool.addresses)) {
+            console.log(item)
+            item = pool.addresses[item]
+            console.log(item)
+            try {
+                accounts.push(new web3.PublicKey(item).toBase58())
+            }
+            catch (err){
+                console.log(err)
+                accounts.push(new web3.PublicKey(item[0]).toBase58())
+                accounts.push(new web3.PublicKey(item[1]).toBase58())
 
-        pool.token_ids.forEach(mintId => {
-            accounts.push(pool.tokens[mintId].addr)
-            accounts.push(pool.fee_accounts[mintId])
-            mints.push(mintId);
-        });
-    });
+            }
+        }
+        for (var mint of pool.underlyingTokens){
+            mints.push(mint)
+        }
+    }
     console.log("saber_count", saber_count)
 
     // ALDRIN POOL 
@@ -125,9 +120,9 @@ async function main() {
     programs.push(aldrin_v2)
     // read testing pool 
     let aldrin_pools = "../pools/aldrin/";
-    let aldrin_pool_names = await read_dir_names(aldrin_pools);
+    let aldrin_pool_names = fs.readdirSync(aldrin_pools);
     let aldrin_count = 0; 
-    aldrin_pool_names.forEach(name => {
+    for (var name of aldrin_pool_names) {
         let pool = JSON.parse(fs.readFileSync(aldrin_pools+name));
         // console.log(pool)
         aldrin_count += 1;
@@ -138,24 +133,22 @@ async function main() {
         accounts.push(pool.feeBaseAccount)
         accounts.push(pool.feeQuoteAccount)
         accounts.push(pool.lpTokenFreezeVault)
-
         if (pool.poolVersion == 2) {
             accounts.push(pool.curve);
         }
-
-        pool.tokenIds.forEach(mintId => {
-            accounts.push(pool.tokens[mintId].addr)
-            mints.push(mintId);
-        });
-    });
+        accounts.push(pool.baseTokenVault)
+        accounts.push(pool.quoteTokenVault)
+        mints.push(pool.baseTokenMint)
+        mints.push(pool.quoteTokenMint)
+    }
     console.log("aldrin_count", aldrin_count)
 
     // SERUM AMM 
     let serum_pid = "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin";
     programs.push(serum_pid) 
 
-    let serum_pools = "../pools/serum/"; 
-    let serum_pool_names = await read_dir_names(serum_pools);
+    let serum_pools = "../pools/openbook/"; 
+    let serum_pool_names = fs.readdirSync(serum_pools);
     let serum_count = 0; 
     for (let name of serum_pool_names) {
         let pool = JSON.parse(fs.readFileSync(serum_pools+name));
@@ -231,13 +224,30 @@ async function main() {
     for (let acc_chunk of chunk(accounts, 99)) {
         console.log(99 * n, "/", accounts.length);
         n += 1;
-        let infos = await connection.getMultipleAccountsInfo(acc_chunk.map(s => new web3.PublicKey(s)))
+        let accounties = acc_chunk.map((s) => {
+            try {
+            
+            return new web3.PublicKey(s)
+            }
+            catch (err){
+                console.log(err)
+                return null
+            }
+        })
+        // remove nulls
+        accounties = accounties.filter(function (el) {
+            return el != null;
+        })
+        let infos = await connection.getMultipleAccountsInfo(accounties)
         
         for (let i=0; i < infos.length; i ++) {
             let pk = acc_chunk[i];
             var info = infos[i]
             
             let notype_info = JSON.parse(JSON.stringify(info, null, "\t"))
+            if (!info){
+                continue
+            }
             notype_info.data = [info.data.toString("base64"), "base64"]
 
             let local_validator_acc = {

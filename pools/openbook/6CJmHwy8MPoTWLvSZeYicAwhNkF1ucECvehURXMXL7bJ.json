@@ -1,0 +1,32 @@
+{
+  "accountFlags": {
+    "initialized": true,
+    "market": true,
+    "openOrders": false,
+    "requestQueue": false,
+    "eventQueue": false,
+    "bids": false,
+    "asks": false
+  },
+  "ownAddress": "6CJmHwy8MPoTWLvSZeYicAwhNkF1ucECvehURXMXL7bJ",
+  "vaultSignerNonce": "02",
+  "baseMint": "9dVB8GsYJ7fKBF7fLwYX7JVKzxRWF98FwmDNGD2tWbaa",
+  "quoteMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "baseVault": "CSTUuqbjUM2z4kQhbgFntA9AVSFADFzf7QF68VNqA75r",
+  "baseDepositsTotal": "00",
+  "baseFeesAccrued": "00",
+  "quoteVault": "3spi3m9DKDNs2c5V4HMxpM8b4DB3Qyno29nT1EJC85wm",
+  "quoteDepositsTotal": "00",
+  "quoteFeesAccrued": "00",
+  "quoteDustThreshold": "64",
+  "requestQueue": "GHTfj45JUCX4LuqkSGjhhjyYHDPEN7q8pUrCCVVfPhFw",
+  "eventQueue": "6BsFgaWXXwQjm1JJ28irzN5vxKZPe15fLbyQLQSMbhxq",
+  "bids": "4gyBXYmyM3Zb1fEjGpnCj8HDzeGQwDZSmK5B38URnZUJ",
+  "asks": "4kHstymCo9q75m4am7Z8RUGYv1jkWzGcb5aHsPmmLtEs",
+  "baseLotSize": "0f4240",
+  "quoteLotSize": "2710",
+  "feeRateBps": "00",
+  "referrerRebatesAccrued": "00",
+  "provider": "openbook",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+}

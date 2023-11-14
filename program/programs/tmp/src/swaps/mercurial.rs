@@ -1,31 +1,27 @@
-use anchor_lang::prelude::*;
-use solana_program::instruction::{AccountMeta, Instruction};
-use solana_program;
-use anchor_spl::{
-    token::{TokenAccount}
-};
-use anchor_lang::{Accounts};
 use crate::ix_data::SwapData;
 use crate::state::SwapState;
+use anchor_lang::prelude::*;
+use anchor_lang::Accounts;
+use anchor_spl::token::TokenAccount;
+use solana_program;
+use solana_program::instruction::{AccountMeta, Instruction};
 
 pub fn _mercurial_swap<'info>(
-    ctx: &Context<'_, '_, '_, 'info, MercurialSwap<'info>>, 
-    amount_in: u64
+    ctx: &Context<'_, '_, '_, 'info, MercurialSwap<'info>>,
+    amount_in: u64,
 ) -> Result<()> {
     // get initial balances
     let data = SwapData {
-        instruction: 4, // swap instruction 
+        instruction: 4, // swap instruction
         amount_in: amount_in,
-        minimum_amount_out: 0, // no saftey lmfao 
+        minimum_amount_out: 0, // no saftey lmfao
     };
 
     let ix_accounts = vec![
         AccountMeta::new(*ctx.accounts.pool_account.key, false),
-
         AccountMeta::new_readonly(*ctx.accounts.token_program.key, false),
         AccountMeta::new_readonly(*ctx.accounts.authority.key, false),
         AccountMeta::new_readonly(*ctx.accounts.user_transfer_authority.key, true),
-        
         AccountMeta::new(*ctx.accounts.pool_src.key, false),
         AccountMeta::new(*ctx.accounts.pool_dst.key, false),
         AccountMeta::new(ctx.accounts.user_src.key(), false),
@@ -50,10 +46,7 @@ pub fn _mercurial_swap<'info>(
         ctx.accounts.mercurial_swap_program.to_account_info(),
     ];
 
-    solana_program::program::invoke(
-        &instruction, 
-        &accounts, 
-    )?;
+    solana_program::program::invoke(&instruction, &accounts)?;
 
     Ok(())
 }
@@ -63,7 +56,7 @@ pub struct MercurialSwap<'info> {
     #[account(mut)]
     pub pool_account: AccountInfo<'info>,
     pub authority: AccountInfo<'info>,
-    pub user_transfer_authority : Signer<'info>,
+    pub user_transfer_authority: Signer<'info>,
     #[account(mut)]
     pub user_src: Account<'info, TokenAccount>,
     #[account(mut)]
@@ -74,6 +67,6 @@ pub struct MercurialSwap<'info> {
     pub user_dst: Account<'info, TokenAccount>,
     pub token_program: AccountInfo<'info>,
     pub mercurial_swap_program: AccountInfo<'info>,
-    #[account(mut, seeds=[b"swap_state"], bump)] 
+    #[account(mut, seeds=[b"swap_state"], bump)]
     pub swap_state: Account<'info, SwapState>,
 }

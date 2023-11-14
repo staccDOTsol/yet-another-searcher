@@ -52,7 +52,7 @@ let TOKEN_PROGRAM_ID = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 async function search_signer(signer) {
     // let connection = new web3.Connection("https://api.mainnet-beta.solana.com")
 
-    let connection = new web3.Connection("https://ssc-dao.genesysgo.net/")
+    let connection = new web3.Connection("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9/")
     console.log("searching pubkey: ", signer.toString())
 
     console.log("retrieving signatures...");

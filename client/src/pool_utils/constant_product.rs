@@ -2,11 +2,11 @@
 
 use {
     crate::{
+        error::SwapError,
         pool_utils::calculator::{
             map_zero_to_none, CurveCalculator, DynPack, RoundDirection, SwapWithoutFeesResult,
             TradeDirection, TradingTokenResult,
         },
-        error::SwapError,
     },
     solana_program::{
         program_error::ProgramError,
@@ -29,14 +29,14 @@ pub fn swap(
     swap_source_amount: u128,
     swap_destination_amount: u128,
 ) -> Option<SwapWithoutFeesResult> {
-    let invariant = swap_source_amount.checked_mul(swap_destination_amount)?; // k = x * y 
+    let invariant = swap_source_amount.checked_mul(swap_destination_amount)?; // k = x * y
 
     let new_swap_source_amount = swap_source_amount.checked_add(source_amount)?; // (x + a_in)
     let (new_swap_destination_amount, new_swap_source_amount) =
-        invariant.checked_ceil_div(new_swap_source_amount)?; // y' = k / (x + a_in) 
+        invariant.checked_ceil_div(new_swap_source_amount)?; // y' = k / (x + a_in)
 
     let source_amount_swapped = new_swap_source_amount.checked_sub(swap_source_amount)?;
-    let destination_amount_swapped = 
+    let destination_amount_swapped =
         map_zero_to_none(swap_destination_amount.checked_sub(new_swap_destination_amount)?)?; // amount_out = y - [k / (x + a_in)]
 
     Some(SwapWithoutFeesResult {

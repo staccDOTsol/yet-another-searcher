@@ -2,6 +2,7 @@
 
 use {
     crate::{
+        error::SwapError,
         pool_utils::{
             calculator::{
                 CurveCalculator, DynPack, RoundDirection, SwapWithoutFeesResult, TradeDirection,
@@ -12,7 +13,6 @@ use {
                 withdraw_single_token_type_exact_out,
             },
         },
-        error::SwapError,
     },
     arrayref::{array_mut_ref, array_ref},
     solana_program::{

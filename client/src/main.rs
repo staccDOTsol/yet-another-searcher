@@ -1,5 +1,4 @@
 use anchor_client::solana_client::rpc_client::RpcClient;
-
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use anchor_client::solana_sdk::signature::read_keypair_file;
@@ -62,24 +61,22 @@ fn main() {
 
     let owner_kp_path = match cluster {
         Cluster::Localnet => "../../mainnet_fork/localnet_owner.key",
-        Cluster::Mainnet => {
-            "/Users/edgar/.config/solana/uwuU3qc2RwN6CpzfBAhg6wAxiEx138jy5wB3Xvx18Rw.json"
-        }
+        Cluster::Mainnet => "/Users/stevengavacs/.config/solana/id.json",
         _ => panic!("shouldnt get here"),
     };
 
     // ** setup RPC connection
     let connection_url = match cluster {
         Cluster::Mainnet => {
-            "https://mainnet.rpc.jito.wtf/?access-token=746bee55-1b6f-4130-8347-5e1ea373333f"
+            "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9"
         }
         _ => cluster.url(),
     };
-    info!("using connection: {}", connection_url);
+    println!("using connection: {}", connection_url);
 
-    let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::confirmed());
+    let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent());
     let send_tx_connection =
-        RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::confirmed());
+        RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::recent());
 
     // setup anchor things
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
@@ -87,7 +84,7 @@ fn main() {
     let provider = Client::new_with_options(
         cluster.clone(),
         rc_owner.clone(),
-        CommitmentConfig::confirmed(),
+        CommitmentConfig::recent(),
     );
     let program = provider.program(*ARB_PROGRAM_ID);
 
@@ -95,19 +92,20 @@ fn main() {
     let mut pool_dirs = vec![];
 
     let orca_dir = PoolDir {
-        tipe: PoolType::OrcaPoolType,
+        pool_type: PoolType::OrcaPoolType,
         dir_path: "../pools/orca".to_string(),
     };
     pool_dirs.push(orca_dir);
-
+/*
     let mercurial_dir = PoolDir {
-        tipe: PoolType::MercurialPoolType,
+        pool_type: PoolType::MercurialPoolType,
         dir_path: "../pools/mercurial".to_string(),
     };
     pool_dirs.push(mercurial_dir);
+     */
 
     let saber_dir = PoolDir {
-        tipe: PoolType::SaberPoolType,
+        pool_type: PoolType::SaberPoolType,
         dir_path: "../pools/saber/".to_string(),
     };
     pool_dirs.push(saber_dir);
@@ -123,14 +121,14 @@ fn main() {
     let mut mint2idx = HashMap::new();
     let mut graph_edges = vec![];
 
-    info!("extracting pool + mints...");
+    println!("extracting pool + mints...");
     for pool_dir in pool_dirs {
         debug!("pool dir: {:#?}", pool_dir);
         let pool_paths = read_json_dir(&pool_dir.dir_path);
 
         for pool_path in pool_paths {
             let json_str = std::fs::read_to_string(&pool_path).unwrap();
-            let pool = pool_factory(&pool_dir.tipe, &json_str);
+            let pool = pool_factory(&pool_dir.pool_type, &json_str);
 
             let pool_mints = pool.get_mints();
             if pool_mints.len() != 2 {
@@ -139,7 +137,7 @@ fn main() {
                 continue;
             }
 
-            //  ** record pool info for graph
+            //  ** record pool println for graph
             // token: (mint = graph idx), (addr = get quote amount)
             let mut mint_idxs = vec![];
             for mint in pool_mints {
@@ -156,7 +154,7 @@ fn main() {
                 mint_idxs.push(idx);
             }
 
-            // get accounts which need account info to be updated (e.g. pool src/dst amounts for xy=k)
+            // get accounts which need account println to be updated (e.g. pool src/dst amounts for xy=k)
             let update_accounts = pool.get_update_accounts();
             update_pks_lengths.push(update_accounts.len());
             update_pks.push(update_accounts);
@@ -180,8 +178,8 @@ fn main() {
     }
     let mut update_pks = update_pks.concat();
 
-    info!("added {:?} mints", token_mints.len());
-    info!("added {:?} pools", pools.len());
+    println!("added {:?} mints", token_mints.len());
+    println!("added {:?} pools", pools.len());
 
     // !
     let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
@@ -194,7 +192,7 @@ fn main() {
     // slide it in there
     update_pks.push(owner_start_addr);
 
-    info!("getting pool amounts...");
+    println!("getting pool amounts...");
     let mut update_accounts = vec![];
     for token_addr_chunk in update_pks.chunks(99) {
         let accounts = connection.get_multiple_accounts(token_addr_chunk).unwrap();
@@ -206,29 +204,32 @@ fn main() {
         .filter(|s| s.is_some())
         .collect::<Vec<Option<Account>>>();
 
-    info!("update accounts is {:?}", update_accounts.len());
+    println!("update accounts is {:?}", update_accounts.len());
     // slide it out here
-    println!("accounts: {:#?}", update_accounts.clone());
     let init_token_acc = update_accounts.pop().unwrap().unwrap();
-    let init_token_balance = unpack_token_account(&init_token_acc.data).amount as u128;
-    info!(
+    let init_token_balance = unpack_token_account(&init_token_acc.data).amount as u128 - 1;
+    println!(
         "init token acc: {:?}, balance: {:#}",
         init_token_acc, init_token_balance
     );
-    info!("starting balance = {}", init_token_balance);
+    println!("starting balance = {}", init_token_balance);
 
-    info!("setting up exchange graph...");
+    println!("setting up exchange graph...");
     let mut graph = PoolGraph::new();
     let mut pool_count = 0;
     let mut account_ptr = 0;
 
-    for pool in pools.into_iter() {
+    for mut pool in pools.into_iter() {
         // update pool
         let length = update_pks_lengths[pool_count];
+        //range end index 518 out of range for slice of length 517
+        if account_ptr + length > update_accounts.len() {
+            break;
+        }
         let _account_slice = &update_accounts[account_ptr..account_ptr + length].to_vec();
         account_ptr += length;
 
-        // pool.set_update_accounts(*account_slice);
+        pool.set_update_accounts(_account_slice.to_vec(), cluster.clone());
 
         // add pool to graph
         let idxs = &all_mint_idxs[pool_count * 2..(pool_count + 1) * 2].to_vec();
@@ -252,9 +253,10 @@ fn main() {
         connection: send_tx_connection,
     };
 
-    info!("searching for arbitrages...");
-    let min_swap_amount = 10_u128.pow(6_u32); // scaled! -- 1 USDC
+    println!("searching for arbitrages...");
+    let min_swap_amount = 10_u128.pow(3_u32); // scaled! -- 1 USDC
     let mut swap_start_amount = init_token_balance; // scaled!
+    println!("swap start amount = {}", swap_start_amount);
     let mut sent_arbs = HashSet::new(); // track what arbs we did with a larger size
 
     for _ in 0..4 {

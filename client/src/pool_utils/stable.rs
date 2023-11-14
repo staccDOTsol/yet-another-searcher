@@ -1,11 +1,11 @@
 //! The curve.fi invariant calculator.
 use {
     crate::{
+        error::SwapError,
         pool_utils::calculator::{
             CurveCalculator, DynPack, RoundDirection, SwapWithoutFeesResult, TradeDirection,
             TradingTokenResult,
         },
-        error::SwapError,
     },
     arrayref::{array_mut_ref, array_ref},
     solana_program::{
@@ -20,23 +20,23 @@ const N_COINS: u8 = 2;
 const N_COINS_SQUARED: u8 = 4;
 const ITERATIONS: u8 = 32;
 
-// CUSTOM STABLE COMPUTATION WITH PERCISION_MULTIPLIERS 
+// CUSTOM STABLE COMPUTATION WITH PERCISION_MULTIPLIERS
 // used for mercurial pools + saber pools
-// ported from jupiters sdk 
+// ported from jupiters sdk
 pub struct Stable {
-    pub amp: u64, 
-    pub fee_numerator: u128, 
+    pub amp: u64,
+    pub fee_numerator: u128,
     pub fee_denominator: u128,
 }
 
 impl Stable {
     pub fn get_quote(
-        &self, 
-        pool_amounts: [u128; 2],    // [0] = src_amount, [1] = dst_amount
-        percision_multipliers: [u64; 2], 
-        scaled_amount_in: u128, 
-     ) -> u128 {
-        // stableswap with percision multipliers 
+        &self,
+        pool_amounts: [u128; 2], // [0] = src_amount, [1] = dst_amount
+        percision_multipliers: [u64; 2],
+        scaled_amount_in: u128,
+    ) -> u128 {
+        // stableswap with percision multipliers
         let xp: Vec<u128> = vec![
             pool_amounts[0] * percision_multipliers[0] as u128,
             pool_amounts[1] * percision_multipliers[1] as u128,
@@ -46,15 +46,22 @@ impl Stable {
         let x = xp[0] + dx;
         let leverage = compute_a(self.amp).unwrap();
         let d = compute_d(leverage, xp[0], xp[1]).unwrap();
+        if compute_new_destination_amount(leverage, x, d).is_none() {
+            return 0;
+        }
         let y = compute_new_destination_amount(leverage, x, d).unwrap();
+        if y > xp[1] {
+            return 0;
+        }
         let dy = xp[1] - y;
         let out_amount = dy.checked_div(percision_multipliers[1] as u128).unwrap();
 
         // reduce fees at the end
         let fees = out_amount
-            .checked_mul(self.fee_numerator).unwrap()
-            .checked_div(self.fee_denominator).unwrap();
-        
+            .checked_mul(self.fee_numerator)
+            .unwrap()
+            .checked_div(self.fee_denominator)
+            .unwrap();
 
         out_amount - fees
     }
@@ -402,4 +409,3 @@ impl DynPack for StableCurve {
         *amp = self.amp.to_le_bytes();
     }
 }
-

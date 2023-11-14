@@ -1,11 +1,11 @@
 //! Simple constant price swap curve, set at init
 use {
     crate::{
+        error::SwapError,
         pool_utils::calculator::{
             map_zero_to_none, CurveCalculator, DynPack, RoundDirection, SwapWithoutFeesResult,
             TradeDirection, TradingTokenResult,
         },
-        error::SwapError,
     },
     arrayref::{array_mut_ref, array_ref},
     solana_program::{

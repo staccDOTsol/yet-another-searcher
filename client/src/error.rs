@@ -113,6 +113,3 @@ impl<T> DecodeError<T> for SwapError {
         "Swap Error"
     }
 }
-
-
-
