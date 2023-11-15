@@ -125,20 +125,10 @@ impl Arbitrager {
                         ixs.0.concat();
                         let owner: &Keypair = self.owner.borrow();
                         if ixs.1 {
-let bla1 =  ixs.0.remove (0);
-                            let first_ix =bla1.get(0).unwrap();
-                            let bla2 =  ixs.0.remove (0);
-                            let second_ix = bla2.get(0).unwrap();
-                            // combine first_ix and second_ix 
                             let bla = ixs.0.remove (ixs.0.len() - 1);
                             let last_ix = bla.get(0).unwrap();
                             // combine first and second
-                            let first_tx = Transaction::new_signed_with_payer(
-                                &[first_ix.clone(), second_ix.clone()],
-                                Some(&owner.pubkey()),
-                                &[owner, &ookp],
-                                self.connection.get_latest_blockhash().unwrap(),
-                            );
+                            
                             let second_tx = Transaction::new_signed_with_payer(
                                 &[last_ix.clone()],
                                 Some(&owner.pubkey()),
@@ -170,22 +160,7 @@ let bla1 =  ixs.0.remove (0);
                             let res = self.connection.simulate_transaction(&tx).unwrap();
                             println!("{:#?}", res);
                         } else if self.cluster == Cluster::Mainnet {
-                            let signature = self
-                                .connection
-                                .send_and_confirm_transaction(
-                                    &first_tx,/*
-                                    RpcSendTransactionConfig {
-                                        skip_preflight: false,
-                                        ..RpcSendTransactionConfig::default()
-                                    }, */
-                                )
-                                ;
-                                if signature.is_err() {
-                                    println!("error: {:#?}", signature.err().unwrap()); 
-                                }
-                                else {
-                            println!("signature: {:?}", signature.unwrap());
-                                }
+                           
                             let signature = self
                                 .connection
                                 .send_transaction(

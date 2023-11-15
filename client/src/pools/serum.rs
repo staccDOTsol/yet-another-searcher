@@ -355,6 +355,7 @@ impl PoolOperations for SerumPool {
         let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
     // setup anchor things
     let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner3 = read_keypair_file(owner_kp_path.clone()).unwrap();
     let rc_owner = Rc::new(owner2);
     let provider = Client::new_with_options(
         cluster.clone(),
@@ -372,7 +373,7 @@ impl PoolOperations for SerumPool {
         let connection = RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::recent());
     
 
-    
+    let ookp = Keypair::new();
     open_orders = ookp.pubkey();
             let rent_exemption_amount = connection
                 .get_minimum_balance_for_rent_exemption(space)
@@ -393,7 +394,28 @@ owner,
             &    pool.own_address.0,
                 None
             ).unwrap();
-    
+            let tx = Transaction::new_signed_with_payer(
+                &[create_account_ix.clone(), init_ix.clone()],
+                Some(&owner3.pubkey()),
+                &[(&owner3), (&ookp)],
+                connection.get_latest_blockhash().unwrap(),
+            );
+            let signature = connection
+                                .send_and_confirm_transaction(
+                                    &tx,/*
+                                    RpcSendTransactionConfig {
+                                        skip_preflight: false,
+                                        ..RpcSendTransactionConfig::default()
+                                    }, */
+                                )
+                                ;
+                                if signature.is_err() {
+                                    println!("error: {:#?}", signature.err().unwrap()); 
+                                }
+                                else {
+                            println!("signature: {:?}", signature.unwrap());
+                                }
+
             market_to_open_orders.insert(
                 pool.own_address.0.to_string(),
                 open_orders.to_string(),
@@ -455,7 +477,7 @@ owner,owner,
 
 
         
-        ((true), vec![create_account_ix, init_ix, openbook_dex::instruction::new_order(
+        ((true), vec![openbook_dex::instruction::new_order(
             
             &self.own_address.0,
 
