@@ -308,7 +308,6 @@ impl PoolOperations for SerumPool {
                     break;
                 }
             }
-            println!("amount out: {}", iteration.amount_out);
             iteration.amount_out as u128
         } else if *mint_in == self.base_mint.0 {
             // ask: base -> quote
@@ -320,7 +319,6 @@ impl PoolOperations for SerumPool {
                     break;
                 }
             }
-            println!("amount in: {}", iteration.amount_out);
             iteration.amount_out as u128
         } else {
             panic!("invalid mints");
