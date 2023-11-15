@@ -1,0 +1,80 @@
+{
+  "id": "EXudMHn33b14PXVNzB6icD4jGLF27dbSC3m2bJXMuLEN",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+  "mintB": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+  "vaultA": "4hC46NB73D2QNTAwYDbS57wiEPWo46c57jbBShmCYfiq",
+  "vaultB": "D4aWZqFEDuijsfV8jmeUaASp5YjnYHPESd2GBJv6ShSd",
+  "mintDecimalsA": 9,
+  "mintDecimalsB": 9,
+  "ammConfig": {
+    "id": "4BLNHtVe942GSs4teSZqGX24xwKNkqU7bGgNn3iUiUpw",
+    "index": 0,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 100,
+    "tickSpacing": 10,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for very stable pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    },
+    {
+      "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 366.90242927261215,
+  "day": {
+    "volume": 17.55413641425985,
+    "volumeFee": 0.0014745474587978277,
+    "feeA": 0.0000073847397960000006,
+    "feeB": 0.000015764622804000002,
+    "feeApr": 0.15,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0.15,
+    "priceMin": 1.0027108452343862,
+    "priceMax": 1.0031703352930554
+  },
+  "week": {
+    "volume": 293.81362173181896,
+    "volumeFee": 0.02468034422547279,
+    "feeA": 0.0002204016717,
+    "feeB": 0.000173656966056,
+    "feeApr": 0.35,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0.35,
+    "priceMin": 1.0013180541804398,
+    "priceMax": 1.005772135392172
+  },
+  "month": {
+    "volume": 1842.7337387285688,
+    "volumeFee": 0.15478963405319976,
+    "feeA": 0.0019823041110600004,
+    "feeB": 0.0019528528094039995,
+    "feeApr": 0.51,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0.51,
+    "priceMin": 1.0013180541804398,
+    "priceMax": 1.0071922337215964
+  },
+  "lookupTableAccount": "GZ8VP8EF1PVDmSLf5q1V9DYW5o5SSBGGAgnwFJe3uDfU",
+  "openTime": 0,
+  "price": 1.0030697188483517
+}

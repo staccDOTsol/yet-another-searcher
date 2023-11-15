@@ -1,0 +1,76 @@
+{
+  "id": "8sBPNM34xW4ywALogcMHE2yJtvr7rJSqkyjwjGxk39EX",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+  "mintB": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "vaultA": "mFAtA2oTvtpuEfFLNw2MtVhiVEfpdDNuhd9wSTDMFyA",
+  "vaultB": "GQcHsS3zfzdh8BBZtKTS4X3Sd1nDkbVyZ9WXNMJNHp1w",
+  "mintDecimalsA": 6,
+  "mintDecimalsB": 6,
+  "ammConfig": {
+    "id": "4BLNHtVe942GSs4teSZqGX24xwKNkqU7bGgNn3iUiUpw",
+    "index": 0,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 100,
+    "tickSpacing": 10,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for very stable pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 2.822484875263098,
+  "day": {
+    "volume": 0,
+    "volumeFee": 0,
+    "feeA": 0,
+    "feeB": 0,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0,
+    "priceMin": 0.2510922849819851,
+    "priceMax": 0.2510922849819851
+  },
+  "week": {
+    "volume": 0.000503,
+    "volumeFee": 4.2252e-8,
+    "feeA": 0,
+    "feeB": 4.2252e-8,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0,
+    "priceMin": 0.2517596101786681,
+    "priceMax": 0.2585034013605442
+  },
+  "month": {
+    "volume": 13.149108000000002,
+    "volumeFee": 0.0011045250720000004,
+    "feeA": 0.0017597643000000001,
+    "feeB": 0.000665970312,
+    "feeApr": 0.48,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0.48,
+    "priceMin": 0.24698371255775056,
+    "priceMax": 0.2585034013605442
+  },
+  "lookupTableAccount": "8UzEwQbqzFPYpG691ZYAgYMpVQkvSmKiTUdM43MNKBqx",
+  "openTime": 0,
+  "price": 0.2510922849819851
+}

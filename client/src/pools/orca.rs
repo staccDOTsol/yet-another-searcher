@@ -189,7 +189,7 @@ let recent_blockhash = connection.get_latest_blockhash().unwrap();
 
         // get quote -- works for either constant product or stable swap
 
-        get_pool_quote_with_amounts(
+        let mut amt = get_pool_quote_with_amounts(
             scaled_amount_in,
             ctype,
             self.amp,
@@ -198,7 +198,13 @@ let recent_blockhash = connection.get_latest_blockhash().unwrap();
             *pool_dst_amount,
             None,
         )
-        .unwrap()
+        .unwrap();
+    if amt > 0 {
+        amt - 1
+    }
+    else {
+        amt
+    }
     }
 
     fn get_update_accounts(&self) -> Vec<Pubkey> {

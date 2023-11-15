@@ -1,0 +1,51 @@
+{
+  "whirlpoolsConfig": "2LecshUwdy9xi7meFgHtFJQNSKk4KdTrcpvaB56dP2NQ",
+  "whirlpoolBump": [
+    254
+  ],
+  "tickSpacing": 128,
+  "tickSpacingSeed": [
+    128,
+    0
+  ],
+  "feeRate": 10000,
+  "protocolFeeRate": 300,
+  "liquidity": "1eedc25ddc60",
+  "sqrtPrice": "011c300d65dff81c",
+  "tickCurrentIndex": -108820,
+  "protocolFeeOwedA": "042e4e02e3",
+  "protocolFeeOwedB": "00",
+  "tokenMintA": "4vMsoUT2BWatFweudnQM1xedRLfJgJ7hswhcpz4xgBTy",
+  "tokenVaultA": "8AmYAZ71XihWCUD1gUkPkJ4jMod2H5KsFmrRuYp4Zbm",
+  "feeGrowthGlobalA": "4a2884450edd243f38",
+  "tokenMintB": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenVaultB": "AEJweA15FqkDv7vufeuxRQMX5B8tgYBdMYJgZAcPTpem",
+  "feeGrowthGlobalB": "6c7b70dbeac208",
+  "rewardLastUpdatedTimestamp": "65541012",
+  "rewardInfos": [
+    {
+      "mint": "orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE",
+      "vault": "44S9R996kw2pS9vcZY3GchTDeuE7EMJV391S6UhspLvh",
+      "authority": "DjDsi34mSB66p2nhBL6YvhbcLtZbkGfNybFeLDjJqxJW",
+      "emissionsPerSecondX64": "00",
+      "growthGlobalX64": "0104e986b5b84eda"
+    },
+    {
+      "mint": "11111111111111111111111111111111",
+      "vault": "11111111111111111111111111111111",
+      "authority": "DjDsi34mSB66p2nhBL6YvhbcLtZbkGfNybFeLDjJqxJW",
+      "emissionsPerSecondX64": "00",
+      "growthGlobalX64": "00"
+    },
+    {
+      "mint": "11111111111111111111111111111111",
+      "vault": "11111111111111111111111111111111",
+      "authority": "DjDsi34mSB66p2nhBL6YvhbcLtZbkGfNybFeLDjJqxJW",
+      "emissionsPerSecondX64": "00",
+      "growthGlobalX64": "00"
+    }
+  ],
+  "poolAddress": "DSyu4Sc5TyWDATZQaiZSMg4KTauwbsXpHb4Z1dU3i5wR",
+  "provider": "whirlpools",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+}

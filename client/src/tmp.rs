@@ -152,7 +152,7 @@ fn ask_iteration(iteration: &mut Iteration, fee_tier: &FeeTier, ob: &mut OrderBo
 }
 
 fn main() {
-    let cluster = Cluster::Localnet;
+    let cluster = Cluster::Mainnet;
     let connection = RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::recent());
 
     // let pool_path = "../../serum/serum_pools/ByRys5tuUWDgL73G8JBAEfkdFf8JWBzPBDHsBVQ5vbQA_serum_dex.json";
@@ -220,7 +220,7 @@ fn main() {
         "QUOTE: amount out: {}",
         iteration.amount_out as f64 / quote_scale as f64
     );
-    // println!("QUOTE: amount out: {}", ((iteration.amount_out * base_lot_size) as f64) / (base_scale as f64));
+    //println!("QUOTE: amount out: {}", ((iteration.amount_out * base_lot_size) as f64) / (base_scale as f64));
     println!("----");
 
     // drop(bids);
@@ -275,7 +275,7 @@ fn main() {
         LAYOUT_V2_SPAN
     };
 
-    let owner_kp_path = "../../mainnet_fork/localnet_owner.key";
+    let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
     println!("{}", owner.pubkey());
 
@@ -354,7 +354,7 @@ fn main() {
                 asks: pool.asks.0,
                 coin_vault: pool.base_vault.0,
                 pc_vault: pool.quote_vault.0,
-                vault_signer: pool.vault_signer.0,
+                vault_signer: open_orders.pubkey(),
                 open_orders: open_orders.pubkey(),
                 order_payer_token_account: payer_acc,
                 coin_wallet: base_ata,
@@ -366,7 +366,7 @@ fn main() {
             rent: solana_sdk::sysvar::rent::id(),
             swap_state,
         })
-        .args(tmp_instructions::SerumSwap { side: _side })
+        .args(tmp_instructions::OpenbookSwap { side: _side })
         .instructions()
         .unwrap();
 
@@ -479,7 +479,7 @@ fn main() {
     // let pool_dir = "../../aldrin_sdk/pools/".to_string();
     // let pool_tipe = PoolType::AldrinPoolType;
 
-    // let cluster = Cluster::Localnet; // !!! make sure its localnet lmfao
+    // let cluster = Cluster::Mainnet; // !!! make sure its localnet lmfao
     // let connection = RpcClient::new_with_commitment(
     //     cluster.url(),
     //     CommitmentConfig::recent()

@@ -27,11 +27,11 @@ use client::utils::read_json_dir;
 use indicatif::ProgressBar;
 
 fn main() {
-    let cluster = Cluster::Localnet;
+    let cluster = Cluster::Mainnet;
 
     env_logger::init();
     // let owner_kp_path = "../../../mainnet.key";
-    let owner_kp_path = "../mainnet-fork/localnet_owner.key";
+    let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
 
     // ** setup RPC connection
@@ -43,7 +43,7 @@ fn main() {
 
     let serum_dir = PoolDir {
         pool_type: PoolType::SerumPoolType,
-        dir_path: "../pools/openbook/".to_string(),
+        dir_path: "../pools/serum/".to_string(),
     };
 
     let pool_paths = read_json_dir(&serum_dir.dir_path);

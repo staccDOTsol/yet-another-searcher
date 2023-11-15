@@ -1,0 +1,80 @@
+{
+  "id": "5KiDC9HRBH21MPy73eXpaZ79etdQoKsELzkV9FRbpaEM",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "CXL7AAheUM8AnSyBvf9b2TtPeqTTALJVqDDdfwNdKZHt",
+  "mintB": "J6S1exEe5guPpJVhfkbfP8E2RS21T4U2tZeiBP1V8U8e",
+  "vaultA": "GUA3bVKC48kPhDr3CQTzoE61MYRXgiGfAV1LnDoNhz1k",
+  "vaultB": "CymKiRNzyBk2uzyRJPExg32txBwwNDhJMgkwbhws9ShS",
+  "mintDecimalsA": 9,
+  "mintDecimalsB": 9,
+  "ammConfig": {
+    "id": "A1BBtTYJd4i3xU8D6Tc2FzU6ZN4oXZWXKZnCxwbHXr8x",
+    "index": 3,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 10000,
+    "tickSpacing": 120,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for exotic pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "J6S1exEe5guPpJVhfkbfP8E2RS21T4U2tZeiBP1V8U8e",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    },
+    {
+      "mint": "2yTrutPCaoXVQiJqBzQ1YpCqfzhMg2YGXXVXLbXYhPn9",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 0,
+  "day": {
+    "volume": 0,
+    "volumeFee": 0,
+    "feeA": 0,
+    "feeB": 0,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0,
+    "priceMin": 138.54978179241675,
+    "priceMax": 138.54978179241675
+  },
+  "week": {
+    "volume": 0,
+    "volumeFee": 0,
+    "feeA": 0,
+    "feeB": 0,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0,
+    "priceMin": 138.54978179241675,
+    "priceMax": 138.54978179241675
+  },
+  "month": {
+    "volume": 0,
+    "volumeFee": 0,
+    "feeA": 0,
+    "feeB": 0,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0,
+    "priceMin": 138.54978179241675,
+    "priceMax": 138.54978179241675
+  },
+  "lookupTableAccount": "8ki2XeXCwmcEatKZhYgBbPTeF3nNd9XCMh4DsRE9AK14",
+  "openTime": 0,
+  "price": 138.54978179241675
+}

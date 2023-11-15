@@ -19,5 +19,5 @@ lazy_static! {
     pub static ref ALDRIN_V2_PROGRAM_ID: Pubkey =
         Pubkey::from_str("CURVGoZn8zycx6FXwwevgBTB2gVvdbGTEpvMJDbgs2t4").unwrap();
     pub static ref SERUM_PROGRAM_ID: Pubkey =
-        Pubkey::from_str("9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin").unwrap();
+        Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap();
 }

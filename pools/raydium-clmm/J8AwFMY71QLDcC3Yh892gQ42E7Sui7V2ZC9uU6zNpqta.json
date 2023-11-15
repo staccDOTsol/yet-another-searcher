@@ -1,0 +1,76 @@
+{
+  "id": "J8AwFMY71QLDcC3Yh892gQ42E7Sui7V2ZC9uU6zNpqta",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "7u8GKidKqjuThoR32vXBN6BV9t3oTnWybEr29wdd9KBg",
+  "mintB": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "vaultA": "2NUJ5LL2ZgV63ia4929yLAUi61wcjDSpaf5H9A6AUUqt",
+  "vaultB": "29qQvQaTfosekvGHDpmxnXYuuvrqqLwor7uoTCJRT3pC",
+  "mintDecimalsA": 9,
+  "mintDecimalsB": 6,
+  "ammConfig": {
+    "id": "E64NGkDLLCdQ2yFNPcavaKptrEgmiQaNykUuLC1Qgwyp",
+    "index": 1,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 2500,
+    "tickSpacing": 60,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for most pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "7u8GKidKqjuThoR32vXBN6BV9t3oTnWybEr29wdd9KBg",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 2119.4975301397717,
+  "day": {
+    "volume": 252.783373,
+    "volumeFee": 0.5308450833,
+    "feeA": 1516.0659995586502,
+    "feeB": 0.31093905780000003,
+    "feeApr": 9.14,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 9.14,
+    "priceMin": 0.00014152137931708423,
+    "priceMax": 0.00014892929155227387
+  },
+  "week": {
+    "volume": 2283.238063999999,
+    "volumeFee": 4.794799934399999,
+    "feeA": 15173.28000804556,
+    "feeB": 2.5112431176000003,
+    "feeApr": 11.79,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 11.79,
+    "priceMin": 0.00013261313761160512,
+    "priceMax": 0.0001768405739840755
+  },
+  "month": {
+    "volume": 5113.729435999999,
+    "volumeFee": 10.73883181560001,
+    "feeA": 38099.64048420779,
+    "feeB": 5.668096266,
+    "feeApr": 6.16,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 6.16,
+    "priceMin": 0.00010715291289264728,
+    "priceMax": 0.0001768405739840755
+  },
+  "lookupTableAccount": "2Rv8BPjzu8sx6WBn8kUSCpJ5tQ9Te9ELUJ7kXHXYhYw4",
+  "openTime": 0,
+  "price": 0.00014788813354363027
+}

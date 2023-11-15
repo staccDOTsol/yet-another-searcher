@@ -1,0 +1,76 @@
+{
+  "id": "CPK8fQYShAmERZmysQRAGWPvV5qs3AvazQsiR9ctC6ED",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "BzjsQpgKjxZedFawUV9GZMExhr7VbvsasQv12v2PVxSt",
+  "mintB": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+  "vaultA": "FprbuKP8WsU9WQuakPpgqpDZfLkek5M4ETsx2Hu5rLo5",
+  "vaultB": "2a7RAJMn2DmEyjYhi69zCmTvtJ52NnCgN6ZXCDix5bYi",
+  "mintDecimalsA": 8,
+  "mintDecimalsB": 5,
+  "ammConfig": {
+    "id": "A1BBtTYJd4i3xU8D6Tc2FzU6ZN4oXZWXKZnCxwbHXr8x",
+    "index": 3,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 10000,
+    "tickSpacing": 120,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for exotic pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "BzjsQpgKjxZedFawUV9GZMExhr7VbvsasQv12v2PVxSt",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 177909.20691156416,
+  "day": {
+    "volume": 977.4151455358228,
+    "volumeFee": 8.210287222500911,
+    "feeA": 2111607.8342108605,
+    "feeB": 1695219.558024468,
+    "feeApr": 1.67,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 1.67,
+    "priceMin": 1.1939479652031368,
+    "priceMax": 1.2298543823404842
+  },
+  "week": {
+    "volume": 50527.58653366278,
+    "volumeFee": 424.43172688276707,
+    "feeA": 71975514.3587159,
+    "feeB": 74991264.26568651,
+    "feeApr": 12.34,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 12.34,
+    "priceMin": 1.1939479652031368,
+    "priceMax": 2.7801183567005117
+  },
+  "month": {
+    "volume": 60491.66003252085,
+    "volumeFee": 508.12994427317517,
+    "feeA": 102662718.2537187,
+    "feeB": 144309355.4352804,
+    "feeApr": 3.45,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 3.45,
+    "priceMin": 1.1939479652031368,
+    "priceMax": 2.7801183567005117
+  },
+  "lookupTableAccount": "6HQr29BMPRuu1fnXfDYqG6nN8ou8Hc7TCqpji3PCd5df",
+  "openTime": 0,
+  "price": 1.2070002181620993
+}

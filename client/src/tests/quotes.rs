@@ -20,7 +20,7 @@ use crate::utils::{derive_token_address, read_json_dir};
 
 #[test]
 fn serum() {
-    let pool_dir = "../pools/openbook/".to_string();
+    let pool_dir = "../pools/serum/".to_string();
     let pool_type = PoolType::SerumPoolType;
     test_all_pool_quotes(pool_dir, pool_type);
 }
@@ -55,7 +55,7 @@ fn orca() {
 
 fn test_all_pool_quotes(pool_dir: String, pool_type: PoolType) {
     // setup stuff
-    let cluster = Cluster::Localnet;
+    let cluster = Cluster::Mainnet;
     let connection = RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::recent());
 
     // let owner_kp_path = "/Users/vbetsun/.config/solana/uwuU3qc2RwN6CpzfBAhg6wAxiEx138jy5wB3Xvx18Rw.json";

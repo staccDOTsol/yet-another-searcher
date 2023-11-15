@@ -1,0 +1,71 @@
+{
+  "id": "21nx2rM9ZZjjoFu3XrXLEE1Dq9jegJ789EXgV4TEYjb3",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "So11111111111111111111111111111111111111112",
+  "mintB": "zebeczgi5fSEtbpfQKVZKCJ3WgYXxjkMUkNNx7fLKAF",
+  "vaultA": "FwpXQjeN15Vr9PhH7Jp3S2b98vFhLCVHxGCgk8vsEDhM",
+  "vaultB": "5iuYb9PKD5XRXy4NzmXawDR3ps8FNnb96jojR4Rsoz2N",
+  "mintDecimalsA": 9,
+  "mintDecimalsB": 9,
+  "ammConfig": {
+    "id": "E64NGkDLLCdQ2yFNPcavaKptrEgmiQaNykUuLC1Qgwyp",
+    "index": 1,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 2500,
+    "tickSpacing": 60,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for most pairs"
+  },
+  "rewardInfos": [],
+  "tvl": 1.6034930565717258,
+  "day": {
+    "volume": 0,
+    "volumeFee": 0,
+    "feeA": 0,
+    "feeB": 0,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0,
+    "priceMin": 2685.401640788018,
+    "priceMax": 2685.401640788018
+  },
+  "week": {
+    "volume": 410.5680001172769,
+    "volumeFee": 0.8621928002462815,
+    "feeA": 0,
+    "feeB": 100.2687871986171,
+    "feeApr": 2803.14,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 2803.14,
+    "priceMin": 2184.593372545438,
+    "priceMax": 2679.1652292270774
+  },
+  "month": {
+    "volume": 410.5732248248819,
+    "volumeFee": 0.8622037721322521,
+    "feeA": 0,
+    "feeB": 100.27039731787471,
+    "feeApr": 654.08,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 654.08,
+    "priceMin": 1784.190559265275,
+    "priceMax": 2679.1652292270774
+  },
+  "lookupTableAccount": "A5aCwxHLz2AXQq5rkQFUwrK5SU9H63xxJ7YeDHUnfJ5v",
+  "openTime": 0,
+  "price": 2685.401640788018
+}

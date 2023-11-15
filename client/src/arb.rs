@@ -207,15 +207,20 @@ impl Arbitrager {
         } else if self.cluster == Cluster::Mainnet {
             let signature = self
                 .connection
-                .send_transaction_with_config(
-                    &tx,
+                .send_transaction(
+                    &tx,/*
                     RpcSendTransactionConfig {
                         skip_preflight: false,
                         ..RpcSendTransactionConfig::default()
-                    },
+                    }, */
                 )
-                .unwrap();
-            println!("signature: {:?}", signature);
+                ;
+                if signature.is_err() {
+                    println!("error: {:#?}", signature.err().unwrap()); 
+                }
+                else {
+            println!("signature: {:?}", signature.unwrap());
+                }
         }
     }
 }

@@ -99,7 +99,7 @@ pub mod tmp {
         Ok(())
     }
 
-    pub fn serum_swap<'info>(
+    pub fn openbook_swap<'info>(
         ctx: Context<'_, '_, '_, 'info, SerumSwap<'info>>,
         side: Side,
     ) -> Result<()> {

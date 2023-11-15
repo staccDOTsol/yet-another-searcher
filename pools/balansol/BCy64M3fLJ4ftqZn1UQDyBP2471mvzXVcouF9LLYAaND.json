@@ -1,0 +1,48 @@
+{
+  "owner": "D3BBjqUdCYuP18fNvvMbPAZ8DpcRi4io2EsYHQawJDag",
+  "pubkey": "BCy64M3fLJ4ftqZn1UQDyBP2471mvzXVcouF9LLYAaND",
+  "data": {
+    "authority": "2ARGAhpbtwAzC45qCKz4CyyUhPRicXMgzYCNuJKYPk4Z",
+    "fee": "2625a0",
+    "taxFee": "07a120",
+    "state": {
+      "initialized": {}
+    },
+    "mintLpt": "BdG9YfpUXeWssj2xkUPhm5td5b4YSFZjbQrTMrrutqeP",
+    "taxMan": "9doo2HZQEmh2NgfT3Yx12M89aoBheycYqH1eaR5gKb3e",
+    "mints": [
+      "CNS9mq26ke8SmEbjEoxvt3HJJUj8EFAUQBzXCyZz6eSg",
+      "CNStCbpvPKDAuxTYwvonqqzFxrknXZwN9wQUy8TkhVGm"
+    ],
+    "actions": [
+      {
+        "active": {}
+      },
+      {
+        "active": {}
+      }
+    ],
+    "treasuries": [
+      "GfuMebKLGj7j6C8tkRzLatVA39X9ehQFRwTBHKPHeHT4",
+      "8euhWyitKtWcpNAgJ1cPGg1KPnQdeTyWyCXc1JMRTsJS"
+    ],
+    "reserves": [
+      "77359400",
+      "1395"
+    ],
+    "weights": [
+      "14f46b0400",
+      "02540be400"
+    ]
+  },
+  "params": {
+    "treasurer": "GYpMPqLrSnbYFpuzpZtUpE7jRdDUKPv626xMfwG8GLTS",
+    "taxmanTokenAccounts": [
+      "xtWWsZJJwvqZzDpWNBfMbUsNBXmsHHqShXgdA2gz2dH",
+      "7ZMvq4hdZuNyakm5zHjtz9fumGPtiTFQa9cp69ZvSrfd"
+    ]
+  },
+  "provider": "balansol",
+  "poolAddress": "BCy64M3fLJ4ftqZn1UQDyBP2471mvzXVcouF9LLYAaND",
+  "other": "CNS9mq26ke8SmEbjEoxvt3HJJUj8EFAUQBzXCyZz6eSg"
+}

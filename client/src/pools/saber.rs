@@ -147,11 +147,13 @@ let recent_blockhash = connection.get_latest_blockhash().unwrap();
     }
         let pool_src = self.tokens.get(&mint_in.to_string()).unwrap().addr.0;
         let pool_dst = self.tokens.get(&mint_out.to_string()).unwrap().addr.0;
+        let mut fee_acc;
         if !self.fee_accounts.contains_key(&mint_out.to_string()) {
-            return vec![];
+            fee_acc = self.fee_accounts.get(&mint_in.to_string()).unwrap().clone();
         }
-        let fee_acc = self.fee_accounts.get(&mint_out.to_string()).unwrap();
-
+        else {
+         fee_acc = self.fee_accounts.get(&mint_out.to_string()).unwrap().clone();
+        }
         let swap_ix = program
             .request()
             .accounts(tmp_accounts::SaberSwap{
@@ -179,7 +181,12 @@ let recent_blockhash = connection.get_latest_blockhash().unwrap();
         mint_in: &Pubkey,
         mint_out: &Pubkey,
     ) -> u128 {
-
+        if !self.fee_accounts.contains_key(&mint_out.to_string()) {
+            return 0;
+        }
+        if !self.fee_accounts.contains_key(&mint_in.to_string()) {
+            return 0;
+        }
         let calculator = Stable {
             amp: self.target_amp, 
             fee_numerator: self.fee_numerator as u128, 

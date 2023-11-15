@@ -16,7 +16,7 @@
   "baseDepositsTotal": "20f3ca4fa68f00",
   "baseFeesAccrued": "00",
   "quoteVault": "6b3w5rXY5jwmsCaUYZVmEF2qGrLsEeQmVHqwZQ9EC32R",
-  "quoteDepositsTotal": "ff39a1",
+  "quoteDepositsTotal": "017c125a",
   "quoteFeesAccrued": "0f27",
   "quoteDustThreshold": "64",
   "requestQueue": "4EUxzSZhvX3gwPSbCwqNWBXaGy4T876ufwaGQqzz2CC3",
@@ -28,5 +28,7 @@
   "feeRateBps": "00",
   "referrerRebatesAccrued": "d014",
   "provider": "openbook",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "baseScale": 9,
+  "quoteScale": 6
 }

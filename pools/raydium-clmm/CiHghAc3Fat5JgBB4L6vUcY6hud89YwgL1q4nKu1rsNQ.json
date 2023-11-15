@@ -1,0 +1,80 @@
+{
+  "id": "CiHghAc3Fat5JgBB4L6vUcY6hud89YwgL1q4nKu1rsNQ",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+  "mintB": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "vaultA": "2UHsXaF2mwqScrmVmnMw6yijFf4NFkRoRejXvgY3XgRw",
+  "vaultB": "7dzRBCnEpww4ebVNktbVbQbmX4VHF8YrvtbLtHVgRYUF",
+  "mintDecimalsA": 9,
+  "mintDecimalsB": 6,
+  "ammConfig": {
+    "id": "E64NGkDLLCdQ2yFNPcavaKptrEgmiQaNykUuLC1Qgwyp",
+    "index": 1,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 2500,
+    "tickSpacing": 60,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for most pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    },
+    {
+      "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 62800.21826774681,
+  "day": {
+    "volume": 99006.90277399997,
+    "volumeFee": 207.91449582540008,
+    "feeA": 1.5417102808988998,
+    "feeB": 111.53601687900006,
+    "feeApr": 120.81,
+    "rewardApr": {
+      "A": 0,
+      "B": 31.27,
+      "C": 0
+    },
+    "apr": 152.08,
+    "priceMin": 58.920549101065106,
+    "priceMax": 66.21573398671136
+  },
+  "week": {
+    "volume": 627836.3694879998,
+    "volumeFee": 1318.4563759248003,
+    "feeA": 10.4609976134265,
+    "feeB": 679.9978177922997,
+    "feeApr": 109.45,
+    "rewardApr": {
+      "A": 0,
+      "B": 31.27,
+      "C": 0
+    },
+    "apr": 140.72,
+    "priceMin": 48.513603244260274,
+    "priceMax": 72.7325876883063
+  },
+  "month": {
+    "volume": 1770909.6702780009,
+    "volumeFee": 3718.9103075838007,
+    "feeA": 40.27531294230988,
+    "feeB": 1951.501989584701,
+    "feeApr": 72.03,
+    "rewardApr": {
+      "A": 0,
+      "B": 31.27,
+      "C": 0
+    },
+    "apr": 103.3,
+    "priceMin": 25.06643081675176,
+    "priceMax": 72.7325876883063
+  },
+  "lookupTableAccount": "BXqvF9nUJJVZnr87SYDNEgQ1hmFiaBAgosqFJvztvrFX",
+  "openTime": 0,
+  "price": 65.20252846487539
+}

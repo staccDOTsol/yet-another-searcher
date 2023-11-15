@@ -13,11 +13,11 @@
   "baseMint": "GHvFFSZ9BctWsEc5nujR1MTmmJWY7tgQz2AXE6WVFtGN",
   "quoteMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
   "baseVault": "5pS1JkD8erFJNSKWBmCjFWMjA9AsFVZe3vUpNLsSX1ky",
-  "baseDepositsTotal": "1b95bdd967be00",
+  "baseDepositsTotal": "1c4a40e946ec00",
   "baseFeesAccrued": "00",
   "quoteVault": "6AeWq1kY5KVCJZKqRR1MG9BSChGwm9caoEzdVtciwan4",
-  "quoteDepositsTotal": "01a18d2de6",
-  "quoteFeesAccrued": "497eb3",
+  "quoteDepositsTotal": "019d49b022",
+  "quoteFeesAccrued": "4bc5ba",
   "quoteDustThreshold": "64",
   "requestQueue": "FeXxvLUypzWcZomJUKS4miASSWtN8YydZT521pRPaJow",
   "eventQueue": "EvE65DqDPPvoJADmBFpnmUm7sDWU1orBAiciWQpe8bS3",
@@ -26,7 +26,9 @@
   "baseLotSize": "3b9aca00",
   "quoteLotSize": "01",
   "feeRateBps": "00",
-  "referrerRebatesAccrued": "2f2ba5",
+  "referrerRebatesAccrued": "2d2fb4",
   "provider": "openbook",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "baseScale": 9,
+  "quoteScale": 6
 }

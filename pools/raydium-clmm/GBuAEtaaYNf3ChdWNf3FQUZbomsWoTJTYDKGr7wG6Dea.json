@@ -1,0 +1,76 @@
+{
+  "id": "GBuAEtaaYNf3ChdWNf3FQUZbomsWoTJTYDKGr7wG6Dea",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "RLBxxFkseAZ4RgJH3Sqn8jXxhmGoz9jWxDNJMh8pL7a",
+  "mintB": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "vaultA": "BguEcTLCWVptdCi2pEAk5DnobtwiBGx5cbaE4NB3dCwB",
+  "vaultB": "HHtagHJBqiSEVkpHanq4xZ4SEAuhWS2XQNFir6xWmcht",
+  "mintDecimalsA": 2,
+  "mintDecimalsB": 6,
+  "ammConfig": {
+    "id": "A1BBtTYJd4i3xU8D6Tc2FzU6ZN4oXZWXKZnCxwbHXr8x",
+    "index": 3,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 10000,
+    "tickSpacing": 120,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for exotic pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "RLBxxFkseAZ4RgJH3Sqn8jXxhmGoz9jWxDNJMh8pL7a",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 11596.54151639212,
+  "day": {
+    "volume": 9.496329,
+    "volumeFee": 0.07976916359999998,
+    "feeA": 0.13146,
+    "feeB": 0.0510813492,
+    "feeApr": 0.25,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0.25,
+    "priceMin": 0.21023747810858143,
+    "priceMax": 0.22838705882352942
+  },
+  "week": {
+    "volume": 40.744244,
+    "volumeFee": 0.34225164959999993,
+    "feeA": 0.7481040000000001,
+    "feeB": 0.17101203000000004,
+    "feeApr": 0.15,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0.15,
+    "priceMin": 0.21023747810858143,
+    "priceMax": 0.2549435840707965
+  },
+  "month": {
+    "volume": 7813.986743000002,
+    "volumeFee": 65.63748864119997,
+    "feeA": 184.10960400000002,
+    "feeB": 38.23978751880002,
+    "feeApr": 6.89,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 6.89,
+    "priceMin": 0.11655,
+    "priceMax": 0.2549435840707965
+  },
+  "lookupTableAccount": "EKbdivk32nQdxzP1Z7AUMjsSTgCtoeQTsKzpQ8Rpstcw",
+  "openTime": 0,
+  "price": 0.22885284504897438
+}

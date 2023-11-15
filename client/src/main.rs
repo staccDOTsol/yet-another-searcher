@@ -109,6 +109,13 @@ fn main() {
         dir_path: "../pools/saber/".to_string(),
     };
     pool_dirs.push(saber_dir);
+      let serum_dir = PoolDir {
+        pool_type: PoolType::SerumPoolType,
+        dir_path: "../pools/serum/".to_string(),
+    };
+    pool_dirs.push(serum_dir); 
+
+
 
     // ** json pool -> pool object
     let mut token_mints = vec![];
@@ -207,7 +214,7 @@ fn main() {
     println!("update accounts is {:?}", update_accounts.len());
     // slide it out here
     let init_token_acc = update_accounts.pop().unwrap().unwrap();
-    let init_token_balance = unpack_token_account(&init_token_acc.data).amount as u128 - 1;
+    let init_token_balance = unpack_token_account(&init_token_acc.data).amount as u128 - 100;
     println!(
         "init token acc: {:?}, balance: {:#}",
         init_token_acc, init_token_balance

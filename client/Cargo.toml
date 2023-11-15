@@ -24,6 +24,7 @@ name = "setup_open_orders"
 path = "src/setup/setup_open_orders.rs"
 
 [dependencies]
+bytemuck = "*"
 solana-sdk = "1.9.9"
 anchor-spl = { version = "0.22.1", features = ["dex"] }
 anchor-client = { version = "0.22.0", features = ["debug"] }
@@ -37,6 +38,7 @@ rayon = "1.5.1"
 ordered-float = "2.10.0"
 uint = "0.8"
 arrayref = "0.3.6"
+openbook_dex = "*"
 num_enum = "0.5.4" 
 clap = { version = "3.1.6", features = ["derive"] }
 enum_dispatch = "0.3.7"
