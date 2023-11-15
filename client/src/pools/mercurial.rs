@@ -58,67 +58,6 @@ impl PoolOperations for MercurialPool {
         let user_src = derive_token_address(owner, mint_in);
         let user_dst = derive_token_address(owner, mint_out);
 
-        let cluster = Cluster::Mainnet;
-
-
-        let owner_kp_path = match cluster {
-            Cluster::Localnet => "../../mainnet_fork/localnet_owner.key",
-            Cluster::Mainnet => {
-                "/Users/stevengavacs/.config/solana/id.json"
-            }
-            _ => panic!("shouldnt get here"),
-        };
-
-        // ** setup RPC connection
-        let connection_url = match cluster {
-            Cluster::Mainnet => {
-                "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9"
-            }
-            _ => cluster.url(),
-        };
-
-        let send_tx_connection =
-            RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::recent());
-    
-        // setup anchor things
-        let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
-        let rc_owner = Rc::new(read_keypair_file(owner_kp_path.clone()).unwrap());
-        let provider = Client::new_with_options(
-            cluster.clone(),
-            rc_owner.clone(),
-            CommitmentConfig::recent(),
-        );
-        let program = provider.program(*ARB_PROGRAM_ID);
-        let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent());
-        let user_src_account_info = connection.get_account(&user_dst);
-        if user_src_account_info.is_err() {
-            
-        let instructions = program
-            .request()
-            .instruction(
-                spl_associated_token_account::create_associated_token_account(
-                    &owner,
-                    &owner,
-                    mint_out,
-                ),
-            )
-            .instructions().unwrap();
-let recent_blockhash = connection.get_latest_blockhash().unwrap();
-        let mut tx = Transaction::new_signed_with_payer(
-            &instructions,
-            Some(&owner),
-            &[&owner2],
-            recent_blockhash
-        );
-        send_tx_connection.send_and_confirm_transaction_with_spinner_and_config(
-            &tx,
-            CommitmentConfig::recent(),
-            RpcSendTransactionConfig {
-                skip_preflight: true,
-                ..RpcSendTransactionConfig::default()
-            },
-        ).unwrap();
-    }
         let pool0 = &self.tokens[&self.token_ids[0]].addr;
         let pool1 = &self.tokens[&self.token_ids[1]].addr;
 

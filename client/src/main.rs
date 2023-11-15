@@ -75,8 +75,7 @@ fn main() {
     println!("using connection: {}", connection_url);
 
     let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent());
-    let send_tx_connection =
-        RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::recent());
+    
 
     // setup anchor things
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
@@ -109,12 +108,13 @@ fn main() {
         dir_path: "../pools/saber/".to_string(),
     };
     pool_dirs.push(saber_dir);
+    /*
       let serum_dir = PoolDir {
         pool_type: PoolType::SerumPoolType,
         dir_path: "../pools/serum/".to_string(),
     };
     pool_dirs.push(serum_dir); 
-
+*/
 
 
     // ** json pool -> pool object
@@ -257,7 +257,7 @@ fn main() {
         cluster,
         owner: rc_owner,
         program,
-        connection: send_tx_connection,
+        connection,
     };
 
     println!("searching for arbitrages...");
