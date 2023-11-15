@@ -1,21 +1,24 @@
-use crate::pool::PoolOperations;
+use crate::pool::{PoolOperations, PoolType};
 use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
 use serde;
-use serde::{Deserialize, Serialize};
-use anchor_client::Client;
-use solana_sdk::commitment_config::CommitmentConfig;
-use solana_sdk::signature::read_keypair_file;
-use solana_sdk::transaction::Transaction;
+use anchor_client::solana_sdk::signature::read_keypair_file;
+use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
+
+use anchor_client::{Client, Cluster};
+
+use std::collections::{HashMap, HashSet};
+use std::fmt::Debug;
 use std::rc::Rc;
+use std::str::FromStr;
+
+use serde::{Deserialize, Serialize};
+use solana_sdk::signature::{ Keypair};
+use solana_sdk::transaction::Transaction;
 use anchor_client::solana_client::rpc_client::RpcClient;
 use anchor_client::solana_client::rpc_config::RpcSendTransactionConfig;
 use solana_sdk::signature::Signer;
 
-use std::collections::HashMap;
-use std::fmt::Debug;
-use std::str::FromStr;
 use anchor_client::solana_sdk::pubkey::Pubkey;
-use anchor_client::Cluster;
 use anchor_client::Program;
 
 use solana_sdk::account::Account;
@@ -47,17 +50,31 @@ pub struct MercurialPool {
 }
 
 impl PoolOperations for MercurialPool {
+
+    fn get_pool_type(&self) -> PoolType {
+        PoolType::MercurialPoolType
+    }
     fn swap_ix(
         &self,
-        program: &Program,
         owner: &Pubkey,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-    ) -> Vec<Instruction> {
+        ookp: &Keypair
+    ) ->  (bool, Vec<Instruction>) {
         let swap_state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let user_src = derive_token_address(owner, mint_in);
         let user_dst = derive_token_address(owner, mint_out);
 
+
+        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
+    // setup anchor things
+    let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let rc_owner = Rc::new(owner2);
+    let provider = Client::new_with_options(
+Cluster::Mainnet,       rc_owner.clone(),
+        CommitmentConfig::recent(),
+    );
+    let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let pool0 = &self.tokens[&self.token_ids[0]].addr;
         let pool1 = &self.tokens[&self.token_ids[1]].addr;
 
@@ -79,7 +96,7 @@ impl PoolOperations for MercurialPool {
             .instructions()
             .unwrap();
 
-        swap_ix
+            (false, swap_ix)
     }
 
     fn get_quote_with_amounts_scaled(

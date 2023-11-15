@@ -2,20 +2,24 @@
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::rc::Rc;
+use anchor_client::solana_sdk::signature::read_keypair_file;
+use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
+
+use anchor_client::{Client, Cluster};
+
+use std::collections::{ HashSet};
+use std::str::FromStr;
+
 use anchor_client::solana_client::rpc_client::RpcClient;
 use anchor_client::solana_client::rpc_config::RpcSendTransactionConfig;
-use solana_sdk::signature::Signer;
-use std::str::FromStr;
+use solana_sdk::signature::{Signer, Keypair};
 use serde;
 use serde::{Deserialize, Serialize};
-use solana_sdk::commitment_config::CommitmentConfig;
-use solana_sdk::signature::read_keypair_file;
 use solana_sdk::transaction::Transaction;
 use crate::serialize::token::{Token, WrappedPubkey, unpack_token_account};
-use crate::pool::PoolOperations;
+use crate::pool::{PoolOperations, PoolType};
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
-use anchor_client::{Cluster, Client};
 use anchor_client::Program;
 
 use solana_sdk::account::Account;
@@ -46,17 +50,33 @@ pub struct SaberPool {
 }
 
 impl PoolOperations for SaberPool {
+
+    fn get_pool_type(&self) -> PoolType {
+        PoolType::SaberPoolType
+    }
     fn swap_ix(&self, 
-        program: &Program,
         owner: &Pubkey,
         mint_in: &Pubkey, 
-        mint_out: &Pubkey
-    ) -> Vec<Instruction> {
+        mint_out: &Pubkey,
+        ookp: &Keypair
+    ) ->  (bool, Vec<Instruction>) {
         let swap_state= Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
         let user_src = derive_token_address(owner, mint_in);
         let user_dst = derive_token_address(owner, mint_out); 
 
+
+        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
+    // setup anchor things
+
+    let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let rc_owner = Rc::new(owner2);
+    let provider = Client::new_with_options(
+        Cluster::Mainnet,
+        rc_owner.clone(),
+        CommitmentConfig::recent(),
+    );
+    let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let pool_src = self.tokens.get(&mint_in.to_string()).unwrap().addr.0;
         let pool_dst = self.tokens.get(&mint_out.to_string()).unwrap().addr.0;
         let mut fee_acc;
@@ -84,7 +104,7 @@ impl PoolOperations for SaberPool {
             .args(tmp_ix::SaberSwap {}) 
             .instructions()
             .unwrap();
-        swap_ix
+        (false, swap_ix)
     }
 
     fn get_quote_with_amounts_scaled(

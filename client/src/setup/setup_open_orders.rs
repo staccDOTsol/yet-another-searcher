@@ -38,7 +38,7 @@ fn main() {
     let connection = RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::recent());
 
     let provider = Client::new_with_options(cluster, Rc::new(owner), CommitmentConfig::recent());
-    let program = provider.program(*ARB_PROGRAM_ID);
+    let program = provider.program(*ARB_PROGRAM_ID).unwrap();
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
 
     let serum_dir = PoolDir {

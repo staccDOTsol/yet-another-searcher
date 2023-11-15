@@ -88,7 +88,7 @@ fn main() {
     let program = provider.program(*ARB_PROGRAM_ID);
 
     // ** define pool JSONs
-    let mut pool_dirs = vec![];
+    let mut pool_dirs: Vec<PoolDir> = vec![];
 
     let orca_dir = PoolDir {
         pool_type: PoolType::OrcaPoolType,
@@ -256,7 +256,6 @@ fn main() {
         graph,
         cluster,
         owner: rc_owner,
-        program,
         connection,
     };
 

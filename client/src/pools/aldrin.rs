@@ -1,22 +1,29 @@
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::str::FromStr;
+use anchor_client::solana_sdk::signature::read_keypair_file;
+use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
+
+use anchor_client::{Client, Cluster};
+
+use std::collections::{HashSet};
+use std::rc::Rc;
 
 use serde;
 use serde::{Deserialize, Serialize};
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
-use anchor_client::Cluster;
 use anchor_client::Program;
 
 use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
 
+use solana_sdk::signature::Keypair;
 use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 
 use crate::constants::*;
-use crate::pool::PoolOperations;
+use crate::pool::{PoolOperations, PoolType};
 use crate::pool_utils::base::CurveType;
 use crate::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
 use crate::serialize::pool::JSONFeeStructure;
@@ -50,15 +57,30 @@ pub struct AldrinPool {
 }
 
 impl PoolOperations for AldrinPool {
+    fn get_pool_type(&self) -> PoolType {
+        PoolType::AldrinPoolType
+    }
     fn swap_ix(
         &self,
-        program: &Program,
+        //impl<C: Deref<Target = impl Signer> + Clone> Program<C>
+
         owner: &Pubkey,
         _mint_in: &Pubkey,
         mint_out: &Pubkey,
-    ) -> Vec<Instruction> {
+        ookp: &Keypair
+    ) ->  (bool, Vec<Instruction>) {
         let state_pda = ((Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap()));
 
+
+        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
+    // setup anchor things
+    let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let rc_owner = Rc::new(owner2);
+    let provider = Client::new_with_options(
+        Cluster::Mainnet,        rc_owner.clone(),
+        CommitmentConfig::recent(),
+    );
+    let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let base_token_mint = &self.token_ids[0];
         let quote_token_mint = &self.token_ids[1];
 
@@ -116,7 +138,7 @@ impl PoolOperations for AldrinPool {
                 .instructions()
                 .unwrap();
         }
-        swap_ix
+        (false, swap_ix)
     }
 
     fn get_quote_with_amounts_scaled(

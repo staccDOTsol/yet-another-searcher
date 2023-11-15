@@ -10,7 +10,7 @@ use std::collections::{HashMap, HashSet};
 use solana_sdk::instruction::Instruction;
 use solana_sdk::transaction::Transaction;
 
-use std::borrow::Borrow;
+use std::borrow::{Borrow, BorrowMut};
 use std::rc::Rc;
 use std::str::FromStr;
 use std::vec;
@@ -20,7 +20,7 @@ use log::info;
 use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 
-use crate::pool::PoolOperations;
+use crate::pool::{PoolOperations, PoolType};
 
 use crate::utils::{derive_token_address, PoolGraph, PoolIndex, PoolQuote};
 
@@ -31,7 +31,6 @@ pub struct Arbitrager {
     pub cluster: Cluster,
     // vv -- need to clone these explicitly -- vv
     pub owner: Rc<Keypair>,
-    pub program: Program,
     pub connection: RpcClient,
 }
 
@@ -114,13 +113,157 @@ impl Arbitrager {
                         } else {
                             sent_arbs.insert(arb_key);
                         }
-
-                        let ixs = self.get_arbitrage_instructions(
+                        let ookp = Keypair::new();
+                        let mut ixs = self.get_arbitrage_instructions(
                             init_balance,
                             &new_path,
                             &new_pool_path,
+                            vec![&mut  Keypair::new()],
+                            &ookp
                         );
-                        self.send_ixs(ixs);
+                        let mut ix;
+                        ixs.0.concat();
+                        let owner: &Keypair = self.owner.borrow();
+                        if ixs.1 {
+let bla1 =  ixs.0.remove (0);
+                            let first_ix =bla1.get(0).unwrap();
+                            let bla2 =  ixs.0.remove (0);
+                            let second_ix = bla2.get(0).unwrap();
+                            // combine first_ix and second_ix 
+                            let bla = ixs.0.remove (ixs.0.len() - 1);
+                            let last_ix = bla.get(0).unwrap();
+                            // combine first and second
+                            let first_tx = Transaction::new_signed_with_payer(
+                                &[first_ix.clone(), second_ix.clone()],
+                                Some(&owner.pubkey()),
+                                &[owner, &ookp],
+                                self.connection.get_latest_blockhash().unwrap(),
+                            );
+                            let second_tx = Transaction::new_signed_with_payer(
+                                &[last_ix.clone()],
+                                Some(&owner.pubkey()),
+                                &[owner],
+                                self.connection.get_latest_blockhash().unwrap(),
+                            );
+
+        let src_ata = derive_token_address(&owner.pubkey(), &dst_mint);
+                                // PROFIT OR REVERT instruction
+                                 ix = spl_token::instruction::transfer(
+                                    &spl_token::id(),
+                                    &src_ata,
+                                    &src_ata,
+                                    &self.owner.pubkey(),
+                                    &[
+                                    ],
+                                    init_balance as u64,
+                                );
+                                // flatten to Vec<Instructions>
+                                ixs.0.push(vec![ix.unwrap()]);
+                        let tx = Transaction::new_signed_with_payer(
+                            &ixs.0.concat(),
+                            Some(&owner.pubkey()),
+                            &[owner],
+                            self.connection.get_latest_blockhash().unwrap(),
+                        );
+                
+                        if self.cluster == Cluster::Localnet {
+                            let res = self.connection.simulate_transaction(&tx).unwrap();
+                            println!("{:#?}", res);
+                        } else if self.cluster == Cluster::Mainnet {
+                            let signature = self
+                                .connection
+                                .send_and_confirm_transaction(
+                                    &first_tx,/*
+                                    RpcSendTransactionConfig {
+                                        skip_preflight: false,
+                                        ..RpcSendTransactionConfig::default()
+                                    }, */
+                                )
+                                ;
+                                if signature.is_err() {
+                                    println!("error: {:#?}", signature.err().unwrap()); 
+                                }
+                                else {
+                            println!("signature: {:?}", signature.unwrap());
+                                }
+                            let signature = self
+                                .connection
+                                .send_transaction(
+                                    &tx,/*
+                                    RpcSendTransactionConfig {
+                                        skip_preflight: false,
+                                        ..RpcSendTransactionConfig::default()
+                                    }, */
+                                )
+                                ;
+                                if signature.is_err() {
+                                    println!("error: {:#?}", signature.err().unwrap()); 
+                                }
+                                else {
+                            println!("signature: {:?}", signature.unwrap());
+                                }
+                                let signature = self
+                                .connection
+                                .send_transaction(
+                                    &second_tx,/*
+                                    RpcSendTransactionConfig {
+                                        skip_preflight: false,
+                                        ..RpcSendTransactionConfig::default()
+                                    }, */
+                                )
+                                ;
+                                if signature.is_err() {
+                                    println!("error: {:#?}", signature.err().unwrap()); 
+                                }
+                                else {
+                            println!("signature: {:?}", signature.unwrap());
+                                }
+                                
+                        }
+                    } else {
+                        
+        let src_ata = derive_token_address(&owner.pubkey(), &dst_mint);
+                        let ix = spl_token::instruction::transfer(
+                            &spl_token::id(),
+                            &src_ata,
+                            &src_ata,
+                            &self.owner.pubkey(),
+                            &[],
+                            init_balance as u64,
+                        );
+                        // flatten to Vec<Instructions>
+                        ixs.0.push(vec![ix.unwrap()]);
+
+
+                        let tx = Transaction::new_signed_with_payer(
+                            &ixs.0.concat(),
+                            Some(&owner.pubkey()),
+                            &[owner],
+                            self.connection.get_latest_blockhash().unwrap(),
+                        );
+                
+                        if self.cluster == Cluster::Localnet {
+                            let res = self.connection.simulate_transaction(&tx).unwrap();
+                            println!("{:#?}", res);
+                        } else if self.cluster == Cluster::Mainnet {
+                            let signature = self
+                                .connection
+                                .send_transaction(
+                                    &tx,/*
+                                    RpcSendTransactionConfig {
+                                        skip_preflight: false,
+                                        ..RpcSendTransactionConfig::default()
+                                    }, */
+                                )
+                                ;
+                                if signature.is_err() {
+                                    println!("error: {:#?}", signature.err().unwrap()); 
+                                }
+                                else {
+                            println!("signature: {:?}", signature.unwrap());
+                                }
+                        }
+                    }
                     }
                 } else if !path.contains(&dst_mint_idx) {
                     // ... search deeper
@@ -137,12 +280,15 @@ impl Arbitrager {
         }
     }
 
-    fn get_arbitrage_instructions(
+    fn get_arbitrage_instructions<'a>(
         &self,
         swap_start_amount: u128,
         mint_idxs: &Vec<usize>,
         pools: &Vec<PoolQuote>,
-    ) -> Vec<Instruction> {
+        mut signers: Vec<&mut  Keypair>,
+
+         ookp : &Keypair
+    ) -> (Vec<Vec<Instruction>>, bool) {
         // gather swap ixs
         let mut ixs = vec![];
         let swap_state_pda =
@@ -150,9 +296,19 @@ impl Arbitrager {
         let src_mint = self.token_mints[mint_idxs[0]];
         let src_ata = derive_token_address(&self.owner.pubkey(), &src_mint);
 
+
+    // setup anchor things
+    let owner = solana_sdk::signer::keypair::read_keypair_file("/Users/stevengavacs/.config/solana/id.json").unwrap();
+    let rc_owner = Rc::new(owner);
+    let provider = anchor_client::Client::new_with_options(
+        Cluster::Mainnet,
+        rc_owner.clone(),
+        solana_sdk::commitment_config::CommitmentConfig::recent(),
+    );
+    let program = provider.program(*crate::constants::ARB_PROGRAM_ID).unwrap();
+
         // initialize swap ix
-        let ix = self
-            .program
+        let ix = program
             .request()
             .accounts(tmp_accounts::TokenAndSwapState {
                 swap_state: swap_state_pda,
@@ -163,64 +319,35 @@ impl Arbitrager {
             .instructions()
             .unwrap();
         ixs.push(ix);
-
+        let mut flag = false;
         for i in 0..mint_idxs.len() - 1 {
             let [mint_idx0, mint_idx1] = [mint_idxs[i], mint_idxs[i + 1]];
             let [mint0, mint1] = [self.token_mints[mint_idx0], self.token_mints[mint_idx1]];
             let pool = &pools[i];
-
-            let swap_ix = pool
+            let mut swap_ix = pool
                 .0
-                .swap_ix(&self.program, &self.owner.pubkey(), &mint0, &mint1);
-            ixs.push(swap_ix);
+                .swap_ix(&self.owner.pubkey(), &mint0, &mint1, ookp);
+            ixs.push(swap_ix.1);
+            let pool_type = pool.0.get_pool_type();
+            match pool_type {
+                PoolType::OrcaPoolType => {
+                }
+                PoolType::MercurialPoolType => {
+                }
+                PoolType::SaberPoolType => {
+                }
+                PoolType::AldrinPoolType => {
+                }
+                PoolType::SerumPoolType => {
+                    
+                    flag = true;
+                }
+            }
         }
-
-        // PROFIT OR REVERT instruction
-        let ix = spl_token::instruction::transfer(
-            &spl_token::id(),
-            &src_ata,
-            &src_ata,
-            &self.owner.pubkey(),
-            &[],
-            swap_start_amount as u64,
-        ).unwrap();
-        
-        // flatten to Vec<Instructions>
-        let mut iis = ixs.concat();
-        iis.push(ix);
-        iis 
+       
+        ixs.concat();
+        (ixs,  flag) 
 
     }
 
-    fn send_ixs(&self, ixs: Vec<Instruction>) {
-        let owner: &Keypair = self.owner.borrow();
-        let tx = Transaction::new_signed_with_payer(
-            &ixs,
-            Some(&owner.pubkey()),
-            &[owner],
-            self.connection.get_latest_blockhash().unwrap(),
-        );
-
-        if self.cluster == Cluster::Localnet {
-            let res = self.connection.simulate_transaction(&tx).unwrap();
-            println!("{:#?}", res);
-        } else if self.cluster == Cluster::Mainnet {
-            let signature = self
-                .connection
-                .send_transaction(
-                    &tx,/*
-                    RpcSendTransactionConfig {
-                        skip_preflight: false,
-                        ..RpcSendTransactionConfig::default()
-                    }, */
-                )
-                ;
-                if signature.is_err() {
-                    println!("error: {:#?}", signature.err().unwrap()); 
-                }
-                else {
-            println!("signature: {:?}", signature.unwrap());
-                }
-        }
-    }
 }

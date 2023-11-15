@@ -295,7 +295,7 @@ fn main() {
 
     // setup anchor things
     let provider = Client::new_with_options(cluster, Rc::new(owner), CommitmentConfig::recent());
-    let program = provider.program(*ARB_PROGRAM_ID);
+    let program = provider.program(*ARB_PROGRAM_ID).unwrap();
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
 
     let init_ix = program
@@ -708,7 +708,7 @@ fn main() {
     // let pool = &merc_pools[merc_pools.len()-1];
     // println!("{:?}", pool);
 
-    // // let connection_url = "https://ssc-dao.genesysgo.net/";
+    // // let connection_url = "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9";
     // let connection_url = "http://127.0.0.1:8899/";
     // let connection = RpcClient::new_with_commitment(
     //     connection_url,

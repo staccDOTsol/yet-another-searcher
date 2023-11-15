@@ -2,6 +2,7 @@ use anchor_client::solana_sdk::pubkey::Pubkey;
 use anchor_client::Program;
 use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
+use solana_sdk::signature::Keypair;
 
 use crate::pools::*;
 use std::fmt::Debug;
@@ -49,6 +50,7 @@ pub fn pool_factory(pool_type: &PoolType, json_str: &String) -> Box<dyn PoolOper
 }
 
 pub trait PoolOperations: Debug {
+    fn get_pool_type(&self) -> PoolType;
     fn get_name(&self) -> String;
     fn get_update_accounts(&self) -> Vec<Pubkey>;
     fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster);
@@ -65,11 +67,11 @@ pub trait PoolOperations: Debug {
     ) -> u128;
     fn swap_ix(
         &self,
-        program: &Program,
         owner: &Pubkey,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-    ) -> Vec<Instruction>;
+        ookp: &Keypair
+    ) -> (bool, Vec<Instruction>);
 
     fn can_trade(&self, mint_in: &Pubkey, mint_out: &Pubkey) -> bool; // used for tests
 }

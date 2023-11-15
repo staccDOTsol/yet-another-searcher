@@ -1,9 +1,11 @@
 use core::panic;
+use std::num::NonZeroU64;
 use bytemuck::{
     bytes_of, bytes_of_mut, cast, cast_slice, cast_slice_mut, from_bytes_mut, try_cast_mut,
     try_cast_slice_mut, try_from_bytes_mut, Pod, Zeroable,
 };
-
+use openbook_dex::matching::OrderType;
+use openbook_dex::matching::Side;
 use crate::pool::PoolOperations;
 use crate::serialize::token::WrappedPubkey;
 use anchor_client::solana_client::rpc_client::RpcClient;
@@ -48,7 +50,6 @@ use solana_sdk::account::Account;
 use solana_sdk::account_info::AccountInfo;
 use solana_sdk::clock::Epoch;
 
-use anchor_spl::dex::serum_dex::matching::Side;
 
 use std::str::FromStr;
 
@@ -77,6 +78,11 @@ pub struct SerumPool {
 
 fn gen_vault_signer_seeds<'a>(nonce: &'a u64, market: &'a Pubkey) -> [&'a [u8]; 2] {
     [market.as_ref(), bytes_of(nonce)]
+}
+
+// Returns the amount of lots for the base currency of a trade with `size`.
+fn coin_lots(market: &Market, size: u64) -> NonZeroU64 {
+    NonZeroU64::new(size.checked_div(market.coin_lot_size).unwrap()).unwrap()
 }
 
 #[inline]
@@ -214,6 +220,9 @@ impl PoolOperations for SerumPool {
         "Serum".to_string()
     }
 
+    fn get_pool_type(&self) -> PoolType {
+        PoolType::SerumPoolType
+    }
     fn get_update_accounts(&self) -> Vec<Pubkey> {
         vec![self.own_address.0, self.bids.0, self.asks.0]
     }
@@ -327,26 +336,32 @@ impl PoolOperations for SerumPool {
 
     fn swap_ix(
         &self,
-        program: &Program,
         owner: &Pubkey,
         mint_in: &Pubkey,
         _mint_out: &Pubkey,
-    ) -> Vec<Instruction> {
+        ookp: &Keypair
+    ) -> (bool, Vec<Instruction>) {
         let oos = self.open_orders.as_ref().unwrap();
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let open_orders: Pubkey;
         let space = 3228;
-        if !oos.contains_key(&self.own_address.0.to_string()) {
             let pool = self;
             let cluster = Cluster::Mainnet;
         let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
         let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
         let owner3 = read_keypair_file(owner_kp_path.clone()).unwrap();
     
-        // ** setup RPC connection
-        let connection = RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::recent());
-        let provider = Client::new_with_options(cluster, Rc::new(owner2), CommitmentConfig::recent());
-        let program = provider.program(*ARB_PROGRAM_ID);
+
+        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
+    // setup anchor things
+    let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let rc_owner = Rc::new(owner2);
+    let provider = Client::new_with_options(
+        cluster.clone(),
+        rc_owner.clone(),
+        CommitmentConfig::recent(),
+    );
+    let program = provider.program(*ARB_PROGRAM_ID).unwrap();
        
     
         // return;
@@ -354,8 +369,10 @@ impl PoolOperations for SerumPool {
         let mut market_to_open_orders = HashMap::new();
     
     
+        let connection = RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::recent());
     
-             let ookp = Keypair::new();
+
+    
     open_orders = ookp.pubkey();
             let rent_exemption_amount = connection
                 .get_minimum_balance_for_rent_exemption(space)
@@ -369,35 +386,13 @@ impl PoolOperations for SerumPool {
                 &SERUM_PROGRAM_ID,
             );
     
-            let init_ix = program
-                .request()
-                .accounts(tmp_accounts::InitOpenOrder {
-                    open_orders: open_orders,
-                    authority: *owner,
-                    market: pool.own_address.0,
-                    dex_program: *SERUM_PROGRAM_ID,
-                    rent: solana_sdk::sysvar::rent::id(),
-                })
-                .args(tmp_instructions::InitOpenOrder {})
-                .instructions()
-                .unwrap();
-    
-            let ixs = vec![vec![create_account_ix], init_ix].concat();
-    
-            // wrap as tx
-            let recent_hash = connection.get_latest_blockhash().unwrap();
-            let tx = Transaction::new_signed_with_payer(
-                &ixs,
-                Some(&owner),
-                &[&owner3, &ookp],
-                recent_hash,
-            );
-            match connection.send_transaction(&tx) {
-                Err(e) => {
-                    println!("error: {:#?}", e);
-                }
-                Ok(_v) => {}
-            }
+            let init_ix = openbook_dex::instruction::init_open_orders(
+                &Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap(),
+                &open_orders,
+owner,
+            &    pool.own_address.0,
+                None
+            ).unwrap();
     
             market_to_open_orders.insert(
                 pool.own_address.0.to_string(),
@@ -409,13 +404,6 @@ impl PoolOperations for SerumPool {
         // save open orders accounts as .JSON
         let json_market_oo = serde_json::to_string(&market_to_open_orders).unwrap();
         std::fs::write("./serum_open_orders.json", json_market_oo).unwrap();
-    }
-        else {
-
-         open_orders =
-        Pubkey::from_str(oos.get(&self.own_address.0.to_string()).unwrap()).unwrap();
-
-        }
         let base_ata = derive_token_address(owner, &self.base_mint);
         let quote_ata = derive_token_address(owner, &self.quote_mint);
 
@@ -429,10 +417,10 @@ impl PoolOperations for SerumPool {
         } else {
             quote_ata
         };
-        let _side = if side == Side::Ask {
-            tmp::Side::Ask
+        let _side = if side == openbook_dex::matching::Side::Ask {
+            openbook_dex::matching::Side::Ask
         } else {
-            tmp::Side::Bid
+            openbook_dex::matching::Side::Bid
         };
         let vault_signer_nonce = self.vault_signer_nonce.parse::<u64>().unwrap();
         let vault_signer = gen_vault_signer_key(
@@ -440,32 +428,56 @@ impl PoolOperations for SerumPool {
             &self.own_address.0,
             &SERUM_PROGRAM_ID,
         );
-        let request = program
-            .request()
-            .accounts(tmp_accounts::SerumSwap {
-                market: tmp_accounts::MarketAccounts {
-                    market: self.own_address.0,
-                    request_queue: self.request_queue.0,
-                    event_queue: self.event_queue.0,
-                    bids: self.bids.0,
-                    asks: self.asks.0,
-                    coin_vault: self.base_vault.0,
-                    pc_vault: self.quote_vault.0,
-                    vault_signer: vault_signer,
-                    open_orders,
-                    order_payer_token_account: payer_acc,
-                    coin_wallet: base_ata,
-                },
-                pc_wallet: quote_ata,
-                authority: *owner,
-                dex_program: *SERUM_PROGRAM_ID,
-                token_program: *TOKEN_PROGRAM_ID,
-                rent: solana_sdk::sysvar::rent::id(),
-                swap_state,
-            })
-            .args(tmp_instructions::OpenbookSwap { side: _side });
+        let mut limit_price;
+        let mut max_coin_qty;
 
-        request.instructions().unwrap()
+        let market_acc = &self.accounts.as_ref().unwrap()[0];
+        let market_acc = &mut market_acc.clone().unwrap();
+let market_acc_info = &account_info(&self.own_address.0,  market_acc);
+
+        if _side == openbook_dex::matching::Side::Ask {
+            limit_price = NonZeroU64::new(1).unwrap();
+            max_coin_qty = NonZeroU64::new(10000000).unwrap();
+        } else {
+            limit_price = NonZeroU64::MAX;
+            max_coin_qty = NonZeroU64::MAX;
+        }
+        let limit_price = NonZeroU64::MAX;
+        let max_coin_qty = NonZeroU64::MAX;
+        let limit: u16 = 0;
+
+        let close_ix = openbook_dex::instruction::close_open_orders(
+            &Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap(),
+            &open_orders,
+owner,owner,
+        &    self.own_address.0,
+        ).unwrap();
+
+
+        
+        ((true), vec![create_account_ix, init_ix, openbook_dex::instruction::new_order(
+            
+            &self.own_address.0,
+
+&            open_orders,
+ &           self.request_queue.0,
+  &          self.event_queue.0,
+   &         self.bids.0,
+    &        self.asks.0,
+            owner,
+            owner,
+     &       self.base_vault.0,
+            &self.quote_vault.0,
+      &      TOKEN_PROGRAM_ID,
+       &     solana_sdk::sysvar::rent::id(),
+            None,
+            &Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap(),
+            _side,limit_price, max_coin_qty, OrderType::Limit,0, openbook_dex::instruction::SelfTradeBehavior::DecrementTake, limit, NonZeroU64::new(10000000).unwrap(),10000000).unwrap(),
+            close_ix])
+
+
+            
+
     }
 
     fn can_trade(&self, mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {

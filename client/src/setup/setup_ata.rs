@@ -7,6 +7,7 @@ use anchor_client::solana_sdk::signature::Signer;
 
 use anchor_client::Cluster;
 
+use client::pool::PoolDir;
 use solana_sdk::instruction::Instruction;
 use solana_sdk::transaction::Transaction;
 
@@ -23,45 +24,48 @@ use client::pool::{pool_factory, PoolOperations, PoolType};
 use client::serialize::token::unpack_token_account;
 use client::utils::{derive_token_address, read_json_dir};
 
-#[derive(Debug)]
-pub struct PoolDir {
-    tipe: PoolType,
-    dir_path: String,
-}
-
 fn main() {
     let cluster = Cluster::Mainnet;
 
     env_logger::init();
-    let owner_kp_path = "../../../mainnet.key";
+    let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
 
     // ** setup RPC connection
     let connection = RpcClient::new_with_commitment(
-        "https://ssc-dao.genesysgo.net/",
+        "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9",
         CommitmentConfig::recent(),
     );
     let send_tx_connection =
         RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::recent());
+        let mut pool_dirs: Vec<PoolDir> = vec![];
 
-    // ** define pool JSONs
-    let orca_dir = PoolDir {
-        tipe: PoolType::OrcaPoolType,
-        dir_path: "../../orca_pools/mainnet_pools/pools".to_string(),
-    };
-    let mercurial_dir = PoolDir {
-        tipe: PoolType::MercurialPoolType,
-        dir_path: "../../mercurial_pools/pools/".to_string(),
-    };
-    let saber_dir = PoolDir {
-        tipe: PoolType::SaberPoolType,
-        dir_path: "../../saber_sdk/pools/".to_string(),
-    };
+        let orca_dir = PoolDir {
+            pool_type: PoolType::OrcaPoolType,
+            dir_path: "../pools/orca".to_string(),
+        };
+        pool_dirs.push(orca_dir);
+    /*
+        let mercurial_dir = PoolDir {
+            pool_type: PoolType::MercurialPoolType,
+            dir_path: "../pools/mercurial".to_string(),
+        };
+        pool_dirs.push(mercurial_dir);
+         */
+    
+        let saber_dir = PoolDir {
+            pool_type: PoolType::SaberPoolType,
+            dir_path: "../pools/saber/".to_string(),
+        };
+        pool_dirs.push(saber_dir);
+        
+          let serum_dir = PoolDir {
+            pool_type: PoolType::SerumPoolType,
+            dir_path: "../pools/serum/".to_string(),
+        };
+        pool_dirs.push(serum_dir); 
+    
 
-    let mut pool_dirs = vec![];
-    pool_dirs.push(orca_dir);
-    pool_dirs.push(mercurial_dir);
-    pool_dirs.push(saber_dir);
 
     let mut token_mints = vec![];
     for pool_dir in pool_dirs {
@@ -69,7 +73,7 @@ fn main() {
 
         for pool_path in pool_paths {
             let json_str = std::fs::read_to_string(&pool_path).unwrap();
-            let pool = pool_factory(&pool_dir.tipe, &json_str);
+            let pool = pool_factory(&pool_dir.pool_type, &json_str);
             let pool_mints = pool.get_mints();
             if pool_mints.len() != 2 {
                 // only support 2 mint pools
@@ -147,7 +151,7 @@ fn main() {
         n
     );
 
-    for chunck_ixs in create_ata_ixs.chunks(13) {
+    for chunck_ixs in create_ata_ixs.chunks(9) {
         let tx = {
             let recent_hash = send_tx_connection.get_latest_blockhash().unwrap();
             Transaction::new_signed_with_payer(
