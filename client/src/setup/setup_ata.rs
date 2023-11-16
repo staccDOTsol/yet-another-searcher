@@ -37,7 +37,7 @@ fn main() {
         CommitmentConfig::recent(),
     );
     let send_tx_connection =
-        RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::recent());
+        RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::recent());
         let mut pool_dirs: Vec<PoolDir> = vec![];
 
         let orca_dir = PoolDir {

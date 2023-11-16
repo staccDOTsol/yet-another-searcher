@@ -153,7 +153,7 @@ fn ask_iteration(iteration: &mut Iteration, fee_tier: &FeeTier, ob: &mut OrderBo
 
 fn main() {
     let cluster = Cluster::Mainnet;
-    let connection = RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::recent());
+    let connection = RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::recent());
 
     // let pool_path = "../../serum/serum_pools/ByRys5tuUWDgL73G8JBAEfkdFf8JWBzPBDHsBVQ5vbQA_serum_dex.json";
     // let pool_path = "../../serum/serum_pools/8PMHyKJ5FycCopijj6eXeCkenB71CYxCKH7AibkksdG5_serum_dex.json";

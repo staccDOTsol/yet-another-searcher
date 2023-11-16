@@ -1,5 +1,6 @@
 use core::panic;
 use std::num::NonZeroU64;
+use chrono::Utc;
 use bytemuck::{
     bytes_of, bytes_of_mut, cast, cast_slice, cast_slice_mut, from_bytes_mut, try_cast_mut,
     try_cast_slice_mut, try_from_bytes_mut, Pod, Zeroable,
@@ -39,7 +40,7 @@ use crate::utils::derive_token_address;
 
 use solana_sdk::pubkey::Pubkey;
 
-use openbook_dex::{critbit::SlabView, matching::OrderBookState, state::MarketState as Market};
+use openbook_dex::{critbit::SlabView, matching::OrderBookState, state::Market};
 use std::ops::DerefMut;
 
 use solana_sdk::instruction::Instruction;
@@ -339,93 +340,16 @@ impl PoolOperations for SerumPool {
         owner: &Pubkey,
         mint_in: &Pubkey,
         _mint_out: &Pubkey,
-        ookp: &Keypair
+        ookp: &Keypair,
+        start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let oos = self.open_orders.as_ref().unwrap();
+        let open_orders =
+            Pubkey::from_str(oos.get(&self.own_address.0.to_string()).unwrap()).unwrap();
+
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let open_orders: Pubkey;
         let space = 3228;
-            let pool = self;
-            let cluster = Cluster::Mainnet;
-        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
-        let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
-        let owner3 = read_keypair_file(owner_kp_path.clone()).unwrap();
-    
-
-        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
-    // setup anchor things
-    let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
-    let owner3 = read_keypair_file(owner_kp_path.clone()).unwrap();
-    let rc_owner = Rc::new(owner2);
-    let provider = Client::new_with_options(
-        cluster.clone(),
-        rc_owner.clone(),
-        CommitmentConfig::recent(),
-    );
-    let program = provider.program(*ARB_PROGRAM_ID).unwrap();
-       
-    
-        // return;
-    
-        let mut market_to_open_orders = HashMap::new();
-    
-    
-        let connection = RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::recent());
-    
-
-    let ookp = Keypair::new();
-    open_orders = ookp.pubkey();
-            let rent_exemption_amount = connection
-                .get_minimum_balance_for_rent_exemption(space)
-                .unwrap();
-    
-            let create_account_ix = solana_sdk::system_instruction::create_account(
-                &owner,
-                &open_orders,
-                rent_exemption_amount,
-                space as u64,
-                &SERUM_PROGRAM_ID,
-            );
-    
-            let init_ix = openbook_dex::instruction::init_open_orders(
-                &Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap(),
-                &open_orders,
-owner,
-            &    pool.own_address.0,
-                None
-            ).unwrap();
-            let tx = Transaction::new_signed_with_payer(
-                &[create_account_ix.clone(), init_ix.clone()],
-                Some(&owner3.pubkey()),
-                &[(&owner3), (&ookp)],
-                connection.get_latest_blockhash().unwrap(),
-            );
-            let signature = connection
-                                .send_and_confirm_transaction(
-                                    &tx,/*
-                                    RpcSendTransactionConfig {
-                                        skip_preflight: false,
-                                        ..RpcSendTransactionConfig::default()
-                                    }, */
-                                )
-                                ;
-                                if signature.is_err() {
-                                    println!("error: {:#?}", signature.err().unwrap()); 
-                                }
-                                else {
-                            println!("signature: {:?}", signature.unwrap());
-                                }
-
-            market_to_open_orders.insert(
-                pool.own_address.0.to_string(),
-                open_orders.to_string(),
-            );
-    
-            
-    
-        // save open orders accounts as .JSON
-        let json_market_oo = serde_json::to_string(&market_to_open_orders).unwrap();
-        std::fs::write("./serum_open_orders.json", json_market_oo).unwrap();
+          
         let base_ata = derive_token_address(owner, &self.base_mint);
         let quote_ata = derive_token_address(owner, &self.quote_mint);
 
@@ -456,27 +380,26 @@ owner,
         let market_acc = &self.accounts.as_ref().unwrap()[0];
         let market_acc = &mut market_acc.clone().unwrap();
 let market_acc_info = &account_info(&self.own_address.0,  market_acc);
-
+let mut max_native_pc_qty_including_fees;
         if _side == openbook_dex::matching::Side::Ask {
             limit_price = NonZeroU64::new(1).unwrap();
-            max_coin_qty = NonZeroU64::new(10000000).unwrap();
+            max_coin_qty = NonZeroU64::new(start_bal as u64 / 2).unwrap();
+            max_native_pc_qty_including_fees = NonZeroU64::new(start_bal as u64 / 2).unwrap();
         } else {
             limit_price = NonZeroU64::MAX;
-            max_coin_qty = NonZeroU64::MAX;
+            max_coin_qty = NonZeroU64::new(start_bal as u64 / 2).unwrap();
+            max_native_pc_qty_including_fees = NonZeroU64::new(start_bal as u64 / 2).unwrap();
         }
-        let limit_price = NonZeroU64::MAX;
-        let max_coin_qty = NonZeroU64::MAX;
-        let limit: u16 = 0;
-
-        let close_ix = openbook_dex::instruction::close_open_orders(
-            &Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap(),
-            &open_orders,
-owner,owner,
-        &    self.own_address.0,
-        ).unwrap();
-
+        let limit: u16 = 3;
 
         
+        let m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
+       
+
+        let now = Utc::now();
+        let ts = now.timestamp();
+        println!("{}", ts);
+        let mut market = m.unwrap();
         ((true), vec![openbook_dex::instruction::new_order(
             
             &self.own_address.0,
@@ -486,16 +409,16 @@ owner,owner,
   &          self.event_queue.0,
    &         self.bids.0,
     &        self.asks.0,
-            owner,
-            owner,
+            
+            &payer_acc,&owner,
      &       self.base_vault.0,
             &self.quote_vault.0,
       &      TOKEN_PROGRAM_ID,
        &     solana_sdk::sysvar::rent::id(),
             None,
             &Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap(),
-            _side,limit_price, max_coin_qty, OrderType::Limit,0, openbook_dex::instruction::SelfTradeBehavior::DecrementTake, limit, NonZeroU64::new(10000000).unwrap(),10000000).unwrap(),
-            close_ix])
+            _side,limit_price, max_coin_qty, OrderType::Limit,0,
+             openbook_dex::instruction::SelfTradeBehavior::DecrementTake, limit, NonZeroU64::new(start_bal as u64 / 2).unwrap(),ts+40000).unwrap()])
 
 
             

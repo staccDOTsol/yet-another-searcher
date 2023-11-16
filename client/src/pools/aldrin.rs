@@ -67,7 +67,8 @@ impl PoolOperations for AldrinPool {
         owner: &Pubkey,
         _mint_in: &Pubkey,
         mint_out: &Pubkey,
-        ookp: &Keypair
+        ookp: &Keypair,
+        start_bal: u128,
     ) ->  (bool, Vec<Instruction>) {
         let state_pda = ((Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap()));
 

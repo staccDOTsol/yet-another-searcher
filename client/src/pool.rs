@@ -70,7 +70,8 @@ pub trait PoolOperations: Debug {
         owner: &Pubkey,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        ookp: &Keypair
+        ookp: &Keypair,
+        start_bal: u128,
     ) -> (bool, Vec<Instruction>);
 
     fn can_trade(&self, mint_in: &Pubkey, mint_out: &Pubkey) -> bool; // used for tests

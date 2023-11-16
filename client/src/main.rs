@@ -113,7 +113,7 @@ fn main() {
         pool_type: PoolType::SerumPoolType,
         dir_path: "../pools/serum/".to_string(),
     };
-    pool_dirs.push(serum_dir); 
+    pool_dirs.push(serum_dir);  
 
 
 

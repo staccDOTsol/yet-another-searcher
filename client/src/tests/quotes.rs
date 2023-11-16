@@ -56,7 +56,7 @@ fn orca() {
 fn test_all_pool_quotes(pool_dir: String, pool_type: PoolType) {
     // setup stuff
     let cluster = Cluster::Mainnet;
-    let connection = RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::recent());
+    let connection = RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::recent());
 
     // let owner_kp_path = "/Users/vbetsun/.config/solana/uwuU3qc2RwN6CpzfBAhg6wAxiEx138jy5wB3Xvx18Rw.json";
     let owner_kp_path = "../mainnet-fork/localnet_owner.key";

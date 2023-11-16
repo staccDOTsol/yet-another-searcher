@@ -124,18 +124,7 @@ impl Arbitrager {
                         let mut ix;
                         ixs.0.concat();
                         let owner: &Keypair = self.owner.borrow();
-                        if ixs.1 {
-                            let bla = ixs.0.remove (ixs.0.len() - 1);
-                            let last_ix = bla.get(0).unwrap();
-                            // combine first and second
                             
-                            let second_tx = Transaction::new_signed_with_payer(
-                                &[last_ix.clone()],
-                                Some(&owner.pubkey()),
-                                &[owner],
-                                self.connection.get_latest_blockhash().unwrap(),
-                            );
-
         let src_ata = derive_token_address(&owner.pubkey(), &dst_mint);
                                 // PROFIT OR REVERT instruction
                                  ix = spl_token::instruction::transfer(
@@ -177,67 +166,8 @@ impl Arbitrager {
                                 else {
                             println!("signature: {:?}", signature.unwrap());
                                 }
-                                let signature = self
-                                .connection
-                                .send_transaction(
-                                    &second_tx,/*
-                                    RpcSendTransactionConfig {
-                                        skip_preflight: false,
-                                        ..RpcSendTransactionConfig::default()
-                                    }, */
-                                )
-                                ;
-                                if signature.is_err() {
-                                    println!("error: {:#?}", signature.err().unwrap()); 
-                                }
-                                else {
-                            println!("signature: {:?}", signature.unwrap());
-                                }
+                              
                                 
-                        }
-                    } else {
-                        
-        let src_ata = derive_token_address(&owner.pubkey(), &dst_mint);
-                        let ix = spl_token::instruction::transfer(
-                            &spl_token::id(),
-                            &src_ata,
-                            &src_ata,
-                            &self.owner.pubkey(),
-                            &[],
-                            init_balance as u64,
-                        );
-                        // flatten to Vec<Instructions>
-                        ixs.0.push(vec![ix.unwrap()]);
-
-
-                        let tx = Transaction::new_signed_with_payer(
-                            &ixs.0.concat(),
-                            Some(&owner.pubkey()),
-                            &[owner],
-                            self.connection.get_latest_blockhash().unwrap(),
-                        );
-                
-                        if self.cluster == Cluster::Localnet {
-                            let res = self.connection.simulate_transaction(&tx).unwrap();
-                            println!("{:#?}", res);
-                        } else if self.cluster == Cluster::Mainnet {
-                            let signature = self
-                                .connection
-                                .send_transaction(
-                                    &tx,/*
-                                    RpcSendTransactionConfig {
-                                        skip_preflight: false,
-                                        ..RpcSendTransactionConfig::default()
-                                    }, */
-                                )
-                                ;
-                                if signature.is_err() {
-                                    println!("error: {:#?}", signature.err().unwrap()); 
-                                }
-                                else {
-                            println!("signature: {:?}", signature.unwrap());
-                                }
-                        }
                     }
                     }
                 } else if !path.contains(&dst_mint_idx) {
@@ -301,7 +231,7 @@ impl Arbitrager {
             let pool = &pools[i];
             let mut swap_ix = pool
                 .0
-                .swap_ix(&self.owner.pubkey(), &mint0, &mint1, ookp);
+                .swap_ix(&self.owner.pubkey(), &mint0, &mint1, ookp, swap_start_amount);
             ixs.push(swap_ix.1);
             let pool_type = pool.0.get_pool_type();
             match pool_type {
