@@ -383,12 +383,12 @@ let market_acc_info = &account_info(&self.own_address.0,  market_acc);
 let mut max_native_pc_qty_including_fees;
         if _side == openbook_dex::matching::Side::Ask {
             limit_price = NonZeroU64::new(1).unwrap();
-            max_coin_qty = NonZeroU64::new(start_bal as u64 - 1).unwrap();
+            max_coin_qty = NonZeroU64::MIN;
             max_native_pc_qty_including_fees = NonZeroU64::new(start_bal as u64 - 1).unwrap();
         } else {
             limit_price = NonZeroU64::MAX;
             max_coin_qty = NonZeroU64::new(start_bal as u64 - 1).unwrap();
-            max_native_pc_qty_including_fees = NonZeroU64::new(start_bal as u64 - 1).unwrap();
+            max_native_pc_qty_including_fees = NonZeroU64::MIN;
         }
         let limit: u16 = 3;
 
@@ -418,7 +418,7 @@ let mut max_native_pc_qty_including_fees;
             None,
             &Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap(),
             _side,limit_price, max_coin_qty, OrderType::Limit,0,
-             openbook_dex::instruction::SelfTradeBehavior::DecrementTake, limit, NonZeroU64::new(start_bal as u64 - 1).unwrap(),ts+40000).unwrap()])
+             openbook_dex::instruction::SelfTradeBehavior::DecrementTake, limit, max_native_pc_qty_including_fees,ts+40000).unwrap()])
 
 
             
