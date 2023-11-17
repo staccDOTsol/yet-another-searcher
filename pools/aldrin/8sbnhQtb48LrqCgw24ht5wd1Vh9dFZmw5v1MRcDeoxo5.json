@@ -38,5 +38,49 @@
   "poolPublicKey": "GxHTDnP7kEjS8WHxnGW6GeRUZXh1nFEY7S734v759gV1",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "AzZMJEE1u5cM2fVtPFp5K4jyL5988i72WiwQhLCXQTr2",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "AzZMJEE1u5cM2fVtPFp5K4jyL5988i72WiwQhLCXQTr2": {
+      "chainId": 101,
+      "address": "AzZMJEE1u5cM2fVtPFp5K4jyL5988i72WiwQhLCXQTr2",
+      "symbol": "MHCNWS",
+      "name": "Most Hyped Crypto News Token",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/AzZMJEE1u5cM2fVtPFp5K4jyL5988i72WiwQhLCXQTr2/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "addr": "G36rZ7mGbH61NSocjRystBQ2icQjtyWfkfg2WUq1NWBv",
+      "tag": "utility-token",
+      "mint": "AzZMJEE1u5cM2fVtPFp5K4jyL5988i72WiwQhLCXQTr2",
+      "scale": 0
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "5pi6CkJczExSWuk7xGikL4Maq92ePuzu7RxyzYeKtsGo",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

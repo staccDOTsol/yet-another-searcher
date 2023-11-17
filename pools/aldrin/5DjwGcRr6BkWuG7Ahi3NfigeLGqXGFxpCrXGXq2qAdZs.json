@@ -38,5 +38,53 @@
   "poolPublicKey": "2xPbsu1LB5xc9Sf7HKArqL4zDjgEs9MpzwEdwU1zD6Ui",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "a11bdAAuV8iB2fu7X6AxAvDTo1QZ8FXB3kk5eecdasp"
+  "other": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+  "tokenIds": [
+    "a11bdAAuV8iB2fu7X6AxAvDTo1QZ8FXB3kk5eecdasp",
+    "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey"
+  ],
+  "tokens": {
+    "a11bdAAuV8iB2fu7X6AxAvDTo1QZ8FXB3kk5eecdasp": {
+      "chainId": 101,
+      "address": "a11bdAAuV8iB2fu7X6AxAvDTo1QZ8FXB3kk5eecdasp",
+      "symbol": "ABR",
+      "name": "Allbridge",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/allbridge-io/media/main/token.svg",
+      "extensions": {
+        "coingeckoId": "allbridge",
+        "medium": "https://allbridge.medium.com/",
+        "telegram": "https://t.me/allbridge_announcements",
+        "twitter": "https://twitter.com/Allbridge_io",
+        "website": "https://allbridge.io/"
+      },
+      "addr": "AdEAi7fiohNeN45XMx41DmkshjPbYbC94NRbqojp6ZQV",
+      "tag": "",
+      "mint": "a11bdAAuV8iB2fu7X6AxAvDTo1QZ8FXB3kk5eecdasp",
+      "scale": 9
+    },
+    "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey": {
+      "chainId": 101,
+      "address": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+      "symbol": "MNDE",
+      "name": "Marinade",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey/logo.png",
+      "extensions": {
+        "coingeckoId": "marinade",
+        "discord": "https://discord.gg/mGqZA5pjRN",
+        "github": "https://github.com/marinade-finance",
+        "medium": "https://medium.com/marinade-finance",
+        "twitter": "https://twitter.com/MarinadeFinance",
+        "website": "https://marinade.finance"
+      },
+      "addr": "4kdxWhWbY8i7RDonFqE236WgjSDEZ9685Uo5eZAw2uui",
+      "tag": "",
+      "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

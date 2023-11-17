@@ -12,19 +12,19 @@
       188
     ]
   },
-  "lpTokenFreezeVault": "CaWsT438RWvkjR1KWKe3DYbTFZBdU122o9BEGcq9FyZS",
-  "poolMint": "dyaMpb1mNU6UtzeR4gFboe1a7VJStvX5KxRFAnnANG3",
-  "baseTokenVault": "GSaA2ZWw7DNLxsLbxnUWQwW4t7fEdoEHF4Z7a4ChLnwA",
-  "baseTokenMint": "AtS8bVho4K3kcufDCiqtE4GoC3WhSpLAM4KsEou5oh1j",
-  "quoteTokenVault": "ByhBZETj88PAzQskEgCVYAsJLNt6KuqCGTMW21VYFDBY",
-  "quoteTokenMint": "So11111111111111111111111111111111111111112",
-  "poolSigner": "CP872sNByVkAsqq3QPD3apQ5Z154MWrnJRjDoxYZnkAw",
-  "poolSignerNonce": 254,
+  "lpTokenFreezeVault": "DqwdoS7zNs8UgQgh3QNSWGw4QyjsqWNX2S7SiZeLxBBC",
+  "poolMint": "F6sY9SM3z73c7YWjFTqJFPah8KhxZtGARcE3zv76yXh3",
+  "baseTokenVault": "1hHzJpJRDoCYM34ynyfMQroCJG47akRkxKY2A3J6U5V",
+  "baseTokenMint": "So11111111111111111111111111111111111111112",
+  "quoteTokenVault": "GngYkz7eBYdgsbUgQMcoQajqEww5tpQvY9U1jmn9ghBX",
+  "quoteTokenMint": "44thGfHRsdCB61NAkrDFe6djRrwWZegTTqrs1bwMeAGu",
+  "poolSigner": "AKPPcn9KV2pUgZLhgKtvmgEMZjTcFk7Nn1cYEfSfu52K",
+  "poolSignerNonce": 253,
   "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
-  "initializerAccount": "C3feYXbiCbeDFK5YnjNf5tbrEA5VYkyzyuteqYUxi21c",
-  "feeBaseAccount": "5k8MMZXUd3RQPWovyTRbeMHxL6PMYMxBnvjh22hbpEhr",
-  "feeQuoteAccount": "1YaPRA8Aso2Au9fS8A5BVeJyHEkuuS7ew1mSnPQGDnz",
-  "feePoolTokenAccount": "2vxVp5i7qMQ11BJvQVCPGZFqbPJ3x4Vzh2AjCEYm4BKa",
+  "initializerAccount": "5jmvxAU2kC3JaARBKNATBc9RikENBKwiy4unKvkonGCc",
+  "feeBaseAccount": "HFDQVmq9i4JkropyyhxiRq5xHLXhP7qd35CypthdjwAJ",
+  "feeQuoteAccount": "414C47rwuPVfkXdDrebgPMnztBPKwNTdZJq29dYaGKsq",
+  "feePoolTokenAccount": "DVxhWNXFVGbadXA2Vqz2EjAQbLeiXmds1RBg5HGrDPyd",
   "fees": {
     "tradeFeeNumerator": 20,
     "tradeFeeDenominator": 10000,
@@ -34,9 +34,49 @@
     "ownerWithdrawFeeDenominator": 0
   },
   "curveType": 0,
-  "curve": "ADJFU9hw7k1PEj1n4THg4HpAYKCa2zyUJUkyyEbaE9zL",
-  "poolPublicKey": "2T6SA6X3VQo4tdnA3LnkYm1tXULx6dYQwJJsnLSfw8vV",
+  "curve": "4isuy8nX8Dm1nYiDMZSnH7YFAmnoZpvtHQPqVct3nXFy",
+  "poolPublicKey": "5vQTRiiRGKF2j4geW15W1nLPthzgDaLCqXCBiq8jvPwp",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "44thGfHRsdCB61NAkrDFe6djRrwWZegTTqrs1bwMeAGu"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "1hHzJpJRDoCYM34ynyfMQroCJG47akRkxKY2A3J6U5V",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "44thGfHRsdCB61NAkrDFe6djRrwWZegTTqrs1bwMeAGu": {
+      "chainId": 101,
+      "address": "44thGfHRsdCB61NAkrDFe6djRrwWZegTTqrs1bwMeAGu",
+      "symbol": "44TH",
+      "name": "44TH",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/44thGfHRsdCB61NAkrDFe6djRrwWZegTTqrs1bwMeAGu/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "addr": "GngYkz7eBYdgsbUgQMcoQajqEww5tpQvY9U1jmn9ghBX",
+      "tag": "utility-token",
+      "mint": "44thGfHRsdCB61NAkrDFe6djRrwWZegTTqrs1bwMeAGu",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,52 @@
   "poolPublicKey": "6Ycrsmj2e2gq9BKNhqQXFMs9FFG2tzZwmocmHEJNJXyq",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk": {
+      "chainId": 101,
+      "address": "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+      "symbol": "MCAKE",
+      "name": "Meme Cake",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk/logo.png",
+      "tags": [
+        "utility-token",
+        "memecake",
+        "social-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.com/invite/WFkRssvNtW",
+        "twitter": "https://twitter.com/realmemecake",
+        "website": "https://memecake.io/"
+      },
+      "addr": "E3KzwKoR1eExgWgEzLVSmhdKaAZ29ogWMy47pp4Rjid",
+      "tag": "utility-token,memecake,social-token",
+      "mint": "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+      "scale": 6
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "64C6aq36vuMdvW9Pwr7U4Pd1gBmsPmuJkrFjyXtEQETo",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

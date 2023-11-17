@@ -38,5 +38,55 @@
   "poolPublicKey": "89vkffAJ6DT95353HT16b9bnkygAEbC5SM6LQNJhd9D7",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+  "other": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "tokenIds": [
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+    "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe"
+  ],
+  "tokens": {
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+      "chainId": 101,
+      "address": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "symbol": "USDT",
+      "name": "USDT",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "tether",
+        "serumV3Usdc": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://tether.to/"
+      },
+      "addr": "mKeWba3Uj7KqX3TZqg6XuKXWbM9XGMMqUVRmHVGZDmZ",
+      "tag": "stablecoin",
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "scale": 6
+    },
+    "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe": {
+      "chainId": 101,
+      "address": "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe",
+      "symbol": "pHONEY",
+      "name": "pre-IDO HONEY",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe/logo.svg",
+      "tags": [
+        "utility-token",
+        "DeFi",
+        "Governance"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/honeydefi",
+        "website": "https://honey.finance"
+      },
+      "addr": "5T56xfSZbfstByKnwnDBzucAidLifpzXLpTWHVkxa7ae",
+      "tag": "utility-token,DeFi,Governance",
+      "mint": "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

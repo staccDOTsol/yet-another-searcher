@@ -38,5 +38,49 @@
   "poolPublicKey": "3UdE1LA2Ap8FfNJ8tEtw5LTPuCtkHFyYmaps2AT8PGLm",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "7ftKSttU6yUAnWsWxpRP3LKdQNEto8V4KD9NuWttoVnV"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "jvcJ39M9FoGtDXgcvhv4vXqKzAaJnow5JogiVaaof7x",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "7ftKSttU6yUAnWsWxpRP3LKdQNEto8V4KD9NuWttoVnV": {
+      "chainId": 101,
+      "address": "7ftKSttU6yUAnWsWxpRP3LKdQNEto8V4KD9NuWttoVnV",
+      "symbol": "JOINTS",
+      "name": "TombStoned JOINTS",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7ftKSttU6yUAnWsWxpRP3LKdQNEto8V4KD9NuWttoVnV/logo.png",
+      "tags": [
+        "social-token"
+      ],
+      "extensions": {
+        "description": "TombStoned High Society",
+        "website": "https://www.tombstoned.xyz/"
+      },
+      "addr": "4rqgtqU5hafbniBVJdrZa4qpNoA5orZKGu316xdPmW8J",
+      "tag": "social-token",
+      "mint": "7ftKSttU6yUAnWsWxpRP3LKdQNEto8V4KD9NuWttoVnV",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

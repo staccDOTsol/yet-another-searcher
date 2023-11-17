@@ -38,5 +38,46 @@
   "poolPublicKey": "J6Nt7Bu1XkLkbnELRURqGzXku3r7vYSU22CaHbJydtxy",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "6wcWAqCEmxQkEK6hPEsyvTpiaFFCENww6gxqMTq8YBHE"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "9QLj5Q833zXM5HmikhkHhekSK3qd8y17NdpEnDcWknmy",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "6wcWAqCEmxQkEK6hPEsyvTpiaFFCENww6gxqMTq8YBHE": {
+      "chainId": 101,
+      "address": "6wcWAqCEmxQkEK6hPEsyvTpiaFFCENww6gxqMTq8YBHE",
+      "symbol": "TTST",
+      "name": "T&T Socialist Party Token",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/xxmafiaxxx/doobietokens/main/TTSP.png",
+      "extensions": {
+        "description": "Trinidad and Tobago Socialist Party Crypto Token",
+        "instagram": "https://www.instagram.com/socialismtnt/"
+      },
+      "addr": "4ejnD9LzoytVMTBAhWYK3RUmtWJuuicWpjfMpUws8Qey",
+      "tag": "",
+      "mint": "6wcWAqCEmxQkEK6hPEsyvTpiaFFCENww6gxqMTq8YBHE",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

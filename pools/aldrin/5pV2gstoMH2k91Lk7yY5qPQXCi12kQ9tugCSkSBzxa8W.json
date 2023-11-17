@@ -38,5 +38,57 @@
   "poolPublicKey": "ZzkVEtbp2rT8VrhWXqe4vu2gxrHYtBhRgY7wh1zvegr",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y": {
+      "chainId": 101,
+      "address": "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y",
+      "symbol": "HIPPO",
+      "name": "Hippo Coin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y/logo.png",
+      "tags": [
+        "meme-token",
+        "community-token"
+      ],
+      "extensions": {
+        "coingeckoId": "hippo-coin",
+        "discord": "https://discord.gg/sk3xN3sA8D",
+        "serumV3Usdc": "HnLKrfMN64ccSbYCj4DxjgPYveSkFujYrnMr4cvPfL8",
+        "twitter": "https://twitter.com/HipposCoin",
+        "website": "https://hippofamilynft.com/"
+      },
+      "addr": "3Ceabmz1EyhchwMFfr31GGkMSTAubkJKahVgQxLpjCgo",
+      "tag": "meme-token,community-token",
+      "mint": "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "FHV2BQJMYciWp1N9nrRXZVHy2Xp26aHurdo8BAKAiBDm",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,51 @@
   "poolPublicKey": "HjMZQGHRDqTqJ3bNd7yZv3vcmWPygYPBNfD9CNGB1BKN",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "TLAJct3sZjNPCeu3gX2ia9XXYTGRyRgXN7c6NETQj3p"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "BgQYceCu6dZV9kChi3KVaH2W8MuUm8Q3VshcrP1sbaq2",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "TLAJct3sZjNPCeu3gX2ia9XXYTGRyRgXN7c6NETQj3p": {
+      "chainId": 101,
+      "address": "TLAJct3sZjNPCeu3gX2ia9XXYTGRyRgXN7c6NETQj3p",
+      "symbol": "$TLA",
+      "name": "TLA Token",
+      "decimals": 4,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/TLAJct3sZjNPCeu3gX2ia9XXYTGRyRgXN7c6NETQj3p/logo.png",
+      "tags": [
+        "NFT",
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.com/invite/thelostapesnft",
+        "twitter": "https://twitter.com/thelostapesnft",
+        "website": "https://thelostapes.com/"
+      },
+      "addr": "8vCmW2Qu79vvrwNGQfwkfme7RLX7xRWEzwaGF5cbumMd",
+      "tag": "NFT,utility-token",
+      "mint": "TLAJct3sZjNPCeu3gX2ia9XXYTGRyRgXN7c6NETQj3p",
+      "scale": 4
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,56 @@
   "poolPublicKey": "6sLpK79Tsjn9t3QsZMJkyoKq1FbrSp2mugWJYpWZKDJh",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ": {
+      "chainId": 101,
+      "address": "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ",
+      "symbol": "GOATS",
+      "name": "GOATS",
+      "decimals": 4,
+      "logoURI": "https://www.solgoats.io/logo_full.png",
+      "tags": [
+        "meme-token",
+        "community-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/eUwEbWw6ww",
+        "serumV3Usdc": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "twitter": "https://twitter.com/TheGOATSociety_",
+        "website": "https://www.solgoats.io"
+      },
+      "addr": "CxXGTvoGc9WoapXScqww39EEsQdHyogziYEEAKvTNCzC",
+      "tag": "meme-token,community-token",
+      "mint": "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ",
+      "scale": 4
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "HqQCR1ZKsBxUvCkvmPT5zGqdt7GBDhShKQPx3LS8uE4w",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

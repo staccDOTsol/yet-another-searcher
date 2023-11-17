@@ -38,5 +38,51 @@
   "poolPublicKey": "91zyQo5xTbCLaZkL1c39AmjogDVWjQXz45zEPACH2Hc7",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT"
+  "other": "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
+  "tokenIds": [
+    "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH"
+  ],
+  "tokens": {
+    "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT": {
+      "chainId": 101,
+      "address": "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
+      "symbol": "STEP",
+      "name": "Step",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "coingeckoId": "step-finance",
+        "serumV3Usdc": "97qCB4cAVSTthvJu3eNoEx6AY6DLuRDtCoPm5Tdyg77S",
+        "twitter": "https://twitter.com/StepFinance_",
+        "waterfallbot": "https://bit.ly/STEPwaterfall",
+        "website": "https://step.finance/"
+      },
+      "addr": "2H1DUFYJY9u3H8gPuYvA2vktGrMufMAYCP2MCawcYdS4",
+      "tag": "utility-token",
+      "mint": "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
+      "scale": 9
+    },
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH": {
+      "chainId": 101,
+      "address": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "symbol": "DAU",
+      "name": "dauqu",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/dauqu/dauqu/main/dauqu.png",
+      "tags": [
+        "social-token"
+      ],
+      "addr": "GRtjtRpkMYcp5fSfBw4CANArgFCp4yGUVEWFkYvhejCS",
+      "tag": "social-token",
+      "mint": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

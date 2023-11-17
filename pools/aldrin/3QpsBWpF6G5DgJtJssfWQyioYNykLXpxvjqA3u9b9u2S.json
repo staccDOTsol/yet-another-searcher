@@ -38,5 +38,56 @@
   "poolPublicKey": "6aWUwz3eqiJ6pEbPJWC6Zo9qutUyDTf2dHxCAhWyUYYw",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "2qRHKgE9k7doshwy7ZfENuSHW256pDhcbyspDgU3Ek8C",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "2qRHKgE9k7doshwy7ZfENuSHW256pDhcbyspDgU3Ek8C": {
+      "chainId": 101,
+      "address": "2qRHKgE9k7doshwy7ZfENuSHW256pDhcbyspDgU3Ek8C",
+      "symbol": "SAMOL",
+      "name": "Samolana NFT",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/2qRHKgE9k7doshwy7ZfENuSHW256pDhcbyspDgU3Ek8C/logo.png",
+      "tags": [
+        "meme",
+        "community",
+        "NFTs",
+        "DEFI",
+        "Dog"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/samolana3"
+      },
+      "addr": "FwwvwXDyJuW87qDR82Nc2CEEp7Em3JGc5p65sodh5iHe",
+      "tag": "meme,community,NFTs,DEFI,Dog",
+      "mint": "2qRHKgE9k7doshwy7ZfENuSHW256pDhcbyspDgU3Ek8C",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "Es5LrbS2aEgqiPiLLLzXMusLrV8MjcCSm9EY3H4eXgy5",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,49 @@
   "poolPublicKey": "G4TLZ8F9bn1PeWR395UmNuTb4SqruHuAx8L25FU2U8Hz",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "PXLSmSBWHU8yAqNof9Ry2LPsZxHSYB4xXsBaQWUmEzV"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "C4EGBDAgoVvDsVtYNVwyiHvgMymuNjVz6cZCRhRD3pKF",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "PXLSmSBWHU8yAqNof9Ry2LPsZxHSYB4xXsBaQWUmEzV": {
+      "chainId": 101,
+      "address": "PXLSmSBWHU8yAqNof9Ry2LPsZxHSYB4xXsBaQWUmEzV",
+      "symbol": "Pixels",
+      "name": "Pixels",
+      "decimals": 0,
+      "logoURI": "https://arweave.net/GpuEa7JiRH0-trJ-B25Pjh-DYt0-RaXjzPTIEVGUOdk?ext=gif",
+      "tags": [
+        "NFT"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/solsunsets",
+        "website": "https://solsunsets.com/"
+      },
+      "addr": "5AQoreRFz3pudFcLwaxniHUxDb8BBRSAPaDBsq5k2uJW",
+      "tag": "NFT",
+      "mint": "PXLSmSBWHU8yAqNof9Ry2LPsZxHSYB4xXsBaQWUmEzV",
+      "scale": 0
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

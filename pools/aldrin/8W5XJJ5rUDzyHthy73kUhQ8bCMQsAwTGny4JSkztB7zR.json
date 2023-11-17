@@ -38,5 +38,56 @@
   "poolPublicKey": "DG3AtmjySnngCNmk2YXYF23UQPCiqaXA9sW2fusmjpJu",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz"
+  "other": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+  "tokenIds": [
+    "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+    "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7"
+  ],
+  "tokens": {
+    "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz": {
+      "chainId": 101,
+      "address": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+      "symbol": "FUM",
+      "name": "FUMoney",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/FUMoney801/token-list/main/assets/mainnet/EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz/logo.png",
+      "tags": [
+        "social-token",
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/FUMindset",
+        "website": "https://FUMoney.io/"
+      },
+      "addr": "7jFhcNyZGVRAYFLM6mhFyuHtVAV8QV9gdMHLeoPqfofT",
+      "tag": "social-token,utility-token",
+      "mint": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+      "scale": 9
+    },
+    "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7": {
+      "chainId": 101,
+      "address": "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7",
+      "symbol": "FBZ",
+      "name": "FakeBiz",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7/logo.png",
+      "tags": [
+        "social-token",
+        "util-token",
+        "web3"
+      ],
+      "extensions": {
+        "instagram": "https://www.instagram.com/timjdillon",
+        "twitter": "https://twitter.com/FakeBiz_FBZ",
+        "website": "https://www.fakebiz.io/"
+      },
+      "addr": "9fMVXctWXkncfzdm8yh9shd5Ks5zUWezQwBZ7U2siZsE",
+      "tag": "social-token,util-token,web3",
+      "mint": "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

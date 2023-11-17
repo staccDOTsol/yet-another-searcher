@@ -38,5 +38,52 @@
   "poolPublicKey": "4xvJEcgCKywh7w6jc918PgeYqJGkp67Zqznr5NTtcCbt",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "4CqGRYLzvj3ibufGJdLmdK2CzvDA5k82NVav4a5EKCBG"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "FTL4JC4M3JMiZ9jQtiVgiHrmfB96wVhhFf8vK5or2579",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "4CqGRYLzvj3ibufGJdLmdK2CzvDA5k82NVav4a5EKCBG": {
+      "chainId": 101,
+      "address": "4CqGRYLzvj3ibufGJdLmdK2CzvDA5k82NVav4a5EKCBG",
+      "symbol": "COCU",
+      "name": "Cocucoin",
+      "decimals": 9,
+      "logoURI": "https://cocucoin.com/logo.png",
+      "tags": [
+        "social-token",
+        "nft",
+        "swap",
+        "trade",
+        "finance"
+      ],
+      "extensions": {
+        "website": "https://cocucoin.com/"
+      },
+      "addr": "BNiPcaYxE5ik6pPSGto2qFKsbUznA1EqAGe3w6b1bNEY",
+      "tag": "social-token,nft,swap,trade,finance",
+      "mint": "4CqGRYLzvj3ibufGJdLmdK2CzvDA5k82NVav4a5EKCBG",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

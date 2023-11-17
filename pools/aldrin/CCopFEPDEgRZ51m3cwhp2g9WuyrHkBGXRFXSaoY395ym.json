@@ -38,5 +38,56 @@
   "poolPublicKey": "9MvoZpcEPUUYKZrQiYv7F2GEXLAK3xuZGXTHV7dTiRdB",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx": {
+      "chainId": 101,
+      "address": "8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx",
+      "symbol": "CKC",
+      "name": "ChikinCoin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx/logo.svg",
+      "extensions": {
+        "discord": "https://discord.gg/rsQQsAcAn7",
+        "facebook": "https://www.facebook.com/Chikin-114453524487432",
+        "github": "https://github.com/ChikinDeveloper",
+        "instagram": "https://www.instagram.com/chikintuttut",
+        "telegram": "https://t.me/+BG1HI84WGdwyMmU0",
+        "tiktok": "https://www.tiktok.com/@chikintuttut",
+        "twitter": "https://twitter.com/ChikinDev",
+        "website": "https://chikin.run"
+      },
+      "addr": "13zaVEUxLi1iHQpTj5eWyK7mqatxfwbiY8uz1wNmUNGQ",
+      "tag": "",
+      "mint": "8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx",
+      "scale": 6
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "86QcZAv9UC4TE6Ab2jr1iWEkgFEU4LZWW7NJseewDDHC",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

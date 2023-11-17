@@ -38,5 +38,45 @@
   "poolPublicKey": "DXFKYyb41sVBM6jnHC683dKqK6FNifsToUVR6WHYb1jX",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "B8dRMrr1VJRfaZsqv1pcb2uz9JPWXuFYWC1B3RVKGJqK",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH": {
+      "chainId": 101,
+      "address": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "symbol": "DAU",
+      "name": "dauqu",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/dauqu/dauqu/main/dauqu.png",
+      "tags": [
+        "social-token"
+      ],
+      "addr": "H9M9HWTpL8MUSjb5qNJr2nsjuJJhyVj3qLLQM8fCP8PP",
+      "tag": "social-token",
+      "mint": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

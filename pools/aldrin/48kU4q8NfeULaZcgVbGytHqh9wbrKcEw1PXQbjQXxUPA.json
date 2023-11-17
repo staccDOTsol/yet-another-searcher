@@ -38,5 +38,56 @@
   "poolPublicKey": "6W6tDb36tG2XsAqSKtTEVLFmWNmJmiDtaH8Hh5Sg45i6",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "Fse2oFDfbwT89CqtuoFaHCBnGTMFLartDYDjPLZyc7e",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "Fse2oFDfbwT89CqtuoFaHCBnGTMFLartDYDjPLZyc7e": {
+      "chainId": 101,
+      "address": "Fse2oFDfbwT89CqtuoFaHCBnGTMFLartDYDjPLZyc7e",
+      "symbol": "TRPY",
+      "name": "Trippy Leaf",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Fse2oFDfbwT89CqtuoFaHCBnGTMFLartDYDjPLZyc7e/logo.png",
+      "tags": [
+        "utility-token",
+        "community-token",
+        "general-token"
+      ],
+      "extensions": {
+        "serumV3Usdc": "3N4UgbUHUkwMU5DKFYRvz3HASbFjs3q9JLAYVRdEQvbp",
+        "twitter": "https://twitter.com/Real_TrippyLeaf",
+        "website": "https://trippyleaf.com"
+      },
+      "addr": "GJn1ZQB75vFxYUSkE3JgptGWhbWcH2W62zRyRZjsX3dT",
+      "tag": "utility-token,community-token,general-token",
+      "mint": "Fse2oFDfbwT89CqtuoFaHCBnGTMFLartDYDjPLZyc7e",
+      "scale": 6
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "8DamGMF1SJ2KbGX6DiEyfW3VAtRkhicSM1ju8qfgAfrh",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

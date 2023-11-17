@@ -38,5 +38,49 @@
   "poolPublicKey": "AyPRyLBnwYnsLU9c51JJgk9Vvpgj2hcxWD7Yp9S5SWcB",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY": {
+      "chainId": 101,
+      "address": "7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY",
+      "symbol": "COBAN",
+      "name": "COBAN",
+      "decimals": 3,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY/logo.png",
+      "extensions": {
+        "website": "https://coban.io"
+      },
+      "addr": "HcmECbucRR85aGw5za5aPaW9t6ZVcwLX6jnLQKujigFa",
+      "tag": "",
+      "mint": "7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY",
+      "scale": 3
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "HiayZxnrJRJ4kzXPrTQwwJrp2RBfvkDX29zSCTYksNrK",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

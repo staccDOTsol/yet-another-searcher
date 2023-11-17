@@ -38,5 +38,59 @@
   "poolPublicKey": "DqsMjBNJJ7Ax6xiHGE5BRKXxBB1LJUfDQV2E2JKWvj94",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y"
+  "other": "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+  "tokenIds": [
+    "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+    "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y"
+  ],
+  "tokens": {
+    "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk": {
+      "chainId": 101,
+      "address": "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+      "symbol": "soETH",
+      "name": "Wrapped Ethereum (Sollet)",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk/logo.png",
+      "tags": [
+        "wrapped-sollet",
+        "ethereum"
+      ],
+      "extensions": {
+        "bridgeContract": "https://etherscan.io/address/0xeae57ce9cc1984f202e15e038b964bb8bdf7229a",
+        "coingeckoId": "ethereum",
+        "serumV3Usdc": "4tSvZvnbyzHXLMTiFonMyxZoHmFqau1XArcRCVHLZ5gX",
+        "serumV3Usdt": "7dLVkUfBVfCGkFhSXDCq1ukM9usathSgS716t643iFGF"
+      },
+      "addr": "EH1aPtPcYMWn5oRQCDd9xGXCyWHtAy1RJHPQR2omaFzX",
+      "tag": "wrapped-sollet,ethereum",
+      "mint": "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+      "scale": 6
+    },
+    "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y": {
+      "chainId": 101,
+      "address": "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y",
+      "symbol": "HIPPO",
+      "name": "Hippo Coin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y/logo.png",
+      "tags": [
+        "meme-token",
+        "community-token"
+      ],
+      "extensions": {
+        "coingeckoId": "hippo-coin",
+        "discord": "https://discord.gg/sk3xN3sA8D",
+        "serumV3Usdc": "HnLKrfMN64ccSbYCj4DxjgPYveSkFujYrnMr4cvPfL8",
+        "twitter": "https://twitter.com/HipposCoin",
+        "website": "https://hippofamilynft.com/"
+      },
+      "addr": "6kEGhYZWzuVFzoMxwLWHHwx6JY9MQdSeeyByvVekNBRS",
+      "tag": "meme-token,community-token",
+      "mint": "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

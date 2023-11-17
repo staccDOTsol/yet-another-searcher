@@ -38,5 +38,52 @@
   "poolPublicKey": "EnsHPfQRK6hHN77rPFtuvW5ELvk5GDJdQzBH754Cei2y",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh"
+  "other": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+  "tokenIds": [
+    "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+    "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp"
+  ],
+  "tokens": {
+    "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh": {
+      "chainId": 101,
+      "address": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+      "symbol": "ARB",
+      "name": "ARB Protocol",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/ARBProtocol/arbprotocol/main/IMG_3600.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/M4F8RKqgce",
+        "twitter": "https://twitter.com/arbprotocol",
+        "coingeckoId": "arb-protocol"
+      },
+      "addr": "4qArowkEGgR7GKhXpVDLPr2ip5N7FrRLWaTrtxnbAQcK",
+      "tag": "utility-token",
+      "mint": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+      "scale": 6
+    },
+    "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp": {
+      "chainId": 101,
+      "address": "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+      "symbol": "RIN",
+      "name": "Aldrin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp/logo.png",
+      "extensions": {
+        "coingeckoId": "aldrin",
+        "serumV3Usdc": "7gZNLDbWE73ueAoHuAeFoSu7JqmorwCLpNTBXHtYSFTa",
+        "twitter": "https://twitter.com/Aldrin_Exchange",
+        "website": "https://rin.aldrin.com/"
+      },
+      "addr": "GrvGJEG1pf5r9F17jmijZcDCFRodoegJa3YuuBJWLdg9",
+      "tag": "",
+      "mint": "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

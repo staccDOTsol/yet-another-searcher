@@ -38,5 +38,52 @@
   "poolPublicKey": "H3av58eyiWsBA8Bya3vaNYTWkDdjoEfUZLqi7BBuVAhq",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK": {
+      "chainId": 101,
+      "address": "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+      "symbol": "CHIPS",
+      "name": "Universe Chips",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK/logo.png",
+      "tags": [
+        "utiliy-token",
+        "social-token",
+        "community-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/cxmgnKtZBF",
+        "twitter": "https://twitter.com/u_niverseNFT",
+        "website": "https://twitter.com/u_niverseNFT"
+      },
+      "addr": "4tSkj5abjAqTT3F4mDZyBdbSMErMWDiiYL9o7iU7SQ4m",
+      "tag": "utiliy-token,social-token,community-token",
+      "mint": "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+      "scale": 6
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "7WLXLDdcfYareqzME1LeiPtcD73L9gDv2QJu6jxbCPvs",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

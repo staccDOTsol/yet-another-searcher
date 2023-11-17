@@ -38,5 +38,55 @@
   "poolPublicKey": "9zW9Q8oXyiciT1FTVNbT9aSwWZF2fanjRSgkSHXZBd2k",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"
+  "other": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+  "tokenIds": [
+    "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ",
+    "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"
+  ],
+  "tokens": {
+    "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ": {
+      "chainId": 101,
+      "address": "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ",
+      "symbol": "GOATS",
+      "name": "GOATS",
+      "decimals": 4,
+      "logoURI": "https://www.solgoats.io/logo_full.png",
+      "tags": [
+        "meme-token",
+        "community-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/eUwEbWw6ww",
+        "serumV3Usdc": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "twitter": "https://twitter.com/TheGOATSociety_",
+        "website": "https://www.solgoats.io"
+      },
+      "addr": "BK9QBH9nv3jh9tDvTEvj5pcT22G4x5nSeZ6umcDBEtPC",
+      "tag": "meme-token,community-token",
+      "mint": "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ",
+      "scale": 4
+    },
+    "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R": {
+      "chainId": 101,
+      "address": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "symbol": "RAY",
+      "name": "Raydium",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R/logo.png",
+      "extensions": {
+        "coingeckoId": "raydium",
+        "serumV3Usdc": "2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep",
+        "serumV3Usdt": "teE55QrL4a4QSfydR9dnHF97jgCfptpuigbb53Lo95g",
+        "waterfallbot": "https://bit.ly/RAYwaterfall",
+        "website": "https://raydium.io/"
+      },
+      "addr": "2VdGU5yqzvcmGspvVjLTQ4sTX3AQ6yf4pcXAfpWP4C5Q",
+      "tag": "",
+      "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

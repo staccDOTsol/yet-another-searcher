@@ -38,5 +38,49 @@
   "poolPublicKey": "7PHsgiajrAjtajjk6DcEQeVc9Fjex2BKmZs8kmrKmXo2",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
+  "other": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+  "tokenIds": [
+    "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
+  ],
+  "tokens": {
+    "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4": {
+      "chainId": 101,
+      "address": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+      "symbol": "MHC",
+      "name": "Most Hyped Crypto",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4/logo.png",
+      "tags": [
+        "governing-token"
+      ],
+      "addr": "3ikvhwNt1CW3SCRNw17A1m9QntKF2yXS9rY5FQX7gbTv",
+      "tag": "governing-token",
+      "mint": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+      "scale": 0
+    },
+    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263": {
+      "chainId": 101,
+      "address": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+      "symbol": "BONK",
+      "name": "Bonk",
+      "decimals": 5,
+      "logoURI": "https://quei6zhlcfsxdfyes577gy7bkxmuz7qqakyt72xlbkyh7fysmoza.arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
+      "tags": [
+        "bonk-coin",
+        "ethereum"
+      ],
+      "extensions": {
+        "coingeckoId": "bonk",
+        "serumV3Usdc": "8PhnCfgqpgFM7ZJvttGdBVMXHuU4Q23ACxCvWkbs1M71"
+      },
+      "addr": "DBaw8ZUcpoHwb45PhomTW5rF3JvgR3APN6eA7zbJi7HH",
+      "tag": "bonk-coin,ethereum",
+      "mint": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+      "scale": 5
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

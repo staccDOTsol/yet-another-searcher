@@ -38,5 +38,48 @@
   "poolPublicKey": "HGFjUqU6KCLk8zXh4RBvLe5L4uYzr8YsZVajZvfEznk3",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "GsNzxJfFn6zQdJGeYsupJWzUAm57Ba7335mfhWvFiE9Z"
+  "other": "GsNzxJfFn6zQdJGeYsupJWzUAm57Ba7335mfhWvFiE9Z",
+  "tokenIds": [
+    "GsNzxJfFn6zQdJGeYsupJWzUAm57Ba7335mfhWvFiE9Z",
+    "NovNrxPNjmLVFscH5rjMbec7C4BdAHms9WK21xjsP3p"
+  ],
+  "tokens": {
+    "GsNzxJfFn6zQdJGeYsupJWzUAm57Ba7335mfhWvFiE9Z": {
+      "chainId": 101,
+      "address": "GsNzxJfFn6zQdJGeYsupJWzUAm57Ba7335mfhWvFiE9Z",
+      "symbol": "DXL",
+      "name": "Dexlab",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/dexlab-project/assets/master/dexlab/dexlab_symbol_logo.svg",
+      "extensions": {
+        "coingeckoId": "dexlab",
+        "serumV3Usdc": "DYfigimKWc5VhavR4moPBibx9sMcWYVSjVdWvPztBPTa",
+        "twitter": "https://twitter.com/dexlab_official",
+        "website": "https://www.dexlab.space/"
+      },
+      "addr": "6EK7YW6ZkypTgstpqw6PCztyJuYCJij1TqQFD2onFpFt",
+      "tag": "",
+      "mint": "GsNzxJfFn6zQdJGeYsupJWzUAm57Ba7335mfhWvFiE9Z",
+      "scale": 6
+    },
+    "NovNrxPNjmLVFscH5rjMbec7C4BdAHms9WK21xjsP3p": {
+      "chainId": 101,
+      "address": "NovNrxPNjmLVFscH5rjMbec7C4BdAHms9WK21xjsP3p",
+      "symbol": "NOVAX",
+      "name": "NOVAX",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/NovNrxPNjmLVFscH5rjMbec7C4BdAHms9WK21xjsP3p/clogo.png",
+      "extensions": {
+        "twitter": "https://twitter.com/the_cynova",
+        "website": "https://www.cynova.io/"
+      },
+      "addr": "DZvkkdNjoZSAEJUKqb7raGG38Ha4aJydWpguognfuB1g",
+      "tag": "",
+      "mint": "NovNrxPNjmLVFscH5rjMbec7C4BdAHms9WK21xjsP3p",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

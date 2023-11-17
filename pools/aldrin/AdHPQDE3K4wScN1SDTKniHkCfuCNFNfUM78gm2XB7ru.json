@@ -38,5 +38,49 @@
   "poolPublicKey": "9HG7CE6LRubTgYLatGxrxZr7pes2t3TvfoVneGnpTmP2",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH"
+  ],
+  "tokens": {
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "5vA4fy4ZKvvnrgkdbmZDX1teSvVa3rMyP7kZjvHpmnVR",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    },
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH": {
+      "chainId": 101,
+      "address": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "symbol": "DAU",
+      "name": "dauqu",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/dauqu/dauqu/main/dauqu.png",
+      "tags": [
+        "social-token"
+      ],
+      "addr": "G3fNZ6Psqs5SXSdE3Y3EoTKbBbxMMvGuopeknuoa7upD",
+      "tag": "social-token",
+      "mint": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

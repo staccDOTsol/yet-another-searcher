@@ -38,5 +38,51 @@
   "poolPublicKey": "4UzvvqJ4jPEU5ZGCr5aVCiFMUe4p8Aez6VLSd2FoTTND",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "FoRGERiW7odcCBGU1bztZi16osPBHjxharvDathL5eds",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "FoRGERiW7odcCBGU1bztZi16osPBHjxharvDathL5eds": {
+      "chainId": 101,
+      "address": "FoRGERiW7odcCBGU1bztZi16osPBHjxharvDathL5eds",
+      "symbol": "FORGE",
+      "name": "FORGE",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/FoRGERiW7odcCBGU1bztZi16osPBHjxharvDathL5eds/logo.png",
+      "tags": [
+        "NFT",
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/blocksmithlabs",
+        "twitter": "https://twitter.com/BlocksmithLabs",
+        "website": "https://blocksmithlabs.io/"
+      },
+      "addr": "CEffc4Yf4R1PgeMRBEd41DWsZZ2XJwu3HrpDLAfntVxB",
+      "tag": "NFT,utility-token",
+      "mint": "FoRGERiW7odcCBGU1bztZi16osPBHjxharvDathL5eds",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "7vLHGFsY2t4NHynGaKEh4tnpZNUAnfjY6LKvvHLixVoe",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

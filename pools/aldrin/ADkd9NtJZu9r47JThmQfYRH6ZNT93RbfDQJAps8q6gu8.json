@@ -38,5 +38,52 @@
   "poolPublicKey": "CJUaR3jguwqctj3BN3DZETwjaXFpRzrRMVhAAFjrHAP1",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj": {
+      "chainId": 101,
+      "address": "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj",
+      "symbol": "$ALL",
+      "name": "ALL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj/logo.png",
+      "tags": [
+        "utility-token",
+        "nft",
+        "commodity-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/stonedapecrew",
+        "twitter": "https://twitter.com/stonedapecrew",
+        "website": "https://www.allblue.dev/"
+      },
+      "addr": "8HxNEgAQWZ64ombeCuvn39GgGj6EkJzrM74b7Abcz5UM",
+      "tag": "utility-token,nft,commodity-token",
+      "mint": "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "8xptwh5ToFZGqfCUMPrmbPkxpFeGMX4a33VdMUjHvrEb",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

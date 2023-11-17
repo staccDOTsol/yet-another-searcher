@@ -38,5 +38,46 @@
   "poolPublicKey": "GKYBaVuzXgq6NHLqJ72eJX56nbf9GoZeAEhMsPCp6DPr",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "823dnFBD7dUCbBr9tvD6oT3JHo286dx93opVLgqKT21u",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "823dnFBD7dUCbBr9tvD6oT3JHo286dx93opVLgqKT21u": {
+      "chainId": 101,
+      "address": "823dnFBD7dUCbBr9tvD6oT3JHo286dx93opVLgqKT21u",
+      "symbol": "SMCK",
+      "name": "Smacked Exprience Coin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/xxmafiaxxx/doobietokens/main/smackedlogo.png",
+      "extensions": {
+        "description": "The Smacked Experience coin",
+        "website": "https://www.smackeddobbie.com"
+      },
+      "addr": "B8m9JkyriGr1Aed71erNpfUKEevsxuR3spXgrANYyroF",
+      "tag": "",
+      "mint": "823dnFBD7dUCbBr9tvD6oT3JHo286dx93opVLgqKT21u",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "6CyhPVYjMZhdyXFXn6MBoK15Cv23puiiCREywjzueBrv",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,51 @@
   "poolPublicKey": "B7ckp2dXhA8V8kE4bwMXWvuS4mwxCM2NCZbTu1bYoKPA",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj": {
+      "chainId": 101,
+      "address": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+      "symbol": "stSOL",
+      "name": "Lido Staked SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj/logo.png",
+      "extensions": {
+        "coingeckoId": "lido-staked-sol",
+        "coinmarketcap": "https://coinmarketcap.com/currencies/lido-for-solana/",
+        "discord": "https://discord.gg/w9pXXgQPu8",
+        "github": "https://github.com/ChorusOne/solido",
+        "serumV3Usdc": "5F7LGsP1LPtaRV7vVKgxwNYX4Vf22xvuzyXjyar7jJqp",
+        "twitter": "https://twitter.com/LidoFinance",
+        "website": "https://solana.lido.fi/"
+      },
+      "addr": "FQGiS3zKkBEPyC9xzcKEHEuJJ12rwMcAwKPHZfgr9vwq",
+      "tag": "",
+      "mint": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "dyPZGrAsWjzmbzX4nXBZXLDWWFGooynhTQWDSZ81WHy",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

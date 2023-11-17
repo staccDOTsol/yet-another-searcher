@@ -38,5 +38,45 @@
   "poolPublicKey": "AYYZ8qyre55Z7duPbLW5kEjKLSShpF9Rp1D2NawCewVi",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "DyT12z3tnUokpy18XdKXQNxsGmgUzAA67JUPpj6dBRtd"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "7twRYiA4L8fsjpWcaTYFqTfLpH8k968sXXGZo1XyjaWT",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "DyT12z3tnUokpy18XdKXQNxsGmgUzAA67JUPpj6dBRtd": {
+      "chainId": 101,
+      "address": "DyT12z3tnUokpy18XdKXQNxsGmgUzAA67JUPpj6dBRtd",
+      "symbol": "RGSC",
+      "name": "Redmatter Game Studios Coin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/redmatter20/RGSCoin/main/RGS%20COIN.png",
+      "tags": [
+        "social-token"
+      ],
+      "addr": "ChnFTEM8cJPKSnshbi5jbih7T3vTCfLLwidMDZHZKNYs",
+      "tag": "social-token",
+      "mint": "DyT12z3tnUokpy18XdKXQNxsGmgUzAA67JUPpj6dBRtd",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

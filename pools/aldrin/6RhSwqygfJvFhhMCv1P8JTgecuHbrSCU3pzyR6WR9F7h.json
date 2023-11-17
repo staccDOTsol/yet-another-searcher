@@ -38,5 +38,47 @@
   "poolPublicKey": "4Hzgi6f4S1fHeb4hZKetk8P6nMxiJTgoiiN33ZrTd7Fk",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "3rkCq2ZAxoDGa3KWGebeiEMN92H5AV9HBLC9eVKDoPv8",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "3rkCq2ZAxoDGa3KWGebeiEMN92H5AV9HBLC9eVKDoPv8": {
+      "chainId": 101,
+      "address": "3rkCq2ZAxoDGa3KWGebeiEMN92H5AV9HBLC9eVKDoPv8",
+      "symbol": "$EGG",
+      "name": "EGG",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/IamDtosh/egg/main/egg.png",
+      "tags": [
+        "defi",
+        "general",
+        "nft"
+      ],
+      "addr": "7shpBN2omfVb9QENqovi3DaNhCvPq5eQs3sv8dRLpzyb",
+      "tag": "defi,general,nft",
+      "mint": "3rkCq2ZAxoDGa3KWGebeiEMN92H5AV9HBLC9eVKDoPv8",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "EmXohRGdgZjvPjkzdPRmiwKWGCAN77JUyu5KBHRi5QjH",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

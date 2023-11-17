@@ -38,5 +38,49 @@
   "poolPublicKey": "E9YdAD2cAHwwtu9oAH1FSyg1fTXgCCbpeGuFuUvqvx3R",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "Bic8w5K9tvHDY7XfiT7fLTdiAkQWURAKkcEs8EsXpxbY",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "Bic8w5K9tvHDY7XfiT7fLTdiAkQWURAKkcEs8EsXpxbY": {
+      "chainId": 101,
+      "address": "Bic8w5K9tvHDY7XfiT7fLTdiAkQWURAKkcEs8EsXpxbY",
+      "symbol": "TROOP",
+      "name": "Troop Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Bic8w5K9tvHDY7XfiT7fLTdiAkQWURAKkcEs8EsXpxbY/logo.png",
+      "tags": [
+        "utility-coin"
+      ],
+      "addr": "3MaJr6f6SzxptYJxqEwTnvPticoNQEpXouqzrzdTxYBL",
+      "tag": "utility-coin",
+      "mint": "Bic8w5K9tvHDY7XfiT7fLTdiAkQWURAKkcEs8EsXpxbY",
+      "scale": 6
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "2qfxTVmDuFUsP5BaLhXVVGy5Rib3ZDEB3fiBJgxJH5Ax",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

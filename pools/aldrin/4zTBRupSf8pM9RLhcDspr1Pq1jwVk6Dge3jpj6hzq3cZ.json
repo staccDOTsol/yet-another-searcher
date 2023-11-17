@@ -38,5 +38,56 @@
   "poolPublicKey": "AN2BojJL8HVYJe2cHL9noH15idk7kMjBEWfwj8JEbxcw",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj": {
+      "chainId": 101,
+      "address": "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj",
+      "symbol": "$ALL",
+      "name": "ALL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj/logo.png",
+      "tags": [
+        "utility-token",
+        "nft",
+        "commodity-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/stonedapecrew",
+        "twitter": "https://twitter.com/stonedapecrew",
+        "website": "https://www.allblue.dev/"
+      },
+      "addr": "DG9Bsxvk4hxwPsHvF9NRRRCw6P7Gptb2nkh65UGWqrtH",
+      "tag": "utility-token,nft,commodity-token",
+      "mint": "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "Cq66aekVzoLKH2C8eAPxdkgZvzKSMmcHTuYkXbwo7mVF",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

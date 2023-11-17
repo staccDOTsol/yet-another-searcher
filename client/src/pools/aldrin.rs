@@ -26,7 +26,7 @@ use crate::constants::*;
 use crate::pool::{PoolOperations, PoolType};
 use crate::pool_utils::base::CurveType;
 use crate::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
-use crate::serialize::pool::JSONFeeStructure;
+use crate::serialize::pool::JSONFeeStructure2;
 use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
 use crate::utils::{derive_token_address, str2pubkey};
 
@@ -45,7 +45,7 @@ pub struct AldrinPool {
     // !
     pub token_ids: Vec<String>,
     pub tokens: HashMap<String, Token>,
-    pub fees: JSONFeeStructure,
+    pub fees: JSONFeeStructure2,
     pub curve_type: u8,
     //
     pub curve: WrappedPubkey,
@@ -152,13 +152,11 @@ impl PoolOperations for AldrinPool {
         let pool_dst_amount = *self.pool_amounts.get(&mint_out.to_string()).unwrap();
 
         // compute fees
-        let trader_fee = &self.fees.trader_fee;
-        let owner_fee = &self.fees.owner_fee;
         let fees = Fees {
-            trade_fee_numerator: trader_fee.numerator,
-            trade_fee_denominator: trader_fee.denominator,
-            owner_trade_fee_numerator: owner_fee.numerator,
-            owner_trade_fee_denominator: owner_fee.denominator,
+            trade_fee_numerator: self.fees.trade_fee_numerator,
+            trade_fee_denominator: self.fees.trade_fee_denominator,
+            owner_trade_fee_numerator: self.fees.owner_trade_fee_numerator,
+            owner_trade_fee_denominator: self.fees.owner_trade_fee_denominator,
             owner_withdraw_fee_numerator: 0,
             owner_withdraw_fee_denominator: 0,
             host_fee_numerator: 0,

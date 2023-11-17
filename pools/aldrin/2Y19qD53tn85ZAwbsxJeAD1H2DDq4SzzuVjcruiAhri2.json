@@ -38,5 +38,52 @@
   "poolPublicKey": "7i4q9TYCShD5EkuEz8mis7vnjQ3dCjMUF8XnoG7K5ZTX",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "frtnaScfGPuo56uyPGmij1QTc64SBdjnXC3RXmcVmxw",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "frtnaScfGPuo56uyPGmij1QTc64SBdjnXC3RXmcVmxw": {
+      "chainId": 101,
+      "address": "frtnaScfGPuo56uyPGmij1QTc64SBdjnXC3RXmcVmxw",
+      "symbol": "FRTN",
+      "name": "Fortune",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/cesar128/token-list/3b60aecbb7e2565151a9dc3c2e4dab1a96acb520/assets/mainnet/frtnaScfGPuo56uyPGmij1QTc64SBdjnXC3RXmcVmxw/logo.png",
+      "extensions": {
+        "coingeckoId": "fortune-finance",
+        "discord": "https://discord.gg/fortunefinance",
+        "twitter": "https://twitter.com/fortunefinance_",
+        "website": "https://fortune.finance/"
+      },
+      "addr": "BLguJq8QS542PRMCu71zp9LFhMvZzRH2i6xTrVcaxZT2",
+      "tag": "",
+      "mint": "frtnaScfGPuo56uyPGmij1QTc64SBdjnXC3RXmcVmxw",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "A9QhKLed9krPPumn3X6PKXSQAUSy9tkCRCqgc1gvbj7E",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

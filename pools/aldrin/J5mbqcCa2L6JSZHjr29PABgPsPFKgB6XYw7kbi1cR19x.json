@@ -38,5 +38,50 @@
   "poolPublicKey": "JDt21M36gYHFqcRWGSaHcHbpowoxvLdFXJ4LgLvrFoo1",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "3e9pHUxa2nvAqso2Kr2KqJxYvZaz9qZLjoLaG77uQwB1",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "3e9pHUxa2nvAqso2Kr2KqJxYvZaz9qZLjoLaG77uQwB1": {
+      "chainId": 101,
+      "address": "3e9pHUxa2nvAqso2Kr2KqJxYvZaz9qZLjoLaG77uQwB1",
+      "symbol": "BAIL",
+      "name": "BAIL COIN",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/ApeLabsNFT/solpatrol/main/hammer.png",
+      "tags": [
+        "NFT",
+        "Utility-Token"
+      ],
+      "addr": "Hf1gUjprrTsKzxuhPfv8PAFDzNhgGZmDB35KT8yTs7kn",
+      "tag": "NFT,Utility-Token",
+      "mint": "3e9pHUxa2nvAqso2Kr2KqJxYvZaz9qZLjoLaG77uQwB1",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "Cpp1wpcb5uUvRvFM5enCydbxfVBd8fSunASezW1V4ejM",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

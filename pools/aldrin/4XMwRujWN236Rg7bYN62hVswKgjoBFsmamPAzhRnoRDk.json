@@ -38,5 +38,57 @@
   "poolPublicKey": "GZfMWf3dwqvaFdYHgzfmGWX6Kxom9gHchnGvkWPM4YCi",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "TKMKgSh3aADsmjr4yFWG52tkCQvmDxsQC1he1aBsi65",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "TKMKgSh3aADsmjr4yFWG52tkCQvmDxsQC1he1aBsi65": {
+      "chainId": 101,
+      "address": "TKMKgSh3aADsmjr4yFWG52tkCQvmDxsQC1he1aBsi65",
+      "symbol": "TKMK",
+      "name": "TOKAMAK ON SOLANA",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/TKMKgSh3aADsmjr4yFWG52tkCQvmDxsQC1he1aBsi65/logo.png",
+      "tags": [
+        "community-token",
+        "nft",
+        "dao"
+      ],
+      "extensions": {
+        "description": "TOKAMAK - REACTOR OF SOLANA ECOSYSTEM",
+        "telegram": "https://t.me/tokamaksolana",
+        "twitter": "https://twitter.com/tokamak_solana",
+        "website": "https://tkmksolana.gitbook.io/tokamak_token/"
+      },
+      "addr": "8SfzDhPpWqWAQa5fMDYUiVZ4QJcYYnAaZD8gTrpibxve",
+      "tag": "community-token,nft,dao",
+      "mint": "TKMKgSh3aADsmjr4yFWG52tkCQvmDxsQC1he1aBsi65",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "249ULHAcF5uUA3ZsASALqZWmbRBzMCDURGh1MfXaPPLt",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

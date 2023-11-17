@@ -38,5 +38,49 @@
   "poolPublicKey": "CBd2JYwEDo97oXXAvMsj8iZDw59kfziZo7tpAdEVbyKY",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "EcQCUYv57C4V6RoPxkVUiDwtX1SP8y8FP5AEToYL8Az"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "7Py74VSMQKBjYu2zj1v22DdpubqchBRBKxNVsDy14Gyt",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "EcQCUYv57C4V6RoPxkVUiDwtX1SP8y8FP5AEToYL8Az": {
+      "chainId": 101,
+      "address": "EcQCUYv57C4V6RoPxkVUiDwtX1SP8y8FP5AEToYL8Az",
+      "symbol": "WLKN",
+      "name": "Walken",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EcQCUYv57C4V6RoPxkVUiDwtX1SP8y8FP5AEToYL8Az/logo.svg",
+      "tags": [
+        "walken",
+        "utility-token"
+      ],
+      "extensions": {
+        "website": "https://walken.io"
+      },
+      "addr": "HyAMJRZ2NLDHvqhwJmc5aaZYacng521Tfow5STvXEEny",
+      "tag": "walken,utility-token",
+      "mint": "EcQCUYv57C4V6RoPxkVUiDwtX1SP8y8FP5AEToYL8Az",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

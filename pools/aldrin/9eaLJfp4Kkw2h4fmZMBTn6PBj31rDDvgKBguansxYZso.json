@@ -38,5 +38,45 @@
   "poolPublicKey": "GLHTSb4gjeBybEQ36NWGhnB48MmdppmVVUqc3SH7rYzN",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "5S2uwGaiCYX4tXq9wfSH44SbXTQUF2n2sanJJ2o1djXr",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "5S2uwGaiCYX4tXq9wfSH44SbXTQUF2n2sanJJ2o1djXr": {
+      "chainId": 101,
+      "address": "5S2uwGaiCYX4tXq9wfSH44SbXTQUF2n2sanJJ2o1djXr",
+      "symbol": "KROBA",
+      "name": "KROBA",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/RonxBrush/KROBA-TOKEN/main/logo.png",
+      "tags": [
+        "social-token"
+      ],
+      "addr": "5sNHCJLrDCLpi5fjHMLqnrrhdjd7Qfcp5BoSoLU9ihCG",
+      "tag": "social-token",
+      "mint": "5S2uwGaiCYX4tXq9wfSH44SbXTQUF2n2sanJJ2o1djXr",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "ApX9mMfmWm3DaoFca12tq5S15UM2CsF4aSCwDBGoFyYX",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

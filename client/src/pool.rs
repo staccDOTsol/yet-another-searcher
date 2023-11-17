@@ -49,7 +49,7 @@ pub fn pool_factory(pool_type: &PoolType, json_str: &String) -> Box<dyn PoolOper
     }
 }
 
-pub trait PoolOperations: Debug {
+pub trait PoolOperations: Debug  {
     fn get_pool_type(&self) -> PoolType;
     fn get_name(&self) -> String;
     fn get_update_accounts(&self) -> Vec<Pubkey>;

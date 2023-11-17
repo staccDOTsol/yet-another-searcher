@@ -38,5 +38,52 @@
   "poolPublicKey": "4GvfcLqV6qNjuV8AjYzVvLTu1B1ajBkBSBKieWsk1w6V",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp"
+  "other": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+  "tokenIds": [
+    "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+    "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey"
+  ],
+  "tokens": {
+    "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp": {
+      "chainId": 101,
+      "address": "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+      "symbol": "RIN",
+      "name": "Aldrin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp/logo.png",
+      "extensions": {
+        "coingeckoId": "aldrin",
+        "serumV3Usdc": "7gZNLDbWE73ueAoHuAeFoSu7JqmorwCLpNTBXHtYSFTa",
+        "twitter": "https://twitter.com/Aldrin_Exchange",
+        "website": "https://rin.aldrin.com/"
+      },
+      "addr": "GKd6AeuSnvchnVshB6RuLdUZjMnGKL7zFMdo7z6AmajX",
+      "tag": "",
+      "mint": "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+      "scale": 9
+    },
+    "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey": {
+      "chainId": 101,
+      "address": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+      "symbol": "MNDE",
+      "name": "Marinade",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey/logo.png",
+      "extensions": {
+        "coingeckoId": "marinade",
+        "discord": "https://discord.gg/mGqZA5pjRN",
+        "github": "https://github.com/marinade-finance",
+        "medium": "https://medium.com/marinade-finance",
+        "twitter": "https://twitter.com/MarinadeFinance",
+        "website": "https://marinade.finance"
+      },
+      "addr": "A5mLrUjTMKk37FMUrFW8kHjkFEYzowX88idwtZNfkrK6",
+      "tag": "",
+      "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

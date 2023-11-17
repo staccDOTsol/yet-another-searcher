@@ -38,5 +38,50 @@
   "poolPublicKey": "ryMUfpqMwSRnRF235yanLwydg5akTpKUHw5DJhbuhpw",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "H69DNtbZZtk92hLLbMrHYqL8HiSHFVGcf6USHU39oRMW",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "H69DNtbZZtk92hLLbMrHYqL8HiSHFVGcf6USHU39oRMW": {
+      "chainId": 101,
+      "address": "H69DNtbZZtk92hLLbMrHYqL8HiSHFVGcf6USHU39oRMW",
+      "symbol": "GUANO",
+      "name": "Guano",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/H69DNtbZZtk92hLLbMrHYqL8HiSHFVGcf6USHU39oRMW/logo.png",
+      "tags": [
+        "community-token",
+        "utility-token",
+        "governance-token"
+      ],
+      "extensions": {
+        "website": "https://newbat.city/"
+      },
+      "addr": "4FjY6o1hmzLdThAEFHfFKmLow4dPkbfLN3QSYYkisMXm",
+      "tag": "community-token,utility-token,governance-token",
+      "mint": "H69DNtbZZtk92hLLbMrHYqL8HiSHFVGcf6USHU39oRMW",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "2XDe1tPNbG6dj5FaXHHtZsHarAbuQUpufgQuJjUz8jVD",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

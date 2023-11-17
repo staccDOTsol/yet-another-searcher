@@ -38,5 +38,57 @@
   "poolPublicKey": "7EchbXqY3d7vqEs7zHEnZEhvMdGBvgWKRxjBYnA2smyJ",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "Aw8qLRHGhMcKq7rxs5XBNCd9oe3BvoAhpNMVz7AdGmty",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "Aw8qLRHGhMcKq7rxs5XBNCd9oe3BvoAhpNMVz7AdGmty": {
+      "chainId": 101,
+      "address": "Aw8qLRHGhMcKq7rxs5XBNCd9oe3BvoAhpNMVz7AdGmty",
+      "symbol": "PANDA",
+      "name": "Panda Coin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Aw8qLRHGhMcKq7rxs5XBNCd9oe3BvoAhpNMVz7AdGmty/logo.png",
+      "tags": [
+        "meme-token",
+        "community-token"
+      ],
+      "extensions": {
+        "coingeckoId": "panda-coin",
+        "discord": "https://discord.gg/nPSXvdJpvz",
+        "telegram": "https://t.me/pandacoin_announcements",
+        "twitter": "https://twitter.com/pandacoin_fi",
+        "website": "https://pandacrypto.org/"
+      },
+      "addr": "2U8uGQDNxYGK7N8oje1pJ2H1aenK8PtgwKVK5sqYbXhS",
+      "tag": "meme-token,community-token",
+      "mint": "Aw8qLRHGhMcKq7rxs5XBNCd9oe3BvoAhpNMVz7AdGmty",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "ZGUxR916YkdCkWpQZqHYDBq64PMyQ95S3XYJGAqM4QT",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,66 @@
   "poolPublicKey": "xbTGnEX7JpYANh14X3e524xZzAq4Ufv3EHcZoSiEgYg",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EcFyPDjqpnyMvh1LhACtC6rrCZ41DMez7RZYocjhmUVS"
+  "other": "EcFyPDjqpnyMvh1LhACtC6rrCZ41DMez7RZYocjhmUVS",
+  "tokenIds": [
+    "EcFyPDjqpnyMvh1LhACtC6rrCZ41DMez7RZYocjhmUVS",
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+  ],
+  "tokens": {
+    "EcFyPDjqpnyMvh1LhACtC6rrCZ41DMez7RZYocjhmUVS": {
+      "chainId": 101,
+      "address": "EcFyPDjqpnyMvh1LhACtC6rrCZ41DMez7RZYocjhmUVS",
+      "symbol": "NOCH",
+      "name": "NodeBunch",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EcFyPDjqpnyMvh1LhACtC6rrCZ41DMez7RZYocjhmUVS/logo.png",
+      "tags": [
+        "dex",
+        "farming",
+        "swap",
+        "pool",
+        "nft",
+        "trade",
+        "staking",
+        "nft-staking",
+        "amm",
+        "launchpad"
+      ],
+      "extensions": {
+        "description": "Extend the boundaries of earning with nodebunch, a futuristic AMM Dex with the power of DEFi",
+        "discord": "https://discord.gg/C4dC2grHAj",
+        "medium": "https://nodebunch.medium.com/",
+        "reddit": "https://www.reddit.com/user/nodebunch",
+        "twitter": "https://twitter.com/BunchNode",
+        "website": "https://nodebunch.finance"
+      },
+      "addr": "Dr71zcFyAWQWBCfR6BDvdSd9X8pAM7vgFYGmF7dbmkYG",
+      "tag": "dex,farming,swap,pool,nft,trade,staking,nft-staking,amm,launchpad",
+      "mint": "EcFyPDjqpnyMvh1LhACtC6rrCZ41DMez7RZYocjhmUVS",
+      "scale": 6
+    },
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+      "chainId": 101,
+      "address": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "symbol": "USDT",
+      "name": "USDT",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "tether",
+        "serumV3Usdc": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://tether.to/"
+      },
+      "addr": "BQiyC5SVjXiL6sLcTc8UNYTnzsaxUQAwoMp4DiGyDfST",
+      "tag": "stablecoin",
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

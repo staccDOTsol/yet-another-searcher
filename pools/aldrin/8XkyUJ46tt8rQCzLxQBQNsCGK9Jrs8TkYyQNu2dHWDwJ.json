@@ -38,5 +38,55 @@
   "poolPublicKey": "3aroGhtJnCpA2cMrFxDmN64EDRb2SN9nwgw2amznzpHU",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj"
+  "other": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+  "tokenIds": [
+    "7p6zGHdmWHvCH4Lsik2MoMBXqPGhFbSPSceSBXd8KNEC",
+    "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj"
+  ],
+  "tokens": {
+    "7p6zGHdmWHvCH4Lsik2MoMBXqPGhFbSPSceSBXd8KNEC": {
+      "chainId": 101,
+      "address": "7p6zGHdmWHvCH4Lsik2MoMBXqPGhFbSPSceSBXd8KNEC",
+      "symbol": "PU238",
+      "name": "Plutonium 238",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7p6zGHdmWHvCH4Lsik2MoMBXqPGhFbSPSceSBXd8KNEC/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "description": "Plutonium 238",
+        "twitter": "https://twitter.com/plutoniansgame",
+        "website": "https://plutonians.tech"
+      },
+      "addr": "6UDnZWTnzkXdc6KLmhBN8r555gBhSn95hv1J1jRiN2VX",
+      "tag": "utility-token",
+      "mint": "7p6zGHdmWHvCH4Lsik2MoMBXqPGhFbSPSceSBXd8KNEC",
+      "scale": 6
+    },
+    "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj": {
+      "chainId": 101,
+      "address": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+      "symbol": "stSOL",
+      "name": "Lido Staked SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj/logo.png",
+      "extensions": {
+        "coingeckoId": "lido-staked-sol",
+        "coinmarketcap": "https://coinmarketcap.com/currencies/lido-for-solana/",
+        "discord": "https://discord.gg/w9pXXgQPu8",
+        "github": "https://github.com/ChorusOne/solido",
+        "serumV3Usdc": "5F7LGsP1LPtaRV7vVKgxwNYX4Vf22xvuzyXjyar7jJqp",
+        "twitter": "https://twitter.com/LidoFinance",
+        "website": "https://solana.lido.fi/"
+      },
+      "addr": "3pJoznUCv1cTruLtb9mo8FeN4zjNaggB3xLRS57EapxD",
+      "tag": "",
+      "mint": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

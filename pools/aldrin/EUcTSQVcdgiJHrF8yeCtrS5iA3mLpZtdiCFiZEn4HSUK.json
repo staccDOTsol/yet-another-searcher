@@ -38,5 +38,58 @@
   "poolPublicKey": "5FjHBa8pQj5kaS8LKKrgwhG25EVHypd4BEg2UoknghH9",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "6Dujewcxn1qCd6rcj448SXQL9YYqTcqZCNQdCn3xJAKS",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "6Dujewcxn1qCd6rcj448SXQL9YYqTcqZCNQdCn3xJAKS": {
+      "chainId": 101,
+      "address": "6Dujewcxn1qCd6rcj448SXQL9YYqTcqZCNQdCn3xJAKS",
+      "symbol": "ARTE",
+      "name": "ARTE",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/ArtPunks/ARTE-token/main/assets/token_512.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "coingeckoId": "arte",
+        "description": "Utility token which is the fuel of the blockchain-art ARTE ecosystem.",
+        "discord": "http://discord.gg/artpunks",
+        "medium": "https://medium.com/@artpunknft",
+        "serumV3Usdc": "4wqFtfechUSNW1nJ3WK5ogy478GTa66H99RrKnz45fa9",
+        "twitter": "https://twitter.com/ArtPunksNFT",
+        "website": "http://artpunks.fun/"
+      },
+      "addr": "CM9rnc5TnSY2k1ZLFnwDKqUoU1d4HV8p8MGXLQ6uuZie",
+      "tag": "utility-token",
+      "mint": "6Dujewcxn1qCd6rcj448SXQL9YYqTcqZCNQdCn3xJAKS",
+      "scale": 6
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "ApjUEga5miEYcRyL7GzrxRtBAjZENNRxgssZM4eeuweA",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

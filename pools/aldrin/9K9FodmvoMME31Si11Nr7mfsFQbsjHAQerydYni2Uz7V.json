@@ -38,5 +38,46 @@
   "poolPublicKey": "HfDyPopSTMpeppy1UceusZtg34rtFWLsLJmGCqdk78xL",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "BYbfgn491deiSTApQnXmV4DpkiDHUXJYYoc11U6fB1By",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "BYbfgn491deiSTApQnXmV4DpkiDHUXJYYoc11U6fB1By": {
+      "chainId": 101,
+      "address": "BYbfgn491deiSTApQnXmV4DpkiDHUXJYYoc11U6fB1By",
+      "symbol": "DOOB",
+      "name": "Doobie Coin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/xxmafiaxxx/doobietokens/main/doobiecoin.png",
+      "extensions": {
+        "description": " The doobie transaction coin",
+        "website": "https://doobie.me/"
+      },
+      "addr": "GtcLCXn73YPVxPs1C14Cmkj34j81Z32hfbHvnTXGcZN8",
+      "tag": "",
+      "mint": "BYbfgn491deiSTApQnXmV4DpkiDHUXJYYoc11U6fB1By",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "84zQFSAiaHSyZ1WRGMCqHbL3FXM35V7TCFJFS9UYYpeV",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

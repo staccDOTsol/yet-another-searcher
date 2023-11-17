@@ -38,5 +38,54 @@
   "poolPublicKey": "FPJDjvtAPsaGLi3TnDMmorBAtxbjhxprhKoWGE4uPmXp",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "4vXidyArpT8fyQTmfXfMNHitj5ay1Fjcnbw9fJLL2zBa",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "4vXidyArpT8fyQTmfXfMNHitj5ay1Fjcnbw9fJLL2zBa": {
+      "chainId": 101,
+      "address": "4vXidyArpT8fyQTmfXfMNHitj5ay1Fjcnbw9fJLL2zBa",
+      "symbol": "HONSHU",
+      "name": "HONSHU",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4vXidyArpT8fyQTmfXfMNHitj5ay1Fjcnbw9fJLL2zBa/logo.png",
+      "tags": [
+        "social-token",
+        "utility-token",
+        "community-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/HonshuWolves"
+      },
+      "addr": "GYmRoZHYkuietuxGv6MkZ2vQ9PuQ19cJfUmw9WYfRqjW",
+      "tag": "social-token,utility-token,community-token",
+      "mint": "4vXidyArpT8fyQTmfXfMNHitj5ay1Fjcnbw9fJLL2zBa",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "3UCftCvKcwk6Jr4dmrtQcoNa4P2MVrhn8yLcqBopzunx",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

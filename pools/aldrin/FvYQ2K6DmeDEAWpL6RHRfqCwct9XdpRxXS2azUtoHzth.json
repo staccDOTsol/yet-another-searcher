@@ -38,5 +38,50 @@
   "poolPublicKey": "7G8wXjXW5GcLo161bBxqGECjaDqpEUW7DWe2BFfWEwxX",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "Amt5wUJREJQC5pX7Z48YSK812xmu4j3sQVupNhtsEuY8",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "Amt5wUJREJQC5pX7Z48YSK812xmu4j3sQVupNhtsEuY8": {
+      "chainId": 101,
+      "address": "Amt5wUJREJQC5pX7Z48YSK812xmu4j3sQVupNhtsEuY8",
+      "symbol": "FROG",
+      "name": "FROG",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Amt5wUJREJQC5pX7Z48YSK812xmu4j3sQVupNhtsEuY8/logo.png",
+      "extensions": {
+        "serumV3Usdc": "2Si6XDdpv5zcvYna221eZZrsjsp5xeYoz9W1TVdMdbnt",
+        "website": "https://www.froglana.com/"
+      },
+      "addr": "UoymxNkPWn3RBr4b2ACKSf8TuWTinf16NdyB9fCkvWd",
+      "tag": "",
+      "mint": "Amt5wUJREJQC5pX7Z48YSK812xmu4j3sQVupNhtsEuY8",
+      "scale": 6
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "7dTkSDf3RfCRYTQTbgafHghBREHBEu7ARngsWvw4nFvb",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,50 @@
   "poolPublicKey": "B92XLrHLJSXJZtyum3ewattEAGZpNZMRgHxNiQeygmdQ",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "DbBJEc1NhBQhHJrVoXYyaTmqHbekiz6DhZ8H5T4KY5fQ"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "97BWBUynnSECxzm5bCDgGMqiv8sKRySUUKELkc7tuEjh",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "DbBJEc1NhBQhHJrVoXYyaTmqHbekiz6DhZ8H5T4KY5fQ": {
+      "chainId": 101,
+      "address": "DbBJEc1NhBQhHJrVoXYyaTmqHbekiz6DhZ8H5T4KY5fQ",
+      "symbol": "$STONE",
+      "name": "Mindfolk Stone",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DbBJEc1NhBQhHJrVoXYyaTmqHbekiz6DhZ8H5T4KY5fQ/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/mindfolk",
+        "twitter": "https://twitter.com/mindfolkART",
+        "website": "https://www.mindfolk.art/"
+      },
+      "addr": "4fRsTvvDDGkDzJjgbwTNpPUp7f5xU7p4V297w557wq69",
+      "tag": "utility-token",
+      "mint": "DbBJEc1NhBQhHJrVoXYyaTmqHbekiz6DhZ8H5T4KY5fQ",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

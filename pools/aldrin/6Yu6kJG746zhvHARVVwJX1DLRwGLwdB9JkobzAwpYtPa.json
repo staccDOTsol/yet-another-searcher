@@ -38,5 +38,51 @@
   "poolPublicKey": "DkTo953SXQYFVX27mhzyqHbFzsAi9UPkTXzpaQMchgV4",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg"
+  "other": "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+  "tokenIds": [
+    "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+    "CdQseFmnPh2JBiz5747dJ6oYXK9NKnbdFRfiXTcZuaXT"
+  ],
+  "tokens": {
+    "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg": {
+      "chainId": 101,
+      "address": "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+      "symbol": "API",
+      "name": "API Coin",
+      "decimals": 9,
+      "logoURI": "https://theblockchainapi-website.s3.amazonaws.com/logo512.png",
+      "tags": [
+        "community-token",
+        "platform"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/_BlockX_",
+        "website": "https://blockchainapi.com/"
+      },
+      "addr": "EJNpCpPx4px52SszcjPRyAP5CcTREykazLsP9dgc7G1T",
+      "tag": "community-token,platform",
+      "mint": "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+      "scale": 9
+    },
+    "CdQseFmnPh2JBiz5747dJ6oYXK9NKnbdFRfiXTcZuaXT": {
+      "chainId": 101,
+      "address": "CdQseFmnPh2JBiz5747dJ6oYXK9NKnbdFRfiXTcZuaXT",
+      "symbol": "$PACES",
+      "name": "PACES Token",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/CdQseFmnPh2JBiz5747dJ6oYXK9NKnbdFRfiXTcZuaXT/logo.png",
+      "extensions": {
+        "discord": "https://discord.gg/5gehRmCNem",
+        "twitter": "https://twitter.com/TheAcesNFT",
+        "website": "https://theacesnft.com/"
+      },
+      "addr": "fy3QeMPuWqynwv56ncEhPPRtXewpzj9zCL1CchqjxpZ",
+      "tag": "",
+      "mint": "CdQseFmnPh2JBiz5747dJ6oYXK9NKnbdFRfiXTcZuaXT",
+      "scale": 0
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

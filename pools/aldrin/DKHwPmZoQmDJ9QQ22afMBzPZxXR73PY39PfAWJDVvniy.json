@@ -38,5 +38,45 @@
   "poolPublicKey": "NAQQVnbqqv2d4e5hstkzV7L6L5X99sSjQVs8izBgqYL",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "8BLiujyxu5gJajWBXoZQkwSsamdeHNKWQbu1ApAao8Ps",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "8BLiujyxu5gJajWBXoZQkwSsamdeHNKWQbu1ApAao8Ps"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "AsioaQb1bQtfggZr4cEv4C63gz2HpUeFU4SQndP9kVVs",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "8BLiujyxu5gJajWBXoZQkwSsamdeHNKWQbu1ApAao8Ps": {
+      "chainId": 101,
+      "address": "8BLiujyxu5gJajWBXoZQkwSsamdeHNKWQbu1ApAao8Ps",
+      "symbol": "ACA",
+      "name": "Acacia",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/qubelabsllc/ACALogo/main/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "addr": "FpZvP7ScivvD17MY28xoCF1BPGXRWjBqt4ByBoE9dYop",
+      "tag": "utility-token",
+      "mint": "8BLiujyxu5gJajWBXoZQkwSsamdeHNKWQbu1ApAao8Ps",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

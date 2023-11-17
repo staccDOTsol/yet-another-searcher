@@ -38,5 +38,51 @@
   "poolPublicKey": "GPEuwLtSX3VgBsfcjMJaM7XrVGoEwhSzrWB6m3qEmX2y",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "boomh1LQnwDnHtKxWTFgxcbdRjPypRSjdwxkAEJkFSH",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "boomh1LQnwDnHtKxWTFgxcbdRjPypRSjdwxkAEJkFSH": {
+      "chainId": 101,
+      "address": "boomh1LQnwDnHtKxWTFgxcbdRjPypRSjdwxkAEJkFSH",
+      "symbol": "BMA",
+      "name": "Boom Army",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/boomh1LQnwDnHtKxWTFgxcbdRjPypRSjdwxkAEJkFSH/logo.svg",
+      "tags": [
+        "utility-token",
+        "community-token",
+        "social-token"
+      ],
+      "addr": "6EAwznt7ptZWimkLafAeiwWp7oH8FiHqzkyon1cXKtLa",
+      "tag": "utility-token,community-token,social-token",
+      "mint": "boomh1LQnwDnHtKxWTFgxcbdRjPypRSjdwxkAEJkFSH",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "6goo9hhQtZtTcnsV7zJpPfCZucEX8jAH4WPpnju9F4tJ",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

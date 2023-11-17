@@ -38,5 +38,57 @@
   "poolPublicKey": "5gSmdoCDcWCXwnG93ZVHrC5VeG7f9pVUFFQi41As7gbe",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz"
+  "other": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+  "tokenIds": [
+    "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+    "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i"
+  ],
+  "tokens": {
+    "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz": {
+      "chainId": 101,
+      "address": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+      "symbol": "FUM",
+      "name": "FUMoney",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/FUMoney801/token-list/main/assets/mainnet/EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz/logo.png",
+      "tags": [
+        "social-token",
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/FUMindset",
+        "website": "https://FUMoney.io/"
+      },
+      "addr": "DjWJ7ezbGe8ppTeEyynr4vJf9gxw4AXK1begTeigrg46",
+      "tag": "social-token,utility-token",
+      "mint": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+      "scale": 9
+    },
+    "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i": {
+      "chainId": 101,
+      "address": "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i",
+      "symbol": "UST",
+      "name": "UST (Portal)",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i/logo.png",
+      "tags": [
+        "wrapped",
+        "wormhole",
+        "stablecoin"
+      ],
+      "extensions": {
+        "address": "uusd",
+        "bridgeContract": "https://finder.terra.money/columbus-5/address/terra10nmmwe8r3g99a9newtqa7a75xfgs2e8z87r2sf",
+        "coingeckoId": "terrausd",
+        "serumV3Usdc": "8WmckvEoVGZvtN8knjdzFGbWJ3Sr4BcWdyzSYuCrD4YK"
+      },
+      "addr": "EBTeaK7wS9QQsvdu17ZBNqizLqBU7fFJUYXz3JhaNCNB",
+      "tag": "wrapped,wormhole,stablecoin",
+      "mint": "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

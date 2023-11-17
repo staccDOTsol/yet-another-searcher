@@ -38,5 +38,58 @@
   "poolPublicKey": "msrXnFtp8k4A9cUbx2XTubX3YBdhZwZcoSyYtJvDr5G",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5"
+  "other": "DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5",
+  "tokenIds": [
+    "DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5",
+    "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i"
+  ],
+  "tokens": {
+    "DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5": {
+      "chainId": 101,
+      "address": "DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5",
+      "symbol": "BITXBIT",
+      "name": "BITXBIT",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5/logo.png",
+      "tags": [
+        "social-token",
+        "technology",
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/bitXbit_aus",
+        "website": "https://bitxbit.com.au"
+      },
+      "addr": "9ATna1r5GZbv97yd7oVeT8tFmPVfzFFoGLZ8sP65KBHb",
+      "tag": "social-token,technology,utility-token",
+      "mint": "DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5",
+      "scale": 9
+    },
+    "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i": {
+      "chainId": 101,
+      "address": "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i",
+      "symbol": "UST",
+      "name": "UST (Portal)",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i/logo.png",
+      "tags": [
+        "wrapped",
+        "wormhole",
+        "stablecoin"
+      ],
+      "extensions": {
+        "address": "uusd",
+        "bridgeContract": "https://finder.terra.money/columbus-5/address/terra10nmmwe8r3g99a9newtqa7a75xfgs2e8z87r2sf",
+        "coingeckoId": "terrausd",
+        "serumV3Usdc": "8WmckvEoVGZvtN8knjdzFGbWJ3Sr4BcWdyzSYuCrD4YK"
+      },
+      "addr": "8VLw5EYRsM7ryv55vP7vNdtE7juJbYRZge4v8UnRbTmC",
+      "tag": "wrapped,wormhole,stablecoin",
+      "mint": "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

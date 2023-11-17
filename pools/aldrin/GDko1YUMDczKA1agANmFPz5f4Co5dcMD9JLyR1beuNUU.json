@@ -38,5 +38,45 @@
   "poolPublicKey": "23Zj6BqbNK6W5FbSaW9BuhJVugH2mR6fWqCCaFh2cKiY",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "4bwMPPipiPafcxxtSBPMUgCkv8hF4xAyWsUzxr3DLYPZ"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "9CL6rTFbzwNYFddWofLoRRceiGpStJqsvzyg2GcLjHzV",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "4bwMPPipiPafcxxtSBPMUgCkv8hF4xAyWsUzxr3DLYPZ": {
+      "chainId": 101,
+      "address": "4bwMPPipiPafcxxtSBPMUgCkv8hF4xAyWsUzxr3DLYPZ",
+      "symbol": "DISK",
+      "name": "FloppyLabs token",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/floppy-labs/disk-logo/master/disk_logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "addr": "7x2exZibRo22d29Z7nVVviwv19CKeUuoTsgiNRHHT8RJ",
+      "tag": "utility-token",
+      "mint": "4bwMPPipiPafcxxtSBPMUgCkv8hF4xAyWsUzxr3DLYPZ",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

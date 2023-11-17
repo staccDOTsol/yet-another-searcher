@@ -8,5 +8,5 @@ do
     echo "------" >> log.txt
     echo $(date) >> log.txt
     echo "------" >> log.txt
-    ./target/debug/main --cluster mainnet >> log.txt 2>&1
+    ./target/debug/main --cluster mainnet --flashing no >> log.txt 2>&1
 done

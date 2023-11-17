@@ -38,5 +38,57 @@
   "poolPublicKey": "zbyUkk999LwQdSLMAvg3iAEU8DRvidvzxzinv35n2gW",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "Gz3u6eJaKEviYpPC5AwUziz891kNX76PNdsmJrnaNNY4",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "Gz3u6eJaKEviYpPC5AwUziz891kNX76PNdsmJrnaNNY4": {
+      "chainId": 101,
+      "address": "Gz3u6eJaKEviYpPC5AwUziz891kNX76PNdsmJrnaNNY4",
+      "symbol": "SOULO",
+      "name": "SouloCoin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Gz3u6eJaKEviYpPC5AwUziz891kNX76PNdsmJrnaNNY4/logo.png",
+      "tags": [
+        "utility-token",
+        "NFT",
+        "game-token",
+        "GameFi"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/soulofox",
+        "twitter": "https://twitter.com/soulofoxnft",
+        "website": "https://app.soulofox.com"
+      },
+      "addr": "Cwp75j1bfXP4rWqiHgh2azTj33wsjCCz9k1PRXPFKeKz",
+      "tag": "utility-token,NFT,game-token,GameFi",
+      "mint": "Gz3u6eJaKEviYpPC5AwUziz891kNX76PNdsmJrnaNNY4",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "EkBzuLfUsV2bJP8rF3GYUKxA9fveSzeuRjP1KMX6eRmp",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

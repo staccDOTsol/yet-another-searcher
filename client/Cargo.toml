@@ -8,6 +8,10 @@ name = "client"
 path = "src/lib.rs"
 
 [[bin]]
+name = "flash-loan-example"
+path = "src/flash_loan_once.rs"
+
+[[bin]]
 name = "main"
 path = "src/main.rs"
 
@@ -24,7 +28,24 @@ name = "setup_open_orders"
 path = "src/setup/setup_open_orders.rs"
 
 [dependencies]
-bytemuck = "*"
+boilerplate = { version = "1.0.0", features = ["axum"] }
+tower-http = { version = "0.4.0", features = ["compression-br", "compression-gzip", "cors", "set-header"] }
+http = "*"
+axum = { version = "0.6.1", features = ["headers"] }
+axum-server = "0.5.0"
+
+bincode = "*"
+base64 = "*"
+solana-transaction-status = "*"
+solana-address-lookup-table-program = "*"
+solana-program = "1.14"
+spl-token = { version = "3.3.1", features = ["no-entrypoint"]  }
+bytemuck = { version = "1.7.3", features = ["extern_crate_std", "min_const_generics"] }
+solana-client = "1.14"
+flash-loan-sdk = { path="../lib" }
+structopt = "0.3"
+dirs-next = "2.0.0"
+derive_more = "0.99.17"
 solana-sdk = "^1.17.5"
 anchor-spl = { version = "0.29", features = ["dex"] }
 anchor-client = { version = "0.29", features = ["debug"] }
@@ -35,6 +56,7 @@ serde_json = "1.0"
 spl-math = { version = "0.1", features = [ "no-entrypoint" ] }
 anyhow = "1.0.55"
 rayon = "1.5.1"
+tokio = "*"
 ordered-float = "2.10.0"
 uint = "0.8"
 chrono = "*"
@@ -43,10 +65,9 @@ openbook_dex = "*"
 num_enum = "0.5.4" 
 clap = { version = "3.1.6", features = ["derive"] }
 enum_dispatch = "0.3.7"
+axum-macros = "*"
 num-derive = "0.3"
 num-traits = "0.2"
-solana-program = "1.9.9"
-spl-token = { version = "3.1.1", features = [ "no-entrypoint" ] }
 thiserror = "1.0"
 arbitrary = { version = "1.0", features = ["derive"], optional = true }
 roots = { version = "0.0.7", optional = true }

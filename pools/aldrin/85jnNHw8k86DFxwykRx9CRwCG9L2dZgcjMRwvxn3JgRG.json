@@ -38,5 +38,45 @@
   "poolPublicKey": "74UyYWUBHfs2zvJ3oGBBiFLatWyjFg7MT8BCdMZheYFT",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "4ckMuvhiqeLAmVh9cCP8M8M3sNomv9MAzTZxAD4ZNARJ",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "4ckMuvhiqeLAmVh9cCP8M8M3sNomv9MAzTZxAD4ZNARJ": {
+      "chainId": 101,
+      "address": "4ckMuvhiqeLAmVh9cCP8M8M3sNomv9MAzTZxAD4ZNARJ",
+      "symbol": "$SPWX",
+      "name": "SPWX",
+      "decimals": 4,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4ckMuvhiqeLAmVh9cCP8M8M3sNomv9MAzTZxAD4ZNARJ/logo.png",
+      "tags": [
+        "MANAGEMENT"
+      ],
+      "addr": "AwnJ4eNujVrXoaCJXSU1VgTD8bjn8icpRTeKnC5DsJY3",
+      "tag": "MANAGEMENT",
+      "mint": "4ckMuvhiqeLAmVh9cCP8M8M3sNomv9MAzTZxAD4ZNARJ",
+      "scale": 4
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "BuqvYaWhLFdQ8foeeAWYybTv5Tb9txtj3wNhmwnuYkdX",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

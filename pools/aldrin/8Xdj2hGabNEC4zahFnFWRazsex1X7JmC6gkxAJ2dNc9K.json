@@ -38,5 +38,56 @@
   "poolPublicKey": "A4R4k5QGEiTaQPHc1ycacv7a9Tfr5qs8XjEk2PfumBeU",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK"
+  ],
+  "tokens": {
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "5N4FNmzwJ82X7PtR99w64xuj6F66paWNAR2nwAftxVWd",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    },
+    "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK": {
+      "chainId": 101,
+      "address": "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+      "symbol": "CHIPS",
+      "name": "Universe Chips",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK/logo.png",
+      "tags": [
+        "utiliy-token",
+        "social-token",
+        "community-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/cxmgnKtZBF",
+        "twitter": "https://twitter.com/u_niverseNFT",
+        "website": "https://twitter.com/u_niverseNFT"
+      },
+      "addr": "GL8cA6VEAAFKGmYCCK4ou2QYq3ZsgQ1Fj9DXn4KAbnpW",
+      "tag": "utiliy-token,social-token,community-token",
+      "mint": "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

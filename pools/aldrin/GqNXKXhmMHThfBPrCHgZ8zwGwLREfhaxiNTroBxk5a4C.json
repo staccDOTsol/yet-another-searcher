@@ -38,5 +38,55 @@
   "poolPublicKey": "Edidc9t5uGFUpPhF422fVgh3qSWHeLsfgrKdhegwb99u",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "SKu11EypaFU3gvr8VSAbi13zEC2CPvqbz9s83N3tWHM",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "SKu11EypaFU3gvr8VSAbi13zEC2CPvqbz9s83N3tWHM": {
+      "chainId": 101,
+      "address": "SKu11EypaFU3gvr8VSAbi13zEC2CPvqbz9s83N3tWHM",
+      "symbol": "SKULL",
+      "name": "Skeleton Crew",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/SKu11EypaFU3gvr8VSAbi13zEC2CPvqbz9s83N3tWHM/logo.png",
+      "tags": [
+        "NFT",
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/skeletoncrewrip",
+        "twitter": "https://twitter.com/skeletoncrewrip",
+        "website": "https://skeletoncrew.rip/"
+      },
+      "addr": "2xHYPiTYg2hQ2A6v9GoVJFT5AzR3LeX1NYdFHdKvj6Sk",
+      "tag": "NFT,utility-token",
+      "mint": "SKu11EypaFU3gvr8VSAbi13zEC2CPvqbz9s83N3tWHM",
+      "scale": 0
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "HYqcpKPdD8J9wsTwETociJ3a7Vadszagkf7XYdharcF2",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

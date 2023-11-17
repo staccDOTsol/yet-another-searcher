@@ -38,5 +38,53 @@
   "poolPublicKey": "8ysWL3griLmYSjXiEPSgFYp2SJeqWQtEm9MJCTVQgUaX",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "ASHTTPcMddo7RsYHEyTv3nutMWvK8S4wgFUy3seAohja",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "ASHTTPcMddo7RsYHEyTv3nutMWvK8S4wgFUy3seAohja": {
+      "chainId": 101,
+      "address": "ASHTTPcMddo7RsYHEyTv3nutMWvK8S4wgFUy3seAohja",
+      "symbol": "$ASH",
+      "name": "Mortuary Inc Ashes",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ASHTTPcMddo7RsYHEyTv3nutMWvK8S4wgFUy3seAohja/logo.svg",
+      "tags": [
+        "NFT",
+        "social-token",
+        "community-token",
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/DTdYZVhwne",
+        "twitter": "https://twitter.com/MortuaryIncNFT",
+        "website": "https://mortuary-inc.io/"
+      },
+      "addr": "42XMSA5vKHPRSgThH4iafZww1AzMQTxZb2RugsPADGFX",
+      "tag": "NFT,social-token,community-token,utility-token",
+      "mint": "ASHTTPcMddo7RsYHEyTv3nutMWvK8S4wgFUy3seAohja",
+      "scale": 0
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "4CXG96v3UYLSZn6PvKihtF31xL8xJDkC5VbdFCkoRhkZ",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

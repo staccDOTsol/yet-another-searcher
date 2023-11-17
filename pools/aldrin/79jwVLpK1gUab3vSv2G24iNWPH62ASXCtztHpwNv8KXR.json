@@ -38,5 +38,49 @@
   "poolPublicKey": "yeGKcsBPKtvfCoNyUy5eABquQzssFuWvdipxrSmtcKm",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4": {
+      "chainId": 101,
+      "address": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+      "symbol": "MHC",
+      "name": "Most Hyped Crypto",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4/logo.png",
+      "tags": [
+        "governing-token"
+      ],
+      "addr": "53TwAyz2ehxfi3V2fG6AVW5vmG1gsRQVQf2XmPJKFRgV",
+      "tag": "governing-token",
+      "mint": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+      "scale": 0
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "9NSaKJoadD1QkBKKqQJDjC6oS39GWP2YN35GbjNdBjEK",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

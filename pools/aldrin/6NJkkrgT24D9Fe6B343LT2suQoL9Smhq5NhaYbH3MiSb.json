@@ -38,5 +38,54 @@
   "poolPublicKey": "69B8wQyd4EZ6c6uDcqBWytDcTxS3x2MaUuctq88cBEKo",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "7sWMHQaJJPn1rkeizq41iPiW5gG7Ry7PXYAVHaUwY4qu",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "7sWMHQaJJPn1rkeizq41iPiW5gG7Ry7PXYAVHaUwY4qu": {
+      "chainId": 101,
+      "address": "7sWMHQaJJPn1rkeizq41iPiW5gG7Ry7PXYAVHaUwY4qu",
+      "symbol": "EDO",
+      "name": "EDO",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7sWMHQaJJPn1rkeizq41iPiW5gG7Ry7PXYAVHaUwY4qu/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/E7yWZrzvXj",
+        "twitter": "https://twitter.com/SenshiNFT",
+        "website": "https://senshisamurai.com/"
+      },
+      "addr": "DoP6JoNsyXQVtmxRoazjUFRrZ7Xx6QMMhAztUQHUzcHr",
+      "tag": "utility-token",
+      "mint": "7sWMHQaJJPn1rkeizq41iPiW5gG7Ry7PXYAVHaUwY4qu",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "Hxd1xmQGiTcBG3UXikGE48ec3GSz6LLCwp43M6jzVCjy",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,51 @@
   "poolPublicKey": "3ncgGjnzWQFiFaQvLoF8yo2Y9CzKLyBU1t7UFpLzZqRb",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH"
+  "other": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+  "tokenIds": [
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+    "4CqGRYLzvj3ibufGJdLmdK2CzvDA5k82NVav4a5EKCBG"
+  ],
+  "tokens": {
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH": {
+      "chainId": 101,
+      "address": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "symbol": "DAU",
+      "name": "dauqu",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/dauqu/dauqu/main/dauqu.png",
+      "tags": [
+        "social-token"
+      ],
+      "addr": "DDmdVK9SNqvhgc4awNuWvqNr1ccqG9Z98RnsVNq1Voj9",
+      "tag": "social-token",
+      "mint": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "scale": 9
+    },
+    "4CqGRYLzvj3ibufGJdLmdK2CzvDA5k82NVav4a5EKCBG": {
+      "chainId": 101,
+      "address": "4CqGRYLzvj3ibufGJdLmdK2CzvDA5k82NVav4a5EKCBG",
+      "symbol": "COCU",
+      "name": "Cocucoin",
+      "decimals": 9,
+      "logoURI": "https://cocucoin.com/logo.png",
+      "tags": [
+        "social-token",
+        "nft",
+        "swap",
+        "trade",
+        "finance"
+      ],
+      "extensions": {
+        "website": "https://cocucoin.com/"
+      },
+      "addr": "7s86LGzmfrvVviExXJaHkuknD4rTpSMnCkK4K2T2XW8y",
+      "tag": "social-token,nft,swap,trade,finance",
+      "mint": "4CqGRYLzvj3ibufGJdLmdK2CzvDA5k82NVav4a5EKCBG",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

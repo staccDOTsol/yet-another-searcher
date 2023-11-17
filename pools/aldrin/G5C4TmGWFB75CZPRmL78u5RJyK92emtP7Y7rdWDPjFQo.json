@@ -38,5 +38,45 @@
   "poolPublicKey": "7LZQH5sAFkSchUFv52E5A58QwL2hPjMm9jiLhkK7p9dP",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "D5fQ4jY4GxKfTjdqe7Rnwbu1wN1DLu7mwtmJxPsT9Zr6",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "D5fQ4jY4GxKfTjdqe7Rnwbu1wN1DLu7mwtmJxPsT9Zr6": {
+      "chainId": 101,
+      "address": "D5fQ4jY4GxKfTjdqe7Rnwbu1wN1DLu7mwtmJxPsT9Zr6",
+      "symbol": "FERO",
+      "name": "Forest Industry staking token",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/D5fQ4jY4GxKfTjdqe7Rnwbu1wN1DLu7mwtmJxPsT9Zr6/logo.png",
+      "tags": [
+        "social-token"
+      ],
+      "addr": "AP7UoqtTxYNp7vgrvB7mrmaMwFdY8atDRqc3p3jxHoFa",
+      "tag": "social-token",
+      "mint": "D5fQ4jY4GxKfTjdqe7Rnwbu1wN1DLu7mwtmJxPsT9Zr6",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "12eigSPkVDrNmjuuv1i9kR9xKU5REaLyL18zPJvG5kAb",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

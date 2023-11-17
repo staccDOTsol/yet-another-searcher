@@ -38,5 +38,56 @@
   "poolPublicKey": "5qEkhwFvymhSzbQR6Qqns6rAS9SXS79g7a4FtRxTXts2",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "FYfQ9uaRaYvRiaEGUmct45F9WKam3BYXArTrotnTNFXF",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "FYfQ9uaRaYvRiaEGUmct45F9WKam3BYXArTrotnTNFXF": {
+      "chainId": 101,
+      "address": "FYfQ9uaRaYvRiaEGUmct45F9WKam3BYXArTrotnTNFXF",
+      "symbol": "SOLA",
+      "name": "Sola Token",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/FYfQ9uaRaYvRiaEGUmct45F9WKam3BYXArTrotnTNFXF/logo.png",
+      "tags": [
+        "community-token"
+      ],
+      "extensions": {
+        "coingeckoId": "sola-token",
+        "serumV3Usdc": "4RZ27tjRnSwrtRqsJxDEgsERnDKFs7yx6Ra3HsJvkboy",
+        "telegram": "https://t.me/solatokennet",
+        "twitter": "https://twitter.com/EcoSolana",
+        "website": "https://solatoken.net/"
+      },
+      "addr": "FoRPexeBMC9dAKPBHD465FhnvXUMugVwK3MNYuEZPAUp",
+      "tag": "community-token",
+      "mint": "FYfQ9uaRaYvRiaEGUmct45F9WKam3BYXArTrotnTNFXF",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "9fgf4JeyXUNof7BJEr49eDvF8m1TVHkKTFYbg6rSmpfC",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

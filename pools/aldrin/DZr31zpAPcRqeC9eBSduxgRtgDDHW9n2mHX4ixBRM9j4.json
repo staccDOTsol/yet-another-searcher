@@ -38,5 +38,55 @@
   "poolPublicKey": "2dMTjB6GQQzY77zyWgoBo3FVPuHrriFtkAHuNP9d4cQt",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe": {
+      "chainId": 101,
+      "address": "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe",
+      "symbol": "pHONEY",
+      "name": "pre-IDO HONEY",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe/logo.svg",
+      "tags": [
+        "utility-token",
+        "DeFi",
+        "Governance"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/honeydefi",
+        "website": "https://honey.finance"
+      },
+      "addr": "HBkcnTYjKajDFtm3C3Hov1rV4TvuJBnTCrvVv472twpU",
+      "tag": "utility-token,DeFi,Governance",
+      "mint": "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe",
+      "scale": 6
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "jhBb8cjq3YHXSNmJ4XxZfii3EgQjgAAunaZeJrhtBZC",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

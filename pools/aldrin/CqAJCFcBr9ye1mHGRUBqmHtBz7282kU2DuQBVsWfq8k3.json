@@ -38,5 +38,57 @@
   "poolPublicKey": "6aZ4nKFhYp3KFm2TuWUMmgHcy7anyUBpWznyDk6UGAe2",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk"
+  "other": "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+  "tokenIds": [
+    "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+    "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk"
+  ],
+  "tokens": {
+    "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj": {
+      "chainId": 101,
+      "address": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+      "symbol": "stSOL",
+      "name": "Lido Staked SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj/logo.png",
+      "extensions": {
+        "coingeckoId": "lido-staked-sol",
+        "coinmarketcap": "https://coinmarketcap.com/currencies/lido-for-solana/",
+        "discord": "https://discord.gg/w9pXXgQPu8",
+        "github": "https://github.com/ChorusOne/solido",
+        "serumV3Usdc": "5F7LGsP1LPtaRV7vVKgxwNYX4Vf22xvuzyXjyar7jJqp",
+        "twitter": "https://twitter.com/LidoFinance",
+        "website": "https://solana.lido.fi/"
+      },
+      "addr": "9nYrdeJrp1MRMPXoaz1vf3a6xUYWK2tPgjFnHoNufLHJ",
+      "tag": "",
+      "mint": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+      "scale": 9
+    },
+    "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk": {
+      "chainId": 101,
+      "address": "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+      "symbol": "soETH",
+      "name": "Wrapped Ethereum (Sollet)",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk/logo.png",
+      "tags": [
+        "wrapped-sollet",
+        "ethereum"
+      ],
+      "extensions": {
+        "bridgeContract": "https://etherscan.io/address/0xeae57ce9cc1984f202e15e038b964bb8bdf7229a",
+        "coingeckoId": "ethereum",
+        "serumV3Usdc": "4tSvZvnbyzHXLMTiFonMyxZoHmFqau1XArcRCVHLZ5gX",
+        "serumV3Usdt": "7dLVkUfBVfCGkFhSXDCq1ukM9usathSgS716t643iFGF"
+      },
+      "addr": "4Ykg6YbHVmeyvjtm8i5bXpMSb4BUetUSU9v14v2Tuuxm",
+      "tag": "wrapped-sollet,ethereum",
+      "mint": "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,51 @@
   "poolPublicKey": "4SdJRZTdM5ayJZArMkd5uP4cafSVgYKLCosCqbbtMagm",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "BgeRyFWWGHeVouqfHfcXUxmvfkgekhrXYVqQWf63kpJB",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "BgeRyFWWGHeVouqfHfcXUxmvfkgekhrXYVqQWf63kpJB": {
+      "chainId": 101,
+      "address": "BgeRyFWWGHeVouqfHfcXUxmvfkgekhrXYVqQWf63kpJB",
+      "symbol": "BAPE",
+      "name": "BAPE",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/BgeRyFWWGHeVouqfHfcXUxmvfkgekhrXYVqQWf63kpJB/logo.png",
+      "extensions": {
+        "coingeckoId": "bored-ape-social-club",
+        "twitter": "https://twitter.com/BAPESocialClub",
+        "website": "https://boredapesocial.club"
+      },
+      "addr": "2Vkfezx1cETTJTtbsFZhNN3gKbeosnHAHbwpgVaYfvqk",
+      "tag": "",
+      "mint": "BgeRyFWWGHeVouqfHfcXUxmvfkgekhrXYVqQWf63kpJB",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "7VugpPKL9ASb9xBxrtRaGCAPPfpjeWVunP4sE7TLvdoy",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

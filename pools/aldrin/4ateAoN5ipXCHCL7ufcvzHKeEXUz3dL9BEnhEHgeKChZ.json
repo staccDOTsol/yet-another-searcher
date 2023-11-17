@@ -38,5 +38,52 @@
   "poolPublicKey": "33pNTKwCus7MrRtUgot5SvsnSaPTAcpU28eqA6RXVy89",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "PHNX6NaMPbSPNvhDWEvr18dAfjM4Qz2PBYvm5NvgcD9",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "PHNX6NaMPbSPNvhDWEvr18dAfjM4Qz2PBYvm5NvgcD9": {
+      "chainId": 101,
+      "address": "PHNX6NaMPbSPNvhDWEvr18dAfjM4Qz2PBYvm5NvgcD9",
+      "symbol": "PHNX",
+      "name": "PHOENIX BURN ",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/PHNX6NaMPbSPNvhDWEvr18dAfjM4Qz2PBYvm5NvgcD9/logo.png",
+      "tags": [
+        "social-token"
+      ],
+      "extensions": {
+        "description": "PHOENIX BURN"
+      },
+      "addr": "6b41kCQbDDMTx4wV7HM5onFrutCR8s3C2bM7SqGJQqex",
+      "tag": "social-token",
+      "mint": "PHNX6NaMPbSPNvhDWEvr18dAfjM4Qz2PBYvm5NvgcD9",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "7NyiT2ywzosz73hjgewkHpppWJRAvsJvUGSZdt9Fjz2m",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,52 @@
   "poolPublicKey": "2xwzb59oRYZ3WQna7kjxezAmbc2hQn6xXohqZpxdm5dY",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "GV3MjuGin8aTG6Rhc1vR1QFYp8gq5vW39jnNPLrbzmPi",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "GV3MjuGin8aTG6Rhc1vR1QFYp8gq5vW39jnNPLrbzmPi": {
+      "chainId": 101,
+      "address": "GV3MjuGin8aTG6Rhc1vR1QFYp8gq5vW39jnNPLrbzmPi",
+      "symbol": "creatorpro",
+      "name": "creatorPRO",
+      "decimals": 6,
+      "logoURI": "https://creatorpro.live/simbolo-creator.png",
+      "tags": [
+        "creator",
+        "creators",
+        "creator-token",
+        "artist"
+      ],
+      "addr": "B9bQCwPYSn28e5b2pkcyA1PUCu76shB2NSWWvn49ERRW",
+      "tag": "creator,creators,creator-token,artist",
+      "mint": "GV3MjuGin8aTG6Rhc1vR1QFYp8gq5vW39jnNPLrbzmPi",
+      "scale": 6
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "GWZobZBFDs7V7CSnAy9jpBmRoRgQboCPoXWKQe6UMQ4S",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,44 @@
   "poolPublicKey": "3rG3WmByUydKAVmiWkd1jxPuhLfMfcbFFF69NvkDRnBG",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4"
+  "other": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+  "tokenIds": [
+    "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+    "EH8wCubDZ8nFvy8xv9T3j5EGZ9AaJXvNAxjpqXiSvqEX"
+  ],
+  "tokens": {
+    "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4": {
+      "chainId": 101,
+      "address": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+      "symbol": "MHC",
+      "name": "Most Hyped Crypto",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4/logo.png",
+      "tags": [
+        "governing-token"
+      ],
+      "addr": "6vAo4fF9djcVVi1NJzJpxD4NFQddMqRYYbB8TF6eokwX",
+      "tag": "governing-token",
+      "mint": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+      "scale": 0
+    },
+    "EH8wCubDZ8nFvy8xv9T3j5EGZ9AaJXvNAxjpqXiSvqEX": {
+      "chainId": 101,
+      "address": "EH8wCubDZ8nFvy8xv9T3j5EGZ9AaJXvNAxjpqXiSvqEX",
+      "symbol": "MHCSWAP",
+      "name": "Most Hyped Crypto Swap Token",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EH8wCubDZ8nFvy8xv9T3j5EGZ9AaJXvNAxjpqXiSvqEX/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "addr": "9sdknEXA6apXRMCrR2QCvzcjh2STbztFWEbHPyHue7XW",
+      "tag": "utility-token",
+      "mint": "EH8wCubDZ8nFvy8xv9T3j5EGZ9AaJXvNAxjpqXiSvqEX",
+      "scale": 0
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,49 @@
   "poolPublicKey": "D2JTvQ1QUd5nKaz7NvvMYK9KQyNmNANoWexGp76Wj4u8",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+  "other": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "tokenIds": [
+    "A6XKxTA1PiYjk3KTh9txMGCCc5CaNj56fRKnmpr6pYDN",
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+  ],
+  "tokens": {
+    "A6XKxTA1PiYjk3KTh9txMGCCc5CaNj56fRKnmpr6pYDN": {
+      "chainId": 101,
+      "address": "A6XKxTA1PiYjk3KTh9txMGCCc5CaNj56fRKnmpr6pYDN",
+      "symbol": "LECT",
+      "name": "Lecturer Token",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/A6XKxTA1PiYjk3KTh9txMGCCc5CaNj56fRKnmpr6pYDN/logo.png",
+      "extensions": {
+        "website": "https://sol.lecturertoken.com"
+      },
+      "addr": "GBqRuzPc1oK7GD4QBRT3GLcfghpHwMJATJ3CmrWYtw1c",
+      "tag": "",
+      "mint": "A6XKxTA1PiYjk3KTh9txMGCCc5CaNj56fRKnmpr6pYDN",
+      "scale": 9
+    },
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+      "chainId": 101,
+      "address": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "symbol": "USDT",
+      "name": "USDT",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "tether",
+        "serumV3Usdc": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://tether.to/"
+      },
+      "addr": "GyiNrQUhwiMt7thjychWNurGYZz2r344A1sa2mLijTPW",
+      "tag": "stablecoin",
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

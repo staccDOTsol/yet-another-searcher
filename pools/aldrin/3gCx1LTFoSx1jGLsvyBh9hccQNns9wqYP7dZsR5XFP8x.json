@@ -38,5 +38,50 @@
   "poolPublicKey": "8Y5BSMj6Qc8fUwF8abVpCJXAMR1sD44tUYtpct5ueDve",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "So11111111111111111111111111111111111111112"
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh": {
+      "chainId": 101,
+      "address": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+      "symbol": "ARB",
+      "name": "ARB Protocol",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/ARBProtocol/arbprotocol/main/IMG_3600.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/M4F8RKqgce",
+        "twitter": "https://twitter.com/arbprotocol",
+        "coingeckoId": "arb-protocol"
+      },
+      "addr": "Bxs9yBZfvJX6mkZePXNQzmtNMhJmTuXEJWJT3cQekw57",
+      "tag": "utility-token",
+      "mint": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+      "scale": 6
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "6zQSmyGWFMgTJMjswwSGU8BigUvtRYV7ppQadb7MiwKV",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

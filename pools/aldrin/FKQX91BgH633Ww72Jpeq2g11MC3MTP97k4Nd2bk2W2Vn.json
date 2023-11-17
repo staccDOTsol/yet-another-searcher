@@ -38,5 +38,59 @@
   "poolPublicKey": "AFu6fk1de2XbmvS16m3E2zA1zANR6Zwg9TBDmo8xDpDu",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "AymKzSDznoLT7Vhsb4wSRnCj1gjcG3zkgYFY8fxsHHer",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "AymKzSDznoLT7Vhsb4wSRnCj1gjcG3zkgYFY8fxsHHer": {
+      "chainId": 101,
+      "address": "AymKzSDznoLT7Vhsb4wSRnCj1gjcG3zkgYFY8fxsHHer",
+      "symbol": "TICKET",
+      "name": "The Ticket Finance",
+      "decimals": 8,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/AymKzSDznoLT7Vhsb4wSRnCj1gjcG3zkgYFY8fxsHHer/logo.png",
+      "tags": [
+        "launchpad",
+        "dex",
+        "defi",
+        "exchange",
+        "utility-token"
+      ],
+      "extensions": {
+        "serumV3Usdc": "HBfdGEMeQQpGogC3Li4uhRqZxGZAVLM9zimt31vdtSdA",
+        "telegram": "https://t.me/theticketfinance",
+        "twitter": "https://twitter.com/TheTicketSol",
+        "website": "https://theticket.finance"
+      },
+      "addr": "6hEZrVBkpNt7xCZCFquDNcammi4hy5TDLrsDcnZP53zv",
+      "tag": "launchpad,dex,defi,exchange,utility-token",
+      "mint": "AymKzSDznoLT7Vhsb4wSRnCj1gjcG3zkgYFY8fxsHHer",
+      "scale": 8
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "4C9gL7KJkriRR3UqRLgZMJ2R4MR9A3qLJ8LBDwdNzGae",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

@@ -38,5 +38,56 @@
   "poolPublicKey": "5EtPHmFgjJ7U9p2iSNNpEFF3vJtiDP3bzJ6Exgv7t6mM",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk"
+  ],
+  "tokens": {
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "FFV3egThZA5kKn5Sfnoo72mxRJCFHGp3iD4rHAeeKneQ",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    },
+    "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk": {
+      "chainId": 101,
+      "address": "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+      "symbol": "MCAKE",
+      "name": "Meme Cake",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk/logo.png",
+      "tags": [
+        "utility-token",
+        "memecake",
+        "social-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.com/invite/WFkRssvNtW",
+        "twitter": "https://twitter.com/realmemecake",
+        "website": "https://memecake.io/"
+      },
+      "addr": "BBkmgmeE4ypFKfDsCBfbJBaJqZG5J6ypMZuxwC1q2MNA",
+      "tag": "utility-token,memecake,social-token",
+      "mint": "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }

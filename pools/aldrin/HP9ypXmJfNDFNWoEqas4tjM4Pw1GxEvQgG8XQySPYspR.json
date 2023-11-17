@@ -38,5 +38,56 @@
   "poolPublicKey": "2kFAojMtPB3SwFtMeW6UhUaLZ8AwVjfuj9d64JAWVwzr",
   "poolVersion": 2,
   "provider": "aldrin",
-  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "A7rqejP8LKN8syXMr4tvcKjs2iJ4WtZjXNs1e6qP3m9g",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "A7rqejP8LKN8syXMr4tvcKjs2iJ4WtZjXNs1e6qP3m9g": {
+      "chainId": 101,
+      "address": "A7rqejP8LKN8syXMr4tvcKjs2iJ4WtZjXNs1e6qP3m9g",
+      "symbol": "Zion",
+      "name": "Zion",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/LousyNFTs/token-list/main/assets/mainnet/A7rqejP8LKN8syXMr4tvcKjs2iJ4WtZjXNs1e6qP3m9g/Ziontoken_2_84.png",
+      "tags": [
+        "social-token",
+        "community-token"
+      ],
+      "extensions": {
+        "coingeckoId": "zion",
+        "discord": "http://discord.gg/catcartel",
+        "twitter": "https://twitter.com/SolanaCatCartel",
+        "website": "https://catcartel.io/"
+      },
+      "addr": "EVgL1CEoAQH1GVBSHomMheVCpJyNxAR4kYJDAkea1YCQ",
+      "tag": "social-token,community-token",
+      "mint": "A7rqejP8LKN8syXMr4tvcKjs2iJ4WtZjXNs1e6qP3m9g",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "BxfLgX783Kdm6fbyPWHxj7cRpCD6wFxEJ5GN2Dy9euR4",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
 }
