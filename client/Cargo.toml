@@ -8,10 +8,6 @@ name = "client"
 path = "src/lib.rs"
 
 [[bin]]
-name = "flash-loan-example"
-path = "src/flash_loan_once.rs"
-
-[[bin]]
 name = "main"
 path = "src/main.rs"
 
