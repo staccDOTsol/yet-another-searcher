@@ -97,7 +97,6 @@ impl Arbitrager {
         pool_path: Vec<PoolQuote>,
         sent_arbs: &mut HashSet<String>,
         transfer: Instruction,
-        page_config: &ShardedDb,
     ) {
         let src_curr = path[path.len() - 1]; // last mint
         let src_mint = self.token_mints[src_curr];
@@ -258,7 +257,6 @@ impl Arbitrager {
                         new_pool_path, // !
                         sent_arbs,
                         transfer.clone(),
-                        page_config,
                     );
                 }
             }

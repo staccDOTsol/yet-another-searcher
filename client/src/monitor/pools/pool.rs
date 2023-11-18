@@ -82,5 +82,8 @@ pub trait PoolOperations: Debug {
 
     fn can_trade(&self, mint_in: &Pubkey, mint_out: &Pubkey) -> bool; // used for tests
 }
-
-// clone_trait_object!(PoolOperations);
+impl Clone for Box<dyn PoolOperations> {
+    fn clone(&self) -> Box<dyn PoolOperations> {
+        self.clone_box()
+    }
+}

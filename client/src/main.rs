@@ -442,7 +442,7 @@ async fn main() {
     let mut pool_count = 0;
     let mut account_ptr = 0;
 
-    for mut pool in pools.into_iter() {
+    for mut pool in pools.clone().into_iter() {
         // update pool
         let length = update_pks_lengths[pool_count];
         //range end index 518 out of range for slice of length 517
@@ -480,7 +480,15 @@ async fn main() {
     let mut swap_start_amount = init_token_balance; // scaled!
     println!("swap start amount = {}", swap_start_amount);
     let mut sent_arbs = HashSet::new(); // track what arbs we did with a larger size
-
+loop {
+    for mut pool   in pools.clone().into_iter() {
+        let accounts = pool.get_update_accounts();
+        let pc = page_config.lock().unwrap();
+        for acc in accounts {
+            let data = pc.get(&acc.to_string()).unwrap().clone();
+            pool.set_update_accounts2(Pubkey::from_str(&acc.to_string()).unwrap(), &data.data, Cluster::Mainnet);
+        }
+    }
     let src_ata = derive_token_address(&owner.pubkey(), &usdc_mint);
     // PROFIT OR REVERT instruction
     let ix = spl_token::instruction::transfer(
@@ -499,6 +507,6 @@ async fn main() {
         vec![],
         &mut sent_arbs,
         ix.unwrap(),
-        &page_config,
     );
+}
 }
