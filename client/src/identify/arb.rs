@@ -66,7 +66,7 @@ use log::info;
 use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 
-use crate::pool::{PoolOperations, PoolType};
+use crate::monitor::pools::{PoolOperations, PoolType};
 
 use crate::utils::{derive_token_address, PoolGraph, PoolIndex, PoolQuote};
 

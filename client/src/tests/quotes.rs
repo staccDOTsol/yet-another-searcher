@@ -15,7 +15,7 @@ use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 
 use crate::constants::*;
-use crate::pool::{pool_factory, PoolOperations, PoolType};
+use crate::monitor::pools::{pool_factory, PoolOperations, PoolType};
 use crate::utils::{derive_token_address, read_json_dir};
 
 #[test]
