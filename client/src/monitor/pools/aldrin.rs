@@ -81,7 +81,7 @@ impl PoolOperations for AldrinPool {
         let provider = Client::new_with_options(
             Cluster::Mainnet,
             rc_owner.clone(),
-            CommitmentConfig::recent(),
+            CommitmentConfig::processed(),
         );
         let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let base_token_mint = &self.token_ids[0];
@@ -255,7 +255,7 @@ impl PoolOperations for AldrinPool {
     }
     
     fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
-        let mut acc_data0 = data;
+        let acc_data0 = data;
 
         let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();
         let _mint = amount0.mint;
