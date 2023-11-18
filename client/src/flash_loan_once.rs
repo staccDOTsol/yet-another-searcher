@@ -18,7 +18,7 @@ use flash_loan_sdk::instruction::{flash_borrow, flash_repay};
 use flash_loan_sdk::{available_liquidity, flash_loan_fee, get_reserve, FLASH_LOAN_ID};
 
 fn main() {
-    let url =  "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9";
+    let url = "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9";
     let reserve = Pubkey::from_str("8qow5YNnT9NfvxVsxYMiKV4ddggT5gEe3uLUvjQ6uYaZ").unwrap();
     let program_id = Pubkey::from_str("F1aShdFVv12jar3oM2fi6SDqbefSnnCVRzaxbPH3you7").unwrap();
     println!("=====================Setup=====================");
@@ -59,7 +59,8 @@ fn main() {
         reserve.lending_market,
     );
 
-    let authority_kp = read_keypair_file("/Users/stevengavacs/.config/solana/id.json").expect("Reading authority key pair file");
+    let authority_kp = read_keypair_file("/Users/stevengavacs/.config/solana/id.json")
+        .expect("Reading authority key pair file");
 
     // Construct FlashRepay instruction. Again we specify amount_to_borrow without fees.
     // But when contract will be executing this IX it will transfer amount_to_borrow + fee from user's wallet!

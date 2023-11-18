@@ -52,8 +52,7 @@ pub fn pool_factory(pool_type: &PoolType, json_str: &String) -> Box<dyn PoolOper
 }
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
-pub trait PoolOperations: Debug  {
-
+pub trait PoolOperations: Debug {
     fn clone_box(&self) -> Box<dyn PoolOperations>;
 
     fn get_pool_type(&self) -> PoolType;
@@ -72,7 +71,7 @@ pub trait PoolOperations: Debug  {
         amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        page_config: &ShardedDb
+        page_config: &ShardedDb,
     ) -> u128;
     fn swap_ix(
         &self,
