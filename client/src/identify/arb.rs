@@ -24,12 +24,10 @@ use solana_sdk::{
     self,
     commitment_config::CommitmentConfig,
     instruction::Instruction,
-    signature::{read_keypair_file, Keypair, Signature},
+    signature::{Keypair, Signature},
     signer::Signer,
     transaction::VersionedTransaction,
 };
-
-use flash_loan_sdk::get_reserve;
 
 use anchor_client::Cluster;
 use std::collections::{HashMap, HashSet};
@@ -43,7 +41,7 @@ use tmp::instruction as tmp_ix;
 
 use crate::monitor::pools::PoolType;
 
-use crate::utils::{derive_token_address, PoolGraph, PoolIndex, PoolQuote};
+use crate::utils::{PoolGraph, PoolIndex, PoolQuote};
 
 // from https://github.com/solana-labs/solana/blob/10d677a0927b2ca450b784f750477f05ff6afffe/sdk/program/src/message/versions/v0/mod.rs#L209
 fn create_tx_with_address_table_lookup(
@@ -128,7 +126,7 @@ impl Arbitrager {
             {
                 continue;
             }
-            let mut pools = &mut self
+            let pools = &mut self
                 .graph
                 .0
                 .get(&PoolIndex(src_curr))
@@ -141,7 +139,7 @@ impl Arbitrager {
             let dst_mint = self.token_mints[dst_mint_idx];
 
             for pool in pools.iter_mut() {
-                let mut new_balance;
+                let new_balance;
                 new_balance = pool.0.borrow_mut().get_quote_with_amounts_scaled(
                     curr_balance,
                     &src_mint,
@@ -154,11 +152,11 @@ impl Arbitrager {
 
                 let mut new_pool_path = pool_path.clone();
                 new_pool_path.push(pool.clone()); // clone the pointer
-                let mut new_init_balance = init_balance;
+                let new_init_balance = init_balance;
 
                 if dst_mint_idx == start_mint_idx {
                     // println!("{:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
-                    let mut mult = 1.0002;
+                    let mult = 1.0002;
 
                     println!("new balance: {:?}", new_balance);
                     // if new_balance > init_balance - 1086310399 {
@@ -187,7 +185,6 @@ impl Arbitrager {
                                 new_init_balance,
                                 &new_path,
                                 &new_pool_path,
-                                vec![&mut Keypair::new()],
                                 &ookp,
                             )
                             .0
@@ -205,23 +202,11 @@ impl Arbitrager {
                         println!("Flash loan program id: {}", program_id);
                         println!("Flash loan reserve   : {}", reserve);
                         println!("===============================================");
-                        let wallet =
-                            Pubkey::from_str("Et1ZTDXDQ9V7TyyZCFX6nAJmxffpsD1iFerYpArQVRAf")
-                                .unwrap();
 
                         let rpc_client = RpcClient::new_with_commitment(
                             url.clone(),
                             CommitmentConfig::confirmed(),
                         );
-
-                        // From Solana RPC rate limit perspective it is more efficient to load Reserve once from the chain and then
-                        // use it in subsequent calls.
-                        let reserve = get_reserve(&reserve, &rpc_client).expect("Getting reserve");
-
-                        let authority_kp =
-                            read_keypair_file("/Users/stevengavacs/.config/solana/id.json")
-                                .expect("Reading authority key pair file");
-                        let src_ata = derive_token_address(&self.owner.pubkey(), &src_mint);
 
                         // flatten to Vec<Instructions>
                         ixs.push(vec![transfer.clone()]);
@@ -238,6 +223,7 @@ impl Arbitrager {
                             "The serialized versioned tx is {} bytes",
                             serialized_versioned_tx.len(),
                         );
+                        // TODO fix deprecated encode call here. 
                         let serialized_encoded = base64::encode(serialized_versioned_tx);
                         let config = RpcSendTransactionConfig {
                             skip_preflight: false,
@@ -286,16 +272,11 @@ impl Arbitrager {
         swap_start_amount: u128,
         mint_idxs: &Vec<usize>,
         pools: &Vec<PoolQuote>,
-        mut signers: Vec<&mut Keypair>,
-
         ookp: &Keypair,
     ) -> (Vec<Vec<Instruction>>, bool) {
         // gather swap ixs
         let mut ixs = vec![];
-        let swap_state_pda =
-            (Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap());
-        let src_mint = self.token_mints[mint_idxs[0]];
-        let src_ata = derive_token_address(&self.owner.pubkey(), &src_mint);
+        let swap_state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
         // setup anchor things
         let owner = solana_sdk::signer::keypair::read_keypair_file(
@@ -306,7 +287,7 @@ impl Arbitrager {
         let provider = anchor_client::Client::new_with_options(
             Cluster::Mainnet,
             rc_owner.clone(),
-            solana_sdk::commitment_config::CommitmentConfig::recent(),
+            solana_sdk::commitment_config::CommitmentConfig::processed(),
         );
         let program = provider.program(*crate::constants::ARB_PROGRAM_ID).unwrap();
 
@@ -327,7 +308,7 @@ impl Arbitrager {
             let [mint_idx0, mint_idx1] = [mint_idxs[i], mint_idxs[i + 1]];
             let [mint0, mint1] = [self.token_mints[mint_idx0], self.token_mints[mint_idx1]];
             let pool = &pools[i];
-            let mut swap_ix = pool.0.swap_ix(
+            let swap_ix = pool.0.swap_ix(
                 &self.owner.pubkey(),
                 &mint0,
                 &mint1,
