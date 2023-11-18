@@ -145,30 +145,16 @@ impl PoolOperations for AldrinPool {
     }
 
     fn get_quote_with_amounts_scaled(
-        &mut self,
+        & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        page_config: &ShardedDb,
     ) -> u128 {
         if !self.pool_amounts.contains_key(&mint_in.to_string())
             || !self.pool_amounts.contains_key(&mint_out.to_string())
         {
             println!("aldrin pool amounts not found");
             return 0;
-        }
-        let pc = page_config.lock().unwrap();
-        if pc.contains_key(&self.get_own_addr().to_string()) {
-            let acc = pc.get(&self.get_own_addr().to_string()).unwrap();
-            let acc_data = &acc.data;
-            let amount0 = unpack_token_account(acc_data).amount as u128;
-            let id0 = &self.token_ids[0];
-            let id1 = &self.token_ids[1];
-            if id0.to_string() == mint_in.to_string() {
-                self.pool_amounts.insert(id0.clone(), amount0);
-            } else {
-                self.pool_amounts.insert(id1.clone(), amount0);
-            }
         }
         let pool_src_amount = *self.pool_amounts.get(&mint_in.to_string()).unwrap();
         let pool_dst_amount = *self.pool_amounts.get(&mint_out.to_string()).unwrap();

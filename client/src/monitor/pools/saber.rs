@@ -111,30 +111,16 @@ impl PoolOperations for SaberPool {
     }
 
     fn get_quote_with_amounts_scaled(
-        &mut self,
+        & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        page_config: &ShardedDb,
     ) -> u128 {
         let calculator = Stable {
             amp: self.target_amp,
             fee_numerator: self.fee_numerator as u128,
             fee_denominator: self.fee_denominator as u128,
         };
-        let pc = page_config.lock().unwrap();
-        if pc.contains_key(&self.get_own_addr().to_string()) {
-            let acc = pc.get(&self.get_own_addr().to_string()).unwrap();
-            let acc_data = &acc.data;
-            let amount0 = unpack_token_account(acc_data).amount as u128;
-            let id0 = &self.token_ids[0];
-            let id1 = &self.token_ids[1];
-            if id0.to_string() == mint_in.to_string() {
-                self.pool_amounts.insert(id0.clone(), amount0);
-            } else {
-                self.pool_amounts.insert(id1.clone(), amount0);
-            }
-        }
         if self.pool_amounts.contains_key(&mint_in.to_string())
             && self.pool_amounts.contains_key(&mint_out.to_string())
         {

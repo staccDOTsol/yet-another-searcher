@@ -8,7 +8,7 @@ use anchor_client::solana_sdk::signature::{Keypair, Signer};
 use std::str::FromStr;
 use anchor_client::{Client, Cluster};
 
-use client::pools::SerumPool;
+use client::monitor::pools::SerumPool;
 
 use solana_sdk::transaction::Transaction;
 
@@ -22,7 +22,7 @@ use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_instructions;
 
 use client::constants::*;
-use client::pool::{PoolDir, PoolType};
+use client::monitor::pools::pool::{PoolDir, PoolType};
 use client::utils::read_json_dir;
 
 use indicatif::ProgressBar;

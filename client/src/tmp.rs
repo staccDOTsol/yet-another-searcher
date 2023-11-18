@@ -4,6 +4,7 @@ use anchor_client::solana_sdk::pubkey::Pubkey;
 use redb::Database;
 use redb::ReadableTable;
 use redb::TableDefinition;
+use client::monitor::pools::*;
 const TABLE: TableDefinition<&str, &[u8]> = TableDefinition::new("my_data");
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
@@ -23,9 +24,7 @@ use clap::Parser;
 use log::{debug, info, warn};
 use solana_sdk::account::Account;
 
-use client::arb::*;
 use client::constants::*;
-use client::pool::{pool_factory, PoolDir, PoolOperations, PoolType};
 use client::serialize::token::unpack_token_account;
 use client::utils::{
     derive_token_address, read_json_dir, PoolEdge, PoolGraph, PoolIndex, PoolQuote,
@@ -319,27 +318,4 @@ fn main() {
     if false {
         first = false
     }
-    let arbitrager = Arbitrager {
-        token_mints: token_mints.clone(),
-        graph_edges: graph_edges.clone(),
-        graph,
-        cluster: cluster.clone(),
-        owner: rc_owner.clone(),
-        connection,
-    };
-    println!("searching for arbitrages...");
-    let min_swap_amount = 10_u128.pow(3_u32); // scaled! -- 1 USDC
-    let mut swap_start_amount = init_token_balance; // scaled!
-    println!("swap start amount = {}", swap_start_amount);
-
-    let src_ata = derive_token_address(&owner.pubkey(), &usdc_mint);
-    // PROFIT OR REVERT instruction
-    let ix = spl_token::instruction::transfer(
-        &spl_token::id(),
-        &src_ata,
-        &src_ata,
-        &owner.pubkey(),
-        &[],
-        init_token_balance as u64,
-    );
 }

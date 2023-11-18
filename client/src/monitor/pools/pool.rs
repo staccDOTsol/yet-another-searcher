@@ -66,11 +66,10 @@ pub trait PoolOperations: Debug {
     fn mint_2_scale(&self, mint: &Pubkey) -> u64;
 
     fn get_quote_with_amounts_scaled(
-        &mut self,
+        &self,
         amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        page_config: &ShardedDb,
     ) -> u128;
     fn swap_ix(
         &self,

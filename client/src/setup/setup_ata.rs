@@ -7,7 +7,7 @@ use anchor_client::solana_sdk::signature::Signer;
 
 use anchor_client::Cluster;
 
-use client::pool::PoolDir;
+use client::monitor::pools::pool::PoolDir;
 use solana_sdk::instruction::Instruction;
 use solana_sdk::transaction::Transaction;
 
@@ -20,7 +20,7 @@ use solana_sdk::system_program;
 use log::warn;
 
 use client::constants::*;
-use client::pool::{pool_factory, PoolOperations, PoolType};
+use client::monitor::pools::pool::{pool_factory, PoolOperations, PoolType};
 use client::serialize::token::unpack_token_account;
 use client::utils::{derive_token_address, read_json_dir};
 

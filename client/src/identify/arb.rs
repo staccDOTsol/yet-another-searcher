@@ -126,7 +126,7 @@ impl Arbitrager {
             {
                 continue;
             }
-            let pools = &mut self
+            let pools = self
                 .graph
                 .0
                 .get(&PoolIndex(src_curr))
@@ -138,15 +138,13 @@ impl Arbitrager {
             let dst_mint_idx = *dst_mint_idx;
             let dst_mint = self.token_mints[dst_mint_idx];
 
-            for pool in pools.iter_mut() {
-                let new_balance;
-                new_balance = pool.0.borrow_mut().get_quote_with_amounts_scaled(
+            for mut pool in pools.iter() {
+                let mut new_balance;
+                new_balance = pool.0.get_quote_with_amounts_scaled(
                     curr_balance,
                     &src_mint,
                     &dst_mint,
-                    &page_config,
                 );
-
                 let mut new_path = path.clone();
                 new_path.push(dst_mint_idx);
 

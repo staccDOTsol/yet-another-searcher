@@ -12,6 +12,7 @@ use tokio::runtime::Runtime; // 0.2.23
 use tokio::sync::mpsc;
 
 // Create the runtime
+use client::identify::arb::Arbitrager;
 
 use std::fs::File;
 use std::task::{Context, Poll, RawWaker, RawWakerVTable, Waker};
@@ -76,9 +77,9 @@ use log::{debug, info, warn};
 use solana_sdk::account::Account;
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
-use client::arb::*;
+use client::execute::*;
 use client::constants::*;
-use client::pool::{pool_factory, PoolDir, PoolOperations, PoolType};
+use client::monitor::pools::pool::{pool_factory, PoolDir, PoolOperations, PoolType};
 // use spl_token unpack_token_Account
 use spl_token::state::Account as TokenAccount;
 
