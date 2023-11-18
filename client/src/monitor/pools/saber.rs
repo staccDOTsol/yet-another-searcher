@@ -12,7 +12,7 @@ use anchor_client::{Client, Cluster};
 use std::collections::HashSet;
 use std::str::FromStr;
 
-use crate::pool::{PoolOperations, PoolType};
+use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
 use anchor_client::solana_client::rpc_client::RpcClient;
 use anchor_client::solana_client::rpc_config::RpcSendTransactionConfig;
@@ -31,7 +31,7 @@ use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 
 use crate::constants::*;
-use crate::pool_utils::stable::Stable;
+use crate::monitor::pool_utils::stable::Stable;
 use crate::utils::{derive_token_address, str2pubkey};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]

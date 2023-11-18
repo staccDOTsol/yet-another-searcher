@@ -8,7 +8,7 @@ use std::num::NonZeroU64;
 use std::sync::{Arc, Mutex};
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
-use crate::pool::PoolOperations;
+use crate::monitor::pools::PoolOperations;
 use crate::serialize::token::WrappedPubkey;
 use anchor_client::solana_client::rpc_client::RpcClient;
 use anchor_client::{Client, Cluster, Program};
@@ -35,7 +35,7 @@ use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_instructions;
 
 use crate::constants::*;
-use crate::pool::{PoolDir, PoolType};
+use crate::monitor::pools::{PoolDir, PoolType};
 use crate::utils::read_json_dir;
 
 use indicatif::ProgressBar;
@@ -50,7 +50,7 @@ use std::ops::DerefMut;
 use solana_sdk::instruction::Instruction;
 
 use crate::constants::*;
-use crate::pool_utils::serum::*;
+use crate::monitor::pool_utils::serum::*;
 use solana_sdk::account::Account;
 use solana_sdk::account_info::AccountInfo;
 use solana_sdk::clock::Epoch;

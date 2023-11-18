@@ -1,4 +1,4 @@
-use crate::pool::{PoolOperations, PoolType};
+use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::pool::JSONFeeStructure;
 use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
@@ -31,8 +31,8 @@ use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 
 use crate::constants::*;
-use crate::pool_utils::base::CurveType;
-use crate::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
+use crate::monitor::pool_utils::base::CurveType;
+use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
 use crate::utils::{derive_token_address, str2pubkey};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]

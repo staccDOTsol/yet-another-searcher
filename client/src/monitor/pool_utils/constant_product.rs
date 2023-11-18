@@ -3,7 +3,7 @@
 use {
     crate::{
         error::SwapError,
-        pool_utils::calculator::{
+        monitor::pool_utils::calculator::{
             map_zero_to_none, CurveCalculator, DynPack, RoundDirection, SwapWithoutFeesResult,
             TradeDirection, TradingTokenResult,
         },
@@ -276,7 +276,7 @@ impl DynPack for ConstantProductCurve {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::pool_utils::calculator::{
+    use crate::monitor::pool_utils::calculator::{
         test::{
             check_curve_value_from_swap, check_deposit_token_conversion,
             check_pool_value_from_deposit, check_pool_value_from_withdraw,

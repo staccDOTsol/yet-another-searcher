@@ -1,8 +1,8 @@
 use crate::{
-    pool_utils,
-    pool_utils::base::{CurveType, SwapCurve},
-    pool_utils::fees::Fees,
-    pool_utils::{constant_product::ConstantProductCurve, stable::StableCurve},
+    monitor::pool_utils,
+    monitor::pool_utils::base::{CurveType, SwapCurve},
+    monitor::pool_utils::fees::Fees,
+    monitor::pool_utils::{constant_product::ConstantProductCurve, stable::StableCurve},
 };
 use anyhow::Result;
 use core::panic;

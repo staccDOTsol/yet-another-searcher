@@ -25,9 +25,9 @@ use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 
 use crate::constants::*;
-use crate::pool::{PoolOperations, PoolType};
-use crate::pool_utils::base::CurveType;
-use crate::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
+use crate::monitor::pools::{PoolOperations, PoolType};
+use crate::monitor::pool_utils::base::CurveType;
+use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
 use crate::serialize::pool::JSONFeeStructure2;
 use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
 use crate::utils::{derive_token_address, str2pubkey};

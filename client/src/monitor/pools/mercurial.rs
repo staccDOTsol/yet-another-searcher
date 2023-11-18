@@ -1,4 +1,4 @@
-use crate::pool::{PoolOperations, PoolType};
+use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
@@ -30,7 +30,7 @@ use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 
 use crate::constants::*;
-use crate::pool_utils::stable::Stable;
+use crate::monitor::pool_utils::stable::Stable;
 use crate::utils::{derive_token_address, str2pubkey};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]

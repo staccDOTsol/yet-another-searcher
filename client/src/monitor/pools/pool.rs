@@ -4,7 +4,7 @@ use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
 use solana_sdk::signature::Keypair;
 
-use crate::pools::*;
+use crate::monitor::pools::*;
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::sync::{Arc, Mutex};
