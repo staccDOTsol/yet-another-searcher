@@ -1,11 +1,16 @@
 use core::panic;
 use std::num::NonZeroU64;
+use std::sync::{Arc, Mutex};
 use chrono::Utc;
 use bytemuck::{
     bytes_of, bytes_of_mut, cast, cast_slice, cast_slice_mut, from_bytes_mut, try_cast_mut,
     try_cast_slice_mut, try_from_bytes_mut, Pod, Zeroable,
 };
+
+type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use openbook_dex::matching::OrderType;
+use solana_sdk::program_pack::Pack;
+use openbook_dex::state::AccountFlag;
 use openbook_dex::matching::Side;
 use crate::pool::PoolOperations;
 use crate::serialize::token::WrappedPubkey;
@@ -54,7 +59,7 @@ use solana_sdk::clock::Epoch;
 
 use std::str::FromStr;
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SerumPool {
     pub own_address: WrappedPubkey,
@@ -221,6 +226,13 @@ impl PoolOperations for SerumPool {
         "Serum".to_string()
     }
 
+
+    fn clone_box(&self) -> Box<dyn PoolOperations> {
+        Box::new(self.clone())
+    }
+    fn get_own_addr(&self) -> Pubkey {
+        self.own_address.0
+    }
     fn get_pool_type(&self) -> PoolType {
         PoolType::SerumPoolType
     }
@@ -230,6 +242,8 @@ impl PoolOperations for SerumPool {
 
     fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster) {
         self.accounts = Some(accounts);
+
+
         let oo_path = match cluster {
             Cluster::Localnet => "./serum_open_orders.json",
             Cluster::Mainnet => {
@@ -240,6 +254,70 @@ impl PoolOperations for SerumPool {
         let oo_str = std::fs::read_to_string(oo_path).unwrap();
         let oo_book: HashMap<String, String> = serde_json::from_str(&oo_str).unwrap();
         self.open_orders = Some(oo_book);
+    }
+
+    fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], cluster: Cluster) {
+        let testing = self.accounts.clone();
+        let mut taccs = vec![]; 
+        if testing.is_some() {
+            taccs = testing.unwrap();
+        }
+        else {
+            println!("made it here 1");
+            return;
+        }
+        println!("length acocunts {}", taccs.len());
+       if taccs.len() < 3 {
+        return 
+
+       }
+            println!("made it here 3");
+           
+            let flags = Market::account_flags(data);
+            if flags.is_err() {
+                return;
+            }
+            let flags = flags.unwrap();
+            if flags.intersects(AccountFlag::Bids) {
+                println!("made it here 2.5");
+                if taccs.len() < 2 {
+                    taccs.push(Some(Account {
+                        lamports: 0,
+                        data: data.to_vec(),
+                        owner: Pubkey::default(),
+                        executable: false,
+                        rent_epoch: 0,
+                    }));
+                }
+                let mut bids = taccs.get(1).unwrap().clone().unwrap();
+                bids.data = data.to_vec();
+                let tval = taccs.get(2);
+                if tval.is_none(){
+                    self.accounts = Some(vec![taccs.get(0).unwrap().clone(), Some(bids)]);
+                }
+                else {
+                self.accounts = Some(vec![taccs.get(0).unwrap().clone(), Some(bids), taccs.get(2).unwrap().clone()]);
+                }
+            } if flags.intersects(AccountFlag::Asks) {
+                     if taccs.len() < 3 {
+                    println!("made it here 32");
+                    taccs.push(Some(Account {
+                        lamports: 0,
+                        data: data.to_vec(),
+                        owner: Pubkey::default(),
+                        executable: false,
+                        rent_epoch: 0,
+                    }));
+                    self.accounts = Some(vec![taccs.get(0).unwrap().clone(), taccs.get(1).unwrap().clone(), (taccs.get(2).unwrap().clone())]);
+                }
+                else {
+                let mut asks = taccs.get(2).unwrap().clone().unwrap();
+                asks.data = data.to_vec();
+                println!("made it here 3.52");
+                self.accounts = Some(vec![taccs.get(0).unwrap().clone(), taccs.get(1).unwrap().clone(), Some(asks)]);
+                }
+
+        }
     }
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey {
@@ -269,10 +347,11 @@ impl PoolOperations for SerumPool {
     }
 
     fn get_quote_with_amounts_scaled(
-        &self,
+        &mut self,
         amount_in: u128,
         mint_in: &Pubkey,
         _mint_out: &Pubkey,
+        page_config: &ShardedDb,
     ) -> u128 {
         let market_pk = self.own_address.0;
         let fee_tier = FeeTier::from_srm_and_msrm_balances(&market_pk, 0, 0);
@@ -280,9 +359,89 @@ impl PoolOperations for SerumPool {
             amount_in: amount_in as u64,
             amount_out: 0,
         };
+        if self.accounts.is_none() {
+            println!("made it here 1");
+            return 0;
+        }
+        if self.accounts.as_ref().unwrap().len() < 2 {
+
+            println!("made it here 3");
+            return 0;
+        }
+        let pc = page_config.lock().unwrap();
+        if pc.contains_key(&self.get_own_addr().to_string()) {
+            let acc = pc.get(&self.get_own_addr().to_string()).unwrap();
+            let data = &acc.data;
+            let testing = self.accounts.clone();
+        let mut taccs = vec![]; 
+        if testing.is_some() {
+            taccs = testing.unwrap();
+        }
+        else {
+            println!("made it here 1");
+        }
+        println!("length acocunts {}", taccs.len());
+       if taccs.len() < 3 {
+
+       }
+            println!("made it here 3");
+           
+            let flags = Market::account_flags(data);
+            if flags.is_err() {
+                return 0;
+            }
+            let flags = flags.unwrap();
+            if flags.intersects(AccountFlag::Bids) {
+                println!("made it here 2.5");
+                if taccs.len() < 2 {
+                    taccs.push(Some(Account {
+                        lamports: 0,
+                        data: data.to_vec(),
+                        owner: Pubkey::default(),
+                        executable: false,
+                        rent_epoch: 0,
+                    }));
+                }
+                let mut bids = taccs.get(1).unwrap().clone().unwrap();
+                bids.data = data.to_vec();
+                let tval = taccs.get(2);
+                if tval.is_none(){
+                    self.accounts = Some(vec![taccs.get(0).unwrap().clone(), Some(bids)]);
+                }
+                else {
+                self.accounts = Some(vec![taccs.get(0).unwrap().clone(), Some(bids), taccs.get(2).unwrap().clone()]);
+                }
+            } if flags.intersects(AccountFlag::Asks) {
+                     if taccs.len() < 3 {
+                    println!("made it here 32");
+                    taccs.push(Some(Account {
+                        lamports: 0,
+                        data: data.to_vec(),
+                        owner: Pubkey::default(),
+                        executable: false,
+                        rent_epoch: 0,
+                    }));
+                    self.accounts = Some(vec![taccs.get(0).unwrap().clone(), taccs.get(1).unwrap().clone(), (taccs.get(2).unwrap().clone())]);
+                }
+                else {
+                let mut asks = taccs.get(2).unwrap().clone().unwrap();
+                asks.data = data.to_vec();
+                println!("made it here 3.52");
+                self.accounts = Some(vec![taccs.get(0).unwrap().clone(), taccs.get(1).unwrap().clone(), Some(asks)]);
+                }
+
+        }
+        }
 
         let market_acc = &self.accounts.as_ref().unwrap()[0];
+        println!("made it here");
         let bids_acc = &self.accounts.as_ref().unwrap()[1];
+        let tval = self.accounts.as_ref().unwrap();
+        if tval.len() < 3 {
+            println!("made it here 4");
+            return 0;
+        }
+
         let asks_acc = &self.accounts.as_ref().unwrap()[2];
 
         // clone accounts for simulation (improve later?)
@@ -297,7 +456,10 @@ impl PoolOperations for SerumPool {
         let asks_acc = &account_info(&self.asks.0, ask_acc);
         
        let mut m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
-        
+        if !m.is_ok() {
+            println!("{}", "m is none");
+            return 0;
+        }
         let mut market = m.unwrap();
         let mut bids = market.load_bids_mut(bids_acc).unwrap();
         let mut asks = market.load_asks_mut(asks_acc).unwrap();
@@ -330,9 +492,11 @@ impl PoolOperations for SerumPool {
                 }
             }
             iteration.amount_out as u128
-        } else {
-            panic!("invalid mints");
-        } 
+        }
+        else {
+            println!("{}", 0);
+            0
+        }
     }
 
     fn swap_ix(

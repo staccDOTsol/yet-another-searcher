@@ -33,7 +33,7 @@ tower-http = { version = "0.4.0", features = ["compression-br", "compression-gzi
 http = "*"
 axum = { version = "0.6.1", features = ["headers"] }
 axum-server = "0.5.0"
-
+redb = "*"
 bincode = "*"
 base64 = "*"
 solana-transaction-status = "*"

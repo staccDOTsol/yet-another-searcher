@@ -2,11 +2,13 @@ use crate::pool::{PoolOperations, PoolType};
 use crate::serialize::pool::JSONFeeStructure;
 use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
 use serde;
+use std::sync::{Arc, Mutex};
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
-
+use solana_sdk::program_pack::Pack;
 use anchor_client::{Client, Cluster};
 
+type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use std::collections::{HashMap, HashSet};
 use std::fmt::Debug;
 use std::rc::Rc;
@@ -54,6 +56,11 @@ pub struct OrcaPool {
 }
 
 impl PoolOperations for OrcaPool {
+
+
+    fn clone_box(&self) -> Box<dyn PoolOperations> {
+        Box::new(self.clone())
+    }
     fn get_pool_type(&self) -> PoolType {
         PoolType::OrcaPoolType
     }
@@ -109,15 +116,33 @@ impl PoolOperations for OrcaPool {
     }
 
     fn get_quote_with_amounts_scaled(
-        &self,
+        &mut self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
+        page_config: &ShardedDb,
     ) -> u128 {
         if !self.pool_amounts.contains_key(&mint_in.to_string())
             || !self.pool_amounts.contains_key(&mint_out.to_string())
         {
+            println!("orca pool amounts not found");
             return 0;
+        }
+        let pc = page_config.lock().unwrap();
+        if pc.contains_key(&self.get_own_addr()
+        .to_string()) {
+            let acc = pc.get(&self.get_own_addr()
+            .to_string()).unwrap();
+            let acc_data = &acc.data;
+            let amount0 = unpack_token_account(acc_data).amount as u128;
+            let id0 = &self.token_ids[0];
+            let id1 = &self.token_ids[1];
+            if id0.to_string() == mint_in.to_string() {
+                self.pool_amounts.insert(id0.clone(), amount0);
+            }
+            else {
+                self.pool_amounts.insert(id1.clone(), amount0);
+            }
         }
         let pool_src_amount = self.pool_amounts.get(&mint_in.to_string()).unwrap();
         let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string()).unwrap();
@@ -144,7 +169,7 @@ impl PoolOperations for OrcaPool {
         };
 
         // get quote -- works for either constant product or stable swap
-
+        println!("{} {} ", pool_src_amount, pool_dst_amount);
         let mut amt = get_pool_quote_with_amounts(
             scaled_amount_in,
             ctype,
@@ -184,23 +209,42 @@ impl PoolOperations for OrcaPool {
 
     fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
         let ids: Vec<String> = self
-            .get_mints()
-            .iter()
-            .map(|mint| mint.to_string())
-            .collect();
-        let id0 = &ids[0];
-        let id1 = &ids[1];
+        .get_mints()
+        .iter()
+        .map(|mint| mint.to_string())
+        .collect();
+    let id0 = &ids[0];
+    let id1 = &ids[1];
 
-        let acc_data0 = &accounts[0].as_ref().unwrap().data;
-        let acc_data1 = &accounts[1].as_ref().unwrap().data;
+    let acc_data0 = &accounts[0].as_ref().unwrap().data;
+    let acc_data1 = &accounts[1].as_ref().unwrap().data;
 
-        let amount0 = unpack_token_account(acc_data0).amount as u128;
-        let amount1 = unpack_token_account(acc_data1).amount as u128;
+    let amount0 = unpack_token_account(acc_data0).amount as u128;
+    let amount1 = unpack_token_account(acc_data1).amount as u128;
 
-        self.pool_amounts.insert(id0.clone(), amount0);
-        self.pool_amounts.insert(id1.clone(), amount1);
+    self.pool_amounts.insert(id0.clone(), amount0);
+    self.pool_amounts.insert(id1.clone(), amount1);
     }
 
+    fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+        
+        let mut acc_data0 = data;
+        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();
+        let _mint = amount0.mint;
+        let _mint = amount0.mint;
+        let id0 = &self.token_ids[0];
+        let id1 = &self.token_ids[1];
+        if _mint.to_string() == id0.to_string() {
+            self.pool_amounts.insert(id0.clone(), amount0.amount as u128);
+        }
+        else if _mint.to_string() == id1.to_string() {
+            self.pool_amounts.insert(id1.clone(), amount0.amount as u128);
+        }
+    }
+
+    fn get_own_addr(&self) -> Pubkey {
+        self.address.0
+    }
     fn get_name(&self) -> String {
         "Orca".to_string()
     }

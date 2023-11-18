@@ -3,9 +3,11 @@ use std::fmt::Debug;
 use std::str::FromStr;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
-
+use solana_sdk::program_pack::Pack;
 use anchor_client::{Client, Cluster};
 
+use std::sync::{Arc, Mutex};
+type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use std::collections::{HashSet};
 use std::rc::Rc;
 
@@ -27,6 +29,7 @@ use crate::pool::{PoolOperations, PoolType};
 use crate::pool_utils::base::CurveType;
 use crate::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
 use crate::serialize::pool::JSONFeeStructure2;
+use spl_token::state::Account as TokenAccount;
 use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
 use crate::utils::{derive_token_address, str2pubkey};
 
@@ -57,6 +60,11 @@ pub struct AldrinPool {
 }
 
 impl PoolOperations for AldrinPool {
+
+
+    fn clone_box(&self) -> Box<dyn PoolOperations> {
+        Box::new(self.clone())
+    }
     fn get_pool_type(&self) -> PoolType {
         PoolType::AldrinPoolType
     }
@@ -143,11 +151,34 @@ impl PoolOperations for AldrinPool {
     }
 
     fn get_quote_with_amounts_scaled(
-        &self,
+        &mut self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
+        page_config: &ShardedDb,
     ) -> u128 {
+        if !self.pool_amounts.contains_key(&mint_in.to_string())
+            || !self.pool_amounts.contains_key(&mint_out.to_string())
+        {
+            println!("aldrin pool amounts not found");
+            return 0;
+        }
+        let pc = page_config.lock().unwrap();
+        if pc.contains_key(&self.get_own_addr()
+        .to_string()) {
+            let acc = pc.get(&self.get_own_addr()
+            .to_string()).unwrap();
+            let acc_data = &acc.data;
+            let amount0 = unpack_token_account(acc_data).amount as u128;
+            let id0 = &self.token_ids[0];
+            let id1 = &self.token_ids[1];
+            if id0.to_string() == mint_in.to_string() {
+                self.pool_amounts.insert(id0.clone(), amount0);
+            }
+            else {
+                self.pool_amounts.insert(id1.clone(), amount0);
+            }
+        }
         let pool_src_amount = *self.pool_amounts.get(&mint_in.to_string()).unwrap();
         let pool_dst_amount = *self.pool_amounts.get(&mint_out.to_string()).unwrap();
 
@@ -191,7 +222,9 @@ impl PoolOperations for AldrinPool {
         }
         true
     }
-
+    fn get_own_addr(&self) -> Pubkey {
+        self.pool_public_key.0
+    }
     fn get_name(&self) -> String {
         if self.pool_version == 1 {
             "AldrinV1".to_string()
@@ -212,22 +245,38 @@ impl PoolOperations for AldrinPool {
     }
 
     fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
+        
         let ids: Vec<String> = self
-            .get_mints()
-            .iter()
-            .map(|mint| mint.to_string())
-            .collect();
-        let id0 = &ids[0];
-        let id1 = &ids[1];
+        .get_mints()
+        .iter()
+        .map(|mint| mint.to_string())
+        .collect();
+    let id0 = &ids[0];
+    let id1 = &ids[1];
 
-        let acc_data0 = &accounts[0].as_ref().unwrap().data;
-        let acc_data1 = &accounts[1].as_ref().unwrap().data;
+    let acc_data0 = &accounts[0].as_ref().unwrap().data;
+    let acc_data1 = &accounts[1].as_ref().unwrap().data;
 
-        let amount0 = unpack_token_account(acc_data0).amount as u128;
-        let amount1 = unpack_token_account(acc_data1).amount as u128;
+    let amount0 = unpack_token_account(acc_data0).amount as u128;
+    let amount1 = unpack_token_account(acc_data1).amount as u128;
 
-        self.pool_amounts.insert(id0.clone(), amount0);
-        self.pool_amounts.insert(id1.clone(), amount1);
+    self.pool_amounts.insert(id0.clone(), amount0);
+    self.pool_amounts.insert(id1.clone(), amount1);
+    }
+    fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+        
+        let mut acc_data0 = data;
+
+        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();
+        let _mint = amount0.mint;
+        let id0 = &self.token_ids[0];
+        let id1 = &self.token_ids[1];
+        if _mint.to_string() == id0.to_string() {
+            self.pool_amounts.insert(id0.clone(), amount0.amount as u128);
+        }
+        else {
+            self.pool_amounts.insert(id1.clone(), amount0.amount as u128);
+        }
     }
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey {

@@ -4,6 +4,8 @@ use serde;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 
+use std::sync::{Arc, Mutex};
+type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use anchor_client::{Client, Cluster};
 
 use std::collections::{HashMap, HashSet};
@@ -51,6 +53,10 @@ pub struct MercurialPool {
 
 impl PoolOperations for MercurialPool {
 
+
+    fn clone_box(&self) -> Box<dyn PoolOperations> {
+        Box::new(self.clone())
+    }
     fn get_pool_type(&self) -> PoolType {
         PoolType::MercurialPoolType
     }
@@ -101,10 +107,11 @@ Cluster::Mainnet,       rc_owner.clone(),
     }
 
     fn get_quote_with_amounts_scaled(
-        &self,
+        &mut self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
+        page_config: &ShardedDb
     ) -> u128 {
         let fee_denom = 10_u128.pow(10);
 
@@ -117,7 +124,24 @@ Cluster::Mainnet,       rc_owner.clone(),
         if !self.pool_amounts.contains_key(&mint_in.to_string())
             || !self.pool_amounts.contains_key(&mint_out.to_string())
         {
+            println!("merc pool amounts not found");
             return 0;
+        }
+        let pc = page_config.lock().unwrap();
+        if pc.contains_key(&self.get_own_addr()
+        .to_string()) {
+            let acc = pc.get(&self.get_own_addr()
+            .to_string()).unwrap();
+            let acc_data = &acc.data;
+            let amount0 = unpack_token_account(acc_data).amount as u128;
+            let id0 = &self.token_ids[0];
+            let id1 = &self.token_ids[1];
+            if id0.to_string() == mint_in.to_string() {
+                self.pool_amounts.insert(id0.clone(), amount0);
+            }
+            else {
+                self.pool_amounts.insert(id1.clone(), amount0);
+            }
         }
         // only stable swap pools here
         let pool_src_amount = self.pool_amounts.get(&mint_in.to_string()).unwrap();
@@ -139,6 +163,9 @@ Cluster::Mainnet,       rc_owner.clone(),
         calculator.get_quote(pool_amounts, percision_multipliers, scaled_amount_in)
     }
 
+    fn get_own_addr(&self) -> Pubkey {
+        self.pool_account.0
+    }
     fn get_name(&self) -> String {
         "Mercurial".to_string()
     }
@@ -161,7 +188,9 @@ Cluster::Mainnet,       rc_owner.clone(),
             .collect();
         accounts
     }
-
+    fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+       
+    }
     fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
         let ids: Vec<String> = self
             .get_mints()

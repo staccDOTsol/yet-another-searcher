@@ -2,9 +2,12 @@
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::rc::Rc;
+use std::sync::{Arc, Mutex};
+use solana_sdk::program_pack::Pack;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 
+type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use anchor_client::{Client, Cluster};
 
 use std::collections::{ HashSet};
@@ -51,6 +54,10 @@ pub struct SaberPool {
 
 impl PoolOperations for SaberPool {
 
+
+    fn clone_box(&self) -> Box<dyn PoolOperations> {
+        Box::new(self.clone())
+    }
     fn get_pool_type(&self) -> PoolType {
         PoolType::SaberPoolType
     }
@@ -81,10 +88,10 @@ impl PoolOperations for SaberPool {
         let pool_src = self.tokens.get(&mint_in.to_string()).unwrap().addr.0;
         let pool_dst = self.tokens.get(&mint_out.to_string()).unwrap().addr.0;
         let mut fee_acc;
-        if !self.fee_accounts.contains_key(&mint_out.to_string()) {
+        if self.fee_accounts.contains_key(&mint_in.to_string()) {
             fee_acc = self.fee_accounts.get(&mint_in.to_string()).unwrap().clone();
         }
-        else {
+        else  {
          fee_acc = self.fee_accounts.get(&mint_out.to_string()).unwrap().clone();
         }
         let swap_ix = program
@@ -109,24 +116,34 @@ impl PoolOperations for SaberPool {
     }
 
     fn get_quote_with_amounts_scaled(
-        &self, 
+        &mut self, 
         scaled_amount_in: u128, 
         mint_in: &Pubkey,
         mint_out: &Pubkey,
+        page_config: &ShardedDb,
     ) -> u128 {
-        if !self.fee_accounts.contains_key(&mint_out.to_string()) {
-            return 0;
-        }
-        if !self.fee_accounts.contains_key(&mint_in.to_string()) {
-            return 0;
-        }
         let calculator = Stable {
             amp: self.target_amp, 
             fee_numerator: self.fee_numerator as u128, 
             fee_denominator: self.fee_denominator as u128,
         };
-
-        if self.pool_amounts.contains_key(&mint_in.to_string()) {
+        let pc = page_config.lock().unwrap();
+        if pc.contains_key(&self.get_own_addr()
+        .to_string()) {
+            let acc = pc.get(&self.get_own_addr()
+            .to_string()).unwrap();
+            let acc_data = &acc.data;
+            let amount0 = unpack_token_account(acc_data).amount as u128;
+            let id0 = &self.token_ids[0];
+            let id1 = &self.token_ids[1];
+            if id0.to_string() == mint_in.to_string() {
+                self.pool_amounts.insert(id0.clone(), amount0);
+            }
+            else {
+                self.pool_amounts.insert(id1.clone(), amount0);
+            }
+        }
+        if self.pool_amounts.contains_key(&mint_in.to_string())  && self.pool_amounts.contains_key(&mint_out.to_string()) {
         let pool_src_amount = self.pool_amounts.get(&mint_in.to_string()).unwrap();
         let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string()).unwrap();
         let pool_amounts = [*pool_src_amount, *pool_dst_amount];
@@ -154,22 +171,46 @@ impl PoolOperations for SaberPool {
     }
 
     fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) { 
-        let ids: Vec<String> = self
-            .get_mints()
-            .iter()
-            .map(|mint| mint.to_string())
-            .collect();
-        let id0 = &ids[0];
-        let id1 = &ids[1];
         
-        let acc_data0 = &accounts[0].as_ref().unwrap().data;
-        let acc_data1 = &accounts[1].as_ref().unwrap().data;
+        let ids: Vec<String> = self
+        .get_mints()
+        .iter()
+        .map(|mint| mint.to_string())
+        .collect();
+    let id0 = &ids[0];
+    let id1 = &ids[1];
+    
+    let acc_data0 = &accounts[0].as_ref().unwrap().data;
+    let acc_data1 = &accounts[1].as_ref().unwrap().data;
 
-        let amount0 = unpack_token_account(acc_data0).amount as u128;
-        let amount1 = unpack_token_account(acc_data1).amount as u128;
+    let amount0 = unpack_token_account(acc_data0).amount as u128;
+    let amount1 = unpack_token_account(acc_data1).amount as u128;
 
-        self.pool_amounts.insert(id0.clone(), amount0);
-        self.pool_amounts.insert(id1.clone(), amount1);
+    self.pool_amounts.insert(id0.clone(), amount0);
+    self.pool_amounts.insert(id1.clone(), amount1);
+    }
+
+    fn set_update_accounts2(&mut self, pubkey: Pubkey, data:&[u8], _cluster: Cluster) { 
+        
+        
+        let mut acc_data0 =  data;
+
+
+        let amount0 = spl_token::state::Account::unpack(acc_data0);
+        if amount0.is_err() {
+            println!("saber pool amount err: {:?}", amount0);
+            return;
+        }
+        let amount0 = amount0.unwrap();
+        let _mint = amount0.mint;
+        let id0 = &self.token_ids[0];
+        let id1 = &self.token_ids[1];
+        if _mint.to_string() == id0.to_string() {
+            self.pool_amounts.insert(id0.clone(), amount0.amount as u128);
+        }
+        else {
+            self.pool_amounts.insert(id1.clone(), amount0.amount as u128);
+        }
     }
 
     fn can_trade(&self, 
@@ -182,6 +223,9 @@ impl PoolOperations for SaberPool {
         true
     }
 
+    fn get_own_addr(&self) -> Pubkey {
+        self.pool_account.0
+    }
     fn get_name(&self) -> String {
          
         "Saber".to_string()

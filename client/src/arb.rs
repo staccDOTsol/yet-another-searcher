@@ -4,6 +4,9 @@ use solana_program::{message::{Message, VersionedMessage, v0}, address_lookup_ta
 use std::path::PathBuf;
 use solana_transaction_status::UiTransactionEncoding;
 
+use std::sync::{Arc, Mutex};
+
+type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use bincode::serialize;
 use solana_sdk::{
     address_lookup_table::{
@@ -19,7 +22,7 @@ use solana_sdk::{
     instruction::InstructionError,
     program_utils::limited_deserialize,
     pubkey::{Pubkey, PUBKEY_BYTES},
-    system_instruction,
+    system_instruction, account::Account,
 };
 use std::str::FromStr;
 use std::thread;
@@ -104,6 +107,9 @@ pub struct Arbitrager {
     pub owner: Rc<Keypair>,
     pub connection: RpcClient,
 }
+unsafe impl  Send for Arbitrager {}
+unsafe impl Sync for Arbitrager {}
+
 
 impl Arbitrager {
     pub fn brute_force_search(
@@ -115,9 +121,7 @@ impl Arbitrager {
         pool_path: Vec<PoolQuote>,
         sent_arbs: &mut HashSet<String>,
         transfer: Instruction,
-        borrow: Instruction,
-        amount_to_borrow: u64,
-        flashing: bool
+        page_config: &ShardedDb,
     ) {
         let src_curr = path[path.len() - 1]; // last mint
         let src_mint = self.token_mints[src_curr];
@@ -139,12 +143,19 @@ impl Arbitrager {
             .graph
             .0
             .get(&PoolIndex(src_curr))
-            .unwrap()
-            .0
-            .get(&PoolIndex(*dst_mint_idx)).is_none(){
+            .is_none()
+            || self
+                .graph
+                .0
+                .get(&PoolIndex(src_curr))
+                .unwrap()
+                .0
+                .get(&PoolIndex(*dst_mint_idx))
+                .is_none()
+            {
                 continue;
             }
-            let pools = self
+            let mut pools = &mut self
                 .graph
                 .0
                 .get(&PoolIndex(src_curr))
@@ -156,34 +167,23 @@ impl Arbitrager {
             let dst_mint_idx = *dst_mint_idx;
             let dst_mint = self.token_mints[dst_mint_idx];
 
-            for pool in pools {
+            for pool in pools.iter_mut() {
                 let mut new_balance ;
-                
-                if flashing {
-                    
-                    new_balance=  pool.0
-                        .get_quote_with_amounts_scaled(amount_to_borrow as u128, &src_mint, &dst_mint);
-                }
-                else {
-                    new_balance=  pool.0
-                    .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint);
-                }
-
+                new_balance = pool.0.borrow_mut()
+                .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint, &page_config);
+        
                 let mut new_path = path.clone();
                 new_path.push(dst_mint_idx);
 
                 let mut new_pool_path = pool_path.clone();
                 new_pool_path.push(pool.clone()); // clone the pointer
                 let mut new_init_balance = init_balance;
-                if flashing {
-                    new_init_balance = amount_to_borrow as u128;
-                }
+                
                 if dst_mint_idx == start_mint_idx {
                     // println!("{:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
                     let mut mult = 1.0002;
-                    if !flashing {
-                        mult = 1.0;
-                    }
+                    
+                println!("new balance: {:?}", new_balance); 
                     // if new_balance > init_balance - 1086310399 {
                     if new_balance as f64 > new_init_balance as f64 * mult {
                         // ... profitable arb!
@@ -204,18 +204,7 @@ impl Arbitrager {
                         }
                         let ookp = Keypair::new();
                         let mut ixs ;
-                        if flashing {
-                            ixs =   vec![vec![borrow.clone()],
-
-                            self.get_arbitrage_instructions(
-                                new_init_balance,
-                                &new_path,
-                                &new_pool_path,
-                                vec![&mut  Keypair::new()],
-                                &ookp
-                            ).0.concat()];
-                        }
-                        else {
+                        
                             ixs =  vec![
                             self.get_arbitrage_instructions(
                             new_init_balance,
@@ -224,7 +213,6 @@ impl Arbitrager {
                             vec![&mut  Keypair::new()],
                             &ookp
                         ).0.concat()];
-                    }
                         let owner: &Keypair = self.owner.borrow();
                         let url =  "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9";
                         let reserve = Pubkey::from_str("8qow5YNnT9NfvxVsxYMiKV4ddggT5gEe3uLUvjQ6uYaZ").unwrap();
@@ -247,21 +235,6 @@ impl Arbitrager {
     let authority_kp = read_keypair_file("/Users/stevengavacs/.config/solana/id.json").expect("Reading authority key pair file");
     let src_ata = derive_token_address(&self.owner.pubkey(), &src_mint);
 
-    // Construct FlashRepay instruction. Again we specify amount_to_borrow without fees.
-    // But when contract will be executing this IX it will transfer amount_to_borrow + fee from user's wallet!
-    let flash_repay_ix = flash_repay(
-        program_id,
-        amount_to_borrow,
-        src_ata,
-        reserve.liquidity.supply_pubkey,
-        reserve.config.fee_receiver,
-        Pubkey::from_str("8qow5YNnT9NfvxVsxYMiKV4ddggT5gEe3uLUvjQ6uYaZ").unwrap(),
-        reserve.lending_market,
-        authority_kp.pubkey(),
-    );
-    if flashing {
-    ixs.push(vec![flash_repay_ix]);
-    }
                                 // flatten to Vec<Instructions>
                                 ixs.push(vec![transfer.clone()]);
                       
@@ -312,9 +285,7 @@ impl Arbitrager {
                         new_pool_path, // !
                         sent_arbs,
                         transfer.clone(),
-                        borrow.clone(),
-                        amount_to_borrow.clone(),
-                        flashing
+                        page_config
                     );
                 }
             }
