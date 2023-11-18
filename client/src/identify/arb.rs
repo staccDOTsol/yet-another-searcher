@@ -236,7 +236,7 @@ impl Arbitrager {
                         let serialized_versioned_tx = serialize(&versioned_tx).unwrap();
                         println!(
                             "The serialized versioned tx is {} bytes",
-                            serialized_versioned_tx.len()
+                            serialized_versioned_tx.len(),
                         );
                         let serialized_encoded = base64::encode(serialized_versioned_tx);
                         let config = RpcSendTransactionConfig {
