@@ -8,14 +8,12 @@ use std::str::FromStr;
 
 use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
-use std::collections::HashSet;
 use std::rc::Rc;
 
 use serde;
 use serde::{Deserialize, Serialize};
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
-use anchor_client::Program;
 
 use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
@@ -31,7 +29,6 @@ use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
 use crate::serialize::pool::JSONFeeStructure2;
 use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
 use crate::utils::{derive_token_address, str2pubkey};
-use spl_token::state::Account as TokenAccount;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -72,10 +69,10 @@ impl PoolOperations for AldrinPool {
         owner: &Pubkey,
         _mint_in: &Pubkey,
         mint_out: &Pubkey,
-        ookp: &Keypair,
-        start_bal: u128,
+        _ookp: &Keypair,
+        _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
-        let state_pda = (Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap());
+        let state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
         let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
         // setup anchor things
@@ -256,6 +253,7 @@ impl PoolOperations for AldrinPool {
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
     }
+    
     fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let mut acc_data0 = data;
 

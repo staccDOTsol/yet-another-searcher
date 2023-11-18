@@ -9,20 +9,15 @@ use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use anchor_client::{Client, Cluster};
 
-use std::collections::HashSet;
 use std::str::FromStr;
 
 use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
-use anchor_client::solana_client::rpc_client::RpcClient;
-use anchor_client::solana_client::rpc_config::RpcSendTransactionConfig;
 use serde;
 use serde::{Deserialize, Serialize};
-use solana_sdk::signature::{Keypair, Signer};
-use solana_sdk::transaction::Transaction;
+use solana_sdk::signature::Keypair;
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
-use anchor_client::Program;
 
 use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
@@ -63,8 +58,8 @@ impl PoolOperations for SaberPool {
         owner: &Pubkey,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        ookp: &Keypair,
-        start_bal: u128,
+        _ookp: &Keypair,
+        _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 

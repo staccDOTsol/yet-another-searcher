@@ -1,22 +1,14 @@
 use anchor_client::solana_client::rpc_client::RpcClient;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
-use anchor_client::solana_sdk::pubkey::Pubkey;
 use anchor_client::solana_sdk::signature::read_keypair_file;
-use anchor_client::solana_sdk::signature::{Keypair, Signer};
-use anchor_client::{Client, Cluster, Program};
-use solana_sdk::transaction::Transaction;
-use spl_token::instruction::mint_to;
-use std::str::FromStr;
+use anchor_client::solana_sdk::signature::Keypair;
+use anchor_client::{Client, Cluster};
+
 
 use std::rc::Rc;
-use std::vec;
 
-use tmp::accounts as tmp_accounts;
-use tmp::instruction as tmp_ix;
-
-use crate::constants::*;
 use crate::monitor::pools::{pool_factory, PoolOperations, PoolType};
-use crate::utils::{derive_token_address, read_json_dir};
+use crate::utils::read_json_dir;
 
 #[test]
 fn serum() {
@@ -66,10 +58,10 @@ fn test_all_pool_quotes(pool_dir: String, pool_type: PoolType) {
     // let owner_kp_path = "../program/target/deploy/tmp-keypair.json";
     // setup anchor things
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
-    println!("owner: {}", owner.pubkey());
+    // println!("owner: {}", owner.pubkey());
 
     let provider = Client::new_with_options(cluster, Rc::new(owner), CommitmentConfig::recent());
-    let program = provider.program(*ARB_PROGRAM_ID).unwrap();
+    // let program = provider.program(*ARB_PROGRAM_ID).unwrap();
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
 
     let pool_paths = read_json_dir(&pool_dir);
@@ -89,10 +81,10 @@ fn test_all_pool_quotes(pool_dir: String, pool_type: PoolType) {
 }
 
 fn test_pool_quote(
-    pool: &mut Box<dyn PoolOperations>,
-    pool_path: &str,
-    connection: &RpcClient,
-    owner: &Keypair,
+    _pool: &mut Box<dyn PoolOperations>,
+    _pool_path: &str,
+    _connection: &RpcClient,
+    _owner: &Keypair,
 ) -> u64 {
     1
 }

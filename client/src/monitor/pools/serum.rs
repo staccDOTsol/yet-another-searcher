@@ -1,7 +1,4 @@
-use bytemuck::{
-    bytes_of, bytes_of_mut, cast, cast_slice, cast_slice_mut, from_bytes_mut, try_cast_mut,
-    try_cast_slice_mut, try_from_bytes_mut, Pod, Zeroable,
-};
+use bytemuck::bytes_of;
 use chrono::Utc;
 use core::panic;
 use std::num::NonZeroU64;
@@ -10,35 +7,20 @@ use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use crate::monitor::pools::PoolOperations;
 use crate::serialize::token::WrappedPubkey;
-use anchor_client::solana_client::rpc_client::RpcClient;
 use anchor_client::{Client, Cluster, Program};
 use openbook_dex::matching::OrderType;
 use openbook_dex::matching::Side;
 use openbook_dex::state::AccountFlag;
 use serde;
 use serde::{Deserialize, Serialize};
-use solana_sdk::commitment_config::CommitmentConfig;
-use solana_sdk::program_pack::Pack;
-use solana_sdk::signature::read_keypair_file;
 use solana_sdk::signature::Keypair;
-use solana_sdk::signature::Signer;
 use std::collections::HashMap;
 use std::fmt::Debug;
 
-use solana_sdk::transaction::Transaction;
-
-use std::rc::Rc;
-
 use std::vec;
 
-use tmp::accounts as tmp_accounts;
-use tmp::instruction as tmp_instructions;
-
 use crate::constants::*;
-use crate::monitor::pools::{PoolDir, PoolType};
-use crate::utils::read_json_dir;
-
-use indicatif::ProgressBar;
+use crate::monitor::pools::PoolType;
 
 use crate::utils::derive_token_address;
 
@@ -49,7 +31,6 @@ use std::ops::DerefMut;
 
 use solana_sdk::instruction::Instruction;
 
-use crate::constants::*;
 use crate::monitor::pool_utils::serum::*;
 use solana_sdk::account::Account;
 use solana_sdk::account_info::AccountInfo;
@@ -506,15 +487,15 @@ impl PoolOperations for SerumPool {
         owner: &Pubkey,
         mint_in: &Pubkey,
         _mint_out: &Pubkey,
-        ookp: &Keypair,
+        _ookp: &Keypair,
         start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let oos = self.open_orders.as_ref().unwrap();
         let open_orders =
             Pubkey::from_str(oos.get(&self.own_address.0.to_string()).unwrap()).unwrap();
 
-        let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let space = 3228;
+        let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
+        let _space = 3228;
 
         let base_ata = derive_token_address(owner, &self.base_mint);
         let quote_ata = derive_token_address(owner, &self.quote_mint);
@@ -535,7 +516,7 @@ impl PoolOperations for SerumPool {
             openbook_dex::matching::Side::Bid
         };
         let vault_signer_nonce = self.vault_signer_nonce.parse::<u64>().unwrap();
-        let vault_signer =
+        let _vault_signer =
             gen_vault_signer_key(vault_signer_nonce, &self.own_address.0, &SERUM_PROGRAM_ID);
         let mut limit_price;
         let mut max_coin_qty;

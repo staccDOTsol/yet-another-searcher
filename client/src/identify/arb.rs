@@ -2,10 +2,9 @@ use anchor_client::solana_client::rpc_client::RpcClient;
 use anchor_client::solana_client::rpc_config::RpcSendTransactionConfig;
 use solana_program::{
     address_lookup_table::AddressLookupTableAccount,
-    message::{v0, Message, VersionedMessage},
+    message::{v0, VersionedMessage},
 };
 use solana_transaction_status::UiTransactionEncoding;
-use std::path::PathBuf;
 
 use std::sync::{Arc, Mutex};
 
@@ -13,26 +12,11 @@ type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use bincode::serialize;
 use solana_sdk::{
     account::Account,
-    address_lookup_table::{
-        instruction::ProgramInstruction,
-        program::{check_id, id},
-        state::{
-            AddressLookupTable, LookupTableMeta, LookupTableStatus, ProgramState,
-            LOOKUP_TABLE_MAX_ADDRESSES, LOOKUP_TABLE_META_SIZE,
-        },
-    },
-    clock::Slot,
-    feature_set,
-    instruction::InstructionError,
-    program_utils::limited_deserialize,
-    pubkey::{Pubkey, PUBKEY_BYTES},
-    system_instruction,
+    address_lookup_table::state::AddressLookupTable,
+    pubkey::Pubkey
 };
 use std::str::FromStr;
-use std::thread;
-use std::time;
 
-use anyhow::Result;
 use serde_json::json;
 use solana_client::rpc_request::RpcRequest;
 use solana_sdk::commitment_config::CommitmentLevel;
@@ -42,31 +26,22 @@ use solana_sdk::{
     instruction::Instruction,
     signature::{read_keypair_file, Keypair, Signature},
     signer::Signer,
-    transaction::{Transaction, VersionedTransaction},
+    transaction::VersionedTransaction,
 };
 
-use derive_more::FromStr;
-use num_traits::pow;
-use solana_client::client_error::ClientError;
-use solana_sdk::signers::Signers;
-use structopt::StructOpt;
+use flash_loan_sdk::get_reserve;
 
-use flash_loan_sdk::instruction::{flash_borrow, flash_repay};
-use flash_loan_sdk::{available_liquidity, flash_loan_fee, get_reserve, FLASH_LOAN_ID};
-
-use anchor_client::{Cluster, Program};
+use anchor_client::Cluster;
 use std::collections::{HashMap, HashSet};
 
 use std::borrow::{Borrow, BorrowMut};
 use std::rc::Rc;
 use std::vec;
 
-use log::info;
-
 use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 
-use crate::monitor::pools::{PoolOperations, PoolType};
+use crate::monitor::pools::PoolType;
 
 use crate::utils::{derive_token_address, PoolGraph, PoolIndex, PoolQuote};
 

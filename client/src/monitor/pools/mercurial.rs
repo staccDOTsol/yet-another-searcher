@@ -8,20 +8,15 @@ use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use anchor_client::{Client, Cluster};
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::fmt::Debug;
 use std::rc::Rc;
 use std::str::FromStr;
 
-use anchor_client::solana_client::rpc_client::RpcClient;
-use anchor_client::solana_client::rpc_config::RpcSendTransactionConfig;
 use serde::{Deserialize, Serialize};
 use solana_sdk::signature::Keypair;
-use solana_sdk::signature::Signer;
-use solana_sdk::transaction::Transaction;
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
-use anchor_client::Program;
 
 use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
@@ -63,8 +58,8 @@ impl PoolOperations for MercurialPool {
         owner: &Pubkey,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        ookp: &Keypair,
-        start_bal: u128,
+        _ookp: &Keypair,
+        _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let swap_state_pda =
             Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
@@ -184,7 +179,7 @@ impl PoolOperations for MercurialPool {
             .collect();
         accounts
     }
-    fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], _cluster: Cluster) {}
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, _data: &[u8], _cluster: Cluster) {}
     fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
         let ids: Vec<String> = self
             .get_mints()
