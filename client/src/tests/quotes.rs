@@ -2,11 +2,7 @@ use anchor_client::solana_client::rpc_client::RpcClient;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::signature::Keypair;
-use anchor_client::{Client, Cluster};
-
-
-use std::rc::Rc;
-
+use anchor_client::Cluster;
 use crate::monitor::pools::{pool_factory, PoolOperations, PoolType};
 use crate::utils::read_json_dir;
 
@@ -47,20 +43,17 @@ fn orca() {
 
 fn test_all_pool_quotes(pool_dir: String, pool_type: PoolType) {
     // setup stuff
-    let cluster = Cluster::Mainnet;
+    let _cluster = Cluster::Mainnet;
     let connection = RpcClient::new_with_commitment(
         "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9",
-        CommitmentConfig::recent(),
+        CommitmentConfig::processed(),
     );
 
     // let owner_kp_path = "/Users/vbetsun/.config/solana/uwuU3qc2RwN6CpzfBAhg6wAxiEx138jy5wB3Xvx18Rw.json";
     let owner_kp_path = "../mainnet-fork/localnet_owner.key";
     // let owner_kp_path = "../program/target/deploy/tmp-keypair.json";
     // setup anchor things
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
     // println!("owner: {}", owner.pubkey());
-
-    let provider = Client::new_with_options(cluster, Rc::new(owner), CommitmentConfig::recent());
     // let program = provider.program(*ARB_PROGRAM_ID).unwrap();
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
 

@@ -7,7 +7,7 @@ use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use crate::monitor::pools::PoolOperations;
 use crate::serialize::token::WrappedPubkey;
-use anchor_client::{Client, Cluster, Program};
+use anchor_client::Cluster;
 use openbook_dex::matching::OrderType;
 use openbook_dex::matching::Side;
 use openbook_dex::state::AccountFlag;
@@ -227,7 +227,7 @@ impl PoolOperations for SerumPool {
         self.open_orders = Some(oo_book);
     }
 
-    fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], cluster: Cluster) {
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let testing = self.accounts.clone();
         let mut taccs = vec![];
         if testing.is_some() {
@@ -439,7 +439,7 @@ impl PoolOperations for SerumPool {
         let bids_acc = &account_info(&self.bids.0, bid_acc);
         let asks_acc = &account_info(&self.asks.0, ask_acc);
 
-        let mut m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
+        let m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
         if !m.is_ok() {
             println!("{}", "m is none");
             return 0;
@@ -518,13 +518,10 @@ impl PoolOperations for SerumPool {
         let vault_signer_nonce = self.vault_signer_nonce.parse::<u64>().unwrap();
         let _vault_signer =
             gen_vault_signer_key(vault_signer_nonce, &self.own_address.0, &SERUM_PROGRAM_ID);
-        let mut limit_price;
-        let mut max_coin_qty;
+        let limit_price;
+        let max_coin_qty;
 
-        let market_acc = &self.accounts.as_ref().unwrap()[0];
-        let market_acc = &mut market_acc.clone().unwrap();
-        let market_acc_info = &account_info(&self.own_address.0, market_acc);
-        let mut max_native_pc_qty_including_fees;
+        let max_native_pc_qty_including_fees;
         if _side == openbook_dex::matching::Side::Ask {
             limit_price = NonZeroU64::new(1).unwrap();
             max_coin_qty = NonZeroU64::MIN;
@@ -536,12 +533,9 @@ impl PoolOperations for SerumPool {
         }
         let limit: u16 = 3;
 
-        let m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
-
         let now = Utc::now();
         let ts = now.timestamp();
         println!("{}", ts);
-        let mut market = m.unwrap();
         (
             (true),
             vec![openbook_dex::instruction::new_order(
@@ -591,7 +585,7 @@ impl PoolOperations for SerumPool {
         if m.is_err() {
             return false;
         }
-        let mut market = m.unwrap();
+        let market = m.unwrap();
         let bids = market.load_bids_mut(bids_acc).unwrap();
         let asks = market.load_asks_mut(asks_acc).unwrap();
 

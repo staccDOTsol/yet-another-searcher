@@ -74,12 +74,12 @@ impl PoolOperations for SaberPool {
         let provider = Client::new_with_options(
             Cluster::Mainnet,
             rc_owner.clone(),
-            CommitmentConfig::recent(),
+            CommitmentConfig::processed(),
         );
         let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let pool_src = self.tokens.get(&mint_in.to_string()).unwrap().addr.0;
         let pool_dst = self.tokens.get(&mint_out.to_string()).unwrap().addr.0;
-        let mut fee_acc;
+        let fee_acc;
         if self.fee_accounts.contains_key(&mint_in.to_string()) {
             fee_acc = self.fee_accounts.get(&mint_in.to_string()).unwrap().clone();
         } else {
@@ -178,8 +178,8 @@ impl PoolOperations for SaberPool {
         self.pool_amounts.insert(id1.clone(), amount1);
     }
 
-    fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
-        let mut acc_data0 = data;
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+        let acc_data0 = data;
 
         let amount0 = spl_token::state::Account::unpack(acc_data0);
         if amount0.is_err() {

@@ -76,7 +76,7 @@ impl PoolOperations for OrcaPool {
         let provider = Client::new_with_options(
             Cluster::Mainnet,
             rc_owner.clone(),
-            CommitmentConfig::recent(),
+            CommitmentConfig::processed(),
         );
         let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let (authority_pda, _) =
@@ -160,7 +160,7 @@ impl PoolOperations for OrcaPool {
 
         // get quote -- works for either constant product or stable swap
         println!("{} {} ", pool_src_amount, pool_dst_amount);
-        let mut amt = get_pool_quote_with_amounts(
+        let amt = get_pool_quote_with_amounts(
             scaled_amount_in,
             ctype,
             self.amp,
@@ -216,7 +216,7 @@ impl PoolOperations for OrcaPool {
     }
 
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
-        let mut acc_data0 = data;
+        let acc_data0 = data;
         let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();
         let _mint = amount0.mint;
         let _mint = amount0.mint;

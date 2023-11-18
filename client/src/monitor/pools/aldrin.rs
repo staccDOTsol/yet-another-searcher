@@ -254,7 +254,7 @@ impl PoolOperations for AldrinPool {
         self.pool_amounts.insert(id1.clone(), amount1);
     }
     
-    fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
 
         let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();

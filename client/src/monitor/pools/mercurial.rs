@@ -73,7 +73,7 @@ impl PoolOperations for MercurialPool {
         let provider = Client::new_with_options(
             Cluster::Mainnet,
             rc_owner.clone(),
-            CommitmentConfig::recent(),
+            CommitmentConfig::processed(),
         );
         let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let pool0 = &self.tokens[&self.token_ids[0]].addr;
