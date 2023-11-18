@@ -1,6 +1,6 @@
-pub mod monitor;
-pub mod identify;
 pub mod execute;
+pub mod identify;
+pub mod monitor;
 
 pub mod config;
 pub mod constants;
