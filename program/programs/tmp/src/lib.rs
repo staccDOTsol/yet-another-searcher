@@ -36,7 +36,6 @@ pub mod tmp {
         let swap_state = &mut ctx.accounts.swap_state;
         swap_state.is_valid = false; // record end of swap
 
-        let init_balance = swap_state.start_balance;
 
 
         Ok(())
