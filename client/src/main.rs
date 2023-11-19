@@ -445,7 +445,7 @@ async fn main() {
             break;
         }
         let _account_slice = &update_accounts[account_ptr..account_ptr + length].to_vec();
-        account_ptr += length;
+       
 
         pool.set_update_accounts(_account_slice.to_vec(), cluster.clone());
         let mut pc = page_config.lock().unwrap();
@@ -457,6 +457,7 @@ async fn main() {
             );
             humbug += 1;
         }
+        account_ptr += length;
         // add pool to graph
         let idxs = &all_mint_idxs[pool_count * 2..(pool_count + 1) * 2].to_vec();
         let idx0 = PoolIndex(idxs[0]);
