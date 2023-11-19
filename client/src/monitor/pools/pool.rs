@@ -1,4 +1,5 @@
 use anchor_client::solana_sdk::pubkey::Pubkey;
+use async_trait::async_trait;
 use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
 use solana_sdk::signature::Keypair;
@@ -51,7 +52,9 @@ pub fn pool_factory(pool_type: &PoolType, json_str: &String) -> Box<dyn PoolOper
 }
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
-pub trait PoolOperations: Debug {
+#[async_trait]
+
+pub trait PoolOperations: Debug + Send {
     fn clone_box(&self) -> Box<dyn PoolOperations>;
 
     fn get_pool_type(&self) -> PoolType;
@@ -71,13 +74,11 @@ pub trait PoolOperations: Debug {
         mint_in: &Pubkey,
         mint_out: &Pubkey,
     ) -> u128;
-    fn swap_ix(
+   async fn swap_ix(
         &self,
-        owner: &Pubkey,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        ookp: &Keypair,
-        start_bal: u128,
+        start_bal: u128
     ) -> (bool, Vec<Instruction>);
 
     fn can_trade(&self, mint_in: &Pubkey, mint_out: &Pubkey) -> bool; // used for tests

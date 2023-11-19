@@ -5,7 +5,9 @@ use anchor_client::solana_sdk::pubkey::Pubkey;
 
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
 use anchor_client::{Cluster, Program};
+use solana_sdk::signature::read_keypair_file;
 use std::collections::{HashMap, HashSet};
+use std::sync::Arc;
 
 use solana_sdk::instruction::Instruction;
 use solana_sdk::transaction::Transaction;
@@ -30,12 +32,11 @@ pub struct Arbitrager {
     pub graph: PoolGraph,
     pub cluster: Cluster,
     // vv -- need to clone these explicitly -- vv
-    pub owner: Rc<Keypair>,
     pub connection: RpcClient,
 }
-
 impl Arbitrager {
-    pub fn brute_force_search(
+#[async_recursion::async_recursion]
+    pub async     fn brute_force_search(
         &self,
         start_mint_idx: usize,
         init_balance: u128,
@@ -57,18 +58,6 @@ impl Arbitrager {
 
         for dst_mint_idx in out_edges {
 
-            if path.contains(dst_mint_idx) && *dst_mint_idx != start_mint_idx {
-                continue;
-            }
-            if self
-            .graph
-            .0
-            .get(&PoolIndex(src_curr))
-            .unwrap()
-            .0
-            .get(&PoolIndex(*dst_mint_idx)).is_none(){
-                continue;
-            }
             let pools = self
                 .graph
                 .0
@@ -85,15 +74,13 @@ impl Arbitrager {
                 let new_balance =
                     pool.0
                         .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint);
-
                 let mut new_path = path.clone();
                 new_path.push(dst_mint_idx);
 
                 let mut new_pool_path = pool_path.clone();
                 new_pool_path.push(pool.clone()); // clone the pointer
-
                 if dst_mint_idx == start_mint_idx {
-                    // println!("{:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
+                    println!("{:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
                     
                     // if new_balance > init_balance - 1086310399 {
                     if new_balance as f64 > init_balance as f64 * 1.000 {
@@ -113,35 +100,36 @@ impl Arbitrager {
                         } else {
                             sent_arbs.insert(arb_key);
                         }
-                        let ookp = Keypair::new();
                         let mut ixs = self.get_arbitrage_instructions(
                             init_balance,
                             &new_path,
                             &new_pool_path,
-                            vec![&mut  Keypair::new()],
-                            &ookp
-                        );
+                        ).await;
                         let mut ix;
                         ixs.0.concat();
-                        let owner: &Keypair = self.owner.borrow();
                             
-        let src_ata = derive_token_address(&owner.pubkey(), &dst_mint);
+    let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+    let owner = owner3.try_pubkey().unwrap();
+        let src_ata = derive_token_address(&owner, &dst_mint);
                                 // PROFIT OR REVERT instruction
                                  ix = spl_token::instruction::transfer(
                                     &spl_token::id(),
                                     &src_ata,
                                     &src_ata,
-                                    &self.owner.pubkey(),
+                                    &owner,
                                     &[
                                     ],
                                     init_balance as u64,
                                 );
                                 // flatten to Vec<Instructions>
                                 ixs.0.push(vec![ix.unwrap()]);
+                                let owner_keypair = Rc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+
                         let tx = Transaction::new_signed_with_payer(
                             &ixs.0.concat(),
-                            Some(&owner.pubkey()),
-                            &[owner],
+                            Some(&owner),
+                            &[&*owner_keypair],
+
                             self.connection.get_latest_blockhash().unwrap(),
                         );
                 
@@ -179,35 +167,34 @@ impl Arbitrager {
                         new_path,      // !
                         new_pool_path, // !
                         sent_arbs,
-                    );
+                    ).await;
                 }
             }
         }
     }
 
-    fn get_arbitrage_instructions<'a>(
+async    fn get_arbitrage_instructions<'a>(
         &self,
         swap_start_amount: u128,
         mint_idxs: &Vec<usize>,
-        pools: &Vec<PoolQuote>,
-        mut signers: Vec<&mut  Keypair>,
+        pools: &Vec<PoolQuote>,    ) -> (Vec<Vec<Instruction>>, bool) {
+            
+    let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
 
-         ookp : &Keypair
-    ) -> (Vec<Vec<Instruction>>, bool) {
+    let owner = owner3.try_pubkey().unwrap();
         // gather swap ixs
         let mut ixs = vec![];
         let swap_state_pda =
             (Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap());
         let src_mint = self.token_mints[mint_idxs[0]];
-        let src_ata = derive_token_address(&self.owner.pubkey(), &src_mint);
+        let src_ata = derive_token_address(&owner, &src_mint);
 
 
     // setup anchor things
-    let owner = solana_sdk::signer::keypair::read_keypair_file("/Users/stevengavacs/.config/solana/id.json").unwrap();
-    let rc_owner = Rc::new(owner);
+    
     let provider = anchor_client::Client::new_with_options(
         Cluster::Mainnet,
-        rc_owner.clone(),
+        owner3.clone(),
         solana_sdk::commitment_config::CommitmentConfig::recent(),
     );
     let program = provider.program(*crate::constants::ARB_PROGRAM_ID).unwrap();
@@ -225,14 +212,15 @@ impl Arbitrager {
             .unwrap();
         ixs.push(ix);
         let mut flag = false;
+        let pubkey = owner;
         for i in 0..mint_idxs.len() - 1 {
             let [mint_idx0, mint_idx1] = [mint_idxs[i], mint_idxs[i + 1]];
             let [mint0, mint1] = [self.token_mints[mint_idx0], self.token_mints[mint_idx1]];
             let pool = &pools[i];
             let mut swap_ix = pool
                 .0
-                .swap_ix(&self.owner.pubkey(), &mint0, &mint1, ookp, swap_start_amount);
-            ixs.push(swap_ix.1);
+                .swap_ix(&mint0, &mint1, swap_start_amount);
+            ixs.push(swap_ix.await.1);
             let pool_type = pool.0.get_pool_type();
             match pool_type {
                 PoolType::OrcaPoolType => {

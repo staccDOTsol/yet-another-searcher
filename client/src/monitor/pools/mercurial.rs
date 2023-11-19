@@ -2,7 +2,9 @@ use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
+use async_trait::async_trait;
 use serde;
+use solana_sdk::signer::Signer;
 
 use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
@@ -46,6 +48,7 @@ pub struct MercurialPool {
     pub pool_amounts: HashMap<String, u128>,
 }
 
+#[async_trait]
 impl PoolOperations for MercurialPool {
     fn clone_box(&self) -> Box<dyn PoolOperations> {
         Box::new(self.clone())
@@ -53,22 +56,21 @@ impl PoolOperations for MercurialPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::MercurialPoolType
     }
-    fn swap_ix(
+   async fn swap_ix(
         &self,
-        owner: &Pubkey,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        _ookp: &Keypair,
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let swap_state_pda =
             Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let user_src = derive_token_address(owner, mint_in);
-        let user_dst = derive_token_address(owner, mint_out);
+            let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
+            let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
+            let owner = owner2.try_pubkey().unwrap();
+        let user_src = derive_token_address(&owner, mint_in);
+        let user_dst = derive_token_address(&owner, mint_out);
 
-        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
         // setup anchor things
-        let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
         let rc_owner = Rc::new(owner2);
         let provider = Client::new_with_options(
             Cluster::Mainnet,
@@ -84,7 +86,7 @@ impl PoolOperations for MercurialPool {
             .accounts(tmp_accounts::MercurialSwap {
                 pool_account: self.pool_account.0,
                 authority: self.authority.0,
-                user_transfer_authority: *owner,
+                user_transfer_authority: owner,
                 user_src,
                 user_dst,
                 pool_src: pool0.0, // src/dst order doesnt matter ??

@@ -4,8 +4,10 @@ use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Client, Cluster};
+use async_trait::async_trait;
 use serde;
 use solana_sdk::program_pack::Pack;
+use solana_sdk::signer::Signer;
 use std::sync::{Arc, Mutex};
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
@@ -49,6 +51,8 @@ pub struct OrcaPool {
     #[serde(skip)]
     pub pool_amounts: HashMap<String, u128>,
 }
+#[async_trait]
+
 
 impl PoolOperations for OrcaPool {
     fn clone_box(&self) -> Box<dyn PoolOperations> {
@@ -57,25 +61,25 @@ impl PoolOperations for OrcaPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::OrcaPoolType
     }
-    fn swap_ix(
+    
+async    fn swap_ix(
         &self,
-        owner: &Pubkey,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        _ookp: &Keypair,
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let user_src = derive_token_address(owner, mint_in);
-        let user_dst = derive_token_address(owner, mint_out);
+        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+
+        let owner = owner3.try_pubkey().unwrap();
+        let user_src = derive_token_address(&owner, mint_in);
+        let user_dst = derive_token_address(&owner, mint_out);
 
         let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
         // setup anchor things
-        let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
-        let rc_owner = Rc::new(owner2);
         let provider = Client::new_with_options(
             Cluster::Mainnet,
-            rc_owner.clone(),
+            owner3.clone(),
             CommitmentConfig::processed(),
         );
         let program = provider.program(*ARB_PROGRAM_ID).unwrap();
@@ -84,26 +88,27 @@ impl PoolOperations for OrcaPool {
 
         let pool_src = self.mint_2_addr(mint_in);
         let pool_dst = self.mint_2_addr(mint_out);
-
-        let swap_ix = program
-            .request()
+let token_swap = self.address.0;
+let pool_mint= self.pool_token_mint.0;
+let fee_account = self.fee_account.0;
+let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || program            .request()
             .accounts(tmp_accounts::OrcaSwap {
-                token_swap: self.address.0,
+                token_swap,
                 authority: authority_pda,
-                user_transfer_authority: *owner,
+                user_transfer_authority: owner,
                 user_src,
                 pool_src,
                 user_dst,
                 pool_dst,
-                pool_mint: self.pool_token_mint.0,
-                fee_account: self.fee_account.0,
+                pool_mint ,
+                fee_account ,
                 token_program: *TOKEN_PROGRAM_ID,
                 token_swap_program: *ORCA_PROGRAM_ID,
                 swap_state,
             })
             .args(tmp_ix::OrcaSwap {})
             .instructions()
-            .unwrap();
+            .unwrap()).await.unwrap();
 
         (false, swap_ix)
     }
@@ -145,7 +150,6 @@ impl PoolOperations for OrcaPool {
         };
 
         // get quote -- works for either constant product or stable swap
-        println!("{} {} ", pool_src_amount, pool_dst_amount);
         let amt = get_pool_quote_with_amounts(
             scaled_amount_in,
             ctype,

@@ -49,7 +49,9 @@ impl PoolQuote {
         Self(quote)
     }
 }
+unsafe impl Send for PoolQuote {}
 
+unsafe impl Sync for PoolQuote {}
 #[derive(Debug)]
 pub struct PoolGraph(pub HashMap<PoolIndex, PoolEdge>);
 

@@ -1,7 +1,9 @@
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Client, Cluster};
+use async_trait::async_trait;
 use solana_sdk::program_pack::Pack;
+use solana_sdk::signer::Signer;
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::str::FromStr;
@@ -55,6 +57,7 @@ pub struct AldrinPool {
     #[serde(skip)]
     pub pool_amounts: HashMap<String, u128>,
 }
+#[async_trait]
 
 impl PoolOperations for AldrinPool {
     fn clone_box(&self) -> Box<dyn PoolOperations> {
@@ -63,24 +66,23 @@ impl PoolOperations for AldrinPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::AldrinPoolType
     }
-    fn swap_ix(
+async    fn swap_ix(
         &self,
         //impl<C: Deref<Target = impl Signer> + Clone> Program<C>
-        owner: &Pubkey,
         _mint_in: &Pubkey,
         mint_out: &Pubkey,
-        _ookp: &Keypair,
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
         let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
         // setup anchor things
-        let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
-        let rc_owner = Rc::new(owner2);
+        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+        
+        let owner = owner3.try_pubkey().unwrap()    ;
         let provider = Client::new_with_options(
             Cluster::Mainnet,
-            rc_owner.clone(),
+            owner3.clone(),
             CommitmentConfig::processed(),
         );
         let program = provider.program(*ARB_PROGRAM_ID).unwrap();
@@ -92,22 +94,26 @@ impl PoolOperations for AldrinPool {
 
         let is_inverted = &mint_out.to_string() == quote_token_mint;
         let user_base_ata =
-            derive_token_address(owner, &Pubkey::from_str(base_token_mint).unwrap());
+            derive_token_address(&owner, &Pubkey::from_str(base_token_mint).unwrap());
         let user_quote_ata =
-            derive_token_address(owner, &Pubkey::from_str(quote_token_mint).unwrap());
+            derive_token_address(&owner, &Pubkey::from_str(quote_token_mint).unwrap());
 
         let swap_ix;
         if self.pool_version == 1 {
-            swap_ix = program
+let pool_public_key = self.pool_public_key.0;
+let pool_signer = self.pool_signer.0;
+let pool_mint = self.pool_mint.0;
+let fee_pool_token_account = self.fee_pool_token_account.0;
+            swap_ix = tokio::task::spawn_blocking(move || program
                 .request()
                 .accounts(tmp_accounts::AldrinSwapV1 {
-                    pool_public_key: self.pool_public_key.0,
-                    pool_signer: self.pool_signer.0,
-                    pool_mint: self.pool_mint.0,
+                    pool_public_key,
+                    pool_signer,
+                    pool_mint,
                     base_token_vault,
                     quote_token_vault,
-                    fee_pool_token_account: self.fee_pool_token_account.0,
-                    user_transfer_authority: *owner,
+                    fee_pool_token_account,
+                    user_transfer_authority: owner,
                     user_base_ata,
                     user_quote_ata,
                     // ...
@@ -117,31 +123,38 @@ impl PoolOperations for AldrinPool {
                 })
                 .args(tmp_ix::AldrinSwapV1 { is_inverted })
                 .instructions()
-                .unwrap();
+                .unwrap())
+            
         } else {
-            swap_ix = program
+            let pool_public_key = self.pool_public_key.0;
+            let pool_signer = self.pool_signer.0;
+            let pool_mint = self.pool_mint.0;
+            let fee_pool_token_account = self.fee_pool_token_account.0;
+            let curve = self.curve.0;
+            swap_ix = tokio::task::spawn_blocking(move || program
                 .request()
                 .accounts(tmp_accounts::AldrinSwapV2 {
-                    pool_public_key: self.pool_public_key.0,
-                    pool_signer: self.pool_signer.0,
-                    pool_mint: self.pool_mint.0,
+                    pool_public_key,
+                    pool_signer,
+                    pool_mint,
                     base_token_vault,
                     quote_token_vault,
-                    fee_pool_token_account: self.fee_pool_token_account.0,
-                    user_transfer_authority: *owner,
+                    fee_pool_token_account,
+                    user_transfer_authority: owner,
                     user_base_ata,
                     user_quote_ata,
                     // ...
                     aldrin_v2_program: *ALDRIN_V2_PROGRAM_ID,
-                    curve: self.curve.0,
+                    curve,
                     token_program: *TOKEN_PROGRAM_ID,
                     swap_state: state_pda,
                 })
                 .args(tmp_ix::AldrinSwapV2 { is_inverted })
                 .instructions()
-                .unwrap();
+                .unwrap())
+
         }
-        (false, swap_ix)
+        (false, swap_ix.await.unwrap())
     }
 
     fn get_quote_with_amounts_scaled(

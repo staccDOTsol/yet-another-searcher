@@ -1,7 +1,10 @@
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
+use async_trait::async_trait;
 use solana_sdk::program_pack::Pack;
 use std::collections::HashMap;
+use solana_sdk::signature::Signer;
+
 use std::fmt::Debug;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
@@ -45,6 +48,7 @@ pub struct SaberPool {
     #[serde(skip)]
     pub pool_amounts: HashMap<String, u128>,
 }
+#[async_trait]
 
 impl PoolOperations for SaberPool {
     fn clone_box(&self) -> Box<dyn PoolOperations> {
@@ -53,27 +57,25 @@ impl PoolOperations for SaberPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::SaberPoolType
     }
-    fn swap_ix(
+async    fn swap_ix(
         &self,
-        owner: &Pubkey,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        _ookp: &Keypair,
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
-        let user_src = derive_token_address(owner, mint_in);
-        let user_dst = derive_token_address(owner, mint_out);
+        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+
+        let owner = owner3.try_pubkey().unwrap();
+        let user_src = derive_token_address(&owner, mint_in);
+        let user_dst = derive_token_address(&owner, mint_out);
 
         let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
         // setup anchor things
-
-        let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
-        let rc_owner = Rc::new(owner2);
         let provider = Client::new_with_options(
             Cluster::Mainnet,
-            rc_owner.clone(),
+            owner3.clone(),
             CommitmentConfig::processed(),
         );
         let program = provider.program(*ARB_PROGRAM_ID).unwrap();
@@ -91,12 +93,14 @@ impl PoolOperations for SaberPool {
         } else {
             return (false, vec![]);
         }
-        let swap_ix = program
-            .request()
+        let pool_account = self.pool_account.0;
+        let authority = self.authority.0;
+        let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || program            .request()
+    
             .accounts(tmp_accounts::SaberSwap {
-                pool_account: self.pool_account.0,
-                authority: self.authority.0,
-                user_transfer_authority: *owner,
+                pool_account,
+                authority,
+                user_transfer_authority: owner,
                 user_src,
                 user_dst,
                 pool_src,
@@ -108,7 +112,7 @@ impl PoolOperations for SaberPool {
             })
             .args(tmp_ix::SaberSwap {})
             .instructions()
-            .unwrap();
+            .unwrap()).await.unwrap();
         (false, swap_ix)
     }
 

@@ -1,5 +1,7 @@
+use async_trait::async_trait;
 use bytemuck::bytes_of;
 use chrono::Utc;
+use solana_sdk::signer::Signer;
 use core::panic;
 use std::num::NonZeroU64;
 use std::sync::{Arc, Mutex};
@@ -13,7 +15,7 @@ use openbook_dex::matching::Side;
 use openbook_dex::state::AccountFlag;
 use serde;
 use serde::{Deserialize, Serialize};
-use solana_sdk::signature::Keypair;
+use solana_sdk::signature::{Keypair, read_keypair_file};
 use std::collections::HashMap;
 use std::fmt::Debug;
 
@@ -196,6 +198,8 @@ fn ask_iteration(iteration: &mut Iteration, fee_tier: &FeeTier, ob: &mut OrderBo
     done
 }
 
+#[async_trait]
+
 impl PoolOperations for SerumPool {
     fn get_name(&self) -> String {
         "Serum".to_string()
@@ -233,7 +237,6 @@ impl PoolOperations for SerumPool {
         if testing.is_some() {
             taccs = testing.unwrap();
         } else {
-            println!("made it here 1");
             return;
         }
         println!("length acocunts {}", taccs.len());
@@ -346,7 +349,6 @@ impl PoolOperations for SerumPool {
             return 0;
         }
         let market_acc = &self.accounts.as_ref().unwrap()[0];
-        println!("made it here");
         let bids_acc = &self.accounts.as_ref().unwrap()[1];
         let tval = self.accounts.as_ref().unwrap();
         if tval.len() < 3 {
@@ -409,13 +411,11 @@ impl PoolOperations for SerumPool {
         }
     }
 
-    fn swap_ix(
+async    fn swap_ix(
         &self,
-        owner: &Pubkey,
         mint_in: &Pubkey,
         _mint_out: &Pubkey,
-        _ookp: &Keypair,
-        start_bal: u128,
+        start_bal: u128
     ) -> (bool, Vec<Instruction>) {
         let oos = self.open_orders.as_ref().unwrap();
         let open_orders =
@@ -423,9 +423,12 @@ impl PoolOperations for SerumPool {
 
         let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let _space = 3228;
+        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
 
-        let base_ata = derive_token_address(owner, &self.base_mint);
-        let quote_ata = derive_token_address(owner, &self.quote_mint);
+        let owner = owner3.try_pubkey().unwrap();
+
+        let base_ata = derive_token_address(&owner, &self.base_mint);
+        let quote_ata = derive_token_address(&owner, &self.quote_mint);
 
         let side = if *mint_in == self.quote_mint.0 {
             Side::Bid

@@ -43,6 +43,8 @@ structopt = "0.3"
 dirs-next = "2.0.0"
 derive_more = "0.99.17"
 solana-sdk = "^1.17.5"
+async-trait = "*"
+async-recursion = "*"
 anchor-spl = { version = "0.29", features = ["dex"] }
 anchor-client = { version = "0.29", features = ["debug"] }
 anchor-lang = "0.29.0"

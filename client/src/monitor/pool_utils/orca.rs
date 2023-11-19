@@ -66,6 +66,5 @@ pub fn get_pool_quote_with_amounts(
     if let Some([num, denom]) = slippage_percent {
         quote = quote * (denom - num) / denom
     }
-    println!("orca quote: {}", quote);
     Ok(quote)
 }
