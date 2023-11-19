@@ -473,8 +473,7 @@ let pool = pool.clone();
     println!("searching for arbitrages...");
     let min_swap_amount = 10_u128.pow(3_u32); // scaled! -- 1 USDC
     let mut swap_start_amount = init_token_balance; // scaled!
-    println!("swap start amount = {}", swap_start_amount);
-    let mut sent_arbs = HashSet::new(); // track what arbs we did with a larger size
+    println!("swap start amount = {}", swap_start_amount); // track what arbs we did with a larger size
     let update_pks = std::fs::read_to_string("update_pks.json").unwrap();
     let update_pks: HashMap<String, Vec<String>> = serde_json::from_str(&update_pks).unwrap();
 loop {
@@ -562,14 +561,13 @@ let pool = pool.clone();
     let src_ata = derive_token_address(&owner.pubkey(), &usdc_mint);
     // PROFIT OR REVERT instruction
     let start_mint_idx: usize = *mint2idx.get(&start_mint).unwrap();
-
+   
     arbitrager.brute_force_search(
         start_mint_idx,
         swap_start_amount,
         swap_start_amount,
         vec![start_mint_idx],
         vec![],
-        &mut sent_arbs,
     ).await;
     swap_start_amount /= 2;
     if swap_start_amount < min_swap_amount {

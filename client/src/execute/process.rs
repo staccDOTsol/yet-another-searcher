@@ -36,6 +36,7 @@ pub struct Arbitrager {
 }
 impl Arbitrager {
 #[async_recursion::async_recursion]
+
     pub async     fn brute_force_search(
         &self,
         start_mint_idx: usize,
@@ -43,7 +44,6 @@ impl Arbitrager {
         curr_balance: u128,
         path: Vec<usize>,
         pool_path: Vec<PoolQuote>,
-        sent_arbs: &mut HashSet<String>,
     ) {
         let src_curr = path[path.len() - 1]; // last mint
         let src_mint = self.token_mints[src_curr];
@@ -94,12 +94,6 @@ impl Arbitrager {
                         let pool_keys: Vec<String> =
                             new_pool_path.iter().map(|p| p.0.get_name()).collect();
                         let arb_key = format!("{}{}", mint_keys.join(""), pool_keys.join(""));
-                        if sent_arbs.contains(&arb_key) {
-                            println!("arb already sent...");
-                            continue; // dont re-send an already sent arb -- bad for network
-                        } else {
-                            sent_arbs.insert(arb_key);
-                        }
                         let mut ixs = self.get_arbitrage_instructions(
                             init_balance,
                             &new_path,
@@ -160,13 +154,13 @@ impl Arbitrager {
                     }
                 } else if !path.contains(&dst_mint_idx) {
                     // ... search deeper
+                    
                     self.brute_force_search(
                         start_mint_idx,
                         init_balance,
                         new_balance,   // !
                         new_path,      // !
                         new_pool_path, // !
-                        sent_arbs,
                     ).await;
                 }
             }
@@ -200,7 +194,8 @@ async    fn get_arbitrage_instructions<'a>(
     let program = provider.program(*crate::constants::ARB_PROGRAM_ID).unwrap();
 
         // initialize swap ix
-        let ix = program
+        let ix = 
+        tokio::task::spawn_blocking(move || program
             .request()
             .accounts(tmp_accounts::TokenAndSwapState {
                 swap_state: swap_state_pda,
@@ -209,7 +204,7 @@ async    fn get_arbitrage_instructions<'a>(
                 swap_input: swap_start_amount as u64,
             })
             .instructions()
-            .unwrap();
+            .unwrap()).await.unwrap();
         ixs.push(ix);
         let mut flag = false;
         let pubkey = owner;
