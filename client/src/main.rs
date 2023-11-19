@@ -12,7 +12,7 @@ use tokio::runtime::Runtime; // 0.2.23
 use tokio::sync::mpsc;
 
 // Create the runtime
-use client::identify::arb::Arbitrager;
+use client::execute::process::Arbitrager;
 
 use std::fs::File;
 use std::task::{Context, Poll, RawWaker, RawWakerVTable, Waker};
@@ -510,7 +510,6 @@ loop {
         vec![start_mint_idx],
         vec![],
         &mut sent_arbs,
-        ix.unwrap(),
     );
 }
 }

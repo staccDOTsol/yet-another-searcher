@@ -69,7 +69,7 @@ impl PoolOperations for OrcaPool {
         let user_src = derive_token_address(owner, mint_in);
         let user_dst = derive_token_address(owner, mint_out);
 
-        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
+        let owner_kp_path = "/home/azoth/.config/solana/id.json";
         // setup anchor things
         let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
         let rc_owner = Rc::new(owner2);

@@ -74,7 +74,7 @@ impl PoolOperations for AldrinPool {
     ) -> (bool, Vec<Instruction>) {
         let state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
-        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
+        let owner_kp_path = "/home/azoth/.config/solana/id.json";
         // setup anchor things
         let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
         let rc_owner = Rc::new(owner2);
