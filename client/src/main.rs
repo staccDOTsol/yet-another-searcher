@@ -95,6 +95,8 @@ pub struct Args {
     pub cluster: String,
     #[clap(short, long)]
     pub flashing: String,
+    #[clap(short, long)]
+    pub keypair: String,
 }
 
 fn add_pool_to_graph<'a>(
@@ -274,14 +276,7 @@ async fn main() {
         "mainnet" => Cluster::Mainnet,
         _ => panic!("invalid cluster type"),
     };
-
-    env_logger::init();
-
-    let owner_kp_path = match cluster {
-        Cluster::Localnet => "../../mainnet_fork/localnet_owner.key",
-        Cluster::Mainnet => "/Users/stevengavacs/.config/solana/id.json",
-        _ => panic!("shouldnt get here"),
-    };
+    let owner_kp_path = args.keypair.as_str();
 
     // ** setup RPC connection
     let connection_url = match cluster {
