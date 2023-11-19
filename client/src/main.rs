@@ -453,7 +453,15 @@ async fn main() {
         account_ptr += length;
 
         pool.set_update_accounts(_account_slice.to_vec(), cluster.clone());
-
+        let mut pc = page_config.lock().unwrap();
+        let mut humbug = 0;
+        for acc in _account_slice.to_vec() {
+            pc.insert(
+                update_pks[account_ptr+humbug].to_string(),
+                acc.unwrap(),
+            );
+            humbug += 1;
+        }
         // add pool to graph
         let idxs = &all_mint_idxs[pool_count * 2..(pool_count + 1) * 2].to_vec();
         let idx0 = PoolIndex(idxs[0]);
@@ -485,7 +493,7 @@ loop {
         let accounts = pool.get_update_accounts();
         let pc = page_config.lock().unwrap();
         for acc in accounts {
-            let data = pc.get(&acc.to_string()).unwrap().clone();
+            let data: Account = pc.get(&acc.to_string()).unwrap().clone();
             pool.set_update_accounts2(Pubkey::from_str(&acc.to_string()).unwrap(), &data.data, Cluster::Mainnet);
         }
     }
