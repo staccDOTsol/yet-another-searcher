@@ -23,7 +23,7 @@ describe("tmp", () => {
         
         web3.Keypair.fromSecretKey(
             new Uint8Array(JSON.parse(
-        fs.readFileSync(`/home/azoth/.config/solana/id.json`, 'utf8').toString())
+        fs.readFileSync(`/Users/stevengavacs/.config/solana/id.json`, 'utf8').toString())
             )
         )
          ), {
@@ -744,7 +744,7 @@ describe("tmp", () => {
           provider as any
     )
 
-    let rawdata = fs.readFileSync(`/home/azoth/.config/solana/id.json`, 'utf8');  
+    let rawdata = fs.readFileSync(`/Users/stevengavacs/.config/solana/id.json`, 'utf8');  
     let owner_secret = new Uint8Array(JSON.parse(rawdata));
     let wallet = web3.Keypair.fromSecretKey(owner_secret);
 

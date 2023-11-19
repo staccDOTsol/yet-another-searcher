@@ -203,7 +203,7 @@ impl Arbitrager {
 
 
     // setup anchor things
-    let owner = solana_sdk::signer::keypair::read_keypair_file("/home/azoth/.config/solana/id.json").unwrap();
+    let owner = solana_sdk::signer::keypair::read_keypair_file("/Users/stevengavacs/.config/solana/id.json").unwrap();
     let rc_owner = Rc::new(owner);
     let provider = anchor_client::Client::new_with_options(
         Cluster::Mainnet,
