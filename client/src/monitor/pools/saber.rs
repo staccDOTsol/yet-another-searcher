@@ -82,12 +82,14 @@ impl PoolOperations for SaberPool {
         let fee_acc;
         if self.fee_accounts.contains_key(&mint_in.to_string()) {
             fee_acc = self.fee_accounts.get(&mint_in.to_string()).unwrap().clone();
-        } else {
+        } else if self.fee_accounts.contains_key(&mint_out.to_string())  {
             fee_acc = self
                 .fee_accounts
                 .get(&mint_out.to_string())
                 .unwrap()
                 .clone();
+        } else {
+            return (false, vec![]);
         }
         let swap_ix = program
             .request()
