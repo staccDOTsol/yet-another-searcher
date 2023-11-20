@@ -446,52 +446,7 @@
     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
     "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS"
   ],
-  "tokens": {
-    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
-      "chainId": 101,
-      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-      "symbol": "USDC",
-      "name": "USD Coin",
-      "decimals": 6,
-      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
-      "tags": [
-        "stablecoin"
-      ],
-      "extensions": {
-        "coingeckoId": "usd-coin",
-        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
-        "website": "https://www.centre.io/"
-      },
-      "addr": "3Pg5xVmLQQm4nHMJ4ATXXKWejkw3chJnLnJVng2rAszu",
-      "tag": "stablecoin",
-      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-      "scale": 6
-    },
-    "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS": {
-      "chainId": 101,
-      "address": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
-      "symbol": "PAI",
-      "name": "PAI (Parrot USD)",
-      "decimals": 6,
-      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS/logo.svg",
-      "tags": [
-        "utility-token",
-        "stablecoin"
-      ],
-      "extensions": {
-        "coingeckoId": "parrot-usd",
-        "discord": "https://discord.gg/gopartyparrot",
-        "medium": "https://gopartyparrot.medium.com/",
-        "telegram": "https://t.me/gopartyparrot",
-        "twitter": "https://twitter.com/gopartyparrot",
-        "website": "https://parrot.fi"
-      },
-      "addr": "DPhWpkh39jo45PiGPois7Qs3Z8KcsqZY2dHZo7faVCEP",
-      "tag": "utility-token,stablecoin",
-      "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
-      "scale": 6
-    }
-  },
+  "tokens": {},
   "fee_accounts": {},
   "target_amp": 100,
   "fee_numerator": 5,

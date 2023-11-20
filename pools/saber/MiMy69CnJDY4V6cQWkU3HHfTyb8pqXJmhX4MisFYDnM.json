@@ -446,43 +446,7 @@
     "2ASbApnFVSTp2RJvMLgLVfbDwJvu1FRXdhJWrGs89Lhj",
     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
   ],
-  "tokens": {
-    "2ASbApnFVSTp2RJvMLgLVfbDwJvu1FRXdhJWrGs89Lhj": {
-      "chainId": 101,
-      "address": "2ASbApnFVSTp2RJvMLgLVfbDwJvu1FRXdhJWrGs89Lhj",
-      "symbol": "aeMIM",
-      "name": "Wrapped MIM (Allbridge from Ethereum)",
-      "decimals": 9,
-      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/2ASbApnFVSTp2RJvMLgLVfbDwJvu1FRXdhJWrGs89Lhj/logo.png",
-      "extensions": {
-        "coingeckoId": "magic-internet-money"
-      },
-      "addr": "EsFsfp3rNDFn4ggWLvfDeTAW1zbjpRRzZxsNWzqRQS4A",
-      "tag": "",
-      "mint": "2ASbApnFVSTp2RJvMLgLVfbDwJvu1FRXdhJWrGs89Lhj",
-      "scale": 9
-    },
-    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
-      "chainId": 101,
-      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-      "symbol": "USDC",
-      "name": "USD Coin",
-      "decimals": 6,
-      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
-      "tags": [
-        "stablecoin"
-      ],
-      "extensions": {
-        "coingeckoId": "usd-coin",
-        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
-        "website": "https://www.centre.io/"
-      },
-      "addr": "FxU5cupP6NA18ttrQHGnP82HZ9VoY9Rzb6KMv8Akw2gm",
-      "tag": "stablecoin",
-      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-      "scale": 6
-    }
-  },
+  "tokens": {},
   "fee_accounts": {},
   "target_amp": 100,
   "fee_numerator": 5,

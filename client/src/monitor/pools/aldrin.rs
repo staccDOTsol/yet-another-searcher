@@ -263,8 +263,10 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
         if _mint.to_string() == id0.to_string() {
             self.pool_amounts
                 .insert(id0.clone(), amount0.amount as u128);
-        } else {
-            self.pool_amounts
+
+            } else if _mint.to_string() == id1.to_string() {
+                
+                            self.pool_amounts
                 .insert(id1.clone(), amount0.amount as u128);
         }
     }

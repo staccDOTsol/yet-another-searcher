@@ -24,10 +24,15 @@ pub enum PoolType {
     SaberPoolType,
     AldrinPoolType,
     SerumPoolType,
+    RaydiumPoolType,
 }
 
 pub fn pool_factory(pool_type: &PoolType, json_str: &String) -> Box<dyn PoolOperations> {
     match pool_type {
+        PoolType::RaydiumPoolType => {
+            let pool: RaydiumPool = serde_json::from_str(json_str).unwrap();
+            Box::new(pool)
+        }
         PoolType::OrcaPoolType => {
             let pool: OrcaPool = serde_json::from_str(json_str).unwrap();
             Box::new(pool)

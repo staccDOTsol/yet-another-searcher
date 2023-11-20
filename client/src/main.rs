@@ -3,6 +3,8 @@ use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
+use base64::Engine;
+use base64::engine::{GeneralPurpose, general_purpose};
 use boilerplate::Boilerplate;
 use client::serialize::token::unpack_token_account;
 use core::panic;
@@ -225,18 +227,30 @@ async fn home(
     // if b iz string
 
     let body = serde_json::from_str::<Vec<HomeHtml2>>(&b).unwrap();
+    tokio::task::spawn_blocking(move || {
     for i in 0..body.len() {
-        page_config.lock().unwrap().insert(
-            body[i].account.parsed.pubkey.clone(),
-            Account {
-                lamports: body[i].account.parsed.lamports,
-                data: base64::decode(&body[i].account.parsed.data[0]).unwrap(),
-                owner: Pubkey::from_str(&body[i].account.parsed.owner).unwrap(),
-                executable: body[i].account.parsed.executable,
-                rent_epoch: body[i].account.parsed.rent_epoch,
-            },
-        );
-    }
+            let mut pc = page_config.lock().unwrap();
+            let mut data = &body[i].account.parsed.data;
+            let mut data = data[0].clone();
+            // data is b64, we need &[u8] 
+            
+            let mut data = general_purpose::STANDARD
+            .decode(&data).unwrap();
+            
+
+            pc.insert(
+                body[i].account.parsed.pubkey.clone(),
+                Account {
+                    lamports: body[i].account.parsed.lamports,
+                    data: data,
+                    owner: Pubkey::from_str(&body[i].account.parsed.owner).unwrap(),
+                    executable: body[i].account.parsed.executable,
+                    rent_epoch: body[i].account.parsed.rent_epoch,
+                    
+                },
+            );
+        }
+        });
     Ok(Json(SetJson { status_code: 200 }).into_response())
 }
 #[tokio::main]
@@ -303,19 +317,16 @@ async fn main() {
     // ** define pool JSONs
     let mut pool_dirs: Vec<PoolDir> = vec![];
 
+    let r_dir = PoolDir {
+        pool_type: PoolType::RaydiumPoolType,
+        dir_path: "../pools/raydium".to_string(),
+    };
+    pool_dirs.push(r_dir);
     let orca_dir = PoolDir {
         pool_type: PoolType::OrcaPoolType,
         dir_path: "../pools/orca".to_string(),
     };
     pool_dirs.push(orca_dir);
-    /*
-    let mercurial_dir = PoolDir {
-        pool_type: PoolType::MercurialPoolType,
-        dir_path: "../pools/mercurial".to_string(),
-    };
-    pool_dirs.push(mercurial_dir);
-     */
-
     let saber_dir = PoolDir {
         pool_type: PoolType::SaberPoolType,
         dir_path: "../pools/saber/".to_string(),
@@ -402,14 +413,13 @@ async fn main() {
     // !
     let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
     let start_mint = usdc_mint;
-    let start_mint_idx: usize = *mint2idx.get(&start_mint).unwrap();
-
     let owner: &Keypair = rc_owner.borrow();
     let owner_start_addr = derive_token_address(&owner.pubkey(), &start_mint);
 
     // slide it in there
     update_pks.push(owner_start_addr);
-
+    let pk_strings = update_pks.iter().map(|pk| pk.to_string()).collect::<Vec<String>>();
+    std::fs::write("update_pks.json", serde_json::to_string(&pk_strings).unwrap()).unwrap();
     println!("getting pool amounts...");
     let mut update_accounts = vec![];
     for token_addr_chunk in update_pks.chunks(99) {
@@ -422,10 +432,13 @@ async fn main() {
         .filter(|s| s.is_some())
         .collect::<Vec<Option<Account>>>();
 
+
+        let src_ata = derive_token_address(&rc_owner.pubkey(), &usdc_mint);
+
+        let init_token_acc = connection.get_account(&src_ata).unwrap();
+        let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128;
     println!("update accounts is {:?}", update_accounts.len());
     // slide it out here
-    let init_token_acc = update_accounts.pop().unwrap().unwrap();
-    let init_token_balance = unpack_token_account(&init_token_acc.data).amount as u128;
     println!(
         "init token acc: {:?}, balance: {:#}",
         init_token_acc, init_token_balance
@@ -450,13 +463,6 @@ async fn main() {
         pool.set_update_accounts(_account_slice.to_vec(), cluster.clone());
         let mut pc = page_config.lock().unwrap();
         let mut humbug = 0;
-        for acc in _account_slice.to_vec() {
-            pc.insert(
-                update_pks[account_ptr+humbug].to_string(),
-                acc.unwrap(),
-            );
-            humbug += 1;
-        }
         account_ptr += length;
         // add pool to graph
         let idxs = &all_mint_idxs[pool_count * 2..(pool_count + 1) * 2].to_vec();
@@ -472,74 +478,126 @@ let pool = pool.clone();
 
     println!("searching for arbitrages...");
     let min_swap_amount = 10_u128.pow(3_u32); // scaled! -- 1 USDC
+
+    let src_ata = derive_token_address(&rc_owner.pubkey(), &usdc_mint);
+
+    let init_token_acc = connection.get_account(&src_ata).unwrap();
+    let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128;
     let mut swap_start_amount = init_token_balance; // scaled!
     println!("swap start amount = {}", swap_start_amount); // track what arbs we did with a larger size
-    let update_pks = std::fs::read_to_string("update_pks.json").unwrap();
-    let update_pks: HashMap<String, Vec<String>> = serde_json::from_str(&update_pks).unwrap();
+    let init_token_acc = connection.get_account(&src_ata).unwrap();
+    let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128;
+
+    
+    println!("searching for arbitrages...");
+    let min_swap_amount = 10_u128.pow(4_u32); // scaled! -- 1 USDC
+    let mut swap_start_amount = init_token_balance; // scaled!
+    println!("swap start amount = {}", swap_start_amount);
+    
 loop {
 
+    let init_token_acc = connection.get_account(&src_ata).unwrap();
+    let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128;
+    swap_start_amount /= 2;
+    if swap_start_amount < min_swap_amount {
+        swap_start_amount = init_token_balance;
+    }
+
+    // ** json pool -> pool object
     let mut token_mints = vec![];
 
-    let mut update_pks_lengths = vec![];
     let mut all_mint_idxs = vec![];
 
     let mut mint2idx = HashMap::new();
     let mut graph_edges = vec![];
+    // ** define pool JSONs
+    let mut pool_dirs: Vec<PoolDir> = vec![];
+
+    let r_dir = PoolDir {
+        pool_type: PoolType::RaydiumPoolType,
+        dir_path: "../pools/raydium".to_string(),
+    };
+    pool_dirs.push(r_dir);
+    let orca_dir = PoolDir {
+        pool_type: PoolType::OrcaPoolType,
+        dir_path: "../pools/orca".to_string(),
+    };
+    pool_dirs.push(orca_dir);
+
+    let saber_dir = PoolDir {
+        pool_type: PoolType::SaberPoolType,
+        dir_path: "../pools/saber/".to_string(),
+    };
+    pool_dirs.push(saber_dir);
+
+    let serum_dir = PoolDir {
+        pool_type: PoolType::SerumPoolType,
+        dir_path: "../pools/serum/".to_string(),
+    };
+    pool_dirs.push(serum_dir);
+    
+
+    // !
+    let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
+    let start_mint = usdc_mint;
+
+    let owner: &Keypair = rc_owner.borrow();
+    let owner_start_addr = derive_token_address(&owner.pubkey(), &start_mint);
+
+
     let mut graph = PoolGraph::new();
     let mut pool_count = 0;
-    for mut pool   in pools.iter_mut() {
+    let mut account_ptr = 0;
+let mut start_mint_idx   = 0;
+    for mut pool in pools.iter_mut() {
+        let pool_mints = pool.get_mints();
+        let mut mint_idxs = vec![];
+        for mint in pool_mints {
+            let idx;
+            if !token_mints.contains(&mint) {
+                idx = token_mints.len();
+                mint2idx.insert(mint, idx);
+                token_mints.push(mint);
+                // graph_edges[idx] will always exist :)
+                graph_edges.push(HashSet::new());
+            } else {
+                idx = *mint2idx.get(&mint).unwrap();
+            }
+            mint_idxs.push(idx);
+            if mint == start_mint {
+                start_mint_idx = idx;
+            }
+        }
+
+        let mint0_idx = mint_idxs[0];
+        let mint1_idx = mint_idxs[1];
+
+        all_mint_idxs.push(mint0_idx);
+        all_mint_idxs.push(mint1_idx);
+
+        // record graph edges if they dont already exist
+        if !graph_edges[mint0_idx].contains(&mint1_idx) {
+            graph_edges[mint0_idx].insert(mint1_idx);
+        }
+        if !graph_edges[mint1_idx].contains(&mint0_idx) {
+            graph_edges[mint1_idx].insert(mint0_idx);
+        }
+        // update pool
         let accounts = pool.get_update_accounts();
         let pc = page_config.lock().unwrap();
         let name = pool.get_name();
         for acc in accounts {
-            for (key, val) in update_pks.clone() {
-                if name.to_lowercase() == key.to_lowercase() {
-                    let data: Account = pc.get(&acc.to_string()).unwrap().clone();
-                    pool.set_update_accounts2(Pubkey::from_str(&acc.to_string()).unwrap(), &data.data, Cluster::Mainnet);
-                }
+            let mut maybe =  pc.get(&acc.to_string());
+            if maybe.is_some(){
+                    let data: Account = maybe.unwrap().clone();
+                   pool.set_update_accounts2(Pubkey::from_str(&acc.to_string()).unwrap(), &data.data, Cluster::Mainnet);
             }
         }
-
-            let pool_mints = pool.get_mints();
-
-            //  ** record pool println for graph
-            // token: (mint = graph idx), (addr = get quote amount)
-            let mut mint_idxs = vec![];
-            for mint in pool_mints {
-                let idx;
-                if !token_mints.contains(&mint) {
-                    idx = token_mints.len();
-                    mint2idx.insert(mint, idx);
-                    token_mints.push(mint);
-                    // graph_edges[idx] will always exist :)
-                    graph_edges.push(HashSet::new());
-                } else {
-                    idx = *mint2idx.get(&mint).unwrap();
-                }
-                mint_idxs.push(idx);
-            }
-
-            // get accounts which need account println to be updated (e.g. pool src/dst amounts for xy=k)
-            let update_accounts = pool.get_update_accounts();
-            update_pks_lengths.push(update_accounts.len());
-
-            let mint0_idx = mint_idxs[0];
-            let mint1_idx = mint_idxs[1];
-
-            all_mint_idxs.push(mint0_idx);
-            all_mint_idxs.push(mint1_idx);
-
-            // record graph edges if they dont already exist
-            if !graph_edges[mint0_idx].contains(&mint1_idx) {
-                graph_edges[mint0_idx].insert(mint1_idx);
-            }
-            if !graph_edges[mint1_idx].contains(&mint0_idx) {
-                graph_edges[mint1_idx].insert(mint0_idx);
-            }
+        // add pool to graph
         let idxs = &all_mint_idxs[pool_count * 2..(pool_count + 1) * 2].to_vec();
         let idx0 = PoolIndex(idxs[0]);
         let idx1 = PoolIndex(idxs[1]);
-let pool = pool.clone();
+        let pool = pool.clone();
         let mut pool_ptr = PoolQuote::new(Rc::new(pool));
         add_pool_to_graph(&mut graph, idx0, idx1, &mut pool_ptr.clone());
         add_pool_to_graph(&mut graph, idx1, idx0, &mut pool_ptr);
@@ -547,28 +605,27 @@ let pool = pool.clone();
         pool_count += 1;
     }
 
+
     let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent());
 
-    let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
-    let rc_owner2 = Rc::new(owner2);
-    let arbitrager = Arbitrager {
+   
+
+    let arbitrager =Arbitrager {
         token_mints,
         graph_edges,
         graph,
         cluster: Cluster::Mainnet,
         connection,
     };
-    let src_ata = derive_token_address(&owner.pubkey(), &usdc_mint);
-    // PROFIT OR REVERT instruction
-    let start_mint_idx: usize = *mint2idx.get(&start_mint).unwrap();
-   
-    arbitrager.brute_force_search(
-        start_mint_idx,
-        swap_start_amount,
-        swap_start_amount,
-        vec![start_mint_idx],
-        vec![],
-    ).await;
+    
+            arbitrager.brute_force_search(
+                start_mint_idx,
+                init_token_balance,
+                swap_start_amount,
+                vec![start_mint_idx],
+                vec![],
+            ).await;
+
     swap_start_amount /= 2;
     if swap_start_amount < min_swap_amount {
         swap_start_amount = init_token_balance;

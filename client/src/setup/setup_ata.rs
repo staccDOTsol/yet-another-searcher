@@ -11,6 +11,7 @@ use client::monitor::pools::pool::PoolDir;
 use solana_sdk::instruction::Instruction;
 use solana_sdk::transaction::Transaction;
 
+use std::collections::HashMap;
 use std::fmt::Debug;
 use std::vec;
 
@@ -40,6 +41,11 @@ fn main() {
         RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::recent());
         let mut pool_dirs: Vec<PoolDir> = vec![];
 
+        let r_dir = PoolDir {
+            pool_type: PoolType::RaydiumPoolType,
+            dir_path: "../pools/raydium".to_string(),
+        };
+        pool_dirs.push(r_dir);
         let orca_dir = PoolDir {
             pool_type: PoolType::OrcaPoolType,
             dir_path: "../pools/orca".to_string(),
@@ -64,29 +70,59 @@ fn main() {
             dir_path: "../pools/serum/".to_string(),
         };
         pool_dirs.push(serum_dir); 
-    
-
-
+    let mut account_pks = vec![];
     let mut token_mints = vec![];
+    let mut map_account_pks_to_pool_paths = HashMap::new();
     for pool_dir in pool_dirs {
         let pool_paths = read_json_dir(&pool_dir.dir_path);
-
+        
         for pool_path in pool_paths {
             let json_str = std::fs::read_to_string(&pool_path).unwrap();
             let pool = pool_factory(&pool_dir.pool_type, &json_str);
-            let pool_mints = pool.get_mints();
-            if pool_mints.len() != 2 {
-                // only support 2 mint pools
-                warn!("skipping pool with mints != 2: {:?}", pool_path);
+            let accounts = pool.get_update_accounts();
+            let mut ii = 0;
+            for account in accounts {
+                account_pks.push(account);
+                map_account_pks_to_pool_paths.insert(account.to_string(), pool_path.clone());
+
+            }
+        }
+    }
+    let mut update_pks = vec![];
+    let mut update_accounts = vec![];
+    for token_addr_chunk in account_pks.chunks(99) {
+        let accounts = connection.get_multiple_accounts(token_addr_chunk).unwrap();
+        update_accounts.push(accounts);
+        update_pks.push(token_addr_chunk);
+
+    }
+    let mut  a = 0;
+    let mut b = 0;
+    for accounts in update_accounts {
+        for account in accounts {
+            if account.is_none() {
                 continue;
             }
-            for mint in pool_mints {
+            let acc_info = account.unwrap();
+            let amount =  unpack_token_account(&acc_info.data).amount as i64;
+            if amount > 0 {
+                let mint = unpack_token_account(&acc_info.data).mint;
                 if !token_mints.contains(&mint) {
                     token_mints.push(mint);
                 }
             }
+            else {
+                let pool_path = map_account_pks_to_pool_paths.get(update_pks[b][a].to_string().as_str()).unwrap();
+                std::fs::remove_file(pool_path);
+            }
+            a += 1;
         }
+        a = 0;
+        b += 1;
     }
+    println!("token mints: {:?}", token_mints.len());
+    println!("token mints: {:?}", token_mints.len());
+
 
     // make sure all tokens have ATA
     // print initial balances
@@ -150,7 +186,6 @@ fn main() {
         create_ata_ixs.len(),
         n
     );
-
     for chunck_ixs in create_ata_ixs.chunks(9) {
         let tx = {
             let recent_hash = send_tx_connection.get_latest_blockhash().unwrap();

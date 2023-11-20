@@ -63,8 +63,5 @@ pub fn get_pool_quote_with_amounts(
     }
 
     // add slippage amount if its given
-    if let Some([num, denom]) = slippage_percent {
-        quote = quote * (denom - num) / denom
-    }
     Ok(quote)
 }

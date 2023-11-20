@@ -23,7 +23,13 @@ path = "src/setup/setup_ata.rs"
 name = "setup_open_orders"
 path = "src/setup/setup_open_orders.rs"
 
+[[bin]]
+name = "amm_client"
+path = "src/client/src/main.rs"
+
 [dependencies]
+raydium-contract-instructions = { path = "./lib"}
+spl-token = { version = "3.2.0", features = ["no-entrypoint"], default-features = false }
 boilerplate = { version = "1.0.0", features = ["axum"] }
 tower-http = { version = "0.4.0", features = ["compression-br", "compression-gzip", "cors", "set-header"] }
 http = "*"
@@ -35,7 +41,6 @@ base64 = "*"
 solana-transaction-status = "*"
 solana-address-lookup-table-program = "*"
 solana-program = "1.14"
-spl-token = { version = "3.3.1", features = ["no-entrypoint"]  }
 bytemuck = { version = "1.7.3", features = ["extern_crate_std", "min_const_generics"] }
 solana-client = "1.14"
 flash-loan-sdk = { path="../lib" }
@@ -75,10 +80,13 @@ indicatif = "0.16.2"
 sha2 = "0.10.2"
 dyn-clone = "1.0"
 lazy_static = "1.4.0"
- spl-associated-token-account = "*"
+spl-associated-token-account = "*"
 [dev-dependencies]
 solana-sdk = "1.9.9"
 proptest = "1.0"
 roots = "0.0.7"
 
 [workspace]
+members = [
+    "lib",
+]

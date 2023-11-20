@@ -80,19 +80,21 @@ async    fn swap_ix(
         );
         let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let pool_src = self.tokens.get(&mint_in.to_string()).unwrap().addr.0;
+        if !self.tokens.contains_key(&mint_out.to_string()) {
+            return (false, vec![]);
+        }
         let pool_dst = self.tokens.get(&mint_out.to_string()).unwrap().addr.0;
         let fee_acc;
-        if self.fee_accounts.contains_key(&mint_in.to_string()) {
-            fee_acc = self.fee_accounts.get(&mint_in.to_string()).unwrap().clone();
-        } else if self.fee_accounts.contains_key(&mint_out.to_string())  {
+                if self.fee_accounts.contains_key(&mint_out.to_string())  {
             fee_acc = self
                 .fee_accounts
                 .get(&mint_out.to_string())
                 .unwrap()
                 .clone();
-        } else {
-            return (false, vec![]);
-        }
+                }
+                else {
+                    return (false, vec![]);
+                }
         let pool_account = self.pool_account.0;
         let authority = self.authority.0;
         let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || program            .request()
@@ -127,18 +129,13 @@ async    fn swap_ix(
             fee_numerator: self.fee_numerator as u128,
             fee_denominator: self.fee_denominator as u128,
         };
-        if self.pool_amounts.contains_key(&mint_in.to_string())
-            && self.pool_amounts.contains_key(&mint_out.to_string())
-        {
             let pool_src_amount = self.pool_amounts.get(&mint_in.to_string()).unwrap();
             let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string()).unwrap();
             let pool_amounts = [*pool_src_amount, *pool_dst_amount];
             let percision_multipliers = [1, 1];
 
             calculator.get_quote(pool_amounts, percision_multipliers, scaled_amount_in)
-        } else {
-            0
-        }
+        
     }
 
     fn get_update_accounts(&self) -> Vec<Pubkey> {
@@ -184,8 +181,11 @@ async    fn swap_ix(
         let id1 = &self.token_ids[1];
         if _mint.to_string() == id0.to_string() {
             self.pool_amounts
-                .insert(id0.clone(), amount0.amount as u128);
-        } else {
+                .remove(&id0.to_string());
+                self.pool_amounts.insert(id0.clone(), amount0.amount as u128);
+        } else if _mint.to_string() == id1.to_string() {
+            self.pool_amounts
+                .remove(&id1.to_string());
             self.pool_amounts
                 .insert(id1.clone(), amount0.amount as u128);
         }

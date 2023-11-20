@@ -446,46 +446,7 @@
     "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
     "So11111111111111111111111111111111111111112"
   ],
-  "tokens": {
-    "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So": {
-      "chainId": 101,
-      "address": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
-      "symbol": "mSOL",
-      "name": "Marinade staked SOL (mSOL)",
-      "decimals": 9,
-      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png",
-      "extensions": {
-        "coingeckoId": "msol",
-        "discord": "https://discord.gg/mGqZA5pjRN",
-        "github": "https://github.com/marinade-finance",
-        "medium": "https://medium.com/marinade-finance",
-        "serumV3Usdc": "6oGsL2puUgySccKzn9XA9afqF217LfxP5ocq4B3LWsjy",
-        "serumV3Usdt": "HxkQdUnrPdHwXP5T9kewEXs3ApgvbufuTfdw9v1nApFd",
-        "twitter": "https://twitter.com/MarinadeFinance",
-        "website": "https://marinade.finance"
-      },
-      "addr": "5j2W7aBXp6e3qHQgFWVs5pDKU8cYCyRHSvvt7JdbevwX",
-      "tag": "",
-      "mint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
-      "scale": 9
-    },
-    "So11111111111111111111111111111111111111112": {
-      "chainId": 102,
-      "address": "So11111111111111111111111111111111111111112",
-      "symbol": "wSOL",
-      "name": "Wrapped SOL",
-      "decimals": 9,
-      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
-      "extensions": {
-        "coingeckoId": "solana",
-        "website": "https://www.solana.com/"
-      },
-      "addr": "AjMBRv6VdDdCNoK5QCMpH1gMvwYnMGoHWR4wRabPzREY",
-      "tag": "",
-      "mint": "So11111111111111111111111111111111111111112",
-      "scale": 9
-    }
-  },
+  "tokens": {},
   "fee_accounts": {},
   "target_amp": 100,
   "fee_numerator": 5,

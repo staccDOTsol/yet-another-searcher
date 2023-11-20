@@ -94,6 +94,11 @@ fn main() {
         pool_type: PoolType::OrcaPoolType,
         dir_path: "../pools/orca".to_string(),
     };
+    let r_dir = PoolDir {
+        pool_type: PoolType::RaydiumPoolType,
+        dir_path: "../pools/raydium".to_string(),
+    };
+    pool_dirs.push(r_dir);
     pool_dirs.push(orca_dir);
     let aldrin_dir = PoolDir {
         pool_type: PoolType::AldrinPoolType,

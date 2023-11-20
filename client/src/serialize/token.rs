@@ -66,7 +66,12 @@ impl DerefMut for WrappedPubkey {
 
 impl From<WrappedString> for WrappedPubkey {
     fn from(s: WrappedString) -> Self {
-        WrappedPubkey(Pubkey::from_str(&s.0).unwrap())
+        let pubkey = Pubkey::from_str(&s.0);
+        if !pubkey.is_err(){
+            WrappedPubkey(pubkey.unwrap())
+        } else {
+            WrappedPubkey(Pubkey::default())
+        }
     }
 }
 

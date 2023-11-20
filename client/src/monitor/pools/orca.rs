@@ -119,12 +119,7 @@ let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || progr
         mint_in: &Pubkey,
         mint_out: &Pubkey,
     ) -> u128 {
-        if !self.pool_amounts.contains_key(&mint_in.to_string())
-            || !self.pool_amounts.contains_key(&mint_out.to_string())
-        {
-            println!("orca pool amounts not found");
-            return 0;
-        }
+        
         let pool_src_amount = self.pool_amounts.get(&mint_in.to_string()).unwrap();
         let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string()).unwrap();
 
@@ -214,8 +209,11 @@ let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || progr
         let id1 = &self.token_ids[1];
         if _mint.to_string() == id0.to_string() {
             self.pool_amounts
-                .insert(id0.clone(), amount0.amount as u128);
+                .remove(&id0.to_string());
+                self.pool_amounts.insert(id0.clone(), amount0.amount as u128);
         } else if _mint.to_string() == id1.to_string() {
+            self.pool_amounts
+                .remove(&id1.to_string());
             self.pool_amounts
                 .insert(id1.clone(), amount0.amount as u128);
         }

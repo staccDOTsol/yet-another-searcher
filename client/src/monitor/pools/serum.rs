@@ -239,11 +239,9 @@ impl PoolOperations for SerumPool {
         } else {
             return;
         }
-        println!("length acocunts {}", taccs.len());
         if taccs.len() < 3 {
             return;
         }
-        println!("made it here 3");
 
         let flags = Market::account_flags(data);
         if flags.is_err() {
@@ -251,7 +249,6 @@ impl PoolOperations for SerumPool {
         }
         let flags = flags.unwrap();
         if flags.intersects(AccountFlag::Bids) {
-            println!("made it here 2.5");
             if taccs.len() < 2 {
                 taccs.push(Some(Account {
                     lamports: 0,
@@ -276,7 +273,6 @@ impl PoolOperations for SerumPool {
         }
         if flags.intersects(AccountFlag::Asks) {
             if taccs.len() < 3 {
-                println!("made it here 32");
                 taccs.push(Some(Account {
                     lamports: 0,
                     data: data.to_vec(),
@@ -292,7 +288,6 @@ impl PoolOperations for SerumPool {
             } else {
                 let mut asks = taccs.get(2).unwrap().clone().unwrap();
                 asks.data = data.to_vec();
-                println!("made it here 3.52");
                 self.accounts = Some(vec![
                     taccs.get(0).unwrap().clone(),
                     taccs.get(1).unwrap().clone(),
@@ -341,18 +336,15 @@ impl PoolOperations for SerumPool {
             amount_out: 0,
         };
         if self.accounts.is_none() {
-            println!("made it here 1");
             return 0;
         }
         if self.accounts.as_ref().unwrap().len() < 2 {
-            println!("made it here 3");
             return 0;
         }
         let market_acc = &self.accounts.as_ref().unwrap()[0];
         let bids_acc = &self.accounts.as_ref().unwrap()[1];
         let tval = self.accounts.as_ref().unwrap();
         if tval.len() < 3 {
-            println!("made it here 4");
             return 0;
         }
 
@@ -404,7 +396,7 @@ impl PoolOperations for SerumPool {
                     break;
                 }
             }
-            iteration.amount_out as u128
+            iteration.amount_out as u128 
         } else {
             println!("{}", 0);
             0
@@ -465,20 +457,29 @@ async    fn swap_ix(
 
         let now = Utc::now();
         let ts = now.timestamp();
+        let base_vault = self.base_vault.0;
+        let quote_vault = self.quote_vault.0;
+        let own_address = self.own_address.0;
+        let request_queue = self.request_queue.0;
+        let event_queue = self.event_queue.0;
+        let bids = self.bids.0;
+        let asks = self.asks.0;
         println!("{}", ts);
         (
             (true),
-            vec![openbook_dex::instruction::new_order(
-                &self.own_address.0,
+            vec![
+                tokio::task::spawn_blocking(move || {
+                    openbook_dex::instruction::new_order(
+                &own_address,
                 &open_orders,
-                &self.request_queue.0,
-                &self.event_queue.0,
-                &self.bids.0,
-                &self.asks.0,
+                &request_queue,
+                &event_queue,
+                &bids,
+                &asks,
                 &payer_acc,
                 &owner,
-                &self.base_vault.0,
-                &self.quote_vault.0,
+                &base_vault,
+                &quote_vault,
                 &TOKEN_PROGRAM_ID,
                 &solana_sdk::sysvar::rent::id(),
                 None,
@@ -492,8 +493,9 @@ async    fn swap_ix(
                 limit,
                 max_native_pc_qty_including_fees,
                 ts + 40000,
-            )
-            .unwrap()],
+                    )}).await.unwrap().unwrap()
+            ],
+            
         )
     }
 

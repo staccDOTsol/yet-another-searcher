@@ -46,13 +46,12 @@ impl Stable {
         let x = xp[0] + dx;
         let leverage = compute_a(self.amp).unwrap();
         let d = compute_d(leverage, xp[0], xp[1]).unwrap();
-        if compute_new_destination_amount(leverage, x, d).is_none() {
+        
+        let y = compute_new_destination_amount(leverage, x, d);
+        if y.is_none() {
             return 0;
         }
-        let y = compute_new_destination_amount(leverage, x, d).unwrap();
-        if y > xp[1] {
-            return 0;
-        }
+        let y = y.unwrap();
         let dy = xp[1] - y;
         let out_amount = dy.checked_div(percision_multipliers[1] as u128).unwrap();
 
