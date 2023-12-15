@@ -1,0 +1,76 @@
+{
+  "id": "4ErJQZZhjC3Z2fHE1yXWbcfPZP1HAJy29DPXqPwSGcdh",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "So111DzVTTNpDq81EbeyKZMi4SkhU9yekqB8xmMpqzA",
+  "mintB": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+  "vaultA": "9YmpA2voJs1GKSjspi6ZykyDTw1jviZVU2RfnS8ovsEP",
+  "vaultB": "Ff1bpEtXjagTr9tLX1HzDGnPmsDBFvvRkafxrHajxdAy",
+  "mintDecimalsA": 9,
+  "mintDecimalsB": 9,
+  "ammConfig": {
+    "id": "HfERMT5DRA6C1TAqecrJQFpmkf3wsWTMncqnj3RDg5aw",
+    "index": 2,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 500,
+    "tickSpacing": 10,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for stable pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "LPFiNAybMobY5oHfYVdy9jPozFBGKpPiEGoobK2xCe3",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 6.586880410237627,
+  "day": {
+    "volume": 0,
+    "volumeFee": 0,
+    "feeA": 0,
+    "feeB": 0,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0,
+    "priceMin": 0.8322846826370746,
+    "priceMax": 0.8322846826370746
+  },
+  "week": {
+    "volume": 0,
+    "volumeFee": 0,
+    "feeA": 0,
+    "feeB": 0,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0,
+    "priceMin": 0.8322846826370746,
+    "priceMax": 0.8322846826370746
+  },
+  "month": {
+    "volume": 0,
+    "volumeFee": 0,
+    "feeA": 0,
+    "feeB": 0,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 0,
+    "priceMin": 0.8322846826370746,
+    "priceMax": 0.8322846826370746
+  },
+  "lookupTableAccount": "EyBJ8qnxPA1Y86uB4eWkLBFnkP6P3mp7HGhP9ed7T9d5",
+  "openTime": 0,
+  "price": 0.8322846826370746
+}

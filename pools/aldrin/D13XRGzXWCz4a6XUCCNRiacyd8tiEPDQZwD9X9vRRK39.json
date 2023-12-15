@@ -1,0 +1,83 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "9Pw2kiDoTM3AXGijTherWee9Jnqwd7KQzJPS8b56rPDz",
+  "poolMint": "D13XRGzXWCz4a6XUCCNRiacyd8tiEPDQZwD9X9vRRK39",
+  "baseTokenVault": "B8m9JkyriGr1Aed71erNpfUKEevsxuR3spXgrANYyroF",
+  "baseTokenMint": "823dnFBD7dUCbBr9tvD6oT3JHo286dx93opVLgqKT21u",
+  "quoteTokenVault": "6CyhPVYjMZhdyXFXn6MBoK15Cv23puiiCREywjzueBrv",
+  "quoteTokenMint": "So11111111111111111111111111111111111111112",
+  "poolSigner": "7bMatNVWvvq8wTEoDELST1MMFAwXEc3aFjXBTz94tUzH",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "B79Cd45nHcwcfbLM8AVyAbUUB75fLxxBiWQyZrtb2qbu",
+  "feeBaseAccount": "GydczjUTdoRDw5Zf6ZH8qXbVU1NFQLy53AzYy1MAKE9A",
+  "feeQuoteAccount": "F64UrkPA3GQqHRE6u6gKXV8awLj5qftX93bno3EBBa13",
+  "feePoolTokenAccount": "8rvZXuFdBLf2FmRCNpeZuXBhDfdcrHoE3b3yTgTujSwj",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "L92XnEAHMQcmcvk1RMdQQ5U6any5QbmDrosN9JriJjx",
+  "poolPublicKey": "GKYBaVuzXgq6NHLqJ72eJX56nbf9GoZeAEhMsPCp6DPr",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "823dnFBD7dUCbBr9tvD6oT3JHo286dx93opVLgqKT21u",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "823dnFBD7dUCbBr9tvD6oT3JHo286dx93opVLgqKT21u": {
+      "chainId": 101,
+      "address": "823dnFBD7dUCbBr9tvD6oT3JHo286dx93opVLgqKT21u",
+      "symbol": "SMCK",
+      "name": "Smacked Exprience Coin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/xxmafiaxxx/doobietokens/main/smackedlogo.png",
+      "extensions": {
+        "description": "The Smacked Experience coin",
+        "website": "https://www.smackeddobbie.com"
+      },
+      "addr": "B8m9JkyriGr1Aed71erNpfUKEevsxuR3spXgrANYyroF",
+      "tag": "",
+      "mint": "823dnFBD7dUCbBr9tvD6oT3JHo286dx93opVLgqKT21u",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "6CyhPVYjMZhdyXFXn6MBoK15Cv23puiiCREywjzueBrv",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

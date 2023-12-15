@@ -1,0 +1,91 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "5aUrig1nynWhaE55rHZthiesdfVEtJuh96F8RDC3EBzy",
+  "poolMint": "2aNqyHAHXVTv6N5dTLejy1ZZQL9wAw56DJncbkFkPxAt",
+  "baseTokenVault": "4JRZXA2sveECnwo8e4WGdqqRPZFREfmXwpXuryaFyfBD",
+  "baseTokenMint": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+  "quoteTokenVault": "EcJ6nJ2314Y861D6Rm88MK3vSyt5VjgYo5A2LXjw88Mu",
+  "quoteTokenMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "poolSigner": "APQdmcXy55zYKJ7S4m3iKi4UYKcmY94WBUTc79gApZ1U",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "BHXGRMVzUoAoaHmxXmoKe7SYq1N5uDcxHprj7utL5MbM",
+  "feeBaseAccount": "A6EG4cvX4XQBxhhLWy7tsQirDWPE5HjNzDde7eY1Y2At",
+  "feeQuoteAccount": "EkSkjGhy68y1MdUPsA4xKpYGQCN28Qh9HFZWk1ggrvwH",
+  "feePoolTokenAccount": "EEBuqNxHLK6ya7tJyp1GFwfYUCQAQEKdrDmbwYLiUgkS",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "864yhDN19YZNnGHroXEhFSFHYD7cYBDS6ZribDCLLQZn",
+  "poolPublicKey": "Fg2oYC9a91S4BXuWnCPGhAheusK9fsjf5HspMbfRvpaE",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+  "tokenIds": [
+    "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+  ],
+  "tokens": {
+    "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz": {
+      "chainId": 101,
+      "address": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+      "symbol": "FUM",
+      "name": "FUMoney",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/FUMoney801/token-list/main/assets/mainnet/EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz/logo.png",
+      "tags": [
+        "social-token",
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/FUMindset",
+        "website": "https://FUMoney.io/"
+      },
+      "addr": "4JRZXA2sveECnwo8e4WGdqqRPZFREfmXwpXuryaFyfBD",
+      "tag": "social-token,utility-token",
+      "mint": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+      "scale": 9
+    },
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+      "chainId": 101,
+      "address": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "symbol": "USDT",
+      "name": "USDT",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "tether",
+        "serumV3Usdc": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://tether.to/"
+      },
+      "addr": "EcJ6nJ2314Y861D6Rm88MK3vSyt5VjgYo5A2LXjw88Mu",
+      "tag": "stablecoin",
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

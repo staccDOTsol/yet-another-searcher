@@ -1,0 +1,82 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "5k4sybodbSkCd7Fqd1Cg31MPJ2kDbVx3ogCzekd64kuA",
+  "poolMint": "HBhaqutsy6vgyuhD7RAStbGyxQ1UTg7GgFkQEY9u8t2H",
+  "baseTokenVault": "7twRYiA4L8fsjpWcaTYFqTfLpH8k968sXXGZo1XyjaWT",
+  "baseTokenMint": "So11111111111111111111111111111111111111112",
+  "quoteTokenVault": "ChnFTEM8cJPKSnshbi5jbih7T3vTCfLLwidMDZHZKNYs",
+  "quoteTokenMint": "DyT12z3tnUokpy18XdKXQNxsGmgUzAA67JUPpj6dBRtd",
+  "poolSigner": "ESUto8Q318gNjtax9vMTwyfLjycCEMd6W3Uq7PnZDVmB",
+  "poolSignerNonce": 252,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "7SFBVeUdPbVhUbQjbFJzmaPQLqx2eTguhXFNLAvJ6jLu",
+  "feeBaseAccount": "6nb45zZrWR4DBNLGZxaMe6eXvJgeWaMQiiXonhvQSSJe",
+  "feeQuoteAccount": "7kWcr5pgs8Cd7wcKYvZqb8qW1E5gFi2qSWNN21dBzm8b",
+  "feePoolTokenAccount": "6yzno1N7nHVEWXrLH6TetD43x6iEffXBvV7G89SAFEBB",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "FaBGYkUD3wF3Jxs1bsz6Z2JFUkTGhdzvJf43AfMxZstp",
+  "poolPublicKey": "AYYZ8qyre55Z7duPbLW5kEjKLSShpF9Rp1D2NawCewVi",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "DyT12z3tnUokpy18XdKXQNxsGmgUzAA67JUPpj6dBRtd"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "7twRYiA4L8fsjpWcaTYFqTfLpH8k968sXXGZo1XyjaWT",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "DyT12z3tnUokpy18XdKXQNxsGmgUzAA67JUPpj6dBRtd": {
+      "chainId": 101,
+      "address": "DyT12z3tnUokpy18XdKXQNxsGmgUzAA67JUPpj6dBRtd",
+      "symbol": "RGSC",
+      "name": "Redmatter Game Studios Coin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/redmatter20/RGSCoin/main/RGS%20COIN.png",
+      "tags": [
+        "social-token"
+      ],
+      "addr": "ChnFTEM8cJPKSnshbi5jbih7T3vTCfLLwidMDZHZKNYs",
+      "tag": "social-token",
+      "mint": "DyT12z3tnUokpy18XdKXQNxsGmgUzAA67JUPpj6dBRtd",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

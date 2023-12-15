@@ -1,0 +1,92 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "GubgQsQTsRFcmXpaSVcjCQZzM4r4LrP4NeQbTNJYiqSp",
+  "poolMint": "HZUaYga4GFKJj5ELT74PN5ZetZPjHnmdKAzksYPPcxQn",
+  "baseTokenVault": "BK9QBH9nv3jh9tDvTEvj5pcT22G4x5nSeZ6umcDBEtPC",
+  "baseTokenMint": "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ",
+  "quoteTokenVault": "2VdGU5yqzvcmGspvVjLTQ4sTX3AQ6yf4pcXAfpWP4C5Q",
+  "quoteTokenMint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+  "poolSigner": "AuAXMrJWn39VdKS51i7cQAXaK6DCr7S3G8naie7Rrj8C",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "GLfSX4YtaFXQrH9S87i1HuwxhX5UtznUvsWyEXvzWzpY",
+  "feeBaseAccount": "7rL7reMdGYuR4dkRAesyj19ohQKVnSyoyr4dYzqt8haq",
+  "feeQuoteAccount": "6xrZf8FQJKs4yypwqMXaEardtqnXjpVXXXBz1ygvdgjE",
+  "feePoolTokenAccount": "C4oruNHWxg779B5CVy7RFRbi3mVZRn3WjA4TaJ4S89Wi",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "EWjyoeNw2GY9YHSj9bnAKyrf8mfwT6THXS4UiJW5XtgV",
+  "poolPublicKey": "9zW9Q8oXyiciT1FTVNbT9aSwWZF2fanjRSgkSHXZBd2k",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+  "tokenIds": [
+    "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ",
+    "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"
+  ],
+  "tokens": {
+    "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ": {
+      "chainId": 101,
+      "address": "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ",
+      "symbol": "GOATS",
+      "name": "GOATS",
+      "decimals": 4,
+      "logoURI": "https://www.solgoats.io/logo_full.png",
+      "tags": [
+        "meme-token",
+        "community-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/eUwEbWw6ww",
+        "serumV3Usdc": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "twitter": "https://twitter.com/TheGOATSociety_",
+        "website": "https://www.solgoats.io"
+      },
+      "addr": "BK9QBH9nv3jh9tDvTEvj5pcT22G4x5nSeZ6umcDBEtPC",
+      "tag": "meme-token,community-token",
+      "mint": "DVPWKGLFHK73PwgKgTtW28iCZGewQdva2N5HeBLDorVJ",
+      "scale": 4
+    },
+    "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R": {
+      "chainId": 101,
+      "address": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "symbol": "RAY",
+      "name": "Raydium",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R/logo.png",
+      "extensions": {
+        "coingeckoId": "raydium",
+        "serumV3Usdc": "2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep",
+        "serumV3Usdt": "teE55QrL4a4QSfydR9dnHF97jgCfptpuigbb53Lo95g",
+        "waterfallbot": "https://bit.ly/RAYwaterfall",
+        "website": "https://raydium.io/"
+      },
+      "addr": "2VdGU5yqzvcmGspvVjLTQ4sTX3AQ6yf4pcXAfpWP4C5Q",
+      "tag": "",
+      "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

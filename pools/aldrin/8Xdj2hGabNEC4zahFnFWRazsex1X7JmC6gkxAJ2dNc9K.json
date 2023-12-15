@@ -1,0 +1,93 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "CaWRNbucFPcZAHYrSh8JfRjS9VHATfU4LJw8tpVoPpXx",
+  "poolMint": "8Xdj2hGabNEC4zahFnFWRazsex1X7JmC6gkxAJ2dNc9K",
+  "baseTokenVault": "5N4FNmzwJ82X7PtR99w64xuj6F66paWNAR2nwAftxVWd",
+  "baseTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "quoteTokenVault": "GL8cA6VEAAFKGmYCCK4ou2QYq3ZsgQ1Fj9DXn4KAbnpW",
+  "quoteTokenMint": "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+  "poolSigner": "6Xi6rpPh6rUSQBHbjzCW9Yy9mDTsKwyyfr5PAFARPWEm",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "2WzZ7hXzpcvz8tNJeZUcqBGMsn6C5aDxiUUGRp5QtTxe",
+  "feeBaseAccount": "DCtQ5MGy6ohYHeivna5zn89mBZXZsSH998DEte4RKVyZ",
+  "feeQuoteAccount": "4K5hkbQGo5y6S5xm1ZXXqfXYLwrb7ZhuQaTdJHfSXnrt",
+  "feePoolTokenAccount": "EACrJYzWNDdGhGFNZRBBu1xUJ7aUF9xh1h3tFg5j4Skx",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "22HcZ1ytfNeKg3FywzB62C3yXGdHoohiZGcyy4UnCu1i",
+  "poolPublicKey": "A4R4k5QGEiTaQPHc1ycacv7a9Tfr5qs8XjEk2PfumBeU",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK"
+  ],
+  "tokens": {
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "5N4FNmzwJ82X7PtR99w64xuj6F66paWNAR2nwAftxVWd",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    },
+    "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK": {
+      "chainId": 101,
+      "address": "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+      "symbol": "CHIPS",
+      "name": "Universe Chips",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK/logo.png",
+      "tags": [
+        "utiliy-token",
+        "social-token",
+        "community-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/cxmgnKtZBF",
+        "twitter": "https://twitter.com/u_niverseNFT",
+        "website": "https://twitter.com/u_niverseNFT"
+      },
+      "addr": "GL8cA6VEAAFKGmYCCK4ou2QYq3ZsgQ1Fj9DXn4KAbnpW",
+      "tag": "utiliy-token,social-token,community-token",
+      "mint": "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

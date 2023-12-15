@@ -1,0 +1,64 @@
+{
+  "owner": "D3BBjqUdCYuP18fNvvMbPAZ8DpcRi4io2EsYHQawJDag",
+  "pubkey": "BW2PQz52AdwCXbezrM4yBTaSesr6aUtrtAZmfcikkboV",
+  "data": {
+    "authority": "CErSZ9jEQTesjkxQoiyc2VGcp8FmjefVB7aDiroSZjHW",
+    "fee": "02faf080",
+    "taxFee": "00",
+    "state": {
+      "initialized": {}
+    },
+    "mintLpt": "NF9MxouXbwEoxizzQakEYgCzeZzZwcvob6BMCvfbei2",
+    "taxMan": "9doo2HZQEmh2NgfT3Yx12M89aoBheycYqH1eaR5gKb3e",
+    "mints": [
+      "xALGoH1zUfRmpCriy94qbfoMXHtK6NDnMKzT4Xdvgms",
+      "FsPncBfeDV3Uv9g6yyx1NnKidvUeCaAiT2NtBAPy17xg",
+      "SENBBKVCM7homnf5RX9zqpf1GFe935hnbU4uVzY1Y6M",
+      "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    ],
+    "actions": [
+      {
+        "active": {}
+      },
+      {
+        "active": {}
+      },
+      {
+        "active": {}
+      },
+      {
+        "active": {}
+      }
+    ],
+    "treasuries": [
+      "AsqcC1T9zL4gHqRMu99SmUrqDTnQ5QT2d3tfHQspJiUX",
+      "2kfCb8FBN8CKouEvqKPhDu9Fk5ZWsm2BySoVbLepe4SU",
+      "CLtJHrxz75WSb77AWvnaqqMBnxvPJCKLE8i5SNW9xZew",
+      "5dheDmfAJ5DJqvVT4WAtmvyeDpqdxm8PrDEDLktjJtrZ"
+    ],
+    "reserves": [
+      "00",
+      "00",
+      "00",
+      "00"
+    ],
+    "weights": [
+      "05d21dba00",
+      "05d21dba00",
+      "05d21dba00",
+      "05d21dba00"
+    ]
+  },
+  "params": {
+    "treasurer": "5c9tK7CZwLvYPwJ26FXUKHiQ9HgosWshzrcEGf5VPms2",
+    "taxmanTokenAccounts": [
+      "GmeedDJZahANMYhgxy1uGqeMDyY4Bd29iK43rp2E73re",
+      "7sVgPiR6sFDSuQn9BgpXpWeo6KYrzFvxY37Wwd2ixQzp",
+      "Eb26fuFY5pb9Ri6eoyjy9j2a4oWW35DgZb1rzrWKbgMn",
+      "72JkQT8UHvtvXN3jTiH5KoTguyAFq588bwxwraxwMrW6"
+    ]
+  },
+  "provider": "balansol",
+  "poolAddress": "BW2PQz52AdwCXbezrM4yBTaSesr6aUtrtAZmfcikkboV",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+}

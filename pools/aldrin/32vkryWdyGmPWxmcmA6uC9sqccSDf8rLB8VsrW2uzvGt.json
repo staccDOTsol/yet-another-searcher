@@ -1,0 +1,88 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "9uUKTcCW9TVSkxkHDDwD3YYKW3hLQ8b4Y9kLU7uEZL8B",
+  "poolMint": "32vkryWdyGmPWxmcmA6uC9sqccSDf8rLB8VsrW2uzvGt",
+  "baseTokenVault": "2H1DUFYJY9u3H8gPuYvA2vktGrMufMAYCP2MCawcYdS4",
+  "baseTokenMint": "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
+  "quoteTokenVault": "GRtjtRpkMYcp5fSfBw4CANArgFCp4yGUVEWFkYvhejCS",
+  "quoteTokenMint": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+  "poolSigner": "3zys2oCa5PvnaChYEqBkje5iBhqPgaobvfLV9P76zr6g",
+  "poolSignerNonce": 254,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "D2yfR1GKu1wk5GnXyhUKtoM3cEjbqEZLUTb2eRdSFkDB",
+  "feeBaseAccount": "FQoecNQwzC2NnDbeAA5VuqSr1sr8Y79BMnpmDZHoyuhP",
+  "feeQuoteAccount": "89yyUpNtfGB7AAP8mJyP1sYuQWBhuqGDjn58Z7Kmy23N",
+  "feePoolTokenAccount": "8BhdnXFzMu4WoA287Qimq16EdB324DTSGGWeknrhc9Ki",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "J94UNoNFkNWrFB94xnfCyS5iYo7fPY6VdFUmcz1EQCTk",
+  "poolPublicKey": "91zyQo5xTbCLaZkL1c39AmjogDVWjQXz45zEPACH2Hc7",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
+  "tokenIds": [
+    "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH"
+  ],
+  "tokens": {
+    "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT": {
+      "chainId": 101,
+      "address": "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
+      "symbol": "STEP",
+      "name": "Step",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "coingeckoId": "step-finance",
+        "serumV3Usdc": "97qCB4cAVSTthvJu3eNoEx6AY6DLuRDtCoPm5Tdyg77S",
+        "twitter": "https://twitter.com/StepFinance_",
+        "waterfallbot": "https://bit.ly/STEPwaterfall",
+        "website": "https://step.finance/"
+      },
+      "addr": "2H1DUFYJY9u3H8gPuYvA2vktGrMufMAYCP2MCawcYdS4",
+      "tag": "utility-token",
+      "mint": "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
+      "scale": 9
+    },
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH": {
+      "chainId": 101,
+      "address": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "symbol": "DAU",
+      "name": "dauqu",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/dauqu/dauqu/main/dauqu.png",
+      "tags": [
+        "social-token"
+      ],
+      "addr": "GRtjtRpkMYcp5fSfBw4CANArgFCp4yGUVEWFkYvhejCS",
+      "tag": "social-token",
+      "mint": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

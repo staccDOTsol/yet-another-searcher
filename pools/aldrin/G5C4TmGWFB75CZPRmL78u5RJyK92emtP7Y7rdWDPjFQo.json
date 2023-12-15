@@ -1,0 +1,82 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "DMrhdpv6wnDH3zcjCREF5tiBzciK3fJYuT8xbCUseBCR",
+  "poolMint": "G5C4TmGWFB75CZPRmL78u5RJyK92emtP7Y7rdWDPjFQo",
+  "baseTokenVault": "AP7UoqtTxYNp7vgrvB7mrmaMwFdY8atDRqc3p3jxHoFa",
+  "baseTokenMint": "D5fQ4jY4GxKfTjdqe7Rnwbu1wN1DLu7mwtmJxPsT9Zr6",
+  "quoteTokenVault": "12eigSPkVDrNmjuuv1i9kR9xKU5REaLyL18zPJvG5kAb",
+  "quoteTokenMint": "So11111111111111111111111111111111111111112",
+  "poolSigner": "AJ3mqiLAAp2ArnjMuh53RA4sJ72nqEW6mabcCDX8mxVY",
+  "poolSignerNonce": 254,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "Se4Gf2GsjgzZZyUfnhFVzVLcijsCXx5a9Erhsp5uoUF",
+  "feeBaseAccount": "ErJv2BwxYaV7M6LQXtSCBcDLWqCxXkH6NPotaPNA6VJj",
+  "feeQuoteAccount": "Buwtzran8uAU42FDvyCWN9HvGTsgPXcfMbTiYt3Zb1XY",
+  "feePoolTokenAccount": "CAXdggUAXisPkjn9AgrqfQzN3Vr9aVrB25872pNrc1TM",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "3mGFgifiaBUYetnd6XbAsU4fCGdsMvijZj4VA8UAW7NP",
+  "poolPublicKey": "7LZQH5sAFkSchUFv52E5A58QwL2hPjMm9jiLhkK7p9dP",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "D5fQ4jY4GxKfTjdqe7Rnwbu1wN1DLu7mwtmJxPsT9Zr6",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "D5fQ4jY4GxKfTjdqe7Rnwbu1wN1DLu7mwtmJxPsT9Zr6": {
+      "chainId": 101,
+      "address": "D5fQ4jY4GxKfTjdqe7Rnwbu1wN1DLu7mwtmJxPsT9Zr6",
+      "symbol": "FERO",
+      "name": "Forest Industry staking token",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/D5fQ4jY4GxKfTjdqe7Rnwbu1wN1DLu7mwtmJxPsT9Zr6/logo.png",
+      "tags": [
+        "social-token"
+      ],
+      "addr": "AP7UoqtTxYNp7vgrvB7mrmaMwFdY8atDRqc3p3jxHoFa",
+      "tag": "social-token",
+      "mint": "D5fQ4jY4GxKfTjdqe7Rnwbu1wN1DLu7mwtmJxPsT9Zr6",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "12eigSPkVDrNmjuuv1i9kR9xKU5REaLyL18zPJvG5kAb",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

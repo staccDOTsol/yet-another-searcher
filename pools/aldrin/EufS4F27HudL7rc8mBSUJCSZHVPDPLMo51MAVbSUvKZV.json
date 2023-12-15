@@ -1,0 +1,96 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "B2GyF8KyCniynTnAmB6BUgycosLV8xpXsuLzhEFxj7HF",
+  "poolMint": "EufS4F27HudL7rc8mBSUJCSZHVPDPLMo51MAVbSUvKZV",
+  "baseTokenVault": "FWJusJswgsnAUnh6qG5MVwpBJ9dbEEeQThHWmRc63N2A",
+  "baseTokenMint": "HZRCwxP2Vq9PCpPXooayhJ2bxTpo5xfpQrwB1svh332p",
+  "quoteTokenVault": "7S3J1bPiK6AbiEQPEfQ9CAu1m4xb5ddrwZrHNPesL6Y5",
+  "quoteTokenMint": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+  "poolSigner": "5LA5EesaqNveUKquW1syYTxdVF8qXsEy8uD4vTZ491CE",
+  "poolSignerNonce": 251,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "feeBaseAccount": "zrW9YPRZt8qskE4wHPHvHJBgeoEHwQvXUBPMujHhegr",
+  "feeQuoteAccount": "8c3tnweuzf2Av5EYPU9xSMh6WCpnu8yS8W1P1b7kSY73",
+  "feePoolTokenAccount": "6YzAnKg3qAu1wudWhHxtCgiq2c4zJyGYZCEmsyBB2yEm",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "DfAUcPRcrLLGqQXLmushhzPyFu8HrSKgfT6ibFU2rxzR",
+  "poolPublicKey": "9XNN2yrrXvpAyvMx8xZHrF7jyGYghXxtRQLdM3hHvADN",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+  "tokenIds": [
+    "HZRCwxP2Vq9PCpPXooayhJ2bxTpo5xfpQrwB1svh332p",
+    "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj"
+  ],
+  "tokens": {
+    "HZRCwxP2Vq9PCpPXooayhJ2bxTpo5xfpQrwB1svh332p": {
+      "chainId": 101,
+      "address": "HZRCwxP2Vq9PCpPXooayhJ2bxTpo5xfpQrwB1svh332p",
+      "symbol": "LDO",
+      "name": "Lido DAO Token (Portal)",
+      "decimals": 8,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/HZRCwxP2Vq9PCpPXooayhJ2bxTpo5xfpQrwB1svh332p/logo.png",
+      "tags": [
+        "wrapped",
+        "ethereum"
+      ],
+      "extensions": {
+        "address": "0x5a98fcbea516cf06857215779fd812ca3bef1b32",
+        "assetContract": "https://etherscan.io/address/0x5a98fcbea516cf06857215779fd812ca3bef1b32",
+        "bridgeContract": "https://etherscan.io/address/0x3ee18B2214AFF97000D974cf647E7C347E8fa585",
+        "coingeckoId": "lido-dao",
+        "twitter": "https://twitter.com/LidoFinance",
+        "website": "https://lido.fi/"
+      },
+      "addr": "FWJusJswgsnAUnh6qG5MVwpBJ9dbEEeQThHWmRc63N2A",
+      "tag": "wrapped,ethereum",
+      "mint": "HZRCwxP2Vq9PCpPXooayhJ2bxTpo5xfpQrwB1svh332p",
+      "scale": 8
+    },
+    "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj": {
+      "chainId": 101,
+      "address": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+      "symbol": "stSOL",
+      "name": "Lido Staked SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj/logo.png",
+      "extensions": {
+        "coingeckoId": "lido-staked-sol",
+        "coinmarketcap": "https://coinmarketcap.com/currencies/lido-for-solana/",
+        "discord": "https://discord.gg/w9pXXgQPu8",
+        "github": "https://github.com/ChorusOne/solido",
+        "serumV3Usdc": "5F7LGsP1LPtaRV7vVKgxwNYX4Vf22xvuzyXjyar7jJqp",
+        "twitter": "https://twitter.com/LidoFinance",
+        "website": "https://solana.lido.fi/"
+      },
+      "addr": "7S3J1bPiK6AbiEQPEfQ9CAu1m4xb5ddrwZrHNPesL6Y5",
+      "tag": "",
+      "mint": "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

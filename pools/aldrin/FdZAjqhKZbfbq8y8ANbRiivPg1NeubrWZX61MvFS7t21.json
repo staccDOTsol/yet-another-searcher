@@ -1,0 +1,88 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "7bM2ERxEXSui1nEgW2eR8aEKiv2ctSYboZ3v4w4LsSvw",
+  "poolMint": "FdZAjqhKZbfbq8y8ANbRiivPg1NeubrWZX61MvFS7t21",
+  "baseTokenVault": "DyjT3Jh2huyddH4oxXjSwBv4bJ3Yj7FH4xD4ZTB4MU8f",
+  "baseTokenMint": "SKu11EypaFU3gvr8VSAbi13zEC2CPvqbz9s83N3tWHM",
+  "quoteTokenVault": "3hzcheAMpsvfRov78hUN8fyj5EmFXRq6icZZKtiydf8F",
+  "quoteTokenMint": "So11111111111111111111111111111111111111112",
+  "poolSigner": "3WZBxZTMAdid88jN5KqKJh3aikCHhoAE9rAAD5d8yz7j",
+  "poolSignerNonce": 253,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "EHaefxu6PgMXRw8VrraTFaCA8jnG4uKzPtRrCCzPBz4o",
+  "feeBaseAccount": "2oJFWfm3JCRPEXWiKZGdWwD8uGvWxuVxWi4qZk44SdJw",
+  "feeQuoteAccount": "JEsXTZ3GhCTRNGscKsEZUPY27L2dQacBKyDcEtZ2pYY",
+  "feePoolTokenAccount": "5JECS9FgK9Bphi3ByvXA1jKpEF5iDv1xY4EzvLdesGBs",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "2VQWemQ3vEiYoq1ciDYMhhfsrTNEQN3u24Zpr4JnURsp",
+  "poolPublicKey": "FB8NYur1pQeawNYxPq71owbfwsHQLiL9BTpNDNpNee59",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "SKu11EypaFU3gvr8VSAbi13zEC2CPvqbz9s83N3tWHM",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "SKu11EypaFU3gvr8VSAbi13zEC2CPvqbz9s83N3tWHM": {
+      "chainId": 101,
+      "address": "SKu11EypaFU3gvr8VSAbi13zEC2CPvqbz9s83N3tWHM",
+      "symbol": "SKULL",
+      "name": "Skeleton Crew",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/SKu11EypaFU3gvr8VSAbi13zEC2CPvqbz9s83N3tWHM/logo.png",
+      "tags": [
+        "NFT",
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/skeletoncrewrip",
+        "twitter": "https://twitter.com/skeletoncrewrip",
+        "website": "https://skeletoncrew.rip/"
+      },
+      "addr": "DyjT3Jh2huyddH4oxXjSwBv4bJ3Yj7FH4xD4ZTB4MU8f",
+      "tag": "NFT,utility-token",
+      "mint": "SKu11EypaFU3gvr8VSAbi13zEC2CPvqbz9s83N3tWHM",
+      "scale": 0
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "3hzcheAMpsvfRov78hUN8fyj5EmFXRq6icZZKtiydf8F",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

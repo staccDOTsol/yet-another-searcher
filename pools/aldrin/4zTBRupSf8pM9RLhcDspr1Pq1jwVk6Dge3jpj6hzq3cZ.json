@@ -1,0 +1,93 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "83PkK3xWuz9Fdw4FNbE8HQtEr7HRYrTxNC3EAeeY6NDr",
+  "poolMint": "4zTBRupSf8pM9RLhcDspr1Pq1jwVk6Dge3jpj6hzq3cZ",
+  "baseTokenVault": "DG9Bsxvk4hxwPsHvF9NRRRCw6P7Gptb2nkh65UGWqrtH",
+  "baseTokenMint": "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj",
+  "quoteTokenVault": "Cq66aekVzoLKH2C8eAPxdkgZvzKSMmcHTuYkXbwo7mVF",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "FybkXGcKNXUAj93FN9Mq69s9147hYG99cYBXXgTscn8Q",
+  "poolSignerNonce": 254,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "6UTfMcL5xFEQYwi3LjhhKuMbvEcNPXqGthUQVt4fyXtj",
+  "feeBaseAccount": "CSJc86Bg892Ja2raW9P67DRUzCtFmb6FNoyHBKCfcNRK",
+  "feeQuoteAccount": "BZAmzGwSRwhCbpQG44feYgmY3oBfpAzVcJ7ZvkS2JZJb",
+  "feePoolTokenAccount": "3trJje7pMyKNMR84h8KshP6dcTStVBuhnwc6p9wDB6Dn",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "4yJ4mbdDyJCtiV9ho7ndERZVSq1bUe9mSTxqqPQudmr2",
+  "poolPublicKey": "AN2BojJL8HVYJe2cHL9noH15idk7kMjBEWfwj8JEbxcw",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj": {
+      "chainId": 101,
+      "address": "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj",
+      "symbol": "$ALL",
+      "name": "ALL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj/logo.png",
+      "tags": [
+        "utility-token",
+        "nft",
+        "commodity-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/stonedapecrew",
+        "twitter": "https://twitter.com/stonedapecrew",
+        "website": "https://www.allblue.dev/"
+      },
+      "addr": "DG9Bsxvk4hxwPsHvF9NRRRCw6P7Gptb2nkh65UGWqrtH",
+      "tag": "utility-token,nft,commodity-token",
+      "mint": "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "Cq66aekVzoLKH2C8eAPxdkgZvzKSMmcHTuYkXbwo7mVF",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

@@ -1,0 +1,76 @@
+{
+  "id": "BZtgQEyS6eXUXicYPHecYQ7PybqodXQMvkjUbP4R8mUU",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "mintB": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "vaultA": "4iJQGzZpys4N13rGXbsB3NqehPkrgrcmDUEcLw7D6GKL",
+  "vaultB": "7NQjToK5NenQZvhPRc1nC1URuKJ4nuLxGPdTbpTiz9EN",
+  "mintDecimalsA": 6,
+  "mintDecimalsB": 6,
+  "ammConfig": {
+    "id": "9iFER3bpjf1PTTCQCfTRu17EJgvsxo9pVyA9QWwEuX4x",
+    "index": 4,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 100,
+    "tickSpacing": 1,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for very stable pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 489363.33669499995,
+  "day": {
+    "volume": 2360771.106711,
+    "volumeFee": 198.304772963724,
+    "feeA": 100.35495935472001,
+    "feeB": 97.97563450793992,
+    "feeApr": 14.79,
+    "rewardApr": {
+      "A": 4.01,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 18.799999999999997,
+    "priceMin": 0.9995454545454545,
+    "priceMax": 1.0000506374336837
+  },
+  "week": {
+    "volume": 14774805.376863997,
+    "volumeFee": 1241.0836516565755,
+    "feeA": 607.3600371159717,
+    "feeB": 633.9778856381039,
+    "feeApr": 13.22,
+    "rewardApr": {
+      "A": 4.01,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 17.23,
+    "priceMin": 0.998003992015968,
+    "priceMax": 1.0001947988701665
+  },
+  "month": {
+    "volume": 41851705.11793503,
+    "volumeFee": 3515.5432299065405,
+    "feeA": 1744.3900857473177,
+    "feeB": 1771.7654698563101,
+    "feeApr": 8.74,
+    "rewardApr": {
+      "A": 4.01,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 12.75,
+    "priceMin": 0.9974897175840475,
+    "priceMax": 1.0010633517380685
+  },
+  "lookupTableAccount": "2Rv8BPjzu8sx6WBn8kUSCpJ5tQ9Te9ELUJ7kXHXYhYw4",
+  "openTime": 0,
+  "price": 0.9998633657048394
+}

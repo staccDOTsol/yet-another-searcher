@@ -1,0 +1,85 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "3Fw4gnWBSbf5NijYoWGS8V7muJXUyxGoQvtBVXpTLqwo",
+  "poolMint": "FqEZgwAwFtWtveUrYrocKf3VhRWNqQ8vTXBoHqXVc1J2",
+  "baseTokenVault": "8AB6ySgYipBCVQtCbC6Mhbk3RSdjCabUP4V3zaPEQcRf",
+  "baseTokenMint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+  "quoteTokenVault": "HGgKzKsfewB8Mfk8Qu4iZ3wU1oxaPMtZDKVrpanwY1PK",
+  "quoteTokenMint": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+  "poolSigner": "2GjbcnmSqXVfWE7ZsSrGkrZng8KnLLe3KskPUpMAfUt6",
+  "poolSignerNonce": 254,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "D2yfR1GKu1wk5GnXyhUKtoM3cEjbqEZLUTb2eRdSFkDB",
+  "feeBaseAccount": "9U348QhLuDTNJBzcCpN4PCwY2TVnyZwtFU3CWcV7L4xR",
+  "feeQuoteAccount": "D2EDbMh3mjz5U1pbjYbCdPqUxRZPaPntqZVQJixQJZF5",
+  "feePoolTokenAccount": "2QGntaNmwuSjd1EuMtNgpXdYkFYkP4q5HTnUpmtP8vMm",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "ETsNtdtAvuLV8AqA1fXQWg1suqCtgfaKB8sbj7Mcfkna",
+  "poolPublicKey": "3ejdA4LBFim7ndBdkU2qnCxorduKyVDgNAs5ZAdkLhAE",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+  "tokenIds": [
+    "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH"
+  ],
+  "tokens": {
+    "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R": {
+      "chainId": 101,
+      "address": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "symbol": "RAY",
+      "name": "Raydium",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R/logo.png",
+      "extensions": {
+        "coingeckoId": "raydium",
+        "serumV3Usdc": "2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep",
+        "serumV3Usdt": "teE55QrL4a4QSfydR9dnHF97jgCfptpuigbb53Lo95g",
+        "waterfallbot": "https://bit.ly/RAYwaterfall",
+        "website": "https://raydium.io/"
+      },
+      "addr": "8AB6ySgYipBCVQtCbC6Mhbk3RSdjCabUP4V3zaPEQcRf",
+      "tag": "",
+      "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "scale": 6
+    },
+    "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH": {
+      "chainId": 101,
+      "address": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "symbol": "DAU",
+      "name": "dauqu",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/dauqu/dauqu/main/dauqu.png",
+      "tags": [
+        "social-token"
+      ],
+      "addr": "HGgKzKsfewB8Mfk8Qu4iZ3wU1oxaPMtZDKVrpanwY1PK",
+      "tag": "social-token",
+      "mint": "EoqJXTxCc67i18B7nwWs59RBkTe8rStTreRhCCq1eVTH",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

@@ -1,0 +1,76 @@
+{
+  "id": "Fu5U6h67K8PkK9XqJDBQmwmCEDSvzfA1J6NpcvxhV4Dw",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "poLisWXnNRwC6oBu1vHiuKQzFjGL4XDSu4g9qjz9qVk",
+  "mintB": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "vaultA": "GisxuuYUhatonyjbPga2Nwns1GkmccpbuVEnotz422ec",
+  "vaultB": "G2omwTRPndJUpHp7wCNz8oUqRPAZVxPiNsNdkGfVmAwY",
+  "mintDecimalsA": 8,
+  "mintDecimalsB": 6,
+  "ammConfig": {
+    "id": "E64NGkDLLCdQ2yFNPcavaKptrEgmiQaNykUuLC1Qgwyp",
+    "index": 1,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 2500,
+    "tickSpacing": 60,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for most pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "poLisWXnNRwC6oBu1vHiuKQzFjGL4XDSu4g9qjz9qVk",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 160.62783225529918,
+  "day": {
+    "volume": 145.151916,
+    "volumeFee": 0.30481902359999996,
+    "feeA": 0.42841154666099995,
+    "feeB": 0.17036683439999997,
+    "feeApr": 69.07,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 69.07,
+    "priceMin": 0.2982494540435232,
+    "priceMax": 0.32947076832513356
+  },
+  "week": {
+    "volume": 1063.594181,
+    "volumeFee": 2.2335477800999994,
+    "feeA": 3.184074189786,
+    "feeB": 1.2222244944000002,
+    "feeApr": 72.3,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 72.3,
+    "priceMin": 0.2576019745226244,
+    "priceMax": 0.3820515739988612
+  },
+  "month": {
+    "volume": 2727.3329439999984,
+    "volumeFee": 5.727399182400004,
+    "feeA": 10.019924896988996,
+    "feeB": 3.0016394877,
+    "feeApr": 43.26,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 43.26,
+    "priceMin": 0.12041628473729107,
+    "priceMax": 0.3820515739988612
+  },
+  "lookupTableAccount": "A5aCwxHLz2AXQq5rkQFUwrK5SU9H63xxJ7YeDHUnfJ5v",
+  "openTime": 0,
+  "price": 0.31384297382004545
+}

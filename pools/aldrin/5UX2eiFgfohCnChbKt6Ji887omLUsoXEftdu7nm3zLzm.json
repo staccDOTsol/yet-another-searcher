@@ -1,0 +1,93 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "HsyZn5g7iyNT6DVnQ9VahwXydjbptcvCMrErYiYPRUTN",
+  "poolMint": "5UX2eiFgfohCnChbKt6Ji887omLUsoXEftdu7nm3zLzm",
+  "baseTokenVault": "FFV3egThZA5kKn5Sfnoo72mxRJCFHGp3iD4rHAeeKneQ",
+  "baseTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "quoteTokenVault": "BBkmgmeE4ypFKfDsCBfbJBaJqZG5J6ypMZuxwC1q2MNA",
+  "quoteTokenMint": "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+  "poolSigner": "AkVQL3NrNPaKfWE3Y9JW225BQAqve8JU8wsuxfvooP1T",
+  "poolSignerNonce": 253,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "732BFQR4fwZW1wPJ6ZThpeJkbSxxgMTJpGMft3BxfqgZ",
+  "feeBaseAccount": "3UEVym68Rp2FEbXxbNnoN7SvykGchjgEEEziMj7PHojb",
+  "feeQuoteAccount": "8hFvUWTSypP2tYNnbKrgmdSZeXULq3Yr6xke95pMztGG",
+  "feePoolTokenAccount": "G6754nvoTydPiZGo6CC8JbSPQkAsGVdFCWjGJfTvs5s9",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "FMj6Ad3rb5tRoamFeAMeKQJunoxArEfadDi4SC1v9vS9",
+  "poolPublicKey": "5EtPHmFgjJ7U9p2iSNNpEFF3vJtiDP3bzJ6Exgv7t6mM",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk"
+  ],
+  "tokens": {
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "FFV3egThZA5kKn5Sfnoo72mxRJCFHGp3iD4rHAeeKneQ",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    },
+    "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk": {
+      "chainId": 101,
+      "address": "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+      "symbol": "MCAKE",
+      "name": "Meme Cake",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk/logo.png",
+      "tags": [
+        "utility-token",
+        "memecake",
+        "social-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.com/invite/WFkRssvNtW",
+        "twitter": "https://twitter.com/realmemecake",
+        "website": "https://memecake.io/"
+      },
+      "addr": "BBkmgmeE4ypFKfDsCBfbJBaJqZG5J6ypMZuxwC1q2MNA",
+      "tag": "utility-token,memecake,social-token",
+      "mint": "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

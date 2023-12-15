@@ -1,0 +1,84 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "eobq11mtAWBLZXZcddV4tiXoZSNw4MJs2jV6abNdQYP",
+  "poolMint": "85jsBmRGa2n5pYYFT6L2iwLpnu3BoQ2GMFEozeFhvqM1",
+  "baseTokenVault": "7qW9WMvCwzbas5EdVPXkpnd8na7MJUfhqBNgT9UWw9sC",
+  "baseTokenMint": "BgeRyFWWGHeVouqfHfcXUxmvfkgekhrXYVqQWf63kpJB",
+  "quoteTokenVault": "4HPnJUTHh8z899Q5aVePUAbdWAX3QjRrdL4QKAbxfexg",
+  "quoteTokenMint": "So11111111111111111111111111111111111111112",
+  "poolSigner": "HNAyurcVZgeJukaNb4ByYmXt9jzQtS2GoRyw6wv3pa5M",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "4dKSgRptpvveQ73kJvzw88gF7YPs4hoWfrJnzBhbmi1i",
+  "feeBaseAccount": "3gF8Etfy444SFZRNXdbM5KWJKjxpT1eTCQbtsgnwxyaq",
+  "feeQuoteAccount": "2Diaz2w7nSeGP8QgNYAt6o8mvoRzrFU3D4xE92hpF8Wk",
+  "feePoolTokenAccount": "5dE1AUVHhqLJu3y9aKjEQ9gpy9SeimBPWPbVoMAzbGJk",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "2PTMffKLit1XVZR5wmbzPBZBMn16pYA7UuysFerVZxbB",
+  "poolPublicKey": "Aqav82YEZjZtssqSDXHCPAzBHkGAodBpbo4qkMkqTo5o",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "BgeRyFWWGHeVouqfHfcXUxmvfkgekhrXYVqQWf63kpJB",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "BgeRyFWWGHeVouqfHfcXUxmvfkgekhrXYVqQWf63kpJB": {
+      "chainId": 101,
+      "address": "BgeRyFWWGHeVouqfHfcXUxmvfkgekhrXYVqQWf63kpJB",
+      "symbol": "BAPE",
+      "name": "BAPE",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/BgeRyFWWGHeVouqfHfcXUxmvfkgekhrXYVqQWf63kpJB/logo.png",
+      "extensions": {
+        "coingeckoId": "bored-ape-social-club",
+        "twitter": "https://twitter.com/BAPESocialClub",
+        "website": "https://boredapesocial.club"
+      },
+      "addr": "7qW9WMvCwzbas5EdVPXkpnd8na7MJUfhqBNgT9UWw9sC",
+      "tag": "",
+      "mint": "BgeRyFWWGHeVouqfHfcXUxmvfkgekhrXYVqQWf63kpJB",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "4HPnJUTHh8z899Q5aVePUAbdWAX3QjRrdL4QKAbxfexg",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

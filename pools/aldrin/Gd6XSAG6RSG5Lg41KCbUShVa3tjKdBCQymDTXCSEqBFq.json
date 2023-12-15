@@ -1,0 +1,81 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "7JNB832atDQq9KZF7SnZ2Sbr1o1DaFQZMXL51gdhY7wk",
+  "poolMint": "Gd6XSAG6RSG5Lg41KCbUShVa3tjKdBCQymDTXCSEqBFq",
+  "baseTokenVault": "6vAo4fF9djcVVi1NJzJpxD4NFQddMqRYYbB8TF6eokwX",
+  "baseTokenMint": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+  "quoteTokenVault": "9sdknEXA6apXRMCrR2QCvzcjh2STbztFWEbHPyHue7XW",
+  "quoteTokenMint": "EH8wCubDZ8nFvy8xv9T3j5EGZ9AaJXvNAxjpqXiSvqEX",
+  "poolSigner": "DYjnRgLE9bJgor7wDmPTKu2dKRFUb4fGXi852Bvi2mHb",
+  "poolSignerNonce": 253,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "33aXuSGCCVSkrRBwCfJkw6CwvDNMcSGHrTh18D7R3UpC",
+  "feeBaseAccount": "AwHTgvvnqDCuePrBB7rQTAiZ24wvAR2kNJJeViTbRXps",
+  "feeQuoteAccount": "8WjyMN8uXXjcbiBpoRUupNmXpt7hDHpgRjc4F1khHuWq",
+  "feePoolTokenAccount": "3PL69dgcnE3g62EfGGqrfX7VSdkMYfDMpHTLUyhFEvgv",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "589XQJh1HiwYjof99aZxozWsPztdP9BniNTCxuoz4qcu",
+  "poolPublicKey": "3rG3WmByUydKAVmiWkd1jxPuhLfMfcbFFF69NvkDRnBG",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+  "tokenIds": [
+    "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+    "EH8wCubDZ8nFvy8xv9T3j5EGZ9AaJXvNAxjpqXiSvqEX"
+  ],
+  "tokens": {
+    "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4": {
+      "chainId": 101,
+      "address": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+      "symbol": "MHC",
+      "name": "Most Hyped Crypto",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4/logo.png",
+      "tags": [
+        "governing-token"
+      ],
+      "addr": "6vAo4fF9djcVVi1NJzJpxD4NFQddMqRYYbB8TF6eokwX",
+      "tag": "governing-token",
+      "mint": "52Y1RGnRFvRFUQq5r2AWpFLLFvokiiqxRocsWVpmPTU4",
+      "scale": 0
+    },
+    "EH8wCubDZ8nFvy8xv9T3j5EGZ9AaJXvNAxjpqXiSvqEX": {
+      "chainId": 101,
+      "address": "EH8wCubDZ8nFvy8xv9T3j5EGZ9AaJXvNAxjpqXiSvqEX",
+      "symbol": "MHCSWAP",
+      "name": "Most Hyped Crypto Swap Token",
+      "decimals": 0,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EH8wCubDZ8nFvy8xv9T3j5EGZ9AaJXvNAxjpqXiSvqEX/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "addr": "9sdknEXA6apXRMCrR2QCvzcjh2STbztFWEbHPyHue7XW",
+      "tag": "utility-token",
+      "mint": "EH8wCubDZ8nFvy8xv9T3j5EGZ9AaJXvNAxjpqXiSvqEX",
+      "scale": 0
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

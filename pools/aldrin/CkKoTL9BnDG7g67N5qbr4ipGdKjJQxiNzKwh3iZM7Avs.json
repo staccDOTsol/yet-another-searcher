@@ -1,0 +1,90 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "ALi5pECD6Go8YM6Sh7zQjG1ymzQjrUFyaKqBMw4Gf7sS",
+  "poolMint": "CkKoTL9BnDG7g67N5qbr4ipGdKjJQxiNzKwh3iZM7Avs",
+  "baseTokenVault": "3FrGp7H1cFn86aiJyZfn8sPCN73LY4z1wAmznuWMquAR",
+  "baseTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "quoteTokenVault": "9XsUm6KL2k7F4Fp8p6sN15R3A3MJPv7uvWLEUAQQ1Kff",
+  "quoteTokenMint": "EqxvSkL78VCnzJbfetznFytJdSfaXqZ29wSGKhYuAfQL",
+  "poolSigner": "6ZFMm7gWfzjbR2fLQXoS1pYcJMaiY7FoxoiYguLvT7F5",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "2ta9JzjJQ7Tx8bwfHtojS3KTUoNFZHCfHp2k7Cemq4gS",
+  "feeBaseAccount": "KTEHdgqNEyR7sNG7tWPjBxnL6dDaVidRvWCSc1cKJpz",
+  "feeQuoteAccount": "6DN234fm67iwRb69iGmpksnqksYTTsVGUwJtN7CsMQHG",
+  "feePoolTokenAccount": "DJ4DzHY7xTNxf7dNxmL2F2aihVayfhAqSHgbmZ4pE856",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "6daXpdqG2pQUp4GjjPHqFn7eEhogBzmQH3fCzSCgTRds",
+  "poolPublicKey": "GkbQoWZdtouytgPFZNQ6DYWLyJP9EwXCAWYmNrfRCwmu",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "EqxvSkL78VCnzJbfetznFytJdSfaXqZ29wSGKhYuAfQL"
+  ],
+  "tokens": {
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "3FrGp7H1cFn86aiJyZfn8sPCN73LY4z1wAmznuWMquAR",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    },
+    "EqxvSkL78VCnzJbfetznFytJdSfaXqZ29wSGKhYuAfQL": {
+      "chainId": 101,
+      "address": "EqxvSkL78VCnzJbfetznFytJdSfaXqZ29wSGKhYuAfQL",
+      "symbol": "VIKN",
+      "name": "Vikash Network",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/VikashAnandJha/token-list/8e5527428ecec8d96be8e9061652ad34e855952f/assets/mainnet/EqxvSkL78VCnzJbfetznFytJdSfaXqZ29wSGKhYuAfQL/logo.png",
+      "tags": [
+        "social-token"
+      ],
+      "extensions": {
+        "description": "VIKN is a Social token of Vikash Network",
+        "twitter": "https://twitter.com/vikashanandjha"
+      },
+      "addr": "9XsUm6KL2k7F4Fp8p6sN15R3A3MJPv7uvWLEUAQQ1Kff",
+      "tag": "social-token",
+      "mint": "EqxvSkL78VCnzJbfetznFytJdSfaXqZ29wSGKhYuAfQL",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

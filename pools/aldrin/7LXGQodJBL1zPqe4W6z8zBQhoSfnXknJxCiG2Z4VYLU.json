@@ -1,0 +1,84 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "EfY92prXVggMeNSL3pKUW6h3kNdGBLt9StSfrF1PgM9N",
+  "poolMint": "7LXGQodJBL1zPqe4W6z8zBQhoSfnXknJxCiG2Z4VYLU",
+  "baseTokenVault": "CNSQ2a1iU5R9oc3Qfz5qausRsnTU9GmoLYEkt5mYXm8z",
+  "baseTokenMint": "q4bpaRKw3fJB1AJBeeBaKv3TjYzWsmntLgnSB275YUb",
+  "quoteTokenVault": "5VtsxN4UDyLxm5Ywri1SHGs76g3mJgJCYjHFLdDNywQr",
+  "quoteTokenMint": "So11111111111111111111111111111111111111112",
+  "poolSigner": "8GNjAPd8S8k976xeXPf9GkvGFLWDiH9vDf1zCzXj65Us",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "DCbx8Wok3N1foChZPJpE3RX977YUJajXbyXA2wUBfu4Y",
+  "feeBaseAccount": "EPJDjEmyCubCEksZ5y4aBDnebZvNQEUhpW6R6CyqHgf4",
+  "feeQuoteAccount": "CizJWGGCfG8TW6bfho6SdDGvkmyYmDbM9WTWSDCeUq3J",
+  "feePoolTokenAccount": "CaL6funxu9RmDc3PHtZ6EP1isHpYwRn3bnAvbse5Es62",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "EHdQNH39VKELpxE1TXaBDj4HgbyQa4q55uvuCuWLd9xy",
+  "poolPublicKey": "6cg85X1MuSjpwgbhSoRZUULD9Bq45VkqANwqypR4WHjD",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "q4bpaRKw3fJB1AJBeeBaKv3TjYzWsmntLgnSB275YUb",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "q4bpaRKw3fJB1AJBeeBaKv3TjYzWsmntLgnSB275YUb": {
+      "chainId": 101,
+      "address": "q4bpaRKw3fJB1AJBeeBaKv3TjYzWsmntLgnSB275YUb",
+      "symbol": "TRTLS",
+      "name": "Turtles Token",
+      "decimals": 9,
+      "logoURI": "https://www.turtles.com/turtles.png",
+      "extensions": {
+        "coingeckoId": "turtles-token",
+        "serumV3Usdc": "2dKHkfJGKNxmtwdLcsqXFGcb8Xppw5RP6YVWEWjSfAHm",
+        "website": "https://www.turtles.com/"
+      },
+      "addr": "CNSQ2a1iU5R9oc3Qfz5qausRsnTU9GmoLYEkt5mYXm8z",
+      "tag": "",
+      "mint": "q4bpaRKw3fJB1AJBeeBaKv3TjYzWsmntLgnSB275YUb",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "5VtsxN4UDyLxm5Ywri1SHGs76g3mJgJCYjHFLdDNywQr",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

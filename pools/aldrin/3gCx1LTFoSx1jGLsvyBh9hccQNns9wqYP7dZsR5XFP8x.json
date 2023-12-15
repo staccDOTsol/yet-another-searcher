@@ -1,0 +1,87 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "Ay9d1uzLfiJgmdw26kVtqPuTp92UETrnhbfbfx3eibPR",
+  "poolMint": "3gCx1LTFoSx1jGLsvyBh9hccQNns9wqYP7dZsR5XFP8x",
+  "baseTokenVault": "Bxs9yBZfvJX6mkZePXNQzmtNMhJmTuXEJWJT3cQekw57",
+  "baseTokenMint": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+  "quoteTokenVault": "6zQSmyGWFMgTJMjswwSGU8BigUvtRYV7ppQadb7MiwKV",
+  "quoteTokenMint": "So11111111111111111111111111111111111111112",
+  "poolSigner": "H65YJrj1LLywprdugZyoa8cCTrC8oe2bvdmBeoAnewXv",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "2MTKaMXH4Eztkod6Mw3Umx4x5ZpneLLFrk4ZgNEpAvRF",
+  "feeBaseAccount": "4Gcgb4vxz7sAiuDft1cq66jyFxXF8DyczzbjovXUwqVS",
+  "feeQuoteAccount": "59RxbpCBLXXFkUZgDwtqCHrRjfmL4irp7689QjTzVdN",
+  "feePoolTokenAccount": "G62wjqZwxd5NPp7N9B3U852xkQqSHzLf6acon5rmyCv8",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "GTcaqxRvRCBYs3CWoM2GPaGUVDTkYuKNvqkKruT2CNDi",
+  "poolPublicKey": "8Y5BSMj6Qc8fUwF8abVpCJXAMR1sD44tUYtpct5ueDve",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh": {
+      "chainId": 101,
+      "address": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+      "symbol": "ARB",
+      "name": "ARB Protocol",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/ARBProtocol/arbprotocol/main/IMG_3600.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/M4F8RKqgce",
+        "twitter": "https://twitter.com/arbprotocol",
+        "coingeckoId": "arb-protocol"
+      },
+      "addr": "Bxs9yBZfvJX6mkZePXNQzmtNMhJmTuXEJWJT3cQekw57",
+      "tag": "utility-token",
+      "mint": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+      "scale": 6
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "6zQSmyGWFMgTJMjswwSGU8BigUvtRYV7ppQadb7MiwKV",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

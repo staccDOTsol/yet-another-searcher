@@ -1,0 +1,76 @@
+{
+  "id": "3FHHEWvEQirpsDpnjcXEfYg5d54mH2uPn8Bwow9479Je",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "So11111111111111111111111111111111111111112",
+  "mintB": "BVW76NP5va4kAFeYEWhTuWSEuNdaydaqdJtcxx82LXgg",
+  "vaultA": "GnVvBMSPuytFE7qt2AbVBq5T84nwbwU8ZKj1HaZAmi8k",
+  "vaultB": "4BgqTzgUCSutfZrZbiCDbSojH9zCkTsr7PLnC2rb36dt",
+  "mintDecimalsA": 9,
+  "mintDecimalsB": 9,
+  "ammConfig": {
+    "id": "E64NGkDLLCdQ2yFNPcavaKptrEgmiQaNykUuLC1Qgwyp",
+    "index": 1,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 2500,
+    "tickSpacing": 60,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for most pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "BVW76NP5va4kAFeYEWhTuWSEuNdaydaqdJtcxx82LXgg",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 43.59342523856077,
+  "day": {
+    "volume": 0,
+    "volumeFee": 0,
+    "feeA": 0,
+    "feeB": 0,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 474.05,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 474.05,
+    "priceMin": 1206456.699169518,
+    "priceMax": 1206456.699169518
+  },
+  "week": {
+    "volume": 0.10252015230990721,
+    "volumeFee": 0.00021529231985080514,
+    "feeA": 0,
+    "feeB": 303.97479485522103,
+    "feeApr": 0.03,
+    "rewardApr": {
+      "A": 474.05,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 474.08,
+    "priceMin": 1204820.512900705,
+    "priceMax": 1209469.7896198202
+  },
+  "month": {
+    "volume": 0.4049631980130824,
+    "volumeFee": 0.0008504227158274731,
+    "feeA": 0,
+    "feeB": 1552.210653998672,
+    "feeApr": 0.02,
+    "rewardApr": {
+      "A": 474.05,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 474.07,
+    "priceMin": 1002898.1751465384,
+    "priceMax": 1209469.7896198202
+  },
+  "lookupTableAccount": "3hix4xQYjnERPXKCU3ZtBjNFGSGYSsxEtRkFrwh7aXto",
+  "openTime": 0,
+  "price": 1206456.699169518
+}

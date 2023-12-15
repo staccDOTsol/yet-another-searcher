@@ -1,0 +1,93 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "E5NsszyHYgAznHaxNjL4JGWCdofb2yB12uvNdP7eDben",
+  "poolMint": "DjZPPSgh7oFnx81uwDXFTHspeRrzfeaRwfEnTjsivWM",
+  "baseTokenVault": "CUwq8db36w9ePV16zwG1mWBx7bff5aRQW2ezDYtduEBa",
+  "baseTokenMint": "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7",
+  "quoteTokenVault": "GUKW1rN8aZWNc13euBcQh9NnMh9k3goBR4nLXfmCS75g",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "9cmrLcFphk3CLo7y9kLfDqLJZ47J1cXUh2YPxt55zeND",
+  "poolSignerNonce": 253,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "2YzVq5RrQW91SzRjWjXoXcXaghjA2FzhBk9sKuBfNSDC",
+  "feeBaseAccount": "9VQdudunh23noaDEd8yHam28TK7dkZnPGXVNkVqZwhnT",
+  "feeQuoteAccount": "5xdL9RmBmZgADrmiWDaA61epbWyWPkeGTJ32cRtwSVJE",
+  "feePoolTokenAccount": "BmzeR2kvMrUMjDrwVB4JKbHogxFWBHnawJcbcQe2LYVr",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "Di6aGCzx6FfM5NuTbXihoa5eYRdm89ZmFprzcfAU7wXT",
+  "poolPublicKey": "96F6Shn2CFtLqepcad6Dj7Pj2pK6Ntu4WEgNviz5udeJ",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7": {
+      "chainId": 101,
+      "address": "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7",
+      "symbol": "FBZ",
+      "name": "FakeBiz",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7/logo.png",
+      "tags": [
+        "social-token",
+        "util-token",
+        "web3"
+      ],
+      "extensions": {
+        "instagram": "https://www.instagram.com/timjdillon",
+        "twitter": "https://twitter.com/FakeBiz_FBZ",
+        "website": "https://www.fakebiz.io/"
+      },
+      "addr": "CUwq8db36w9ePV16zwG1mWBx7bff5aRQW2ezDYtduEBa",
+      "tag": "social-token,util-token,web3",
+      "mint": "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "GUKW1rN8aZWNc13euBcQh9NnMh9k3goBR4nLXfmCS75g",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

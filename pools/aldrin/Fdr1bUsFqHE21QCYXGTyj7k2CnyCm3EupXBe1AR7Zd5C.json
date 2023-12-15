@@ -1,0 +1,87 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "7ds4Gt9LwFgKeD425meAtunqpz2spNvdC8kVYLpH5HV",
+  "poolMint": "Fdr1bUsFqHE21QCYXGTyj7k2CnyCm3EupXBe1AR7Zd5C",
+  "baseTokenVault": "7Q6ZXjLhZdLjy2k9qSLkdqvS76yuSnDZnMXQBfnkouGX",
+  "baseTokenMint": "NovNrxPNjmLVFscH5rjMbec7C4BdAHms9WK21xjsP3p",
+  "quoteTokenVault": "42dbzjY2u6QekR5aUsZWVnbhmymtWQ16pr69PXiopQyy",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "G7eZQczsGU3aDiUnrWiahfzH4tWeLKd4Ug3yT6gEdyj4",
+  "poolSignerNonce": 254,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "6UTfMcL5xFEQYwi3LjhhKuMbvEcNPXqGthUQVt4fyXtj",
+  "feeBaseAccount": "8sb6i9wgjijfYx4fpJxvrG4xgQQCppwA6JWJPqTpCMYY",
+  "feeQuoteAccount": "5s8YSgBoFqWNKDBcTf4neG7bqoTuk44TpYmA7nuMsCRn",
+  "feePoolTokenAccount": "5MQz1GLBTjyAvAC5dUxgiDdfeynG2pzSKPzfnSJypFkP",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "6sQtHKXLvkbWNoYCBYGux7i8pfxLweQUNJhwSfcMGYwH",
+  "poolPublicKey": "5Z6yHtTN7Lxgojux1RkTioV2EdDWxMunubTuuBEjJFg4",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "NovNrxPNjmLVFscH5rjMbec7C4BdAHms9WK21xjsP3p",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "NovNrxPNjmLVFscH5rjMbec7C4BdAHms9WK21xjsP3p": {
+      "chainId": 101,
+      "address": "NovNrxPNjmLVFscH5rjMbec7C4BdAHms9WK21xjsP3p",
+      "symbol": "NOVAX",
+      "name": "NOVAX",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/NovNrxPNjmLVFscH5rjMbec7C4BdAHms9WK21xjsP3p/clogo.png",
+      "extensions": {
+        "twitter": "https://twitter.com/the_cynova",
+        "website": "https://www.cynova.io/"
+      },
+      "addr": "7Q6ZXjLhZdLjy2k9qSLkdqvS76yuSnDZnMXQBfnkouGX",
+      "tag": "",
+      "mint": "NovNrxPNjmLVFscH5rjMbec7C4BdAHms9WK21xjsP3p",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "42dbzjY2u6QekR5aUsZWVnbhmymtWQ16pr69PXiopQyy",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

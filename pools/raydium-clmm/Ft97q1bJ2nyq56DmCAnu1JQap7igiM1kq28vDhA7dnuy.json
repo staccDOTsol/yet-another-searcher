@@ -1,0 +1,76 @@
+{
+  "id": "Ft97q1bJ2nyq56DmCAnu1JQap7igiM1kq28vDhA7dnuy",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "So11111111111111111111111111111111111111112",
+  "mintB": "hntyVP6YFm1Hg25TN9WGLqM12b8TQmcknKrdu1oxWux",
+  "vaultA": "FLW6YdjJMVYjDgXytvwKLY66eYULiSXLTtrSAsLXHLGV",
+  "vaultB": "5wgKf1S2fjyVgxyHFms9nAhcwgXr1bDvRy68kPRirLLg",
+  "mintDecimalsA": 9,
+  "mintDecimalsB": 8,
+  "ammConfig": {
+    "id": "E64NGkDLLCdQ2yFNPcavaKptrEgmiQaNykUuLC1Qgwyp",
+    "index": 1,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 2500,
+    "tickSpacing": 60,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for most pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 2894.390128893733,
+  "day": {
+    "volume": 648.72675199744,
+    "volumeFee": 1.3623261791946244,
+    "feeA": 0.0070203658349999995,
+    "feeB": 0.5085427289669999,
+    "feeApr": 17.17,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 17.17,
+    "priceMin": 26.866557646609227,
+    "priceMax": 28.64609049749023
+  },
+  "week": {
+    "volume": 1243.6725151061455,
+    "volumeFee": 2.6117122817229044,
+    "feeA": 0.018485107893000008,
+    "feeB": 0.847693702107,
+    "feeApr": 4.7,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 4.7,
+    "priceMin": 24.345931009029943,
+    "priceMax": 28.64609049749023
+  },
+  "month": {
+    "volume": 103158.28872587302,
+    "volumeFee": 216.63240632433326,
+    "feeA": 3.4860117899774985,
+    "feeB": 89.52490100309697,
+    "feeApr": 91.02,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 91.02,
+    "priceMin": 15.106934836396121,
+    "priceMax": 28.64609049749023
+  },
+  "lookupTableAccount": "9ME1QHmCANRZCZayoNDcprUm4Rm7dMTVH97W7voM6WUH",
+  "openTime": 0,
+  "price": 28.574907634914155
+}

@@ -1,0 +1,48 @@
+{
+  "owner": "D3BBjqUdCYuP18fNvvMbPAZ8DpcRi4io2EsYHQawJDag",
+  "pubkey": "C15v6TsCp9tHL7qLrjGJprkQoVKBFbvyitVN3PwK6Y7J",
+  "data": {
+    "authority": "2YzVq5RrQW91SzRjWjXoXcXaghjA2FzhBk9sKuBfNSDC",
+    "fee": "2625a0",
+    "taxFee": "07a120",
+    "state": {
+      "initialized": {}
+    },
+    "mintLpt": "8JE9DCWJRWPqa7J7c6YfycTiQ6gDd6RxxsrkJGMqqvt",
+    "taxMan": "9doo2HZQEmh2NgfT3Yx12M89aoBheycYqH1eaR5gKb3e",
+    "mints": [
+      "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+      "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7"
+    ],
+    "actions": [
+      {
+        "active": {}
+      },
+      {
+        "active": {}
+      }
+    ],
+    "treasuries": [
+      "362uHYKUGWqH4hRdkq98xQhEqoLkRo4zTTzPAaqBQGXf",
+      "7voqnzLrYrdm9T52hJDG8vp8PoN1cq5EutQfMUE13PLM"
+    ],
+    "reserves": [
+      "076ba98b406b8377",
+      "164dfb70302e0ba0"
+    ],
+    "weights": [
+      "05d21dba00",
+      "1176592e00"
+    ]
+  },
+  "params": {
+    "treasurer": "5nCQ3VUtgDN1cPiBum4CBqRoTsuXntQnweD36CWR3enj",
+    "taxmanTokenAccounts": [
+      "2By18eH6mRjFnnfikatxEYv56hBVnDqa42tAXbSKCaQs",
+      "HuPaGxHsW5UiuFGm4GCvBFmdorSTQazPzvGiishmvHv2"
+    ]
+  },
+  "provider": "balansol",
+  "poolAddress": "C15v6TsCp9tHL7qLrjGJprkQoVKBFbvyitVN3PwK6Y7J",
+  "other": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz"
+}

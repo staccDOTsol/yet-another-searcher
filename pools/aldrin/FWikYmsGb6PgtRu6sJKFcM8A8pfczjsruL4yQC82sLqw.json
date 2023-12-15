@@ -1,0 +1,82 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "BJBornqNy18jJx2bbsNh7RokdUzvwbHM2m11GfdeRbWF",
+  "poolMint": "FWikYmsGb6PgtRu6sJKFcM8A8pfczjsruL4yQC82sLqw",
+  "baseTokenVault": "5JAS9c5TjApt4xzpmcsc3TXf2Hhq3wAH5Kd1gep4qPKC",
+  "baseTokenMint": "So11111111111111111111111111111111111111112",
+  "quoteTokenVault": "5EgzcwVj8HcTsd3cNC8vSDxV529W4bCh22x43ZJTEDsR",
+  "quoteTokenMint": "NGK3iHqqQkyRZUj4uhJDQqEyKKcZ7mdawWpqwMffM3s",
+  "poolSigner": "4QY9FeRbM5MWRYtZDxKxS4WMA8X4fdBjouDC2uRpdBJy",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "SGhDybhTLDG18JJg1TSsaePb2eXBWg1YcdSCYhtNEFy",
+  "feeBaseAccount": "32TWcyCxBZWDth2P8PQ4qeAmTyws1ozBUf1FYWtqwpSL",
+  "feeQuoteAccount": "2RddRmtXsHcPrvNhvFRZkR8vkYswN9mZQ3H3d6bUBPvD",
+  "feePoolTokenAccount": "JBpq3i5NuyeJwrDwR93J3k2Tmnfd2VsWa462Vg6d1nd",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "H1UeF6WyuXZUGupaiGHq32PvWCJv9dssJMhCSjDeriJW",
+  "poolPublicKey": "7fdb3DFL8Sb1epFGPLTv6mc1q6HjLputzPDJ3tKkL51y",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "NGK3iHqqQkyRZUj4uhJDQqEyKKcZ7mdawWpqwMffM3s"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "5JAS9c5TjApt4xzpmcsc3TXf2Hhq3wAH5Kd1gep4qPKC",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "NGK3iHqqQkyRZUj4uhJDQqEyKKcZ7mdawWpqwMffM3s": {
+      "chainId": 101,
+      "address": "NGK3iHqqQkyRZUj4uhJDQqEyKKcZ7mdawWpqwMffM3s",
+      "symbol": "YAKU",
+      "name": "Yaku",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EK58dp4mxsKwwuySWQW826i3fwcvUK69jPph22VUcd2H/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "addr": "5EgzcwVj8HcTsd3cNC8vSDxV529W4bCh22x43ZJTEDsR",
+      "tag": "utility-token",
+      "mint": "NGK3iHqqQkyRZUj4uhJDQqEyKKcZ7mdawWpqwMffM3s",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

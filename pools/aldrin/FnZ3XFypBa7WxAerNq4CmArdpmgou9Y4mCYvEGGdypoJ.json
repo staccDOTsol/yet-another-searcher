@@ -1,0 +1,89 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "D1zh5Qjjxn8CFcGRvRRvZ7nvht4S3SkcKtU4Y5UiPPuk",
+  "poolMint": "FnZ3XFypBa7WxAerNq4CmArdpmgou9Y4mCYvEGGdypoJ",
+  "baseTokenVault": "B2nLSoyFQWzZHCfmYJaE5gvbowH2CVbmNs83m8sMbjmJ",
+  "baseTokenMint": "So11111111111111111111111111111111111111112",
+  "quoteTokenVault": "ECyz6jq3sdPz8i3tmCbVmgrwFM3tD8hrLqBU2wK48fR9",
+  "quoteTokenMint": "ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx",
+  "poolSigner": "Btvn2CwEzKbDDRsRZc5T2HYMyUWEzZpKZUXz1PTJg4qN",
+  "poolSignerNonce": 254,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "4zDJBWU17FbrhRLqLvmexV1N1XwAGQ3LMDGC5w5t8Wbc",
+  "feeBaseAccount": "69q9zJmdZJQc7AykgbncQ68wf8wn6AQAVY68akmQFEBY",
+  "feeQuoteAccount": "44M37WNBeNJKwTUyBex6BZTtFZER1tXBZSh6dC7rAWzM",
+  "feePoolTokenAccount": "7egtXvc3wsRubAmLpCkW324P8DeWkWxAtGZgeKjDFA4m",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "5shn6TwFQtPWUseA8KJf57Xxsvqozs8ZiG3HpRJToAN7",
+  "poolPublicKey": "891d1e9E5n1x62J9o5sWGFKGoZSRq1YD2SFpQJkCqMX2",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "B2nLSoyFQWzZHCfmYJaE5gvbowH2CVbmNs83m8sMbjmJ",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx": {
+      "chainId": 101,
+      "address": "ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx",
+      "symbol": "ATLAS",
+      "name": "Star Atlas",
+      "decimals": 8,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "coingeckoId": "star-atlas",
+        "description": "Star Atlas Token",
+        "serumV3Usdc": "Di66GTLsV64JgCCYGVcY21RZ173BHkjJVgPyezNN7P1K",
+        "waterfallbot": "https://bit.ly/ATLASwaterfall",
+        "website": "https://staratlas.com"
+      },
+      "addr": "ECyz6jq3sdPz8i3tmCbVmgrwFM3tD8hrLqBU2wK48fR9",
+      "tag": "utility-token",
+      "mint": "ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx",
+      "scale": 8
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

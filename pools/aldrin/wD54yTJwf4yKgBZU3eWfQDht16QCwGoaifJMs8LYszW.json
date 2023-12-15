@@ -1,0 +1,88 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "6JiPDL9Zv9TUiKjSJDuSeudRxCsZ2aK8mPDmrokBJNg3",
+  "poolMint": "wD54yTJwf4yKgBZU3eWfQDht16QCwGoaifJMs8LYszW",
+  "baseTokenVault": "9opoYCUCea7y5n71e7LnNSQV7te3ZtdhK64ZJ4Thspay",
+  "baseTokenMint": "So11111111111111111111111111111111111111112",
+  "quoteTokenVault": "2sQWWaFTY1R5HYAr3DhRUBT1tBMYhSk9xHZAntHmKN9a",
+  "quoteTokenMint": "14Zi6xaKrFpEdxQKyU1SnSE8dfa97Gfj1jrtuWCxWnZL",
+  "poolSigner": "4CBP6FA8iYtDx2J7gdAPX52E8c6ziundmruyHSmD7w7y",
+  "poolSignerNonce": 254,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "39XRJaVUk5e1B2ptx3BMq1GEKa6o1GNS3waRfyis3k7A",
+  "feeBaseAccount": "NTm9XfeXE4Lmzn3W9kXy8KfhUwpfivDv2XqNohsCWjs",
+  "feeQuoteAccount": "DYyiqfbZqmy15UxYyYnosyVMaSMwhNh6q3vangZH1a1x",
+  "feePoolTokenAccount": "B7Dx73wv26rgTRKrSYMFdTb26bemZqKnJff875pLU9RE",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "BSVFaUUS1BJidsGZzgg5WAT83ipCAiYXWwonx9m9Ydus",
+  "poolPublicKey": "CSExnGcUGEtfEcR7djtRdLVBNuc6aY8RT1jxXjgWSz5u",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "14Zi6xaKrFpEdxQKyU1SnSE8dfa97Gfj1jrtuWCxWnZL"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "9opoYCUCea7y5n71e7LnNSQV7te3ZtdhK64ZJ4Thspay",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "14Zi6xaKrFpEdxQKyU1SnSE8dfa97Gfj1jrtuWCxWnZL": {
+      "chainId": 101,
+      "address": "14Zi6xaKrFpEdxQKyU1SnSE8dfa97Gfj1jrtuWCxWnZL",
+      "symbol": "WPUFF",
+      "name": "Wonderpuff",
+      "decimals": 2,
+      "logoURI": "https://bafkreifpmmgm3wp7e5u5hhnbxbq5djoh6zhickapb6e3yq2x473pn2w66q.ipfs.nftstorage.link/?ext=png",
+      "tags": [
+        "NFT",
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/8J2tZgHQHu",
+        "twitter": "https://twitter.com/smokeheadsnft",
+        "website": "https://smokeheads.io/"
+      },
+      "addr": "2sQWWaFTY1R5HYAr3DhRUBT1tBMYhSk9xHZAntHmKN9a",
+      "tag": "NFT,utility-token",
+      "mint": "14Zi6xaKrFpEdxQKyU1SnSE8dfa97Gfj1jrtuWCxWnZL",
+      "scale": 2
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

@@ -1,0 +1,89 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "2MboE7wtvsz7uTNKhc9m5v6RLKbx6PibBRvgM4YGA1vo",
+  "poolMint": "Bf4nDPPTbwAMw2EMWCDs533KB7ZvnxYbdutwQ1AnbLXa",
+  "baseTokenVault": "GKd6AeuSnvchnVshB6RuLdUZjMnGKL7zFMdo7z6AmajX",
+  "baseTokenMint": "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+  "quoteTokenVault": "A5mLrUjTMKk37FMUrFW8kHjkFEYzowX88idwtZNfkrK6",
+  "quoteTokenMint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+  "poolSigner": "AY9sTYiac2nuUoaPcseqG9X31hUj9tWMV75woYykmbMJ",
+  "poolSignerNonce": 253,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "AB4aCptmqEM5RzHU7ds6obvPzjo18tSV52Jn4YgmXWsT",
+  "feeBaseAccount": "82w1ZRmzMNtTY6xSUeGVxMUuoMKe2bu7CFViuYqATkaA",
+  "feeQuoteAccount": "3ECYuTSfFzHYJxPdUQEeXqBwCctJurqDD2FZPhQJcSnQ",
+  "feePoolTokenAccount": "4zGo51FEDH3kqUe3AvYJF1yKYJM6tzYsmPfPXAP63ccp",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "E8PpoUJqTazNwMTsnYe3Tq4tvDoU8LTGQzmfY8mi93Rj",
+  "poolPublicKey": "4GvfcLqV6qNjuV8AjYzVvLTu1B1ajBkBSBKieWsk1w6V",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+  "tokenIds": [
+    "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+    "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey"
+  ],
+  "tokens": {
+    "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp": {
+      "chainId": 101,
+      "address": "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+      "symbol": "RIN",
+      "name": "Aldrin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp/logo.png",
+      "extensions": {
+        "coingeckoId": "aldrin",
+        "serumV3Usdc": "7gZNLDbWE73ueAoHuAeFoSu7JqmorwCLpNTBXHtYSFTa",
+        "twitter": "https://twitter.com/Aldrin_Exchange",
+        "website": "https://rin.aldrin.com/"
+      },
+      "addr": "GKd6AeuSnvchnVshB6RuLdUZjMnGKL7zFMdo7z6AmajX",
+      "tag": "",
+      "mint": "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+      "scale": 9
+    },
+    "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey": {
+      "chainId": 101,
+      "address": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+      "symbol": "MNDE",
+      "name": "Marinade",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey/logo.png",
+      "extensions": {
+        "coingeckoId": "marinade",
+        "discord": "https://discord.gg/mGqZA5pjRN",
+        "github": "https://github.com/marinade-finance",
+        "medium": "https://medium.com/marinade-finance",
+        "twitter": "https://twitter.com/MarinadeFinance",
+        "website": "https://marinade.finance"
+      },
+      "addr": "A5mLrUjTMKk37FMUrFW8kHjkFEYzowX88idwtZNfkrK6",
+      "tag": "",
+      "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

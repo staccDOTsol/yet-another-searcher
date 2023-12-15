@@ -1,0 +1,76 @@
+{
+  "id": "CFN7cLDGSmaQrRKSN3MCr2EKzZ7UKJgiuv4tkrf56JWQ",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "So11111111111111111111111111111111111111112",
+  "mintB": "EV2M5ArcrGkMddvPj3Fu7MBKuEo5MvZUkZKkPzXLTa2u",
+  "vaultA": "AfrSJRH21kguQ17b4ne4gRVubhoENeTsk2Nev7psMHnm",
+  "vaultB": "81wrJfsW2KPyAu8ZJPU5tFVpsMAFa9Bssb51QqEFspY3",
+  "mintDecimalsA": 9,
+  "mintDecimalsB": 9,
+  "ammConfig": {
+    "id": "A1BBtTYJd4i3xU8D6Tc2FzU6ZN4oXZWXKZnCxwbHXr8x",
+    "index": 3,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 10000,
+    "tickSpacing": 120,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for exotic pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "EV2M5ArcrGkMddvPj3Fu7MBKuEo5MvZUkZKkPzXLTa2u",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 13.53486946788647,
+  "day": {
+    "volume": 0,
+    "volumeFee": 0,
+    "feeA": 0,
+    "feeB": 0,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 2354.13,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 2354.13,
+    "priceMin": 97109.21372985297,
+    "priceMax": 97109.21372985297
+  },
+  "week": {
+    "volume": 0,
+    "volumeFee": 0,
+    "feeA": 0,
+    "feeB": 0,
+    "feeApr": 0,
+    "rewardApr": {
+      "A": 2354.13,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 2354.13,
+    "priceMin": 97109.21372985297,
+    "priceMax": 97109.21372985297
+  },
+  "month": {
+    "volume": 0.3926614722092111,
+    "volumeFee": 0.003298356366557373,
+    "feeA": 0.00008594104679999999,
+    "feeB": 2.6132330798364,
+    "feeApr": 0.3,
+    "rewardApr": {
+      "A": 2354.13,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 2354.4300000000003,
+    "priceMin": 96191.94769716667,
+    "priceMax": 98195.39478027055
+  },
+  "lookupTableAccount": "3hix4xQYjnERPXKCU3ZtBjNFGSGYSsxEtRkFrwh7aXto",
+  "openTime": 0,
+  "price": 97109.21372985297
+}

@@ -1,0 +1,92 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "4NRJWTGn3e2YeRmmahatetbqZpCSBTAT7NXQqz7MUKAU",
+  "poolMint": "3TPkAxES1sbNzwh5HUyUbu5wWn8UVfqVr5wci9TXBxD6",
+  "baseTokenVault": "mKeWba3Uj7KqX3TZqg6XuKXWbM9XGMMqUVRmHVGZDmZ",
+  "baseTokenMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "quoteTokenVault": "5T56xfSZbfstByKnwnDBzucAidLifpzXLpTWHVkxa7ae",
+  "quoteTokenMint": "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe",
+  "poolSigner": "DfeKkh8kGanYr3hnxQFaYtqL8tCZRQMeDgjdDjvorrfY",
+  "poolSignerNonce": 253,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "2RcTrmjHLpH4eWS7NVPjENjQv2LtHS4THamYhaudJ1AH",
+  "feeBaseAccount": "C6bGdVji2JjD1Wnp6EEtuzp8S4j1EEkBdY5eN4THh65w",
+  "feeQuoteAccount": "E4kP1EbR6E4DjHL1a3Q2kAqRMFmjBVY6WpxjbBCXEPhP",
+  "feePoolTokenAccount": "29zvbgJNTb9rFwJXyGEvGepuSbgKda9oRDT2zujDCHDL",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "8rUE2DFvV4CvPq4eNwTpntqRaK1njLurptYyYrA6bqg8",
+  "poolPublicKey": "89vkffAJ6DT95353HT16b9bnkygAEbC5SM6LQNJhd9D7",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "tokenIds": [
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+    "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe"
+  ],
+  "tokens": {
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+      "chainId": 101,
+      "address": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "symbol": "USDT",
+      "name": "USDT",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "tether",
+        "serumV3Usdc": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://tether.to/"
+      },
+      "addr": "mKeWba3Uj7KqX3TZqg6XuKXWbM9XGMMqUVRmHVGZDmZ",
+      "tag": "stablecoin",
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "scale": 6
+    },
+    "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe": {
+      "chainId": 101,
+      "address": "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe",
+      "symbol": "pHONEY",
+      "name": "pre-IDO HONEY",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe/logo.svg",
+      "tags": [
+        "utility-token",
+        "DeFi",
+        "Governance"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/honeydefi",
+        "website": "https://honey.finance"
+      },
+      "addr": "5T56xfSZbfstByKnwnDBzucAidLifpzXLpTWHVkxa7ae",
+      "tag": "utility-token,DeFi,Governance",
+      "mint": "PHnyhLEnsD9SiP9tk9kHHKiCxCTPFnymzPspDqAicMe",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

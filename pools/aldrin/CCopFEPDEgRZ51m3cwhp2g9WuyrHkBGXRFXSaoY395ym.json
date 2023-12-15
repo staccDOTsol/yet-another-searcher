@@ -1,0 +1,93 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "6aQJ3FRis5HNHxfdUWr451yhzbavPw41jPqjRa79BRE7",
+  "poolMint": "CCopFEPDEgRZ51m3cwhp2g9WuyrHkBGXRFXSaoY395ym",
+  "baseTokenVault": "13zaVEUxLi1iHQpTj5eWyK7mqatxfwbiY8uz1wNmUNGQ",
+  "baseTokenMint": "8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx",
+  "quoteTokenVault": "86QcZAv9UC4TE6Ab2jr1iWEkgFEU4LZWW7NJseewDDHC",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "GQTXKANeCK9xnerAewvBR5fgVcEx9jEeu2K17XevRjjc",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "E8f3kZYCzsxhyYzCw9uJ7oSMsgrt6uKRc3HXp6bLoGSZ",
+  "feeBaseAccount": "FWYZ5WsumowfSJUNhpqLFzhLyk9m4DisBSE4BU1DHCga",
+  "feeQuoteAccount": "HF2UudZAgnEBJHg5RqkLTPqh9Mu6SoNm1uYgAchhJkdE",
+  "feePoolTokenAccount": "7ZSHn4HJZdeeVPSPE2kc4FoRMMPD9HRG2E6jqiMNCdxv",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "E257PARWp8FGELnwteqgbam1jm51qhggp5b6MWGuUkgo",
+  "poolPublicKey": "9MvoZpcEPUUYKZrQiYv7F2GEXLAK3xuZGXTHV7dTiRdB",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx": {
+      "chainId": 101,
+      "address": "8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx",
+      "symbol": "CKC",
+      "name": "ChikinCoin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx/logo.svg",
+      "extensions": {
+        "discord": "https://discord.gg/rsQQsAcAn7",
+        "facebook": "https://www.facebook.com/Chikin-114453524487432",
+        "github": "https://github.com/ChikinDeveloper",
+        "instagram": "https://www.instagram.com/chikintuttut",
+        "telegram": "https://t.me/+BG1HI84WGdwyMmU0",
+        "tiktok": "https://www.tiktok.com/@chikintuttut",
+        "twitter": "https://twitter.com/ChikinDev",
+        "website": "https://chikin.run"
+      },
+      "addr": "13zaVEUxLi1iHQpTj5eWyK7mqatxfwbiY8uz1wNmUNGQ",
+      "tag": "",
+      "mint": "8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx",
+      "scale": 6
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "86QcZAv9UC4TE6Ab2jr1iWEkgFEU4LZWW7NJseewDDHC",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

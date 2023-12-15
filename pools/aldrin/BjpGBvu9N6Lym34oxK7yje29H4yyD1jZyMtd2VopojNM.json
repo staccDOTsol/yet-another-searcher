@@ -1,0 +1,92 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "8KxAe3Bn1F83LvgnESvErz4YqRig2doC4JMbzh8hPDJM",
+  "poolMint": "BjpGBvu9N6Lym34oxK7yje29H4yyD1jZyMtd2VopojNM",
+  "baseTokenVault": "J1rBUqiqhSyD53GkMoudyvMowYiSYdTtfucn7BLKAPvv",
+  "baseTokenMint": "DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5",
+  "quoteTokenVault": "At2WeZ81XNPJjpzu7mhjNsqJzQ9q9ormU8pGiqMStFr5",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "4rEFqmTGZRT8iTnnvcZoZck28FcycfGkhmWMr4dUXPDh",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "GQB7rFfWqbPLkkbfZEnPppmL8EJEFQ3qvwyGcH8dnS3U",
+  "feeBaseAccount": "Pkd9PRW9MQ7TNVcfhuqBBagazNRpM18t64KVjN4aA9N",
+  "feeQuoteAccount": "82a2hFkNx6MWmKBGvCK62RsV3rZ6nngKR93RbukfyUmm",
+  "feePoolTokenAccount": "2436DKQUMv6Y7qMhCv8Bn5xyADHoB6WPryxwYkwPs9qC",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "9yzjgMPfC8hfU5Euii19QbfD61WRg7jamVEdpNEJoGHc",
+  "poolPublicKey": "CoQRLyNLkvKCMeEmcEieFw3QqK3Fudc6VfvJNvVkbLtQ",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5": {
+      "chainId": 101,
+      "address": "DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5",
+      "symbol": "BITXBIT",
+      "name": "BITXBIT",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5/logo.png",
+      "tags": [
+        "social-token",
+        "technology",
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/bitXbit_aus",
+        "website": "https://bitxbit.com.au"
+      },
+      "addr": "J1rBUqiqhSyD53GkMoudyvMowYiSYdTtfucn7BLKAPvv",
+      "tag": "social-token,technology,utility-token",
+      "mint": "DK6PWMyuZ4NMjsm9AWNCTMKrajQYrtfMjMJ3QauX2UH5",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "At2WeZ81XNPJjpzu7mhjNsqJzQ9q9ormU8pGiqMStFr5",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

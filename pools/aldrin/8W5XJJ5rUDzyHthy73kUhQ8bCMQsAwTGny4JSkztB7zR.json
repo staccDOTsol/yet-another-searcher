@@ -1,0 +1,93 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "8ontqEACvQ4SNTy1cCBTXTY3k4hWGJPoDeaG6uF5rXTA",
+  "poolMint": "8W5XJJ5rUDzyHthy73kUhQ8bCMQsAwTGny4JSkztB7zR",
+  "baseTokenVault": "7jFhcNyZGVRAYFLM6mhFyuHtVAV8QV9gdMHLeoPqfofT",
+  "baseTokenMint": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+  "quoteTokenVault": "9fMVXctWXkncfzdm8yh9shd5Ks5zUWezQwBZ7U2siZsE",
+  "quoteTokenMint": "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7",
+  "poolSigner": "2c1prPaXNq7hVkxcspR3cz4t77KKqEWNoaS98pu5TCJT",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "2YzVq5RrQW91SzRjWjXoXcXaghjA2FzhBk9sKuBfNSDC",
+  "feeBaseAccount": "FjkKJXmi9tQZd2KRt3sqTvkXumf389fpNRwS3RwGo8FR",
+  "feeQuoteAccount": "5N4rkJEEBHM3XkDGYLxukXLG4RC47xVdXKmqWFvKjSsV",
+  "feePoolTokenAccount": "BrrvDFc3dRiE8H9SMPKxo1eZ1RteqUzQXRCh6EyuX4nE",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "4pc2zGJgsLRbSeEdf2xBQ6GetKLN7R9Mqrw2WABb9Boy",
+  "poolPublicKey": "DG3AtmjySnngCNmk2YXYF23UQPCiqaXA9sW2fusmjpJu",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+  "tokenIds": [
+    "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+    "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7"
+  ],
+  "tokens": {
+    "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz": {
+      "chainId": 101,
+      "address": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+      "symbol": "FUM",
+      "name": "FUMoney",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/FUMoney801/token-list/main/assets/mainnet/EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz/logo.png",
+      "tags": [
+        "social-token",
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/FUMindset",
+        "website": "https://FUMoney.io/"
+      },
+      "addr": "7jFhcNyZGVRAYFLM6mhFyuHtVAV8QV9gdMHLeoPqfofT",
+      "tag": "social-token,utility-token",
+      "mint": "EZF2sPJRe26e8iyXaCrmEefrGVBkqqNGv9UPGG9EnTQz",
+      "scale": 9
+    },
+    "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7": {
+      "chainId": 101,
+      "address": "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7",
+      "symbol": "FBZ",
+      "name": "FakeBiz",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7/logo.png",
+      "tags": [
+        "social-token",
+        "util-token",
+        "web3"
+      ],
+      "extensions": {
+        "instagram": "https://www.instagram.com/timjdillon",
+        "twitter": "https://twitter.com/FakeBiz_FBZ",
+        "website": "https://www.fakebiz.io/"
+      },
+      "addr": "9fMVXctWXkncfzdm8yh9shd5Ks5zUWezQwBZ7U2siZsE",
+      "tag": "social-token,util-token,web3",
+      "mint": "BKydRTNdaMJ8B4zPva3YhwUQcpvAsyZaGJnKA6F44fX7",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

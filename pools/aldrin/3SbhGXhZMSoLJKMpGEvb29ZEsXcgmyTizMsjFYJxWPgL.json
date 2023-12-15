@@ -1,0 +1,91 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "H3fX6NF56X2ox2C7etVormN7WWcUbCNDPj6GHK4f4W7p",
+  "poolMint": "3SbhGXhZMSoLJKMpGEvb29ZEsXcgmyTizMsjFYJxWPgL",
+  "baseTokenVault": "J94S454qunF5xH4UdyXbv6j8kTneLajFYzjTpfHJ62cU",
+  "baseTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "quoteTokenVault": "3hWGKXEtKbAyArLb4y4hpMyhqqXXp4HM1jPrz4mPjxcJ",
+  "quoteTokenMint": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+  "poolSigner": "6yioeAnhko4Vzw9CZsncwaHDz5S12YjTms3eGjhrGJUX",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "2cdv15mgCd3Jt1ka7Jz58fEweXMToqPmb1VYZ1g3oYQ5",
+  "feeBaseAccount": "HviTqqs7Lxe1GZDpqWD22VgoNj4DtkKMMMjWeKAd3yP2",
+  "feeQuoteAccount": "GTKniiDfCrK1FeUG8KKx1rmwH6H4GZsComjNxBSpALDw",
+  "feePoolTokenAccount": "4eRYmUET6EtaVHwYmgxJeHTXVdYJG5pXmpixQ175RAiQ",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "2LnTcdBH6zytWoDkTgUakgHmYf9eP51MgkBdTGow4jQL",
+  "poolPublicKey": "BMFQxq1x9GBsSDpHVf8iMVmmoB8rR9sJq3JSSE2kDQwG",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
+  ],
+  "tokens": {
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "J94S454qunF5xH4UdyXbv6j8kTneLajFYzjTpfHJ62cU",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    },
+    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263": {
+      "chainId": 101,
+      "address": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+      "symbol": "DOGE",
+      "name": "Bonk",
+      "decimals": 5,
+      "logoURI": "https://quei6zhlcfsxdfyes577gy7bkxmuz7qqakyt72xlbkyh7fysmoza.arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
+      "tags": [
+        "doge-coin",
+        "ethereum"
+      ],
+      "extensions": {
+        "coingeckoId": "doge",
+        "serumV3Usdc": "8PhnCfgqpgFM7ZJvttGdBVMXHuU4Q23ACxCvWkbs1M71"
+      },
+      "addr": "3hWGKXEtKbAyArLb4y4hpMyhqqXXp4HM1jPrz4mPjxcJ",
+      "tag": "doge-coin,ethereum",
+      "mint": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+      "scale": 5
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

@@ -1,0 +1,90 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "3CSKex9bpWowYbnXveLXkVDYnWg97YojK7DRTF75S4E9",
+  "poolMint": "5JUYGVHfciobRnLDVMFRuaYraZAnPxgFeMFLmyhD3CGp",
+  "baseTokenVault": "6pxH3FJUvdUq9KLBxKzvSVmyaBbENFV1Y6xDHMVRH5Vs",
+  "baseTokenMint": "5r7vsbP24VaVzvZ3W2YnwYdGMmdpSsGFHA2mCitPxZev",
+  "quoteTokenVault": "7hZZ9AurAbEnUHvKv6vz61C7UpAYtXHvkPc36w2dGbVr",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "3y8E6PL5pVozRaFK9G5EVc4FMMvEFqmxWRzPK32dBMse",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "FHkrmY7zwKEncRtdKoiDdppWRTsF19naXx6hBjbCUAtd",
+  "feeBaseAccount": "CJfRjVjUevPmZnit1J5MLp5tb5bdZ9mnyPVRHKK1QQid",
+  "feeQuoteAccount": "AwQvhCwkgr2zsMrjofMN843j4cXYmehexhbLh4oRgyum",
+  "feePoolTokenAccount": "AC9soZw2ECvHWsSYpXSxo6QtG7GeQN4636SkX5ak8kzQ",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "Afp4vX2aa5rMVGL71idvBUoJfrrTQ422NkHHiNqbwbHf",
+  "poolPublicKey": "7z3opfk2XtvVP6JDrcjW5kFwwktPho7KscNuzfzJLtda",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "5r7vsbP24VaVzvZ3W2YnwYdGMmdpSsGFHA2mCitPxZev",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "5r7vsbP24VaVzvZ3W2YnwYdGMmdpSsGFHA2mCitPxZev": {
+      "chainId": 101,
+      "address": "5r7vsbP24VaVzvZ3W2YnwYdGMmdpSsGFHA2mCitPxZev",
+      "symbol": "VOLT",
+      "name": "Voltage Solana",
+      "decimals": 4,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/5r7vsbP24VaVzvZ3W2YnwYdGMmdpSsGFHA2mCitPxZev/logo.png",
+      "tags": [
+        "community-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/FFkmX5S9As",
+        "twitter": "https://twitter.com/VoltageSolana"
+      },
+      "addr": "6pxH3FJUvdUq9KLBxKzvSVmyaBbENFV1Y6xDHMVRH5Vs",
+      "tag": "community-token",
+      "mint": "5r7vsbP24VaVzvZ3W2YnwYdGMmdpSsGFHA2mCitPxZev",
+      "scale": 4
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "7hZZ9AurAbEnUHvKv6vz61C7UpAYtXHvkPc36w2dGbVr",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

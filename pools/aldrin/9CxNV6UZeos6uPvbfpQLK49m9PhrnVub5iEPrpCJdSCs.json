@@ -1,0 +1,87 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "2GNFyTBW81nMNTTbkUAgjtHNZMBH4GqojxVMQWHwzYQQ",
+  "poolMint": "9CxNV6UZeos6uPvbfpQLK49m9PhrnVub5iEPrpCJdSCs",
+  "baseTokenVault": "GBz341PxUaNNj8Hkb13yaYFxbGScS2TnDDeeAbNjKrk",
+  "baseTokenMint": "3e9pHUxa2nvAqso2Kr2KqJxYvZaz9qZLjoLaG77uQwB1",
+  "quoteTokenVault": "9xf1N4ZzRazxzYYhTx331Vqjwp8rCDStNQCgbQZ64oyj",
+  "quoteTokenMint": "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+  "poolSigner": "CyJyW2yYA6SASqjdRt6NXWWGptxyJy9TAwYQxyuNQbwN",
+  "poolSignerNonce": 251,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "31LKs39pjT5oj6fWjC3F76dHWf9489asCthmgj8wu7pj",
+  "feeBaseAccount": "AoapJ2bN7zsVnoPwsnYJ1VeiynrcNN1TvreifzYfSxku",
+  "feeQuoteAccount": "2CRiN4r7jhhVjqkC6f681AzFno79duGZpkjSuZCRNGod",
+  "feePoolTokenAccount": "Gi4rEmW1bFNpdohaRVJkciu6BrkkLcn9nT3a7uzbNPeQ",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "79a7oHfhTZPoGLVVxi1QUbWXEmYYxUJSZdJcCwrP8cKj",
+  "poolPublicKey": "AS9v2AQvuLuZiGMKk9wCFYJiXRPEqM6ukV6yEivgz62u",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "3e9pHUxa2nvAqso2Kr2KqJxYvZaz9qZLjoLaG77uQwB1",
+  "tokenIds": [
+    "3e9pHUxa2nvAqso2Kr2KqJxYvZaz9qZLjoLaG77uQwB1",
+    "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg"
+  ],
+  "tokens": {
+    "3e9pHUxa2nvAqso2Kr2KqJxYvZaz9qZLjoLaG77uQwB1": {
+      "chainId": 101,
+      "address": "3e9pHUxa2nvAqso2Kr2KqJxYvZaz9qZLjoLaG77uQwB1",
+      "symbol": "BAIL",
+      "name": "BAIL COIN",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/ApeLabsNFT/solpatrol/main/hammer.png",
+      "tags": [
+        "NFT",
+        "Utility-Token"
+      ],
+      "addr": "GBz341PxUaNNj8Hkb13yaYFxbGScS2TnDDeeAbNjKrk",
+      "tag": "NFT,Utility-Token",
+      "mint": "3e9pHUxa2nvAqso2Kr2KqJxYvZaz9qZLjoLaG77uQwB1",
+      "scale": 9
+    },
+    "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg": {
+      "chainId": 101,
+      "address": "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+      "symbol": "API",
+      "name": "API Coin",
+      "decimals": 9,
+      "logoURI": "https://theblockchainapi-website.s3.amazonaws.com/logo512.png",
+      "tags": [
+        "community-token",
+        "platform"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/_BlockX_",
+        "website": "https://blockchainapi.com/"
+      },
+      "addr": "9xf1N4ZzRazxzYYhTx331Vqjwp8rCDStNQCgbQZ64oyj",
+      "tag": "community-token,platform",
+      "mint": "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

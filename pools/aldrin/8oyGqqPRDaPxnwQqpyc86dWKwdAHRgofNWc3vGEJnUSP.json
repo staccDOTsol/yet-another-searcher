@@ -1,0 +1,92 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "7M6B2uRBsbeNDtyu8wCwLEnxU8H8tDJxHjBmutW9BqnE",
+  "poolMint": "8oyGqqPRDaPxnwQqpyc86dWKwdAHRgofNWc3vGEJnUSP",
+  "baseTokenVault": "8WXw4c2rxES1QMBmvgWNbUxgipbRxY95F6hnaBsV7UuN",
+  "baseTokenMint": "2zzC22UBgJGCYPdFyo7GDwz7YHq5SozJc1nnBqLU8oZb",
+  "quoteTokenVault": "EsXdrcYNKfkHk9n4d7BEF1PhS9mXzXMcufXixcWdExCV",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "CFWuaDGetXRZLwqvA9GVcfXf3R5KEGQft1UpKPiFZeJS",
+  "poolSignerNonce": 249,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "EDtruSFWDbdamcBPpxSMp1k76x3UKtgDEJSAa4u5g2hG",
+  "feeBaseAccount": "7TA7dkUcfszGuirux5stiiWT9q2UWykPhwxhhzDE4Tzy",
+  "feeQuoteAccount": "HFtxxJrhGNQAXqu9SnNW9xyidkRRgQkD2wxzixUV7Xbt",
+  "feePoolTokenAccount": "CdL8EiCigw4K9n6ZQZC71jJapGvzcpEbheAGWAu9pDpd",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "2Nm2ktZzZqn8xNFCME1A8U5Ctb7WnuzX1ugLb9XMz4sR",
+  "poolPublicKey": "EQmveK6oFqrFJYkvLemGw66K4UN6TCECPTvSVdCWgkkc",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "2zzC22UBgJGCYPdFyo7GDwz7YHq5SozJc1nnBqLU8oZb",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "2zzC22UBgJGCYPdFyo7GDwz7YHq5SozJc1nnBqLU8oZb": {
+      "chainId": 101,
+      "address": "2zzC22UBgJGCYPdFyo7GDwz7YHq5SozJc1nnBqLU8oZb",
+      "symbol": "1SP",
+      "name": "1SPACE",
+      "decimals": 9,
+      "logoURI": "https://1space.me/images/1SP_logo.png",
+      "tags": [
+        "social-token",
+        "utility-token",
+        "community-token"
+      ],
+      "extensions": {
+        "telegram": "https://t.me/+jDm8ioFvec5iNzFk",
+        "website": "https://1space.me/"
+      },
+      "addr": "8WXw4c2rxES1QMBmvgWNbUxgipbRxY95F6hnaBsV7UuN",
+      "tag": "social-token,utility-token,community-token",
+      "mint": "2zzC22UBgJGCYPdFyo7GDwz7YHq5SozJc1nnBqLU8oZb",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "EsXdrcYNKfkHk9n4d7BEF1PhS9mXzXMcufXixcWdExCV",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

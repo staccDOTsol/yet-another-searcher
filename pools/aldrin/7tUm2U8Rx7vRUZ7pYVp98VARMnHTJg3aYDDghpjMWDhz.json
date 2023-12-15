@@ -1,0 +1,82 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "F1bmm5T6HmCWa2wtdqqL8JebwbavGfFia2yPnxUHog99",
+  "poolMint": "7tUm2U8Rx7vRUZ7pYVp98VARMnHTJg3aYDDghpjMWDhz",
+  "baseTokenVault": "Sz2m5UY3u8krGxsTeZqcYBXSvhEme2gHF8aXMLbuZN2",
+  "baseTokenMint": "Bic8w5K9tvHDY7XfiT7fLTdiAkQWURAKkcEs8EsXpxbY",
+  "quoteTokenVault": "7pTgeyBarXztFsLfefJytPVL9QXAQHkJsNDpRgMx2stH",
+  "quoteTokenMint": "So11111111111111111111111111111111111111112",
+  "poolSigner": "D3Bx5rEM5HaTiy6H6GZw8GzuAkD6iwFGpr3a8ky4Feoi",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "5vnH1UPdPhQvbqC3ibC71oLynWfYvqNyyiXyipjjA4Vy",
+  "feeBaseAccount": "3bWQmavhbZ44qNdu3XMPHfQ4GYV12ddWgZZ9zBpgsGuA",
+  "feeQuoteAccount": "Cv4fyenxiCHF27qP7MHZkJRGKbZhRCxAaoWwyXxi2RNJ",
+  "feePoolTokenAccount": "4H9FVUDMuX3gDCFuuqdKnG4hgtjEYFhdbgNABruC3KTV",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "3jLK2HwDm4h5TQLzTytUmq67HrffRkVo3uJYL43dFMm1",
+  "poolPublicKey": "9X8bcKDeSG3ENyhfk6pocwCYk1iDm3c7ANHYdTXYbhVP",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "Bic8w5K9tvHDY7XfiT7fLTdiAkQWURAKkcEs8EsXpxbY",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "Bic8w5K9tvHDY7XfiT7fLTdiAkQWURAKkcEs8EsXpxbY": {
+      "chainId": 101,
+      "address": "Bic8w5K9tvHDY7XfiT7fLTdiAkQWURAKkcEs8EsXpxbY",
+      "symbol": "TROOP",
+      "name": "Troop Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Bic8w5K9tvHDY7XfiT7fLTdiAkQWURAKkcEs8EsXpxbY/logo.png",
+      "tags": [
+        "utility-coin"
+      ],
+      "addr": "Sz2m5UY3u8krGxsTeZqcYBXSvhEme2gHF8aXMLbuZN2",
+      "tag": "utility-coin",
+      "mint": "Bic8w5K9tvHDY7XfiT7fLTdiAkQWURAKkcEs8EsXpxbY",
+      "scale": 6
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "7pTgeyBarXztFsLfefJytPVL9QXAQHkJsNDpRgMx2stH",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

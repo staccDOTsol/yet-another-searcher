@@ -1,0 +1,76 @@
+{
+  "id": "3NeUgARDmFgnKtkJLqUcEUNCfknFCcGsFfMJCtx6bAgx",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "mintB": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "vaultA": "LzqskDmQeqb3WtQHA3aLCoQrUyNNEKodRD3GMvsdRLe",
+  "vaultB": "2yPyVxqSjvJ6wBF9R1QR6bm8hTHrR12JCLEDMhnAhaxq",
+  "mintDecimalsA": 6,
+  "mintDecimalsB": 6,
+  "ammConfig": {
+    "id": "4BLNHtVe942GSs4teSZqGX24xwKNkqU7bGgNn3iUiUpw",
+    "index": 0,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 100,
+    "tickSpacing": 10,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for very stable pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 2620.489197,
+  "day": {
+    "volume": 53718.61103799999,
+    "volumeFee": 4.512363327192001,
+    "feeA": 2.2580899356119994,
+    "feeB": 2.2549026995039996,
+    "feeApr": 62.85,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 62.85,
+    "priceMin": 0.9984911444920428,
+    "priceMax": 1.0003966920885685
+  },
+  "week": {
+    "volume": 173924.95627699996,
+    "volumeFee": 14.609696327268,
+    "feeA": 7.305448900595998,
+    "feeB": 7.306992717276,
+    "feeApr": 29.07,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 29.07,
+    "priceMin": 0.9975363224372612,
+    "priceMax": 1.0018081729286992
+  },
+  "month": {
+    "volume": 519497.7768640002,
+    "volumeFee": 43.63781325657603,
+    "feeA": 21.830062776731985,
+    "feeB": 21.81292525162801,
+    "feeApr": 20.26,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 20.26,
+    "priceMin": 0.9975363224372612,
+    "priceMax": 1.0057029515504836
+  },
+  "lookupTableAccount": "8ki2XeXCwmcEatKZhYgBbPTeF3nNd9XCMh4DsRE9AK14",
+  "openTime": 0,
+  "price": 0.9998777957742925
+}

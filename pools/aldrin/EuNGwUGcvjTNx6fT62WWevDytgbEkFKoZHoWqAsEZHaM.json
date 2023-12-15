@@ -1,0 +1,91 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "7QY2rxVvWs1f5Ym9kpqrcXzgL32QUSynzM63EiwwXPmU",
+  "poolMint": "EuNGwUGcvjTNx6fT62WWevDytgbEkFKoZHoWqAsEZHaM",
+  "baseTokenVault": "BTDuVZ9ycZdhT3Be25VUegQBBeddj8BgyhGhFNeVK1a4",
+  "baseTokenMint": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+  "quoteTokenVault": "3E6muDKifjipJkDyZCwvW7H4gdFP32dkkc9MggFiyaxp",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "2AgcusCVzvjqVB2jJ1YKJ7AoKAtpo7h9pevcGhZG6LZF",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "CMyghRyE41tsQBagSWA6ZJQ5n5bdN9r7DepxwFcNC1GV",
+  "feeBaseAccount": "8bvfSqSLfWoRLR8zT1ARnGkhcPJS2ThFcW94ssccNnE8",
+  "feeQuoteAccount": "GEDwwfFGY6aDefpwfg1is8pVUw7a5Lcrhwaikq4M9dF5",
+  "feePoolTokenAccount": "BafWGc68hNPmfSq9PgjoanBcwYQaRC5X989kEi5bniqW",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "FkoLr2bRoDcUWwhagtEfGKJavY9rmTHc9emgYf9AJSuK",
+  "poolPublicKey": "4WXXBKtuXx2DsMZ5xeq3GimNZrfcL9LtsVKB6NwWKjZu",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh": {
+      "chainId": 101,
+      "address": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+      "symbol": "ARB",
+      "name": "ARB Protocol",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/ARBProtocol/arbprotocol/main/IMG_3600.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/M4F8RKqgce",
+        "twitter": "https://twitter.com/arbprotocol",
+        "coingeckoId": "arb-protocol"
+      },
+      "addr": "BTDuVZ9ycZdhT3Be25VUegQBBeddj8BgyhGhFNeVK1a4",
+      "tag": "utility-token",
+      "mint": "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh",
+      "scale": 6
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "3E6muDKifjipJkDyZCwvW7H4gdFP32dkkc9MggFiyaxp",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

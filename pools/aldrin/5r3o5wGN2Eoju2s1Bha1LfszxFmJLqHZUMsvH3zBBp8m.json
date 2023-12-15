@@ -1,0 +1,96 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "78THHLT5dr4w4tgUSWKceVYrqJArwxcMYpS4t4hHrMDp",
+  "poolMint": "5r3o5wGN2Eoju2s1Bha1LfszxFmJLqHZUMsvH3zBBp8m",
+  "baseTokenVault": "EH1aPtPcYMWn5oRQCDd9xGXCyWHtAy1RJHPQR2omaFzX",
+  "baseTokenMint": "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+  "quoteTokenVault": "6kEGhYZWzuVFzoMxwLWHHwx6JY9MQdSeeyByvVekNBRS",
+  "quoteTokenMint": "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y",
+  "poolSigner": "A7JkEhw9CtFa36mmkevbCszsWwhtQY4L6x7L4d4DGw3K",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "GHaYkEmgP2SCh5EFK58Hj9ptVoUtNgm9kNbu54XxAQoK",
+  "feeBaseAccount": "gWUuaqs9M7kdPe7Ta8CNs1tmt5GX8vSKrM5V4FHpckA",
+  "feeQuoteAccount": "5F9n7CUxvWKZb2PVc6nrXBBkwo88Agytsix4Zq8FaS1e",
+  "feePoolTokenAccount": "9HeTWnyjF3LAoJ3XdgmbeTBPpXTtTj6q2qQTxFRZ9AFr",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "F4dFz7X8ATN4uJ5fX9sFjFFVf4MNcryH9DmbEkJE4aMC",
+  "poolPublicKey": "DqsMjBNJJ7Ax6xiHGE5BRKXxBB1LJUfDQV2E2JKWvj94",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+  "tokenIds": [
+    "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+    "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y"
+  ],
+  "tokens": {
+    "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk": {
+      "chainId": 101,
+      "address": "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+      "symbol": "soETH",
+      "name": "Wrapped Ethereum (Sollet)",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk/logo.png",
+      "tags": [
+        "wrapped-sollet",
+        "ethereum"
+      ],
+      "extensions": {
+        "bridgeContract": "https://etherscan.io/address/0xeae57ce9cc1984f202e15e038b964bb8bdf7229a",
+        "coingeckoId": "ethereum",
+        "serumV3Usdc": "4tSvZvnbyzHXLMTiFonMyxZoHmFqau1XArcRCVHLZ5gX",
+        "serumV3Usdt": "7dLVkUfBVfCGkFhSXDCq1ukM9usathSgS716t643iFGF"
+      },
+      "addr": "EH1aPtPcYMWn5oRQCDd9xGXCyWHtAy1RJHPQR2omaFzX",
+      "tag": "wrapped-sollet,ethereum",
+      "mint": "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+      "scale": 6
+    },
+    "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y": {
+      "chainId": 101,
+      "address": "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y",
+      "symbol": "HIPPO",
+      "name": "Hippo Coin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y/logo.png",
+      "tags": [
+        "meme-token",
+        "community-token"
+      ],
+      "extensions": {
+        "coingeckoId": "hippo-coin",
+        "discord": "https://discord.gg/sk3xN3sA8D",
+        "serumV3Usdc": "HnLKrfMN64ccSbYCj4DxjgPYveSkFujYrnMr4cvPfL8",
+        "twitter": "https://twitter.com/HipposCoin",
+        "website": "https://hippofamilynft.com/"
+      },
+      "addr": "6kEGhYZWzuVFzoMxwLWHHwx6JY9MQdSeeyByvVekNBRS",
+      "tag": "meme-token,community-token",
+      "mint": "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

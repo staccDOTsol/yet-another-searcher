@@ -1,0 +1,88 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "AYnceAS6p19k43SDQAVd1L9EBQpg7ECYKvtiRrsRR7hH",
+  "poolMint": "9LXWXpugn2VrQbxxH2qG66mXE2BFRmAdrcHL9Xjds3ZD",
+  "baseTokenVault": "Df4gHuZFsa8B2tUoVisvcjZDjrYYEXNdnPcS7eMk7y7x",
+  "baseTokenMint": "4RBJRwEAnNEe664LgSECkkfeT4fc6ZjtCMgL7rtUs8g1",
+  "quoteTokenVault": "8jBrXYLqJc6Y45a8bqu8J99bipfWDiBk1ABsALVxyito",
+  "quoteTokenMint": "So11111111111111111111111111111111111111112",
+  "poolSigner": "6HJFfHHVSmUE1u75BgajTUSGXqm7opT7ezc2mPAVECJY",
+  "poolSignerNonce": 253,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "HSUirrJnLHiLHbUELH4DgLKy32jFmmhqHEMG4EQ23Srs",
+  "feeBaseAccount": "GBumkxP4D3o8ssvC4yMhTCBcd4pYw8sKHaRxmmBVtt56",
+  "feeQuoteAccount": "2PwDruNDL3ou28a1DErxHaSGAqxQXva5oTY5gaKDnrjK",
+  "feePoolTokenAccount": "DYZsh8WGmtxxU1WP3Wp6pBUYsMWU4BwG6mvDpBnH8F8e",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "Gk8VdtWaNFUKy8gZdAwD8drAkHUfkPrPZNBEytsHKZnJ",
+  "poolPublicKey": "FozNyCKR3r6BgNJxjX2Pb7b5Jw9VR3WykfSkeokfwVQz",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "4RBJRwEAnNEe664LgSECkkfeT4fc6ZjtCMgL7rtUs8g1",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "4RBJRwEAnNEe664LgSECkkfeT4fc6ZjtCMgL7rtUs8g1": {
+      "chainId": 101,
+      "address": "4RBJRwEAnNEe664LgSECkkfeT4fc6ZjtCMgL7rtUs8g1",
+      "symbol": "CYRUS",
+      "name": "Bizarre Platypus Cyrus",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4RBJRwEAnNEe664LgSECkkfeT4fc6ZjtCMgL7rtUs8g1/logo.png",
+      "tags": [
+        "utility-token",
+        "community-token"
+      ],
+      "extensions": {
+        "description": "Bizarre Platypus Token.",
+        "twitter": "https://twitter.com/bizarreplatypus",
+        "website": "https://bizarreplatypus.io"
+      },
+      "addr": "Df4gHuZFsa8B2tUoVisvcjZDjrYYEXNdnPcS7eMk7y7x",
+      "tag": "utility-token,community-token",
+      "mint": "4RBJRwEAnNEe664LgSECkkfeT4fc6ZjtCMgL7rtUs8g1",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "8jBrXYLqJc6Y45a8bqu8J99bipfWDiBk1ABsALVxyito",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

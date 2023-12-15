@@ -1,0 +1,22 @@
+[features]
+seeds = false
+[programs.localnet]
+tmp = "CRQXfRGq3wTkjt7JkqhojPLiKLYLjHPGLebnfiiQB46T"
+[programs.devnet]
+tmp = "CRQXfRGq3wTkjt7JkqhojPLiKLYLjHPGLebnfiiQB46T"
+[programs.mainnet]
+tmp = "CRQXfRGq3wTkjt7JkqhojPLiKLYLjHPGLebnfiiQB46T"
+# orig - CRQXfRGq3wTkjt7JkqhojPLiKLYLjHPGLebnfiiQB46T
+# new - CRQXfRGq3wTkjt7JkqhojPLiKLYLjHPGLebnfiiQB46T
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "localnet"
+# wallet = "../mainnet-fork/localnet_owner.key"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+

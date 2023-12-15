@@ -1,0 +1,76 @@
+{
+  "id": "4nFbdT7DeXATvaRZfR3WqALGJnogMjqe9vf2H6C1WXBr",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "3NZ9JMVBmGAqocybic2c7LQCJScmgsAZ6vQqTDzcqmJh",
+  "mintB": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "vaultA": "5GiPa4kZ35eSjq8L4yfnYH8XaCMEHoTNX2zhGwgAuh2b",
+  "vaultB": "9oPajcQ4XtAk7UcjGweFm9BR4pHvBg461dusUCxd9CJU",
+  "mintDecimalsA": 8,
+  "mintDecimalsB": 6,
+  "ammConfig": {
+    "id": "HfERMT5DRA6C1TAqecrJQFpmkf3wsWTMncqnj3RDg5aw",
+    "index": 2,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 500,
+    "tickSpacing": 10,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for stable pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 575323.2376807043,
+  "day": {
+    "volume": 237937.6130010001,
+    "volumeFee": 99.93379746042004,
+    "feeA": 0.0014199762024,
+    "feeB": 48.766905296759994,
+    "feeApr": 6.34,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 6.34,
+    "priceMin": 34846.09341779997,
+    "priceMax": 36828.90427453791
+  },
+  "week": {
+    "volume": 1745180.4994070001,
+    "volumeFee": 732.9758097509398,
+    "feeA": 0.009966420067799993,
+    "feeB": 367.0653311379602,
+    "feeApr": 6.64,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 6.64,
+    "priceMin": 34846.09341779997,
+    "priceMax": 37990.08096228677
+  },
+  "month": {
+    "volume": 5176649.639497004,
+    "volumeFee": 2174.192848588741,
+    "feeA": 0.0312344178678,
+    "feeB": 1103.6971107111608,
+    "feeApr": 4.6,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 4.6,
+    "priceMin": 27055.318983231587,
+    "priceMax": 38551.497055101914
+  },
+  "lookupTableAccount": "EyBJ8qnxPA1Y86uB4eWkLBFnkP6P3mp7HGhP9ed7T9d5",
+  "openTime": 0,
+  "price": 35652.4197575435
+}

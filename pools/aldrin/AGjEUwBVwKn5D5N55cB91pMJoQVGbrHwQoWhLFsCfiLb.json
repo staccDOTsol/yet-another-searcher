@@ -1,0 +1,87 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "BWsNRUsjyBEX6dwaDYbU8W5ey9RN5Dnaocmqw2JBjXQ6",
+  "poolMint": "AGjEUwBVwKn5D5N55cB91pMJoQVGbrHwQoWhLFsCfiLb",
+  "baseTokenVault": "EsDmT6iEgdpWNz77qc1rE1wAaYvgjj7DBkZYvzWhVdk1",
+  "baseTokenMint": "BQTN97PwrQGkbNepQxjvcYfRPYbPNgd5PqoioYwBt4qX",
+  "quoteTokenVault": "9qYAjFhpb2FmX7Dy27mb8a8wy8agtuRyMUcpiDoeQKRa",
+  "quoteTokenMint": "So11111111111111111111111111111111111111112",
+  "poolSigner": "2aFd1kLFg4emKcHBuVMdks82fbyhigao29xmTAWeyYnQ",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "3UMzN4qLwfcg1MqpnSn6oLZudxmrbjeMkWr3Qh6hFjgG",
+  "feeBaseAccount": "BusqLm76CmjKd9GVjKfa6eRpWKecsxvmX9Z2ScfFwpyZ",
+  "feeQuoteAccount": "5CievDx6fyMWmcpXxAg7cJavpDuD6ywSdSyS1hZMVxQV",
+  "feePoolTokenAccount": "D3vnqMvNfnN6zu1DHxPymgutamBKAE49rZ5WF6FCKp65",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "3HtDC9yWYPKZpf4pExNvoGPmKEMMA7Nwsx65hoqco1G7",
+  "poolPublicKey": "CcGdTfpZt6GrjSGaxRrLWsN2Y7jjMU8ETk7VaA1wihiy",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "BQTN97PwrQGkbNepQxjvcYfRPYbPNgd5PqoioYwBt4qX",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "BQTN97PwrQGkbNepQxjvcYfRPYbPNgd5PqoioYwBt4qX": {
+      "chainId": 101,
+      "address": "BQTN97PwrQGkbNepQxjvcYfRPYbPNgd5PqoioYwBt4qX",
+      "symbol": "ASGARD",
+      "name": "Asgard Army DAO Token",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/BQTN97PwrQGkbNepQxjvcYfRPYbPNgd5PqoioYwBt4qX/logo.png",
+      "tags": [
+        "DOA",
+        "asgard-army",
+        "nft"
+      ],
+      "extensions": {
+        "website": "https://asgardarmy.com/"
+      },
+      "addr": "EsDmT6iEgdpWNz77qc1rE1wAaYvgjj7DBkZYvzWhVdk1",
+      "tag": "DOA,asgard-army,nft",
+      "mint": "BQTN97PwrQGkbNepQxjvcYfRPYbPNgd5PqoioYwBt4qX",
+      "scale": 9
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "9qYAjFhpb2FmX7Dy27mb8a8wy8agtuRyMUcpiDoeQKRa",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

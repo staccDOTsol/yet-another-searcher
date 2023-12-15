@@ -1,0 +1,97 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "HTYw8RTL3mNgf6jnHBq43ygf9E6ipk96psMqWxbG5D4X",
+  "poolMint": "2ZMdBWE9uB8iFGQCkQWVuw6tgQdfGXtvCiYEwfxViFhh",
+  "baseTokenVault": "8tV2asXquGuQWsRXfFBtBwRrjxv4HLznhaGeaqQrpR5B",
+  "baseTokenMint": "8fd5eUPMNHuyKRshFbfmKRAm2gowJ75m8WjT7tLio6J3",
+  "quoteTokenVault": "Fkaa6Kt3nuUiomkMMrv3zevxtWQfS3jDXafjinrJPyHL",
+  "quoteTokenMint": "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+  "poolSigner": "CbAByVde6D3KxBZZScXonetsd7wXJechrwEyQ1FY3FQ9",
+  "poolSignerNonce": 248,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "AhJp6iPSwKvn3bvfYjV2TzHkpkJa7RmeTxN1wqBk6D8w",
+  "feeBaseAccount": "E8ykraYotKkB51vXntQkT99FbQQ9BqpR7Gio6RJ5g1iw",
+  "feeQuoteAccount": "8fZGG6W1JHb3cAwPGeNhVDFiJxBmPWsVQQVGVnFZnTkY",
+  "feePoolTokenAccount": "BM9JeR8pHFxRLm2G6ERPkXmyYcjh1CdYiGBd4daUbhMC",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "8exSipdiw8LkikyZQQPE9Hq27kk3hNnCwP8saBZJ5Bd1",
+  "poolPublicKey": "5fG34HcW21roXMgxTyES14GLLTgBfrtb9e6mfFbcgWBH",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "8fd5eUPMNHuyKRshFbfmKRAm2gowJ75m8WjT7tLio6J3",
+  "tokenIds": [
+    "8fd5eUPMNHuyKRshFbfmKRAm2gowJ75m8WjT7tLio6J3",
+    "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp"
+  ],
+  "tokens": {
+    "8fd5eUPMNHuyKRshFbfmKRAm2gowJ75m8WjT7tLio6J3": {
+      "chainId": 101,
+      "address": "8fd5eUPMNHuyKRshFbfmKRAm2gowJ75m8WjT7tLio6J3",
+      "symbol": "DLN",
+      "name": "Goekdln",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/8fd5eUPMNHuyKRshFbfmKRAm2gowJ75m8WjT7tLio6J3/logo.svg",
+      "tags": [
+        "community-token",
+        "meme-token",
+        "social-token",
+        "utility-token"
+      ],
+      "extensions": {
+        "description": "We are based on a Decentralized community token which aims to make peer-to-peer exchanges thanks to blockchain technology.",
+        "facebook": "https://facebook.com/goekdln",
+        "instagram": "https://www.instagram.com/goekdln",
+        "medium": "https://medium.com/@goekdln",
+        "reddit": "https://www.reddit.com/user/goekdln",
+        "telegram": "https://t.me/goekdln",
+        "twitter": "https://twitter.com/goekdln",
+        "website": "https://www.goekdln.com"
+      },
+      "addr": "8tV2asXquGuQWsRXfFBtBwRrjxv4HLznhaGeaqQrpR5B",
+      "tag": "community-token,meme-token,social-token,utility-token",
+      "mint": "8fd5eUPMNHuyKRshFbfmKRAm2gowJ75m8WjT7tLio6J3",
+      "scale": 9
+    },
+    "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp": {
+      "chainId": 101,
+      "address": "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+      "symbol": "RIN",
+      "name": "Aldrin",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp/logo.png",
+      "extensions": {
+        "coingeckoId": "aldrin",
+        "serumV3Usdc": "7gZNLDbWE73ueAoHuAeFoSu7JqmorwCLpNTBXHtYSFTa",
+        "twitter": "https://twitter.com/Aldrin_Exchange",
+        "website": "https://rin.aldrin.com/"
+      },
+      "addr": "Fkaa6Kt3nuUiomkMMrv3zevxtWQfS3jDXafjinrJPyHL",
+      "tag": "",
+      "mint": "E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

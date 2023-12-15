@@ -1,0 +1,94 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "7wc1U376sr11eq9BmtsPLQUHY3J2MN1657r1y2MxK9Gb",
+  "poolMint": "84V5NmagXgAxeaZGmSNT54vdmuff2pvUh63Lgp4W2izz",
+  "baseTokenVault": "F9NgEECbgsL3dnxpRu3Qfp3nvjqowNxrXhYkhssQEKLu",
+  "baseTokenMint": "21jZ1ESEFYh9SBwjT5gqE3jHv3JnaGhgvypLTR96QXW9",
+  "quoteTokenVault": "6cu7B7pSXF97sKRgKEZvikyGkJ3ajTXVh1HHEfS9pC6s",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "6xfpf7vHJtZg3MHhqJoS6FHdzMcWbPWChEqiYHB2wiej",
+  "poolSignerNonce": 254,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "6foEm3bCdAit5J9fyYnevS5FrMKd8c5D1LHDS5bvTnRw",
+  "feeBaseAccount": "J5PnNci8ZdZjivNetpzohMnn8dANVhwnCnSpx2zgZ5J3",
+  "feeQuoteAccount": "LA7dPuETxQ7aUKo1XVdrnTL8B3PahrjBsxKNMmfQdsv",
+  "feePoolTokenAccount": "3PkqMogSNK3699WzuZeYNQJcpLp54kFGmKT6xLPR6e4p",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "6xvxVJs2LPmk3BGxHpn9ZTtGAmPEXo1mfkgu96CwtXnC",
+  "poolPublicKey": "YkxYt1i9bMupZrmt7RzWCghA5xHKtiz8sot9oup4rxz",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "21jZ1ESEFYh9SBwjT5gqE3jHv3JnaGhgvypLTR96QXW9",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "21jZ1ESEFYh9SBwjT5gqE3jHv3JnaGhgvypLTR96QXW9": {
+      "chainId": 101,
+      "address": "21jZ1ESEFYh9SBwjT5gqE3jHv3JnaGhgvypLTR96QXW9",
+      "symbol": "sUSD",
+      "name": "Solcasino USD",
+      "decimals": 9,
+      "logoURI": "https://files.solcasino.io/susd.png",
+      "tags": [
+        "stablecoin",
+        "web3",
+        "lottery",
+        "casino",
+        "bet"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/Solcasinoio",
+        "website": "https://www.solcasino.io/"
+      },
+      "addr": "F9NgEECbgsL3dnxpRu3Qfp3nvjqowNxrXhYkhssQEKLu",
+      "tag": "stablecoin,web3,lottery,casino,bet",
+      "mint": "21jZ1ESEFYh9SBwjT5gqE3jHv3JnaGhgvypLTR96QXW9",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "6cu7B7pSXF97sKRgKEZvikyGkJ3ajTXVh1HHEfS9pC6s",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

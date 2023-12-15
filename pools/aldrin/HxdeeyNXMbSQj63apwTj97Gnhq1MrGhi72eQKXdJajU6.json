@@ -1,0 +1,89 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "8T6KCYAY7RmCsToCAdRupJWkpgLeBgQkuaFjbcmaGJ1d",
+  "poolMint": "HxdeeyNXMbSQj63apwTj97Gnhq1MrGhi72eQKXdJajU6",
+  "baseTokenVault": "4tSkj5abjAqTT3F4mDZyBdbSMErMWDiiYL9o7iU7SQ4m",
+  "baseTokenMint": "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+  "quoteTokenVault": "7WLXLDdcfYareqzME1LeiPtcD73L9gDv2QJu6jxbCPvs",
+  "quoteTokenMint": "So11111111111111111111111111111111111111112",
+  "poolSigner": "DcCUfFCXXs2YUWku35F5YBjKWuUxaBdcukNs8eN6eV6k",
+  "poolSignerNonce": 251,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "3UMzN4qLwfcg1MqpnSn6oLZudxmrbjeMkWr3Qh6hFjgG",
+  "feeBaseAccount": "HMntUXy7DNJV6TjHVURvgMx3ktKYd9KohKeTpB9qvLVM",
+  "feeQuoteAccount": "FavLPCUtcnEadLPW2GZuW9kxXZiWtTAySvbmuo8VtMVR",
+  "feePoolTokenAccount": "C76dtNU3jA99Y9QagkEXWgPdP6qnKDk3MU8EXvPPQSEG",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "3yuDy2UkTFj7X3kQp75cTtuqGNN99pszKoEpLXhdpK6t",
+  "poolPublicKey": "H3av58eyiWsBA8Bya3vaNYTWkDdjoEfUZLqi7BBuVAhq",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK": {
+      "chainId": 101,
+      "address": "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+      "symbol": "CHIPS",
+      "name": "Universe Chips",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK/logo.png",
+      "tags": [
+        "utiliy-token",
+        "social-token",
+        "community-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/cxmgnKtZBF",
+        "twitter": "https://twitter.com/u_niverseNFT",
+        "website": "https://twitter.com/u_niverseNFT"
+      },
+      "addr": "4tSkj5abjAqTT3F4mDZyBdbSMErMWDiiYL9o7iU7SQ4m",
+      "tag": "utiliy-token,social-token,community-token",
+      "mint": "6vVD6QjoFjghKhXQtSc2yTSQaGTBxcUGnWfjnzbeeENK",
+      "scale": 6
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "7WLXLDdcfYareqzME1LeiPtcD73L9gDv2QJu6jxbCPvs",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

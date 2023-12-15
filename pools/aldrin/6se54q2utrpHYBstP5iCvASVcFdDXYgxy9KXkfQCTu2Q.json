@@ -1,0 +1,89 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "GsLS6e4n4z8nozzBRjaELbyRf7N7UhU9om7KbNocpVCC",
+  "poolMint": "6se54q2utrpHYBstP5iCvASVcFdDXYgxy9KXkfQCTu2Q",
+  "baseTokenVault": "C2xqNGNrCPg2DW2vzeazHAE9hfekBrDtwoEc2taq6Jud",
+  "baseTokenMint": "ADPEoQKG1xbiwYro4ecUfLQgXkkTVqQousxSCDsRKh9H",
+  "quoteTokenVault": "5x6RS1MkpakD2JZwxQZF2VzX25hU3dUSAaKDp3dWqMHE",
+  "quoteTokenMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "poolSigner": "2NPBec1yyV8KJ9qyj4BfxK4purxZFJRLcoy8RGg4arPD",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "C6PxqvLyDArZtLFmBv3e2VRatKbkiJogL66k5yNeni3B",
+  "feeBaseAccount": "FNYQCJYAPTxjDy9Xhz2bUCQDgHbh2pE34CbTwNA8rfk9",
+  "feeQuoteAccount": "HeTQtUPGkVd6bQxKtuxAFJVLF71K8wy8xQrbCKM8JpA6",
+  "feePoolTokenAccount": "E1semhy3b6KES2Lc65DAoMjEVBzakA3iqKssmQm5dS8K",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "HjoCtR8yPK1eBybcgxB4WcTJdPbNLfjL14uxfdiidX7A",
+  "poolPublicKey": "CoGpeUpQfRK6KV4wuhnZ7eEY39X26QKrptWczgbupzwo",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "tokenIds": [
+    "ADPEoQKG1xbiwYro4ecUfLQgXkkTVqQousxSCDsRKh9H",
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+  ],
+  "tokens": {
+    "ADPEoQKG1xbiwYro4ecUfLQgXkkTVqQousxSCDsRKh9H": {
+      "chainId": 101,
+      "address": "ADPEoQKG1xbiwYro4ecUfLQgXkkTVqQousxSCDsRKh9H",
+      "symbol": "BREA",
+      "name": "Baliarena",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/Baliarena/baliarena/main/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "website": "https://baliarena.com"
+      },
+      "addr": "C2xqNGNrCPg2DW2vzeazHAE9hfekBrDtwoEc2taq6Jud",
+      "tag": "utility-token",
+      "mint": "ADPEoQKG1xbiwYro4ecUfLQgXkkTVqQousxSCDsRKh9H",
+      "scale": 9
+    },
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+      "chainId": 101,
+      "address": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "symbol": "USDT",
+      "name": "USDT",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "tether",
+        "serumV3Usdc": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://tether.to/"
+      },
+      "addr": "5x6RS1MkpakD2JZwxQZF2VzX25hU3dUSAaKDp3dWqMHE",
+      "tag": "stablecoin",
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

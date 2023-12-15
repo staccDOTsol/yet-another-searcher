@@ -1,0 +1,86 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "AgeDroktyFBP1o2eU7hHpMbRKMjmGojo3c4gRSFXPHk4",
+  "poolMint": "GNbNbeqAw5MGmJWb9mAhzFcTPJ41ojctFaegFHJKozUc",
+  "baseTokenVault": "J8J7SYe96X2BTdN9Eg9YubkHcKXUWdYLkWVqRcbM9Knm",
+  "baseTokenMint": "So11111111111111111111111111111111111111112",
+  "quoteTokenVault": "9pbZv1Y57yH8FxXKa3UdfEk9un8WZmuDK1amYZ21fM47",
+  "quoteTokenMint": "3yeGqnYLXya7zPbTkEt2d84F489eV9mNia4WQHY3JefA",
+  "poolSigner": "Xg616KjHqPXVKL1v2YNrc6Ap4sAXiWgaK3yavgLqsSB",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "HSUirrJnLHiLHbUELH4DgLKy32jFmmhqHEMG4EQ23Srs",
+  "feeBaseAccount": "4hWA4nctXzfkPFktLDPwbWVVTyduvDfdtPQWSQ5ULdby",
+  "feeQuoteAccount": "87VpKp2hCYHQeYXrDQBABCdN6iJ5RVqiwcRoBgFuace",
+  "feePoolTokenAccount": "GdkcDqsVAaYong2RuHMF18djGBJuEXghj6zmgBb3Nggk",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "2resDvMVsnbHpAuj7u2oNQAeowPvdYNHbPmpPNk1TwVB",
+  "poolPublicKey": "Gkg7oCpR5jF7fshThyN81pgfqRed9cCvM3WZ6ZGXp321",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "3yeGqnYLXya7zPbTkEt2d84F489eV9mNia4WQHY3JefA"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "J8J7SYe96X2BTdN9Eg9YubkHcKXUWdYLkWVqRcbM9Knm",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "3yeGqnYLXya7zPbTkEt2d84F489eV9mNia4WQHY3JefA": {
+      "chainId": 101,
+      "address": "3yeGqnYLXya7zPbTkEt2d84F489eV9mNia4WQHY3JefA",
+      "symbol": "TRB",
+      "name": "Trippin' Ape Tribe Token",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/3yeGqnYLXya7zPbTkEt2d84F489eV9mNia4WQHY3JefA/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/TrippinApeNFT",
+        "website": "https://www.trippinapetribe.xyz/"
+      },
+      "addr": "9pbZv1Y57yH8FxXKa3UdfEk9un8WZmuDK1amYZ21fM47",
+      "tag": "utility-token",
+      "mint": "3yeGqnYLXya7zPbTkEt2d84F489eV9mNia4WQHY3JefA",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

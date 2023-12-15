@@ -1,0 +1,93 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "F9L6mMVK5NdWVMEHggvUiKsG6ZNZ5ncsuBYcysk1Yw17",
+  "poolMint": "HP9ypXmJfNDFNWoEqas4tjM4Pw1GxEvQgG8XQySPYspR",
+  "baseTokenVault": "EVgL1CEoAQH1GVBSHomMheVCpJyNxAR4kYJDAkea1YCQ",
+  "baseTokenMint": "A7rqejP8LKN8syXMr4tvcKjs2iJ4WtZjXNs1e6qP3m9g",
+  "quoteTokenVault": "BxfLgX783Kdm6fbyPWHxj7cRpCD6wFxEJ5GN2Dy9euR4",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "8TQQyikkbunHMM2Z6Y4jqrbHtvoxNQwgWp6pYzg1jQzF",
+  "poolSignerNonce": 254,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "EBJfZ9d63fPn3g6AMRD6TEw9hUkw8BbC3vf14bV6bC9q",
+  "feeBaseAccount": "J8xVgmDevMBhJsA2LwGK9nUbkfp7PnDPc3jo6cgdsmAE",
+  "feeQuoteAccount": "HJSNUqFt1etda62Gg8duwvhUXN6UgHByPEm7qmdLTC2U",
+  "feePoolTokenAccount": "Eom7CZH91Qnx3tqus1tte4e9p24hWb9QxtEM3mxJqt6z",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "Hz6zMXnEYTfQbifFMyKcwL44aWYL3srQ5VYYpH6kYF7P",
+  "poolPublicKey": "2kFAojMtPB3SwFtMeW6UhUaLZ8AwVjfuj9d64JAWVwzr",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "A7rqejP8LKN8syXMr4tvcKjs2iJ4WtZjXNs1e6qP3m9g",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "A7rqejP8LKN8syXMr4tvcKjs2iJ4WtZjXNs1e6qP3m9g": {
+      "chainId": 101,
+      "address": "A7rqejP8LKN8syXMr4tvcKjs2iJ4WtZjXNs1e6qP3m9g",
+      "symbol": "Zion",
+      "name": "Zion",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/LousyNFTs/token-list/main/assets/mainnet/A7rqejP8LKN8syXMr4tvcKjs2iJ4WtZjXNs1e6qP3m9g/Ziontoken_2_84.png",
+      "tags": [
+        "social-token",
+        "community-token"
+      ],
+      "extensions": {
+        "coingeckoId": "zion",
+        "discord": "http://discord.gg/catcartel",
+        "twitter": "https://twitter.com/SolanaCatCartel",
+        "website": "https://catcartel.io/"
+      },
+      "addr": "EVgL1CEoAQH1GVBSHomMheVCpJyNxAR4kYJDAkea1YCQ",
+      "tag": "social-token,community-token",
+      "mint": "A7rqejP8LKN8syXMr4tvcKjs2iJ4WtZjXNs1e6qP3m9g",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "BxfLgX783Kdm6fbyPWHxj7cRpCD6wFxEJ5GN2Dy9euR4",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

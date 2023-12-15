@@ -1,0 +1,91 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "5UQ8Axai3k8a97Ah7916gG2LZLbA9FGiP1cdKwSV7K26",
+  "poolMint": "4yCgUXz6VEBZnSqCJXoLMuwDxpEijfrokcjZYciDGncz",
+  "baseTokenVault": "2R4CLxCUvFSBtsEuhfdt2u4AWqjgVgmYv2yszs3ney9j",
+  "baseTokenMint": "4ZMwr188nAyRiJYsHLL5TBswXTU7aAmVio6SMP1mcdsJ",
+  "quoteTokenVault": "Ez2ZdvZ7zjpwJuKPwW269shLWkPXe9asENqAuuFmJkkE",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "9BNpVMNmMswA2TYasBCyta7Dd8FXx2Ts8Ga4H6vBtzVa",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "HHFSk9rNgYWdGXa3wdwj6crYu3iBYhLYey8heZx3yyGd",
+  "feeBaseAccount": "EUZ3aWP2yiDAbWLmvdnuDrLUCinQihcY7BBWfwR3jcWP",
+  "feeQuoteAccount": "Gv5Aw5pK1VDESUSmEh13mKRirKMBCBEnMEkF5N9wTy7t",
+  "feePoolTokenAccount": "3JaUeb88Tq4768rTABCszHdBTnbUj2XUZhEQte4ApHyA",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "4uUWAnZTXPRFDFXvAqktyRmu6e8GGsqJWQYau1AwVwwa",
+  "poolPublicKey": "HM2jBXBuWChTkUBkathCE2FASN37zCx4nmGJeLZCcqnT",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "4ZMwr188nAyRiJYsHLL5TBswXTU7aAmVio6SMP1mcdsJ",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "4ZMwr188nAyRiJYsHLL5TBswXTU7aAmVio6SMP1mcdsJ": {
+      "chainId": 101,
+      "address": "4ZMwr188nAyRiJYsHLL5TBswXTU7aAmVio6SMP1mcdsJ",
+      "symbol": "CRH",
+      "name": "crypto revolution HEROES",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4ZMwr188nAyRiJYsHLL5TBswXTU7aAmVio6SMP1mcdsJ/logo.png",
+      "tags": [
+        "UTILITY",
+        "NFT",
+        "DEFI"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/cryptocomicsnft"
+      },
+      "addr": "2R4CLxCUvFSBtsEuhfdt2u4AWqjgVgmYv2yszs3ney9j",
+      "tag": "UTILITY,NFT,DEFI",
+      "mint": "4ZMwr188nAyRiJYsHLL5TBswXTU7aAmVio6SMP1mcdsJ",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "Ez2ZdvZ7zjpwJuKPwW269shLWkPXe9asENqAuuFmJkkE",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

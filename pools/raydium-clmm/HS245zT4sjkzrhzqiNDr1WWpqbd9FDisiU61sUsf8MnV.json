@@ -1,0 +1,76 @@
+{
+  "id": "HS245zT4sjkzrhzqiNDr1WWpqbd9FDisiU61sUsf8MnV",
+  "mintProgramIdA": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintProgramIdB": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "mintA": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+  "mintB": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "vaultA": "6HSrUPtmEM5aNkj85pahLYvzF18paXbne9xXG8QbN5H9",
+  "vaultB": "FGn5gdkpzJbff2tLRnshATSKfKWVfk8wgAByuB8SnYVN",
+  "mintDecimalsA": 6,
+  "mintDecimalsB": 6,
+  "ammConfig": {
+    "id": "E64NGkDLLCdQ2yFNPcavaKptrEgmiQaNykUuLC1Qgwyp",
+    "index": 1,
+    "protocolFeeRate": 120000,
+    "tradeFeeRate": 2500,
+    "tickSpacing": 60,
+    "fundFeeRate": 40000,
+    "fundOwner": "FundHfY8oo8J9KYGyfXFFuQCHe7Z1VBNmsj84eMcdYs4",
+    "description": "Best for most pairs"
+  },
+  "rewardInfos": [
+    {
+      "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "tvl": 19185.289654295222,
+  "day": {
+    "volume": 6423.4067350000005,
+    "volumeFee": 13.489154143500004,
+    "feeA": 18.130852968900005,
+    "feeB": 7.150166767800001,
+    "feeApr": 25.63,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 25.63,
+    "priceMin": 0.33843901545533933,
+    "priceMax": 0.3797382837105239
+  },
+  "week": {
+    "volume": 113607.75397299994,
+    "volumeFee": 238.5762833433,
+    "feeA": 350.25942863519987,
+    "feeB": 125.98864629120007,
+    "feeApr": 64.76,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 64.76,
+    "priceMin": 0.2534334331639666,
+    "priceMax": 0.4687457104439589
+  },
+  "month": {
+    "volume": 350231.66251800023,
+    "volumeFee": 735.4864912878006,
+    "feeA": 1439.1871843670995,
+    "feeB": 379.26092780099975,
+    "feeApr": 46.58,
+    "rewardApr": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "apr": 46.58,
+    "priceMin": 0.15997482656758857,
+    "priceMax": 0.4687457104439589
+  },
+  "lookupTableAccount": "GZ8VP8EF1PVDmSLf5q1V9DYW5o5SSBGGAgnwFJe3uDfU",
+  "openTime": 0,
+  "price": 0.3747408516514716
+}

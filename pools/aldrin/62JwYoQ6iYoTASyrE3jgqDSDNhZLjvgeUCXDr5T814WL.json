@@ -1,0 +1,92 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "3rFHoQYaEopFRcHfMyvS5St6hUbZfdMD1CnGneMcpWEB",
+  "poolMint": "62JwYoQ6iYoTASyrE3jgqDSDNhZLjvgeUCXDr5T814WL",
+  "baseTokenVault": "51tkbXPKzzmVLcbP3pNyJgX4J3sRdufuh2gPeTHCoLSq",
+  "baseTokenMint": "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+  "quoteTokenVault": "FPM7QgXh3Z4Pzu6MRvCrSqV9Lvm4VgMKbpZyFraWq8GE",
+  "quoteTokenMint": "AShCRr7fqsMf7ieM5AkJqNY566HsYmtvpvK8oPUL4Bh8",
+  "poolSigner": "EuXbW4e9Bd9WARMPMQGtW5Y5Y681Zf9vBAeYjCPfNU5f",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "APipLFSda8yjUaSMk69m8yA1KT6RE5MR1Ltso4ciirzW",
+  "feeBaseAccount": "7ECbKAKFxF6vcPGSTuLuBEWaoyFhzrGoR9Dw1Px4MvBq",
+  "feeQuoteAccount": "4mWg1opvw74nik4Yuo2KSLungnnUUDt7MLmump8sz8gK",
+  "feePoolTokenAccount": "9o8YttHkTeRbxy7UFjC914Vc87bxNj1GmMkPGmWoZLPZ",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "9y6qyVjbYmQp3Mq2KqrYzrBLN2FoQiSPzDV6T4cpDTAz",
+  "poolPublicKey": "FeX7e9dvF4c6kcwk8gYz5Uss31VA4viVF4TMJKNzTaeV",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+  "tokenIds": [
+    "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+    "AShCRr7fqsMf7ieM5AkJqNY566HsYmtvpvK8oPUL4Bh8"
+  ],
+  "tokens": {
+    "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg": {
+      "chainId": 101,
+      "address": "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+      "symbol": "API",
+      "name": "API Coin",
+      "decimals": 9,
+      "logoURI": "https://theblockchainapi-website.s3.amazonaws.com/logo512.png",
+      "tags": [
+        "community-token",
+        "platform"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/_BlockX_",
+        "website": "https://blockchainapi.com/"
+      },
+      "addr": "51tkbXPKzzmVLcbP3pNyJgX4J3sRdufuh2gPeTHCoLSq",
+      "tag": "community-token,platform",
+      "mint": "cPQm9UM1ekMeAgRcYGLfNcBC65SLA8o2BVTaBUA7kTg",
+      "scale": 9
+    },
+    "AShCRr7fqsMf7ieM5AkJqNY566HsYmtvpvK8oPUL4Bh8": {
+      "chainId": 101,
+      "address": "AShCRr7fqsMf7ieM5AkJqNY566HsYmtvpvK8oPUL4Bh8",
+      "symbol": "MBC",
+      "name": "MoneyBoy Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/AShCRr7fqsMf7ieM5AkJqNY566HsYmtvpvK8oPUL4Bh8/logo.png",
+      "tags": [
+        "utility-token",
+        "community-token",
+        "meme-token"
+      ],
+      "extensions": {
+        "twitter": "https://twitter.com/SolanaMoneyBoys",
+        "website": "https://www.solanamoneyboys.com/"
+      },
+      "addr": "FPM7QgXh3Z4Pzu6MRvCrSqV9Lvm4VgMKbpZyFraWq8GE",
+      "tag": "utility-token,community-token,meme-token",
+      "mint": "AShCRr7fqsMf7ieM5AkJqNY566HsYmtvpvK8oPUL4Bh8",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

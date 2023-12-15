@@ -1,0 +1,89 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "BzHcv8hrTWovwVpcWPcuNgeKrhSMZvS5gvzboRER9sqN",
+  "poolMint": "FSi8unv4cvQvoJi534h1B2CzspiSBVRewVrGQJKuZ3iT",
+  "baseTokenVault": "E3KzwKoR1eExgWgEzLVSmhdKaAZ29ogWMy47pp4Rjid",
+  "baseTokenMint": "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+  "quoteTokenVault": "64C6aq36vuMdvW9Pwr7U4Pd1gBmsPmuJkrFjyXtEQETo",
+  "quoteTokenMint": "So11111111111111111111111111111111111111112",
+  "poolSigner": "8BY3CFgF2QQavcdgr79fmdy8v2FmagqCnd1yxYcPJtEt",
+  "poolSignerNonce": 251,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "3UMzN4qLwfcg1MqpnSn6oLZudxmrbjeMkWr3Qh6hFjgG",
+  "feeBaseAccount": "3KHpzBynnxV5gCP4qaDbnfB8uSPVVyzsZi1fnqGZHUEp",
+  "feeQuoteAccount": "CHF49TiRju12MHAmTYCSZdrbdWhdsogzqZMQbiTDZvfF",
+  "feePoolTokenAccount": "HqGmD36AFCCuLTUYUfpP6NnVgVqxnJj9v3wMdM4vEc5j",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "EVd7b4Z98h7ddoRZnTfDq5sRtJ8XQSeQA7zXCmGHMWP2",
+  "poolPublicKey": "6Ycrsmj2e2gq9BKNhqQXFMs9FFG2tzZwmocmHEJNJXyq",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+    "So11111111111111111111111111111111111111112"
+  ],
+  "tokens": {
+    "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk": {
+      "chainId": 101,
+      "address": "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+      "symbol": "MCAKE",
+      "name": "Meme Cake",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk/logo.png",
+      "tags": [
+        "utility-token",
+        "memecake",
+        "social-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.com/invite/WFkRssvNtW",
+        "twitter": "https://twitter.com/realmemecake",
+        "website": "https://memecake.io/"
+      },
+      "addr": "E3KzwKoR1eExgWgEzLVSmhdKaAZ29ogWMy47pp4Rjid",
+      "tag": "utility-token,memecake,social-token",
+      "mint": "mCaKentpBgRwisk5zUtx6dfRYkCqMyTKDjjqSDp97mk",
+      "scale": 6
+    },
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "64C6aq36vuMdvW9Pwr7U4Pd1gBmsPmuJkrFjyXtEQETo",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

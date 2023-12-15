@@ -1,0 +1,87 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "8Z74cXRt22CLa9a6hLwRW71UCHm8R5U5afZzWoQ9Mjkw",
+  "poolMint": "FdYKb3mYoJo5Bm4GSrkJgQgdQa9VQgHCB8Shi4hMjvTQ",
+  "baseTokenVault": "F8cuRDKtfBsm7uFEm9p7BQf7M2mNYGjoTmphK9uDczvR",
+  "baseTokenMint": "So11111111111111111111111111111111111111112",
+  "quoteTokenVault": "DPVH7yXi3oA3g9qsEtJ45M9dUVrkc37RZnJ78EtcrnM3",
+  "quoteTokenMint": "BkbqZY7Bhg4TV1fjL9zBLs1xLUpjXj16mmPT6MAMfpQH",
+  "poolSigner": "9jEdKWrPatuCTzjmmcZ7fTqyTBKi5ry4qVvmFgPGCcsS",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "39XRJaVUk5e1B2ptx3BMq1GEKa6o1GNS3waRfyis3k7A",
+  "feeBaseAccount": "G1QrDVQPGvA9mZVoNeKfennvwXGMNeGvQcGeF8zP46fG",
+  "feeQuoteAccount": "2GqXdVeBgQSa4rpM94SJWsjspoWZFqYoKC57mKxPKxQ2",
+  "feePoolTokenAccount": "GHHbeAiZXy5iHFpzksqdJgrpXvWZvcpbm2mE5676NNcw",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "23UcRiyRSgszZGwyHgHriTdkXeAhLdsnvPbxJntJg35K",
+  "poolPublicKey": "B6apjYizqFsx49BVrWVx2gYX2iQGjbUDyoUu5rud4Guv",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "So11111111111111111111111111111111111111112",
+  "tokenIds": [
+    "So11111111111111111111111111111111111111112",
+    "BkbqZY7Bhg4TV1fjL9zBLs1xLUpjXj16mmPT6MAMfpQH"
+  ],
+  "tokens": {
+    "So11111111111111111111111111111111111111112": {
+      "chainId": 102,
+      "address": "So11111111111111111111111111111111111111112",
+      "symbol": "wSOL",
+      "name": "Wrapped SOL",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "extensions": {
+        "coingeckoId": "solana",
+        "website": "https://www.solana.com/"
+      },
+      "addr": "F8cuRDKtfBsm7uFEm9p7BQf7M2mNYGjoTmphK9uDczvR",
+      "tag": "",
+      "mint": "So11111111111111111111111111111111111111112",
+      "scale": 9
+    },
+    "BkbqZY7Bhg4TV1fjL9zBLs1xLUpjXj16mmPT6MAMfpQH": {
+      "chainId": 101,
+      "address": "BkbqZY7Bhg4TV1fjL9zBLs1xLUpjXj16mmPT6MAMfpQH",
+      "symbol": "$POT",
+      "name": "Simians Potion",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/BkbqZY7Bhg4TV1fjL9zBLs1xLUpjXj16mmPT6MAMfpQH/logo.png",
+      "tags": [
+        "utility-token"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/cmUJSVqK",
+        "twitter": "https://twitter.com/SimiansNFT",
+        "website": "https://simiansuniverse.com"
+      },
+      "addr": "DPVH7yXi3oA3g9qsEtJ45M9dUVrkc37RZnJ78EtcrnM3",
+      "tag": "utility-token",
+      "mint": "BkbqZY7Bhg4TV1fjL9zBLs1xLUpjXj16mmPT6MAMfpQH",
+      "scale": 9
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

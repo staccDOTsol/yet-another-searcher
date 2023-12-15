@@ -1,0 +1,92 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "49UvWvaxewLQD6Za4EGvQ3RoahhnmQx7n5ZbkYu3f9Xy",
+  "poolMint": "BXYAQcLZHrTZb3mPrxrxoYGFfyFwCt9QNvVN4F6msDPe",
+  "baseTokenVault": "8UHnW4ATxbUkXj2rkkyTp86w7fohxE4P1zpMucF2TEeS",
+  "baseTokenMint": "HonyeYAaTPgKUgQpayL914P6VAqbQZPrbkGMETZvW4iN",
+  "quoteTokenVault": "6Uv2SfEbg2fUhEoa8vsN4fkpe6Rm5NS49WjWo4r6G4U3",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "25vZ39ckvPbiu8n3spAT9WNZbCBhVRxgupDT4QRjGe13",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "Dyq5Qw7GygaajLnM6QAqeo4X6rkkD9NAU75Zv2cDZEpQ",
+  "feeBaseAccount": "Fim5aypxMHTvN7xtKYDz8mTiFZUfSfKVbySRsKEMX2XZ",
+  "feeQuoteAccount": "7qYYzdjfA5T8mG31mQcF6sbCkM7PDDaRZ6Q9UxRtGP7W",
+  "feePoolTokenAccount": "9hnJwrJ9MPnDPozGmJ4r384mVRYAj28sihP46YYdLzQR",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "9GkVA9G15q86vgS7QDqkPRGLcYqmjDR17e2wKBxYqHKa",
+  "poolPublicKey": "Hzg6xTpYSx6fAmReirncPZdM6ozRFyjPGDXWyJFz5iTh",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "HonyeYAaTPgKUgQpayL914P6VAqbQZPrbkGMETZvW4iN",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "HonyeYAaTPgKUgQpayL914P6VAqbQZPrbkGMETZvW4iN": {
+      "chainId": 101,
+      "address": "HonyeYAaTPgKUgQpayL914P6VAqbQZPrbkGMETZvW4iN",
+      "symbol": "$HONEY",
+      "name": "HONEY",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/HonyeYAaTPgKUgQpayL914P6VAqbQZPrbkGMETZvW4iN/logo.svg",
+      "tags": [
+        "utility-token",
+        "DeFi",
+        "Governance"
+      ],
+      "extensions": {
+        "discord": "https://discord.gg/honeydefi",
+        "website": "https://honey.finance"
+      },
+      "addr": "8UHnW4ATxbUkXj2rkkyTp86w7fohxE4P1zpMucF2TEeS",
+      "tag": "utility-token,DeFi,Governance",
+      "mint": "HonyeYAaTPgKUgQpayL914P6VAqbQZPrbkGMETZvW4iN",
+      "scale": 6
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "6Uv2SfEbg2fUhEoa8vsN4fkpe6Rm5NS49WjWo4r6G4U3",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}

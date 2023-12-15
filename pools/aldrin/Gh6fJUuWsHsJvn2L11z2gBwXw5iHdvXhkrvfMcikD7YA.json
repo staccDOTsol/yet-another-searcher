@@ -1,0 +1,87 @@
+{
+  "padding": {
+    "type": "Buffer",
+    "data": [
+      241,
+      154,
+      109,
+      4,
+      17,
+      177,
+      109,
+      188
+    ]
+  },
+  "lpTokenFreezeVault": "9z7gUd914xjwqCgrJBjnPFrN7MNRzyPkASW16yV9EC12",
+  "poolMint": "Gh6fJUuWsHsJvn2L11z2gBwXw5iHdvXhkrvfMcikD7YA",
+  "baseTokenVault": "61rVgHBuK29jaEukPvayQyfMjN6cvMzYiQjVgWLRSAK4",
+  "baseTokenMint": "DiWunPY8GfsFthdDAwiRRtCgKCB5AEcFx9edDpxZoTyo",
+  "quoteTokenVault": "94b1FiVmr3QUmVh8DwUm7SHienwVDsW7BhyzPtwct5Zh",
+  "quoteTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "poolSigner": "58Y2NsKmTwLQNuf1vr5LwTi1Fm3ovMEJSYJp7VziomGJ",
+  "poolSignerNonce": 255,
+  "authority": "BqSGA2WdiQXA2cC1EdGDnVD615A4nYEAq49K3fz2hNBo",
+  "initializerAccount": "4eQvnqXw82BZ2rx1AhdZ3JdwboA6Q7TNkbL34M4p6oMH",
+  "feeBaseAccount": "2cCRwokNHTNEEh3XrTg3cr8efYo63vDcUio42dvs7qji",
+  "feeQuoteAccount": "3QbemLe1yKQX1Vn3yGZ7Yn2jD9D3enAgEVZRagaNkDSd",
+  "feePoolTokenAccount": "7eZ54Tjgif2K32DpJTsdCoDozd3c1WE8bD2koWk1E7Pi",
+  "fees": {
+    "tradeFeeNumerator": 20,
+    "tradeFeeDenominator": 10000,
+    "ownerTradeFeeNumerator": 10,
+    "ownerTradeFeeDenominator": 10000,
+    "ownerWithdrawFeeNumerator": 0,
+    "ownerWithdrawFeeDenominator": 0
+  },
+  "curveType": 0,
+  "curve": "vg3sjTrckpRwcdANVf81Ary6BFD3chSrWPdvasbpmwU",
+  "poolPublicKey": "FZKYeYPqyJcjLdLEoUR3UrVpSzR46LB2Lop5dcNV2WZR",
+  "poolVersion": 2,
+  "provider": "aldrin",
+  "other": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "tokenIds": [
+    "DiWunPY8GfsFthdDAwiRRtCgKCB5AEcFx9edDpxZoTyo",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  ],
+  "tokens": {
+    "DiWunPY8GfsFthdDAwiRRtCgKCB5AEcFx9edDpxZoTyo": {
+      "chainId": 101,
+      "address": "DiWunPY8GfsFthdDAwiRRtCgKCB5AEcFx9edDpxZoTyo",
+      "symbol": "GMORNN",
+      "name": "gmornn",
+      "decimals": 9,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DiWunPY8GfsFthdDAwiRRtCgKCB5AEcFx9edDpxZoTyo/logo.png",
+      "extensions": {
+        "twitter": "https://twitter.com/g_mornn",
+        "website": "https://twitter.com/g_mornn"
+      },
+      "addr": "61rVgHBuK29jaEukPvayQyfMjN6cvMzYiQjVgWLRSAK4",
+      "tag": "",
+      "mint": "DiWunPY8GfsFthdDAwiRRtCgKCB5AEcFx9edDpxZoTyo",
+      "scale": 9
+    },
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+      "chainId": 101,
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "tags": [
+        "stablecoin"
+      ],
+      "extensions": {
+        "coingeckoId": "usd-coin",
+        "serumV3Usdt": "77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS",
+        "website": "https://www.centre.io/"
+      },
+      "addr": "94b1FiVmr3QUmVh8DwUm7SHienwVDsW7BhyzPtwct5Zh",
+      "tag": "stablecoin",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scale": 6
+    }
+  },
+  "target_amp": 100,
+  "fee_numerator": 5,
+  "fee_denominator": 10000
+}
