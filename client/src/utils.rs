@@ -7,6 +7,7 @@ use std::rc::Rc;
 use std::str::FromStr;
 
 pub fn read_json_dir(dir: &String) -> Vec<String> {
+    println!("Reading json files from {}", dir);
     let _paths = fs::read_dir(dir).unwrap();
     let mut paths = Vec::new();
     for path in _paths {
@@ -58,8 +59,14 @@ pub struct PoolGraph(pub HashMap<PoolIndex, PoolEdge>);
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct PoolIndex(pub usize);
 
-#[derive(Debug, Clone)]
-pub struct PoolEdge(pub HashMap<PoolIndex, Vec<PoolQuote>>);
+#[derive(Debug)]
+pub struct PoolEdge(pub HashMap<PoolIndex, Vec<wgpu::BindGroup>>);
+
+impl Default for PoolGraph {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl PoolGraph {
     pub fn new() -> Self {

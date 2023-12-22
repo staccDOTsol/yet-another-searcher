@@ -67,7 +67,7 @@ impl DerefMut for WrappedPubkey {
 impl From<WrappedString> for WrappedPubkey {
     fn from(s: WrappedString) -> Self {
         let pubkey = Pubkey::from_str(&s.0);
-        if !pubkey.is_err(){
+        if pubkey.is_ok(){
             WrappedPubkey(pubkey.unwrap())
         } else {
             WrappedPubkey(Pubkey::default())
@@ -134,25 +134,70 @@ fn unpack_coption_u64(src: &[u8; 12]) -> Result<COption<u64>, ProgramError> {
         _ => Err(ProgramError::InvalidAccountData),
     }
 }
+use wgpu::util::DeviceExt;
 
-pub fn unpack_token_account(data: &[u8]) -> TokenAccount {
+pub fn unpack_token_account(device: &wgpu::Device, data: &[u8]) -> (wgpu::BindGroup, u64, Pubkey) {
     if data.len() != 165 {
-        return TokenAccount::default();
+        panic!("Invalid data length");
     }
-    let src = array_ref![data, 0, 165];
-    let (mint, owner, amount, delegate, state, is_native, delegated_amount, close_authority) =
-        array_refs![src, 32, 32, 8, 36, 1, 12, 8, 36];
+    let data = &data[0..32+32+8];
+    let src = array_ref![data, 0, 32+32+8];
+    let (mint, _, amount) = array_refs![src, 32, 32, 8];
 
-    TokenAccount {
-        mint: Pubkey::new_from_array(*mint),
-        owner: Pubkey::new_from_array(*owner),
-        amount: u64::from_le_bytes(*amount),
-        delegate: unpack_coption_key(delegate).unwrap(),
-        state: AccountState::try_from_primitive(state[0])
-            .or(Err(ProgramError::InvalidAccountData))
-            .unwrap(),
-        is_native: unpack_coption_u64(is_native).unwrap(),
-        delegated_amount: u64::from_le_bytes(*delegated_amount),
-        close_authority: unpack_coption_key(close_authority).unwrap(),
-    }
+    let mint_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+        label: Some("Mint Buffer"),
+        contents: mint,
+        usage: wgpu::BufferUsages::COPY_SRC | wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::STORAGE,
+    });
+
+    let amount_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+        label: Some("Amount Buffer"),
+        contents: amount,
+        usage: wgpu::BufferUsages::COPY_SRC | wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::STORAGE,
+    });
+
+    let amount = u64::from_le_bytes(*amount);
+
+    let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+        entries: &[
+            wgpu::BindGroupLayoutEntry {
+                binding: 0,
+                visibility: wgpu::ShaderStages::VERTEX,
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Storage { read_only: false },
+                    has_dynamic_offset: false,
+                    min_binding_size: wgpu::BufferSize::new(32),
+                },
+                count: None,
+            },
+            wgpu::BindGroupLayoutEntry {
+                binding: 1,
+                visibility: wgpu::ShaderStages::VERTEX,
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Storage { read_only: false },
+                    has_dynamic_offset: false,
+                    min_binding_size: wgpu::BufferSize::new(8),
+                },
+                count: None,
+            },
+        ],
+        label: Some("buffer_bind_group_layout"),
+    });
+
+    let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+        layout: &bind_group_layout,
+        entries: &[
+            wgpu::BindGroupEntry {
+                binding: 0,
+                resource: mint_buffer.as_entire_binding(),
+            },
+            wgpu::BindGroupEntry {
+                binding: 1,
+                resource: amount_buffer.as_entire_binding(),
+            },
+        ],
+        label: Some("buffer_bind_group"),
+    });
+
+    (bind_group, amount, Pubkey::new_from_array(*mint))
 }

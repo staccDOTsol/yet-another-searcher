@@ -1,25 +1,30 @@
+#![feature(slice_patterns)]
 use anchor_client::solana_client::rpc_client::RpcClient;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
 use base64::Engine;
-use base64::engine::{GeneralPurpose, general_purpose};
+use base64::engine::{general_purpose};
 use boilerplate::Boilerplate;
 use client::serialize::token::unpack_token_account;
+use wgpu::{Dx12Compiler, BindGroup};
 use core::panic;
-use redb::{Database, Error, ReadableTable, TableDefinition};
-use solana_sdk::program_pack::Pack;
-use tokio::runtime::Runtime; // 0.2.23
-use tokio::sync::mpsc;
+
+use redb::{Error, ReadableTable, TableDefinition};
+
+ // 0.2.23
+
+
+
 
 // Create the runtime
 use client::execute::process::Arbitrager;
 
-use std::fs::File;
-use std::task::{Context, Poll, RawWaker, RawWakerVTable, Waker};
 
-use serde;
+
+
+
 use serde::{Deserialize, Serialize};
 
 use std::sync::{Arc, Mutex};
@@ -35,38 +40,34 @@ struct AppState {
 
 use axum::routing::post;
 use axum::{
-    body,
-    extract::{Extension, Json, Path, Query},
-    http::{header, HeaderMap, HeaderValue, StatusCode, Uri},
-    response::{IntoResponse, Redirect, Response},
-    routing::get,
+    extract::{Extension, Json},
+    http::{header, HeaderValue, StatusCode},
+    response::{IntoResponse, Response},
     Router,
 };
 use axum_server::Handle;
 use std::net::ToSocketAddrs;
-use std::path::PathBuf;
+
 use tower_http::{
-    compression::CompressionLayer,
     cors::{Any, CorsLayer},
-    set_header::SetResponseHeaderLayer,
 };
 
-use derive_more::FromStr;
-use num_traits::pow;
-use solana_client::client_error::ClientError;
-use solana_sdk::signature::Signature;
-use solana_sdk::signers::Signers;
-use solana_sdk::transaction::Transaction;
-use structopt::StructOpt;
 
-use flash_loan_sdk::instruction::{flash_borrow, flash_repay};
-use flash_loan_sdk::{available_liquidity, flash_loan_fee, get_reserve, FLASH_LOAN_ID};
+
+
+
+
+
+
+
+
+
 
 use anchor_client::{Client, Cluster};
 
 use std::collections::{HashMap, HashSet};
 use std::fmt::Debug;
-use std::io::Write;
+
 use std::rc::Rc;
 use std::str::FromStr;
 
@@ -75,15 +76,17 @@ use std::vec;
 
 use clap::Parser;
 
-use log::{debug, info, warn};
+use log::{debug, warn};
 use solana_sdk::account::Account;
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
-use client::execute::*;
+type ShardedDb2 = Arc<Mutex<HashMap<String, BindGroup>>>;
+
+
 use client::constants::*;
 use client::monitor::pools::pool::{pool_factory, PoolDir, PoolOperations, PoolType};
 // use spl_token unpack_token_Account
-use spl_token::state::Account as TokenAccount;
+
 
 use client::utils::{
     derive_token_address, read_json_dir, PoolEdge, PoolGraph, PoolIndex, PoolQuote,
@@ -104,16 +107,14 @@ pub struct Args {
 fn add_pool_to_graph<'a>(
     graph: &mut PoolGraph,
     idx0: PoolIndex,
-    idx1: PoolIndex,
-    quote: &PoolQuote,
+    _idx1: PoolIndex,
+    _quote: &BindGroup,
 ) {
     // idx0 = A, idx1 = B
-    let edges = graph
+    graph
         .0
         .entry(idx0)
         .or_insert_with(|| PoolEdge(HashMap::new()));
-    let quotes = edges.0.entry(idx1).or_insert_with(|| vec![]);
-    quotes.push(quote.clone());
 }
 
 #[derive(Debug)]
@@ -230,11 +231,11 @@ async fn home(
     tokio::task::spawn_blocking(move || {
     for i in 0..body.len() {
             let mut pc = page_config.lock().unwrap();
-            let mut data = &body[i].account.parsed.data;
-            let mut data = data[0].clone();
+            let data = &body[i].account.parsed.data;
+            let data = data[0].clone();
             // data is b64, we need &[u8] 
             
-            let mut data = general_purpose::STANDARD
+            let data = general_purpose::STANDARD
             .decode(&data).unwrap();
             
 
@@ -242,7 +243,7 @@ async fn home(
                 body[i].account.parsed.pubkey.clone(),
                 Account {
                     lamports: body[i].account.parsed.lamports,
-                    data: data,
+                    data,
                     owner: Pubkey::from_str(&body[i].account.parsed.owner).unwrap(),
                     executable: body[i].account.parsed.executable,
                     rent_epoch: body[i].account.parsed.rent_epoch,
@@ -256,7 +257,19 @@ async fn home(
 #[tokio::main]
 
 async fn main() {
-    let page_config = Arc::new(ShardedDb::new(Mutex::new(HashMap::new())));
+    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
+        backends: wgpu::Backends::all(),
+        dx12_shader_compiler: Dx12Compiler::default(),
+        flags: wgpu::InstanceFlags::default(),
+        gles_minor_version: wgpu::Gles3MinorVersion::Automatic
+    });
+
+    let adapter = instance.request_adapter(&wgpu::RequestAdapterOptions::default()).await.unwrap();
+    let (device, queue) = adapter.request_device(&wgpu::DeviceDescriptor::default(), None).await.unwrap();
+
+
+    let page_config: Arc<Arc<Mutex<HashMap<String, Account>>>> = Arc::new(ShardedDb::new(Mutex::new(HashMap::new())));
+    let bg_config: Arc<Arc<Mutex<HashMap<String, BindGroup>>>> = Arc::new(ShardedDb2::new(Mutex::new(HashMap::new())));
 
     let router = Router::new()
         .route("/", post(home))
@@ -302,17 +315,17 @@ async fn main() {
     let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent());
 
     // setup anchor things
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
     let rc_owner = Rc::new(owner);
     // setup anchor things
-    let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
-    let rc_owner2 = Rc::new(owner2);
+    let owner2 = read_keypair_file(owner_kp_path).unwrap();
+    let _rc_owner2 = Rc::new(owner2);
     let provider = Client::new_with_options(
         cluster.clone(),
         rc_owner.clone(),
         CommitmentConfig::recent(),
     );
-    let program = provider.program(*ARB_PROGRAM_ID);
+    let _program = provider.program(*ARB_PROGRAM_ID);
 
     // ** define pool JSONs
     let mut pool_dirs: Vec<PoolDir> = vec![];
@@ -333,11 +346,12 @@ async fn main() {
     };
     pool_dirs.push(saber_dir);
 
-    let serum_dir = PoolDir {
+
+    let ob = PoolDir {
         pool_type: PoolType::SerumPoolType,
-        dir_path: "../pools/serum/".to_string(),
+        dir_path: "../pools/openbook/".to_string(),
     };
-    pool_dirs.push(serum_dir);
+    pool_dirs.push(ob);
 
     // ** json pool -> pool object
     let mut token_mints = vec![];
@@ -426,7 +440,7 @@ async fn main() {
         let accounts = connection.get_multiple_accounts(token_addr_chunk).unwrap();
         update_accounts.push(accounts);
     }
-    let mut update_accounts = update_accounts
+    let update_accounts = update_accounts
         .concat()
         .into_iter()
         .filter(|s| s.is_some())
@@ -436,7 +450,9 @@ async fn main() {
         let src_ata = derive_token_address(&rc_owner.pubkey(), &usdc_mint);
 
         let init_token_acc = connection.get_account(&src_ata).unwrap();
-        let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128;
+        let (_, amount, _mint) = unpack_token_account(&device, &init_token_acc.data);
+
+        let init_token_balance: u128 = amount as u128;
     println!("update accounts is {:?}", update_accounts.len());
     // slide it out here
     println!(
@@ -450,7 +466,7 @@ async fn main() {
     let mut pool_count = 0;
     let mut account_ptr = 0;
 
-    for mut pool in pools.iter_mut() {
+    for pool in pools.iter_mut() {
         // update pool
         let length = update_pks_lengths[pool_count];
         //range end index 518 out of range for slice of length 517
@@ -460,33 +476,33 @@ async fn main() {
         let _account_slice = &update_accounts[account_ptr..account_ptr + length].to_vec();
        
 
-        pool.set_update_accounts(_account_slice.to_vec(), cluster.clone());
-        let mut pc = page_config.lock().unwrap();
-        let mut humbug = 0;
+        pool.set_update_accounts(&device, _account_slice.to_vec(), cluster.clone());
+        let _pc = page_config.lock().unwrap();
+        let _humbug = 0;
         account_ptr += length;
         // add pool to graph
         let idxs = &all_mint_idxs[pool_count * 2..(pool_count + 1) * 2].to_vec();
         let idx0 = PoolIndex(idxs[0]);
         let idx1 = PoolIndex(idxs[1]);
 let pool = pool.clone();
-        let mut pool_ptr = PoolQuote::new(Rc::new(pool));
-        add_pool_to_graph(&mut graph, idx0, idx1, &mut pool_ptr.clone());
-        add_pool_to_graph(&mut graph, idx1, idx0, &mut pool_ptr);
+let bg_pc = bg_config.lock().unwrap();
+let blind_quote = bg_pc.get(&pool.get_own_addr().to_string()).unwrap();
+        let _pool_ptr = PoolQuote::new(Rc::new(pool));
+        add_pool_to_graph(&mut graph, idx0, idx1, blind_quote);
+        add_pool_to_graph(&mut graph, idx1, idx0, blind_quote);
 
         pool_count += 1;
     }
 
     println!("searching for arbitrages...");
-    let min_swap_amount = 10_u128.pow(3_u32); // scaled! -- 1 USDC
+    let _min_swap_amount = 10_u128.pow(3_u32); // scaled! -- 1 USDC
 
     let src_ata = derive_token_address(&rc_owner.pubkey(), &usdc_mint);
 
-    let init_token_acc = connection.get_account(&src_ata).unwrap();
-    let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128;
-    let mut swap_start_amount = init_token_balance; // scaled!
+    let _init_token_acc = connection.get_account(&src_ata).unwrap();
+    let swap_start_amount = init_token_balance; // scaled!
     println!("swap start amount = {}", swap_start_amount); // track what arbs we did with a larger size
-    let init_token_acc = connection.get_account(&src_ata).unwrap();
-    let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128;
+    let _init_token_acc = connection.get_account(&src_ata).unwrap();
 
     
     println!("searching for arbitrages...");
@@ -496,8 +512,37 @@ let pool = pool.clone();
     
 loop {
 
+    let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+        entries: &[
+            wgpu::BindGroupLayoutEntry {
+                binding: 0,
+                visibility: wgpu::ShaderStages::VERTEX,
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Storage { read_only: false },
+                    has_dynamic_offset: false,
+                    min_binding_size: wgpu::BufferSize::new(8),
+                },
+                count: None,
+            },
+            wgpu::BindGroupLayoutEntry {
+                binding: 1,
+                visibility: wgpu::ShaderStages::VERTEX,
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Storage { read_only: false },
+                    has_dynamic_offset: false,
+                    min_binding_size: wgpu::BufferSize::new(8),
+                },
+                count: None,
+            },
+        ],
+        label: Some("buffer_bind_group_layout"),
+    });
+
     let init_token_acc = connection.get_account(&src_ata).unwrap();
-    let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128;
+    
+    let (_, amount, _mint)  = unpack_token_account(&device, &init_token_acc.data);
+
+    let init_token_balance: u128 = amount as u128;
     swap_start_amount /= 2;
     if swap_start_amount < min_swap_amount {
         swap_start_amount = init_token_balance;
@@ -542,14 +587,14 @@ loop {
     let start_mint = usdc_mint;
 
     let owner: &Keypair = rc_owner.borrow();
-    let owner_start_addr = derive_token_address(&owner.pubkey(), &start_mint);
+    let _owner_start_addr = derive_token_address(&owner.pubkey(), &start_mint);
 
 
     let mut graph = PoolGraph::new();
     let mut pool_count = 0;
-    let mut account_ptr = 0;
+    let _account_ptr = 0;
 let mut start_mint_idx   = 0;
-    for mut pool in pools.iter_mut() {
+    for pool in pools.iter_mut() {
         let pool_mints = pool.get_mints();
         let mut mint_idxs = vec![];
         for mint in pool_mints {
@@ -584,13 +629,46 @@ let mut start_mint_idx   = 0;
         }
         // update pool
         let accounts = pool.get_update_accounts();
-        let pc = page_config.lock().unwrap();
+        let pc: std::sync::MutexGuard<'_, HashMap<String, Account>> = page_config.lock().unwrap();
         let name = pool.get_name();
         for acc in accounts {
-            let mut maybe =  pc.get(&acc.to_string());
+            let maybe =  pc.get(&acc.to_string());
             if maybe.is_some(){
                     let data: Account = maybe.unwrap().clone();
-                   pool.set_update_accounts2(Pubkey::from_str(&acc.to_string()).unwrap(), &data.data, Cluster::Mainnet);
+                  let bg = pool.set_update_accounts2(device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                    entries: &[
+                        wgpu::BindGroupLayoutEntry {
+                            binding: 0,
+                            visibility: wgpu::ShaderStages::VERTEX,
+                            ty: wgpu::BindingType::Buffer {
+                                ty: wgpu::BufferBindingType::Storage { read_only: false },
+                                has_dynamic_offset: false,
+                                min_binding_size: wgpu::BufferSize::new(8),
+                            },
+                            count: None,
+                        },
+                        wgpu::BindGroupLayoutEntry {
+                            binding: 1,
+                            visibility: wgpu::ShaderStages::VERTEX,
+                            ty: wgpu::BindingType::Buffer {
+                                ty: wgpu::BufferBindingType::Storage { read_only: false },
+                                has_dynamic_offset: false,
+                                min_binding_size: wgpu::BufferSize::new(8),
+                            },
+                            count: None,
+                        },
+                    ],
+                    label: Some("buffer_bind_group_layout"),
+                }), &device,  Pubkey::from_str(&acc.to_string()).unwrap(), &data.data, Cluster::Mainnet);
+                  if bg.is_some() {
+                    let mut bg_pc = bg_config.lock().unwrap();
+                    bg_pc.insert(
+                        acc.to_string(),
+                        bg.unwrap(),
+                    );
+                      println!("updated pool: {:?}", name);
+                  }
+
             }
         }
         // add pool to graph
@@ -598,9 +676,11 @@ let mut start_mint_idx   = 0;
         let idx0 = PoolIndex(idxs[0]);
         let idx1 = PoolIndex(idxs[1]);
         let pool = pool.clone();
-        let mut pool_ptr = PoolQuote::new(Rc::new(pool));
-        add_pool_to_graph(&mut graph, idx0, idx1, &mut pool_ptr.clone());
-        add_pool_to_graph(&mut graph, idx1, idx0, &mut pool_ptr);
+        
+        let bg_pc = bg_config.lock().unwrap();
+        let blind_quote = bg_pc.get(&pool.get_own_addr().to_string()).unwrap();
+        add_pool_to_graph(&mut graph, idx0, idx1, blind_quote);
+        add_pool_to_graph(&mut graph, idx1, idx0, blind_quote);
 
         pool_count += 1;
     }
@@ -617,13 +697,17 @@ let mut start_mint_idx   = 0;
         cluster: Cluster::Mainnet,
         connection,
     };
+
     
             arbitrager.brute_force_search(
+                &device,
                 start_mint_idx,
                 init_token_balance,
                 swap_start_amount,
                 vec![start_mint_idx],
                 vec![],
+                bind_group_layout, 
+                &queue
             ).await;
 
     swap_start_amount /= 2;

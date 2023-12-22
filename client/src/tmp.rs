@@ -10,6 +10,8 @@ use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
 
 use anchor_client::{Client, Cluster};
+use wgpu::BindGroup;
+use wgpu::Dx12Compiler;
 
 use std::collections::{HashMap, HashSet};
 use std::fmt::Debug;
@@ -41,18 +43,16 @@ fn add_pool_to_graph<'a>(
     graph: &mut PoolGraph,
     idx0: PoolIndex,
     idx1: PoolIndex,
-    quote: &PoolQuote,
+    quote: &BindGroup,
 ) {
     // idx0 = A, idx1 = B
     let edges = graph
         .0
         .entry(idx0)
         .or_insert_with(|| PoolEdge(HashMap::new()));
-    let quotes = edges.0.entry(idx1).or_insert_with(|| vec![]);
-    quotes.push(quote.clone());
 }
-
-fn main() {
+#[tokio::main]
+async fn main() {
     let args = Args::parse();
     let cluster = match args.cluster.as_str() {
         "localnet" => Cluster::Localnet,
@@ -191,6 +191,18 @@ fn main() {
     println!("added {:?} mints", token_mints.len());
     println!("added {:?} pools", pools.len());
 
+
+    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
+        backends: wgpu::Backends::all(),
+        dx12_shader_compiler: Dx12Compiler::default(),
+        flags: wgpu::InstanceFlags::default(),
+        gles_minor_version: wgpu::Gles3MinorVersion::Automatic
+    });
+
+    let adapter = instance.request_adapter(&wgpu::RequestAdapterOptions::default()).await.unwrap();
+    let (device, queue) = adapter.request_device(&wgpu::DeviceDescriptor::default(), None).await.unwrap();
+
+
     // !
     let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
     let start_mint = usdc_mint;
@@ -205,8 +217,10 @@ fn main() {
     let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent());
     // slide it out here
     let init_token_acc = derive_token_address(&owner.pubkey(), &usdc_mint);
-    let init_token_balance =
-        unpack_token_account(&connection.get_account(&init_token_acc).unwrap().data).amount as u128;
+    let init_token_acc_acc = connection.get_account(&init_token_acc).unwrap();
+    let (_, amount, _mint) = unpack_token_account(&device, &init_token_acc_acc.data);
+
+    let init_token_balance: u128 = amount as u128;
     println!(
         "init token acc: {:?}, balance: {:#}",
         init_token_acc, init_token_balance
@@ -237,6 +251,7 @@ fn main() {
     let db = db.unwrap();
     let read_txn = db.begin_read().unwrap();
     for mut pool in pools.into_iter() {
+        let mut bg  = None;
         for (key, value) in update_pks2.iter() {
             let pool_addr = pool.get_own_addr().to_string();
 
@@ -283,26 +298,99 @@ fn main() {
                 let account1 = connection.get_account(&update_pks[1]).unwrap();
                 let account0 = connection.get_account(&update_pks[0]).unwrap();
                 pool.set_update_accounts(
+                    &device,
                     vec![Some(account0), Some(account1), Some(account)],
                     cluster.clone(),
                 );
             } else if false {
                 let account = connection.get_account(&update_pks[1]).unwrap();
                 let account2 = connection.get_account(&update_pks[0]).unwrap();
-                pool.set_update_accounts(vec![Some(account2), Some(account)], cluster.clone());
+                pool.set_update_accounts(&device, vec![Some(account2), Some(account)], cluster.clone());
             }
 
-            pool.set_update_accounts2(update_pks[0], v1.unwrap().value(), cluster.clone());
+            bg = pool.set_update_accounts2(device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                entries: &[
+                    wgpu::BindGroupLayoutEntry {
+                        binding: 0,
+                        visibility: wgpu::ShaderStages::VERTEX,
+                        ty: wgpu::BindingType::Buffer {
+                            ty: wgpu::BufferBindingType::Storage { read_only: false },
+                            has_dynamic_offset: false,
+                            min_binding_size: wgpu::BufferSize::new(8),
+                        },
+                        count: None,
+                    },
+                    wgpu::BindGroupLayoutEntry {
+                        binding: 1,
+                        visibility: wgpu::ShaderStages::VERTEX,
+                        ty: wgpu::BindingType::Buffer {
+                            ty: wgpu::BufferBindingType::Storage { read_only: false },
+                            has_dynamic_offset: false,
+                            min_binding_size: wgpu::BufferSize::new(8),
+                        },
+                        count: None,
+                    },
+                ],
+                label: Some("buffer_bind_group_layout"),
+            }), &device, update_pks[0], v1.unwrap().value(), cluster.clone());
 
             let v2 = table.get(update_pks[1].to_string().as_str()).unwrap();
             if v2.is_none() {
                 continue;
             }
-            pool.set_update_accounts2(update_pks[1], v2.unwrap().value(), cluster.clone());
+            bg = pool.set_update_accounts2(device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                entries: &[
+                    wgpu::BindGroupLayoutEntry {
+                        binding: 0,
+                        visibility: wgpu::ShaderStages::VERTEX,
+                        ty: wgpu::BindingType::Buffer {
+                            ty: wgpu::BufferBindingType::Storage { read_only: false },
+                            has_dynamic_offset: false,
+                            min_binding_size: wgpu::BufferSize::new(8),
+                        },
+                        count: None,
+                    },
+                    wgpu::BindGroupLayoutEntry {
+                        binding: 1,
+                        visibility: wgpu::ShaderStages::VERTEX,
+                        ty: wgpu::BindingType::Buffer {
+                            ty: wgpu::BufferBindingType::Storage { read_only: false },
+                            has_dynamic_offset: false,
+                            min_binding_size: wgpu::BufferSize::new(8),
+                        },
+                        count: None,
+                    },
+                ],
+                label: Some("buffer_bind_group_layout"),
+            }),&device,  update_pks[1], v2.unwrap().value(), cluster.clone());
             if update_pks.len() == 3 {
                 let v3 = table.get(update_pks[2].to_string().as_str()).unwrap();
 
-                pool.set_update_accounts2(update_pks[2], v3.unwrap().value(), cluster.clone());
+                 bg = pool.set_update_accounts2(device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                    entries: &[
+                        wgpu::BindGroupLayoutEntry {
+                            binding: 0,
+                            visibility: wgpu::ShaderStages::VERTEX,
+                            ty: wgpu::BindingType::Buffer {
+                                ty: wgpu::BufferBindingType::Storage { read_only: false },
+                                has_dynamic_offset: false,
+                                min_binding_size: wgpu::BufferSize::new(8),
+                            },
+                            count: None,
+                        },
+                        wgpu::BindGroupLayoutEntry {
+                            binding: 1,
+                            visibility: wgpu::ShaderStages::VERTEX,
+                            ty: wgpu::BindingType::Buffer {
+                                ty: wgpu::BufferBindingType::Storage { read_only: false },
+                                has_dynamic_offset: false,
+                                min_binding_size: wgpu::BufferSize::new(8),
+                            },
+                            count: None,
+                        },
+                    ],
+                    label: Some("buffer_bind_group_layout"),
+                }),&device,  update_pks[2], v3.unwrap().value(), cluster.clone());
             }
             let what = pool_count * 2..(pool_count + 1) * 2;
             if what.end > all_mint_idxs.len() {
@@ -315,9 +403,13 @@ fn main() {
         let idx1 = PoolIndex(idxs[1]);
 
         let mut pool_ptr = PoolQuote::new(Rc::new(pool));
+        if bg.is_none() {
+            continue;
+        }
+        let bg = bg.unwrap();
+        add_pool_to_graph(&mut graph, idx0, idx1, &bg);
+        add_pool_to_graph(&mut graph, idx1, idx0, &bg);
 
-        add_pool_to_graph(&mut graph, idx0, idx1, &mut pool_ptr.clone());
-        add_pool_to_graph(&mut graph, idx1, idx0, &mut pool_ptr);
     }
 
     if false {

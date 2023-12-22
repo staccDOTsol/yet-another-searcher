@@ -55,7 +55,7 @@ fn test_all_pool_quotes(pool_dir: String, pool_type: PoolType) {
     // setup anchor things
     // println!("owner: {}", owner.pubkey());
     // let program = provider.program(*ARB_PROGRAM_ID).unwrap();
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
 
     let pool_paths = read_json_dir(&pool_dir);
     let mut err_count = 0;

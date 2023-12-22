@@ -2,6 +2,8 @@ use async_trait::async_trait;
 use bytemuck::bytes_of;
 use chrono::Utc;
 use solana_sdk::signer::Signer;
+use wgpu::BindGroupLayout;
+use wgpu::util::DeviceExt;
 use core::panic;
 use std::num::NonZeroU64;
 use std::sync::{Arc, Mutex};
@@ -15,7 +17,7 @@ use openbook_dex::matching::Side;
 use openbook_dex::state::AccountFlag;
 use serde;
 use serde::{Deserialize, Serialize};
-use solana_sdk::signature::{Keypair, read_keypair_file};
+use solana_sdk::signature::{read_keypair_file};
 use std::collections::HashMap;
 use std::fmt::Debug;
 
@@ -107,11 +109,7 @@ fn bid_iteration(iteration: &mut Iteration, fee_tier: &FeeTier, ob: &mut OrderBo
     let mut pc_qty_remaining = max_pc_qty;
 
     let done = loop {
-        let flag = match ob.asks.find_min() {
-            // min = best ask
-            Some(_) => false,
-            None => true,
-        };
+        let flag = ob.asks.find_min().is_none();
         if flag {
             break true;
         }
@@ -218,7 +216,7 @@ impl PoolOperations for SerumPool {
         vec![self.own_address.0, self.bids.0, self.asks.0]
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster) {
+    fn set_update_accounts(&mut self, _device: &wgpu::Device, accounts: Vec<Option<Account>>, cluster: Cluster) {
         self.accounts = Some(accounts);
 
         let oo_path = match cluster {
@@ -231,21 +229,21 @@ impl PoolOperations for SerumPool {
         self.open_orders = Some(oo_book);
     }
 
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, bind_group_layout: BindGroupLayout, device: &wgpu::Device, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) -> Option<wgpu::BindGroup> {
         let testing = self.accounts.clone();
         let mut taccs = vec![];
         if testing.is_some() {
             taccs = testing.unwrap();
         } else {
-            return;
+            return None;
         }
         if taccs.len() < 3 {
-            return;
+            return None;
         }
 
         let flags = Market::account_flags(data);
         if flags.is_err() {
-            return;
+            return None;
         }
         let flags = flags.unwrap();
         if flags.intersects(AccountFlag::Bids) {
@@ -262,10 +260,10 @@ impl PoolOperations for SerumPool {
             bids.data = data.to_vec();
             let tval = taccs.get(2);
             if tval.is_none() {
-                self.accounts = Some(vec![taccs.get(0).unwrap().clone(), Some(bids)]);
+                self.accounts = Some(vec![taccs.first().unwrap().clone(), Some(bids)]);
             } else {
                 self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
+                    taccs.first().unwrap().clone(),
                     Some(bids),
                     taccs.get(2).unwrap().clone(),
                 ]);
@@ -281,7 +279,7 @@ impl PoolOperations for SerumPool {
                     rent_epoch: 0,
                 }));
                 self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
+                    taccs.first().unwrap().clone(),
                     taccs.get(1).unwrap().clone(),
                     (taccs.get(2).unwrap().clone()),
                 ]);
@@ -289,12 +287,49 @@ impl PoolOperations for SerumPool {
                 let mut asks = taccs.get(2).unwrap().clone().unwrap();
                 asks.data = data.to_vec();
                 self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
+                    taccs.first().unwrap().clone(),
                     taccs.get(1).unwrap().clone(),
                     Some(asks),
                 ]);
             }
         }
+
+        let amount = self.get_quote_with_amounts_scaled(1_000_000, &self.base_mint, &self.quote_mint);
+
+        let amount_inverse = self.get_quote_with_amounts_scaled(1_000_000, &self.quote_mint, &self.base_mint);
+
+        let amount_bytes: [u8; 16] = amount.to_le_bytes();
+
+        let amount_inverse_bytes: [u8; 16] = amount_inverse.to_le_bytes();
+
+        let amount_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Amount Buffer"),
+            contents: &amount_bytes,
+            usage: wgpu::BufferUsages::COPY_SRC | wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::STORAGE,
+        });
+
+        let amount_inverse_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Amount Buffer"),
+            contents: &amount_inverse_bytes,
+            usage: wgpu::BufferUsages::COPY_SRC | wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::STORAGE,
+        });
+
+        let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+            layout: &bind_group_layout,
+            entries: &[
+                wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: amount_buffer.as_entire_binding(),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 1,
+                    resource: amount_inverse_buffer.as_entire_binding(),
+                },
+            ],
+            label: Some("buffer_bind_group"),
+        });
+
+        Some(bind_group)
     }
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey {
@@ -361,8 +396,8 @@ impl PoolOperations for SerumPool {
         let asks_acc = &account_info(&self.asks.0, ask_acc);
 
         let m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
-        if !m.is_ok() {
-            println!("{}", "m is none");
+        if m.is_err() {
+            println!("m is none");
             return 0;
         }
         let mut market = m.unwrap();
@@ -415,7 +450,7 @@ async    fn swap_ix(
 
         let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let _space = 3228;
-        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
 
@@ -524,17 +559,10 @@ async    fn swap_ix(
         // is there a bid or ask we can trade with???
         if *mint_in == self.quote_mint.0 {
             // bid: quote -> base
-            match asks.find_min() {
-                // min = best ask
-                Some(_) => true,
-                None => false,
-            }
+            asks.find_min().is_some()
         } else if *mint_in == self.base_mint.0 {
             // ask: base -> quote
-            match bids.find_max() {
-                Some(_) => true,
-                None => false,
-            }
+            bids.find_max().is_some()
         } else {
             panic!("invalid mints");
         }

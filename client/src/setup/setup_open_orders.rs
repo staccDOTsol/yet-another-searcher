@@ -18,8 +18,8 @@ use std::collections::HashMap;
 
 use std::vec;
 
-use tmp::accounts as tmp_accounts;
-use tmp::instruction as tmp_instructions;
+
+
 
 use client::constants::*;
 use client::monitor::pools::pool::{PoolDir, PoolType};
@@ -33,7 +33,7 @@ fn main() {
     env_logger::init();
     // let owner_kp_path = "../../../mainnet.key";
     let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
     let oo_path = match cluster {
         Cluster::Localnet => "./serum_open_orders.json",
         Cluster::Mainnet => {
@@ -60,8 +60,8 @@ fn main() {
     let connection = RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::recent());
 
     let provider = Client::new_with_options(cluster, Rc::new(owner), CommitmentConfig::recent());
-    let program = provider.program(*ARB_PROGRAM_ID).unwrap();
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let _program = provider.program(*ARB_PROGRAM_ID).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
 
     let serum_dir = PoolDir {
         pool_type: PoolType::SerumPoolType,
@@ -92,7 +92,7 @@ fn main() {
         let json_str = std::fs::read_to_string(&pool_path).unwrap();
         let pool: SerumPool = serde_json::from_str(&json_str).unwrap();
         if open_orders.contains(&pool.own_address.0.to_string()) {
-            println!("already have open orders for {}", pool.own_address.0.to_string());
+            println!("already have open orders for {}", pool.own_address.0);
             continue;
         }
         // do a swap and check the amount
@@ -102,7 +102,7 @@ fn main() {
         PROGRAM_LAYOUT_VERSIONS.insert("EUqojwWA2rd19FZrzeBncJsm38Jm1hEhE3zsmX3bRc2o", 2);
         PROGRAM_LAYOUT_VERSIONS.insert("9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin", 3);
 
-        let LAYOUT_V1_SPAN = 3220;
+        let _LAYOUT_V1_SPAN = 3220;
         let LAYOUT_V2_SPAN = 3228;
 
         let space = LAYOUT_V2_SPAN;

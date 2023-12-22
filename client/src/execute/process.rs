@@ -1,31 +1,35 @@
+#![feature(slice_patterns)]
 use anchor_client::solana_client::rpc_client::RpcClient;
-use anchor_client::solana_client::rpc_config::RpcSendTransactionConfig;
-use bincode::serialize;
+
+
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
 
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
-use anchor_client::{Cluster, Program};
-use serde_json::json;
+use anchor_client::{Cluster};
+
 use solana_address_lookup_table_program::state::AddressLookupTable;
-use solana_client::rpc_request::RpcRequest;
+
 use solana_program::address_lookup_table::AddressLookupTableAccount;
 use solana_program::message::{VersionedMessage, v0};
-use solana_sdk::commitment_config::{CommitmentLevel, CommitmentConfig};
-use solana_sdk::signature::{read_keypair_file, Signature};
-use solana_transaction_status::UiTransactionEncoding;
-use std::collections::{HashMap, HashSet};
+
+use solana_sdk::signature::{read_keypair_file};
+
+
+
+use std::collections::{HashSet};
+use std::marker::PhantomData;
 use std::sync::Arc;
 
 use solana_sdk::instruction::Instruction;
-use solana_sdk::transaction::{Transaction, VersionedTransaction};
+use solana_sdk::transaction::{VersionedTransaction};
 
-use std::borrow::{Borrow, BorrowMut};
-use std::rc::Rc;
+
+
 use std::str::FromStr;
 use std::vec;
 
-use log::info;
+
 
 use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
@@ -45,19 +49,29 @@ pub struct Arbitrager {
 impl Arbitrager {
 #[async_recursion::async_recursion]
 
-    pub async     fn brute_force_search(
+    pub async     fn brute_force_search (
         &self,
-        start_mint_idx: usize,
-        init_balance: u128,
+        device: &wgpu::Device,
+        _start_mint_idx: usize,
+        _init_balance: u128,
         curr_balance: u128,
         path: Vec<usize>,
-        pool_path: Vec<PoolQuote>,
+        _pool_path: Vec<PoolQuote>,
+        bind_group_layout: wgpu::BindGroupLayout,
+        queue: &wgpu::Queue,
     ) {
+
+    let readback_buffer = Arc::new(device.create_buffer(&wgpu::BufferDescriptor {
+        label: Some("readback_buffer"),
+        size: (2 * std::mem::size_of::<f32>()) as wgpu::BufferAddress, // cover both indices
+        usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+        mapped_at_creation: false,
+    }));
         if curr_balance == 0 {
             return;
         }
         let src_curr = path[path.len() - 1]; // last mint
-        let src_mint = self.token_mints[src_curr];
+        let _src_mint = self.token_mints[src_curr];
 
         let out_edges = &self.graph_edges[src_curr];
 
@@ -66,7 +80,6 @@ impl Arbitrager {
         if path.len() == 4 {
             return;
         };
-
         for dst_mint_idx in out_edges {
 
             
@@ -80,9 +93,78 @@ impl Arbitrager {
                 .unwrap();
 
             let dst_mint_idx = *dst_mint_idx;
-            let dst_mint = self.token_mints[dst_mint_idx];
+            let _dst_mint = self.token_mints[dst_mint_idx];
 
-            for pool in pools {
+            for bind_group in pools {
+                 // quotes[0] is the trade from start_mint to end_mint
+        // quotes[1] is the trade from end_mint to start_mint
+        // Create a readback buffer
+        let _return_values = [0.0, 0.0];
+        let _start_mint = path[0];
+        let _end_mint = path[path.len() - 1];
+
+        // Create a mapping to read buffer data
+        
+
+        let _fraction: f32 = curr_balance as f32 / 1_000_000.0; 
+        let mut return_values = [0.0, 0.0];
+        
+        // Start a render pass
+        let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
+            label: Some("Render Encoder"),
+        });
+
+        // Load the shader
+        let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: Some("Shader"),
+            source: wgpu::ShaderSource::Dummy(
+                PhantomData
+            ),
+        });
+        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label: Some("Pipeline Layout"),
+            bind_group_layouts: &[&bind_group_layout],
+            push_constant_ranges: &[],
+        });
+
+        // Create a render pipeline
+        let render_pipeline = device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
+            layout: Some(&pipeline_layout),
+            module: &shader,
+            entry_point: "main",
+            label: Some("Render Pipeline"),
+        });
+
+        let mut compute_pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {
+            label: Some("Compute Pass"),
+            timestamp_writes: None
+        });
+
+        compute_pass.set_pipeline(&render_pipeline);
+        compute_pass.set_bind_group(0, bind_group, &[]);
+
+        // submit the work
+
+        // Finish recording commands.
+        drop(compute_pass);
+
+        // Submit the commands.
+        queue.submit(Some(encoder.finish()));
+        let buffer_slice = readback_buffer.slice(..);
+        device.poll(wgpu::Maintain::Wait);
+        
+        let data = buffer_slice.get_mapped_range();
+        let data: &[f32] = bytemuck::cast_slice::<u8, f32>(&data);
+        // Copy the data into return_values
+        return_values.copy_from_slice(data);
+        drop(data);
+        drop(buffer_slice);
+        readback_buffer.unmap();
+        println!("return values: {:?}", return_values);
+        
+        // Once the future is ready, get the data
+        
+        /*
                 let new_balance =
                     pool.0
                         .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint);
@@ -248,7 +330,7 @@ impl Arbitrager {
                         new_path,      // !
                         new_pool_path, // !
                     ).await;
-                }
+                } */
             }
         }
     }
@@ -259,15 +341,15 @@ async    fn get_arbitrage_instructions<'a>(
         mint_idxs: &Vec<usize>,
         pools: &Vec<PoolQuote>,    ) -> (Vec<Vec<Instruction>>, bool) {
             
-    let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+    let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json").unwrap());
 
     let owner = owner3.try_pubkey().unwrap();
         // gather swap ixs
         let mut ixs = vec![];
         let swap_state_pda =
-            (Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap());
+            Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let src_mint = self.token_mints[mint_idxs[0]];
-        let src_ata = derive_token_address(&owner, &src_mint);
+        let _src_ata = derive_token_address(&owner, &src_mint);
 
 
     // setup anchor things
@@ -293,12 +375,12 @@ async    fn get_arbitrage_instructions<'a>(
             .unwrap()).await.unwrap();
         ixs.push(ix);
         let mut flag = false;
-        let pubkey = owner;
+        let _pubkey = owner;
         for i in 0..mint_idxs.len() - 1 {
             let [mint_idx0, mint_idx1] = [mint_idxs[i], mint_idxs[i + 1]];
             let [mint0, mint1] = [self.token_mints[mint_idx0], self.token_mints[mint_idx1]];
             let pool = &pools[i];
-            let mut swap_ix = pool
+            let swap_ix = pool
                 .0
                 .swap_ix(&mint0, &mint1, swap_start_amount);
             ixs.push(swap_ix.await.1);
@@ -353,6 +435,6 @@ fn create_tx_with_address_table_lookup(
         &[payer],
     ).unwrap();
 
-    assert!(tx.message.address_table_lookups().unwrap().len() > 0);
+    assert!(!tx.message.address_table_lookups().unwrap().is_empty());
     tx
 }

@@ -15,9 +15,9 @@ pub fn get_pool_quote_with_amounts(
     fees: &Fees,
     input_token_pool_amount: u128,
     output_token_pool_amount: u128,
-    slippage_percent: Option<[u128; 2]>,
+    _slippage_percent: Option<[u128; 2]>,
 ) -> Result<u128> {
-    let mut quote;
+    let quote;
     let trade_direction = pool_utils::calculator::TradeDirection::AtoB;
 
     if curve_type == CurveType::ConstantProduct {

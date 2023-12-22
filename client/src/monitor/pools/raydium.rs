@@ -1,10 +1,10 @@
 use crate::monitor::pool_utils::serum::FeeTier;
 use crate::monitor::pools::{PoolOperations, PoolType};
-use crate::serialize::pool::JSONFeeStructure;
-use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
-use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
+
+use crate::serialize::token::{WrappedPubkey};
+
 use anchor_client::solana_sdk::signature::read_keypair_file;
-use anchor_client::{Client, Cluster};
+use anchor_client::{Cluster};
 use async_trait::async_trait;
 use openbook_dex::critbit::SlabView;
 use openbook_dex::matching::OrderBookState;
@@ -12,8 +12,10 @@ use openbook_dex::state::{Market, AccountFlag};
 use serde;
 use solana_program::account_info::AccountInfo;
 use solana_program::stake_history::Epoch;
-use solana_sdk::program_pack::Pack;
+
 use solana_sdk::signer::Signer;
+use wgpu::BindGroupLayout;
+use wgpu::util::DeviceExt;
 use std::sync::{Arc, Mutex};
 use std::ops::DerefMut;
 
@@ -26,10 +28,10 @@ use raydium_contract_instructions::{
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use std::collections::HashMap;
 use std::fmt::Debug;
-use std::rc::Rc;
+
 use std::str::FromStr;
 
-use solana_sdk::signature::Keypair;
+
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use serde::{Deserialize, Serialize};
@@ -37,12 +39,12 @@ use solana_sdk::account::Account;
 
 use solana_sdk::instruction::Instruction;
 
-use tmp::accounts as tmp_accounts;
-use tmp::instruction as tmp_ix;
+
+
 
 use crate::constants::*;
-use crate::monitor::pool_utils::base::CurveType;
-use crate::utils::{derive_token_address, str2pubkey};
+
+use crate::utils::{derive_token_address};
 
 struct Iteration {
     amount_in: u64,
@@ -108,11 +110,7 @@ fn bid_iteration(iteration: &mut Iteration, fee_tier: &FeeTier, ob: &mut OrderBo
     let mut pc_qty_remaining = max_pc_qty;
 
     let done = loop {
-        let flag = match ob.asks.find_min() {
-            // min = best ask
-            Some(_) => false,
-            None => true,
-        };
+        let flag = ob.asks.find_min().is_none();
         if flag {
             break true;
         }
@@ -216,8 +214,8 @@ async    fn swap_ix(
         mint_out: &Pubkey,
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
-        let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+        let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
+        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, mint_in);
@@ -243,7 +241,7 @@ async    fn swap_ix(
             &user_dst,
             &owner, 
             _start_bal as u64,
-            0 as u64
+            0_u64
         );
     if swap_ix.is_err() {
         swap_ix = stable_swap(
@@ -253,7 +251,7 @@ async    fn swap_ix(
             &self.open_orders,
             &self.base_vault,
             &self.quote_vault,
-            &self.model_data_account.as_ref().unwrap(),
+            self.model_data_account.as_ref().unwrap(),
             &self.market_program_id,
             &self.market_id,
             &self.market_bids,
@@ -266,7 +264,7 @@ async    fn swap_ix(
             &user_dst,
             &owner, 
             _start_bal as u64,
-            0 as u64
+            0_u64
         );
     }        
 
@@ -277,7 +275,7 @@ async    fn swap_ix(
         & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
-        mint_out: &Pubkey,
+        _mint_out: &Pubkey,
     ) -> u128 {
         let market_pk = self.id.0;
         let mut iteration = Iteration {
@@ -305,16 +303,16 @@ async    fn swap_ix(
         let bids_acc = &account_info(&self.market_bids.0, bid_acc);
         let asks_acc = &account_info(&self.market_asks.0, ask_acc);
         let mut m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
-        if !m.is_ok() {
+        if m.is_err() {
             
             m = Market::load(market_acc_info, &stableProgramID, false);
-            if !m.is_ok()   {
+            if m.is_err()   {
                 
                 return 0;
             }
         }
         let mut market = m.unwrap();
-        let mut bids = market.load_bids_mut(bids_acc);
+        let bids = market.load_bids_mut(bids_acc);
         if bids.is_err() {
             return 0;
         }
@@ -372,9 +370,9 @@ async    fn swap_ix(
         let asks_acc = &account_info(&self.market_asks.0, ask_acc);
 
         let mut m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
-        if !m.is_ok() {
+        if m.is_err() {
             m = Market::load(market_acc_info, &stableProgramID, false);
-            if !m.is_ok()   {
+            if m.is_err()   {
                 
                 return false;
             }
@@ -386,17 +384,10 @@ async    fn swap_ix(
         // is there a bid or ask we can trade with???
         if *mint_in == self.quote_mint.0 {
             // bid: quote -> base
-            match asks.find_min() {
-                // min = best ask
-                Some(_) => true,
-                None => false,
-            }
+            asks.find_min().is_some()
         } else if *mint_in == self.base_mint.0 {
             // ask: base -> quote
-            match bids.find_max() {
-                Some(_) => true,
-                None => false,
-            }
+            bids.find_max().is_some()
         } else {
             panic!("invalid mints");
         }
@@ -411,7 +402,7 @@ async    fn swap_ix(
         vec![self.market_id.0, self.base_vault.0, self.quote_vault.0]
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster) {
+    fn set_update_accounts(&mut self, _device: &wgpu::Device, accounts: Vec<Option<Account>>, cluster: Cluster) {
         self.accounts = Some(accounts);
 
         let oo_path = match cluster {
@@ -420,24 +411,25 @@ async    fn swap_ix(
             _ => panic!("clsuter {} not supported", cluster),
         };
         let oo_str = std::fs::read_to_string(oo_path).unwrap();
-        let oo_book: HashMap<String, String> = serde_json::from_str(&oo_str).unwrap();
+        let _oo_book: HashMap<String, String> = serde_json::from_str(&oo_str).unwrap();
     }
 
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, bind_group_layout: BindGroupLayout,  device: &wgpu::Device, _pubkey: Pubkey, data: &[u8], _cluster: Cluster)     -> Option<wgpu::BindGroup>
+    {
         let testing = self.accounts.clone();
         let mut taccs = vec![];
         if testing.is_some() {
             taccs = testing.unwrap();
         } else {
-            return;
+            return None;
         }
         if taccs.len() < 3 {
-            return;
+            return None;
         }
 
         let flags = Market::account_flags(data);
         if flags.is_err() {
-            return;
+            return None;
         }
         let flags = flags.unwrap();
         if flags.intersects(AccountFlag::Bids) {
@@ -454,10 +446,10 @@ async    fn swap_ix(
             bids.data = data.to_vec();
             let tval = taccs.get(2);
             if tval.is_none() {
-                self.accounts = Some(vec![taccs.get(0).unwrap().clone(), Some(bids)]);
+                self.accounts = Some(vec![taccs.first().unwrap().clone(), Some(bids)]);
             } else {
                 self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
+                    taccs.first().unwrap().clone(),
                     Some(bids),
                     taccs.get(2).unwrap().clone(),
                 ]);
@@ -473,7 +465,7 @@ async    fn swap_ix(
                     rent_epoch: 0,
                 }));
                 self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
+                    taccs.first().unwrap().clone(),
                     taccs.get(1).unwrap().clone(),
                     (taccs.get(2).unwrap().clone()),
                 ]);
@@ -481,12 +473,51 @@ async    fn swap_ix(
                 let mut asks = taccs.get(2).unwrap().clone().unwrap();
                 asks.data = data.to_vec();
                 self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
+                    taccs.first().unwrap().clone(),
                     taccs.get(1).unwrap().clone(),
                     Some(asks),
                 ]);
             }
         }
+        
+
+        let amount = self.get_quote_with_amounts_scaled(1_000_000, &self.base_mint, &self.quote_mint);
+
+        let amount_inverse = self.get_quote_with_amounts_scaled(1_000_000, &self.quote_mint, &self.base_mint);
+
+        let amount_bytes: [u8; 16] = amount.to_le_bytes();
+
+        let amount_inverse_bytes: [u8; 16] = amount_inverse.to_le_bytes();
+
+        let amount_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Amount Buffer"),
+            contents: &amount_bytes,
+            usage: wgpu::BufferUsages::COPY_SRC | wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::STORAGE,
+        });
+
+        let amount_inverse_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Amount Buffer"),
+            contents: &amount_inverse_bytes,
+            usage: wgpu::BufferUsages::COPY_SRC | wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::STORAGE,
+        });
+
+        let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+            layout: &bind_group_layout,
+            entries: &[
+                wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: amount_buffer.as_entire_binding(),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 1,
+                    resource: amount_inverse_buffer.as_entire_binding(),
+                },
+            ],
+            label: Some("buffer_bind_group"),
+        });
+
+
+        Some(bind_group)
     }
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey {

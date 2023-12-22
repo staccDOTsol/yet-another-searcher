@@ -2,7 +2,8 @@ use anchor_client::solana_sdk::pubkey::Pubkey;
 use async_trait::async_trait;
 use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
-use solana_sdk::signature::Keypair;
+
+use wgpu::BindGroupLayout;
 
 use crate::monitor::pools::*;
 use std::collections::HashMap;
@@ -66,8 +67,8 @@ pub trait PoolOperations: Debug + Send {
     fn get_name(&self) -> String;
     fn get_own_addr(&self) -> Pubkey;
     fn get_update_accounts(&self) -> Vec<Pubkey>;
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster);
-    fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], cluster: Cluster);
+    fn set_update_accounts(&mut self, device: &wgpu::Device, accounts: Vec<Option<Account>>, cluster: Cluster);
+    fn set_update_accounts2(&mut self, bind_group_layou: BindGroupLayout, device: &wgpu::Device, pubkey: Pubkey, data: &[u8], cluster: Cluster) -> Option<wgpu::BindGroup>;
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey;
     fn get_mints(&self) -> Vec<Pubkey>;

@@ -5,6 +5,7 @@ use anchor_client::solana_sdk::signature::read_keypair_file;
 use async_trait::async_trait;
 use serde;
 use solana_sdk::signer::Signer;
+use wgpu::BindGroupLayout;
 
 use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
@@ -16,7 +17,7 @@ use std::rc::Rc;
 use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
-use solana_sdk::signature::Keypair;
+
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
 
@@ -65,7 +66,7 @@ impl PoolOperations for MercurialPool {
         let swap_state_pda =
             Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
             let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
-            let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
+            let owner2 = read_keypair_file(owner_kp_path).unwrap();
             let owner = owner2.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, mint_in);
         let user_dst = derive_token_address(&owner, mint_out);
@@ -167,8 +168,8 @@ impl PoolOperations for MercurialPool {
             .collect();
         accounts
     }
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, _data: &[u8], _cluster: Cluster) {}
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
+    fn set_update_accounts2(&mut self,_bind_group_layout: BindGroupLayout, _device: &wgpu::Device,  _pubkey: Pubkey, _data: &[u8], _cluster: Cluster) -> Option<wgpu::BindGroup> {None}
+    fn set_update_accounts(&mut self,  device: &wgpu::Device, accounts: Vec<Option<Account>>, _cluster: Cluster) {
         let ids: Vec<String> = self
             .get_mints()
             .iter()
@@ -180,8 +181,8 @@ impl PoolOperations for MercurialPool {
         let acc_data0 = &accounts[0].as_ref().unwrap().data;
         let acc_data1 = &accounts[1].as_ref().unwrap().data;
 
-        let amount0 = unpack_token_account(acc_data0).amount as u128;
-        let amount1 = unpack_token_account(acc_data1).amount as u128;
+        let amount0 = unpack_token_account(device, acc_data0).1 as u128;
+        let amount1 = unpack_token_account(device, acc_data1).1 as u128;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);

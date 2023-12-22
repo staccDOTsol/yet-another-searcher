@@ -10,27 +10,28 @@ use anchor_client::Cluster;
 use client::monitor::pools::pool::PoolDir;
 use solana_sdk::instruction::Instruction;
 use solana_sdk::transaction::Transaction;
+use wgpu::Dx12Compiler;
 
 use std::collections::HashMap;
-use std::fmt::Debug;
+
 use std::vec;
 
 use solana_sdk::instruction::AccountMeta;
 use solana_sdk::system_program;
 
-use log::warn;
+
 
 use client::constants::*;
 use client::monitor::pools::pool::{pool_factory, PoolOperations, PoolType};
 use client::serialize::token::unpack_token_account;
 use client::utils::{derive_token_address, read_json_dir};
-
-fn main() {
-    let cluster = Cluster::Mainnet;
+#[tokio::main]
+async fn main() {
+    let _cluster = Cluster::Mainnet;
 
     env_logger::init();
     let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
 
     // ** setup RPC connection
     let connection = RpcClient::new_with_commitment(
@@ -80,7 +81,7 @@ fn main() {
             let json_str = std::fs::read_to_string(&pool_path).unwrap();
             let pool = pool_factory(&pool_dir.pool_type, &json_str);
             let accounts = pool.get_update_accounts();
-            let mut ii = 0;
+            let _ii = 0;
             for account in accounts {
                 account_pks.push(account);
                 map_account_pks_to_pool_paths.insert(account.to_string(), pool_path.clone());
@@ -96,6 +97,16 @@ fn main() {
         update_pks.push(token_addr_chunk);
 
     }
+    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
+        backends: wgpu::Backends::all(),
+        dx12_shader_compiler: Dx12Compiler::default(),
+        flags: wgpu::InstanceFlags::default(),
+        gles_minor_version: wgpu::Gles3MinorVersion::Automatic
+    });
+
+    let adapter = instance.request_adapter(&wgpu::RequestAdapterOptions::default()).await.unwrap();
+    let (device, _queue) = adapter.request_device(&wgpu::DeviceDescriptor::default(), None).await.unwrap();
+
     let mut  a = 0;
     let mut b = 0;
     for accounts in update_accounts {
@@ -104,9 +115,10 @@ fn main() {
                 continue;
             }
             let acc_info = account.unwrap();
-            let amount =  unpack_token_account(&acc_info.data).amount as i64;
+            let unpacked: (wgpu::BindGroup, u64, anchor_lang::prelude::Pubkey) = unpack_token_account(&device, &acc_info.data);
+            let amount =  unpacked.1 as i64;
             if amount > 0 {
-                let mint = unpack_token_account(&acc_info.data).mint;
+                let mint = unpacked.2;
                 if !token_mints.contains(&mint) {
                     token_mints.push(mint);
                 }
@@ -139,9 +151,7 @@ fn main() {
         for account in token_accounts {
             let amount = match account {
                 Some(account) => {
-                    let data = account.data;
-
-                    unpack_token_account(&data).amount as i64
+                    unpack_token_account(&device, &account.data).1 as i64
                 }
                 None => -1_i64, // no ATA!
             };

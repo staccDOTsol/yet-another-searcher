@@ -6,17 +6,19 @@ use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Client, Cluster};
 use async_trait::async_trait;
 use serde;
-use solana_sdk::program_pack::Pack;
+
 use solana_sdk::signer::Signer;
+use wgpu::BindGroupLayout;
+use wgpu::util::DeviceExt;
 use std::sync::{Arc, Mutex};
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use std::collections::HashMap;
 use std::fmt::Debug;
-use std::rc::Rc;
+
 use std::str::FromStr;
 
-use solana_sdk::signature::Keypair;
+
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use serde::{Deserialize, Serialize};
@@ -69,13 +71,13 @@ async    fn swap_ix(
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, mint_in);
         let user_dst = derive_token_address(&owner, mint_out);
 
-        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
+        let _owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
         // setup anchor things
         let provider = Client::new_with_options(
             Cluster::Mainnet,
@@ -181,7 +183,7 @@ let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || progr
         true
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
+    fn set_update_accounts(&mut self, device: &wgpu::Device, accounts: Vec<Option<Account>>, _cluster: Cluster) {
         let ids: Vec<String> = self
             .get_mints()
             .iter()
@@ -193,30 +195,65 @@ let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || progr
         let acc_data0 = &accounts[0].as_ref().unwrap().data;
         let acc_data1 = &accounts[1].as_ref().unwrap().data;
 
-        let amount0 = unpack_token_account(acc_data0).amount as u128;
-        let amount1 = unpack_token_account(acc_data1).amount as u128;
+        let amount0 = unpack_token_account(device, acc_data0).1 as u128;
+        let amount1 = unpack_token_account(device, acc_data1).1 as u128;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
     }
 
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, bind_group_layout: BindGroupLayout, device: &wgpu::Device, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) -> Option<wgpu::BindGroup>{
         let acc_data0 = data;
-        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();
-        let _mint = amount0.mint;
-        let _mint = amount0.mint;
+        let (_, amount0, mint) = unpack_token_account(device, acc_data0);
         let id0 = &self.token_ids[0];
         let id1 = &self.token_ids[1];
-        if _mint.to_string() == id0.to_string() {
+        if mint.to_string() == *id0 {
             self.pool_amounts
                 .remove(&id0.to_string());
-                self.pool_amounts.insert(id0.clone(), amount0.amount as u128);
-        } else if _mint.to_string() == id1.to_string() {
+                self.pool_amounts.insert(id0.clone(), amount0 as u128);
+        } else if mint.to_string() == *id1 {
             self.pool_amounts
                 .remove(&id1.to_string());
             self.pool_amounts
-                .insert(id1.clone(), amount0.amount as u128);
+                .insert(id1.clone(), amount0 as u128);
         }
+
+        let amount = self.get_quote_with_amounts_scaled(1_000_000, &Pubkey::from_str(id0).unwrap(), &Pubkey::from_str(id1).unwrap());
+
+        let amount_inverse = self.get_quote_with_amounts_scaled(1_000_000, &Pubkey::from_str(id1).unwrap(),  &Pubkey::from_str(id0).unwrap());
+
+        let amount_bytes: [u8; 16] = amount.to_le_bytes();
+
+        let amount_inverse_bytes: [u8; 16] = amount_inverse.to_le_bytes();
+
+        let amount_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Amount Buffer"),
+            contents: &amount_bytes,
+            usage: wgpu::BufferUsages::COPY_SRC | wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::STORAGE,
+        });
+
+        let amount_inverse_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Amount Buffer"),
+            contents: &amount_inverse_bytes,
+            usage: wgpu::BufferUsages::COPY_SRC | wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::STORAGE,
+        });
+
+        let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+            layout: &bind_group_layout,
+            entries: &[
+                wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: amount_buffer.as_entire_binding(),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 1,
+                    resource: amount_inverse_buffer.as_entire_binding(),
+                },
+            ],
+            label: Some("buffer_bind_group"),
+        });
+
+        Some(bind_group)
     }
 
     fn get_own_addr(&self) -> Pubkey {
