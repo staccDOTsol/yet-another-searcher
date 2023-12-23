@@ -5,8 +5,8 @@ use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
 use base64::Engine;
 use base64::engine::{GeneralPurpose, general_purpose};
-use boilerplate::Boilerplate;
 use client::serialize::token::unpack_token_account;
+use log::{debug, warn};
 use core::panic;
 use redb::{Database, Error, ReadableTable, TableDefinition};
 use solana_sdk::program_pack::Pack;
@@ -24,14 +24,45 @@ use serde::{Deserialize, Serialize};
 
 use std::sync::{Arc, Mutex};
 
-#[derive(Debug, Clone)]
-struct Config {
-    msg: String,
-}
-#[derive(Debug)]
-struct AppState {
-    home_html: Mutex<HomeHtml>,
-}
+
+use {
+    chrono::{DateTime, NaiveDateTime, Utc},
+    clap::{Parser, ValueEnum},
+    futures::{sink::SinkExt, stream::StreamExt},
+    log::{error, info},
+    maplit::hashmap,
+    solana_sdk::signature::Signature,
+    std::{
+        collections::{BTreeMap, HashMap},
+        env,
+    },
+   
+};
+use {
+    futures::{future::TryFutureExt},
+    solana_transaction_status::{EncodedTransactionWithStatusMeta, UiTransactionEncoding},
+    std::{
+        fmt,
+        time::Duration,
+    },
+    yellowstone_grpc_client::{GeyserGrpcClient, GeyserGrpcClientError},
+    yellowstone_grpc_proto::{
+        prelude::{
+            subscribe_request_filter_accounts_filter::Filter as AccountsFilterDataOneof,
+            subscribe_request_filter_accounts_filter_memcmp::Data as AccountsFilterMemcmpOneof,
+            subscribe_update::UpdateOneof, CommitmentLevel, SubscribeRequest,
+            SubscribeRequestAccountsDataSlice, SubscribeRequestFilterAccounts,
+            SubscribeRequestFilterAccountsFilter, SubscribeRequestFilterAccountsFilterMemcmp,
+            SubscribeRequestFilterBlocks, SubscribeRequestFilterBlocksMeta,
+            SubscribeRequestFilterEntry, SubscribeRequestFilterSlots,
+            SubscribeRequestFilterTransactions, SubscribeRequestPing, SubscribeUpdateAccount,
+            SubscribeUpdateTransaction,
+        },
+        tonic::service::Interceptor,
+    },
+};
+
+
 
 use axum::routing::post;
 use axum::{
@@ -54,7 +85,6 @@ use tower_http::{
 use derive_more::FromStr;
 use num_traits::pow;
 use solana_client::client_error::ClientError;
-use solana_sdk::signature::Signature;
 use solana_sdk::signers::Signers;
 use solana_sdk::transaction::Transaction;
 use structopt::StructOpt;
@@ -64,7 +94,7 @@ use flash_loan_sdk::{available_liquidity, flash_loan_fee, get_reserve, FLASH_LOA
 
 use anchor_client::{Client, Cluster};
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{ HashSet};
 use std::fmt::Debug;
 use std::io::Write;
 use std::rc::Rc;
@@ -73,9 +103,7 @@ use std::str::FromStr;
 use std::borrow::Borrow;
 use std::vec;
 
-use clap::Parser;
 
-use log::{debug, info, warn};
 use solana_sdk::account::Account;
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
@@ -116,190 +144,165 @@ fn add_pool_to_graph<'a>(
     quotes.push(quote.clone());
 }
 
-#[derive(Debug)]
-pub enum ServerError {
-    BadRequest(String),
-    Internal(Error),
-    NotAcceptable(String),
-    NotFound(String),
-}
+async fn yellowstone(page_config: &mut Arc<ShardedDb>, 
+    
+    token_mints: Vec<Pubkey>, graph_edges: Vec<HashSet<usize>>, graph: PoolGraph, 
+    
+    cluster: &Cluster, connection_url: &str,
+     accounts: HashMap<String, SubscribeRequestFilterAccounts>,
+     mint2idx: HashMap<Pubkey, usize>,
+     ) -> Result<(), Box<dyn std::error::Error>> {
 
-pub type ServerResult<T> = Result<T, ServerError>;
 
-impl IntoResponse for ServerError {
-    fn into_response(self) -> Response {
-        match self {
-            Self::BadRequest(message) => (StatusCode::BAD_REQUEST, message).into_response(),
-            Self::Internal(error) => {
-                eprintln!("error serving request: {error}");
-                (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    StatusCode::INTERNAL_SERVER_ERROR
-                        .canonical_reason()
-                        .unwrap_or_default(),
-                )
-                    .into_response()
+        let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent());
+
+        let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
+        let start_mint_idx = *mint2idx.get(&usdc_mint).unwrap();
+
+        let start_mint: Pubkey = usdc_mint;
+    let min_swap_amount = 10_u128.pow(3_u32); // scaled! -- 1 USDC
+    let owner_kp_path = "/Users/jd/.config/solana/id.json";
+    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let rc_owner = Rc::new(owner);
+    let src_ata = derive_token_address(&rc_owner.pubkey(), &start_mint);
+    let init_token_acc = connection.get_account(&src_ata).unwrap();
+    let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128;
+    let mut swap_start_amount = init_token_balance; // scaled!
+    println!("swap start amount = {}", swap_start_amount); // track what arbs we did with a larger size
+    let init_token_acc = connection.get_account(&src_ata).unwrap();
+
+    println!("searching for arbitrages...");
+    let min_swap_amount = 10_u128.pow(4_u32); // scaled! -- 1 USDC
+    let mut client = GeyserGrpcClient::connect("https://jarrett-solana-7ba9.mainnet.rpcpool.com", Some("8d890735-edf2-4a75-af84-92f7c9e31718".to_string()), None)?;
+    let (mut subscribe_tx, mut stream) = client.subscribe().await?;
+
+    let commitment: CommitmentLevel = CommitmentLevel::Processed.into();
+    subscribe_tx
+        .send(SubscribeRequest {
+            slots: HashMap::new(),
+            accounts: accounts,
+            transactions: HashMap::new(),
+            entry: HashMap::new(),
+            blocks: HashMap::new(),
+            blocks_meta: HashMap::new(),
+            commitment: Some(commitment as i32),
+            accounts_data_slice: vec![],
+            ping: None,
+        })
+        .await?;
+    let arbitrager =Arbitrager {
+        token_mints,
+        graph_edges,
+        graph,
+        cluster: Cluster::Custom(
+            connection_url.to_string(),
+            connection_url.to_string()),
+        connection
+    };
+
+    let mut messages: BTreeMap<u64, (Option<DateTime<Utc>>, Vec<String>)> = BTreeMap::new();
+    while let Some(message) = stream.next().await {
+        match message {
+            Ok(msg) => {
+                match msg.update_oneof {
+                    Some(UpdateOneof::Transaction(tx)) => {
+                        let entry = messages.entry(tx.slot).or_default();
+                        let sig = Signature::try_from(tx.transaction.unwrap().signature.as_slice())
+                            .expect("valid signature from transaction")
+                            .to_string();
+                        if let Some(timestamp) = entry.0 {
+                            info!("received txn {} at {}", sig, timestamp);
+                        } else {
+                            entry.1.push(sig);
+                        }
+                    }
+                    Some(UpdateOneof::Account(acc)) => {
+                        let entry = messages.entry(acc.slot).or_default();
+                        let account = acc.account.clone().unwrap();
+                        let pubkey: Pubkey = bincode::deserialize(&account.pubkey).unwrap();
+                        let account: Account = bincode::deserialize(&account.data).unwrap();
+                        let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128;
+                        swap_start_amount /= 2;
+                        if swap_start_amount < min_swap_amount {
+                            swap_start_amount = init_token_balance;
+                        }
+                           let arb = arbitrager.brute_force_search(
+                                start_mint_idx,
+                                init_token_balance,
+                                swap_start_amount,
+                                vec![start_mint_idx],
+                                vec![],
+                                0
+                            );
+                            println!("arb is {:?}", arb);
+
+                        let pk = Pubkey::try_from(acc.account.unwrap().pubkey.as_slice())
+                            .expect("valid pubkey from account")
+                            .to_string();
+                        if let Some(timestamp) = entry.0 {
+                            info!("received account {} at {}", pk, timestamp);
+                        } else {
+                            entry.1.push(pk);
+                        }
+                    }
+                    Some(UpdateOneof::BlockMeta(block)) => {
+                        let entry = messages.entry(block.slot).or_default();
+                        entry.0 = block.block_time.map(|obj| {
+                            DateTime::from_naive_utc_and_offset(
+                                NaiveDateTime::from_timestamp_opt(obj.timestamp, 0).unwrap(),
+                                Utc,
+                            )
+                        });
+                        if let Some(timestamp) = entry.0 {
+                            for sig in &entry.1 {
+                                info!("received txn {} at {}", sig, timestamp);
+                            }
+                        }
+
+                        // remove outdated
+                        while let Some(slot) = messages.keys().next().cloned() {
+                            if slot < block.slot - 20 {
+                                messages.remove(&slot);
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    _ => {}
+                }
             }
-            Self::NotAcceptable(content_type) => (
-                StatusCode::NOT_ACCEPTABLE,
-                format!("inscription content type `{content_type}` is not acceptable"),
-            )
-                .into_response(),
-            Self::NotFound(message) => (
-                StatusCode::NOT_FOUND,
-                [(header::CACHE_CONTROL, HeaderValue::from_static("no-store"))],
-                message,
-            )
-                .into_response(),
+            Err(error) => {
+                error!("stream error: {error:?}");
+                break;
+            }
         }
-    }
-}
-
-pub trait OptionExt<T> {
-    fn ok_or_not_found<F: FnOnce() -> S, S: Into<String>>(self, f: F) -> ServerResult<T>;
-}
-
-impl<T> OptionExt<T> for Option<T> {
-    fn ok_or_not_found<F: FnOnce() -> S, S: Into<String>>(self, f: F) -> ServerResult<T> {
-        match self {
-            Some(value) => Ok(value),
-            None => Err(ServerError::NotFound(f().into() + " not found")),
-        }
-    }
-}
-
-impl From<Error> for ServerError {
-    fn from(error: Error) -> Self {
-        Self::Internal(error)
-    }
-}
-/*
-parsed: {
-  pubkey: 'EaXdHx7x3mdGA38j5RSmKYSXMzAFzzUXCLNBEDXDn1d5',
-  lamports: 457104960,
-  owner: 'srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX',
-  executable: false,
-  rent_epoch: 0,
-  data: ['AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'... 77400 more characters,
-    'base64'
-  ],
-  write_version: 939620503313
-     */
-#[derive(Deserialize, Serialize, Debug, Clone)]
-pub(crate) struct ShyftInfo {
-    pub pubkey: String,
-    pub lamports: u64,
-    pub owner: String,
-    pub executable: bool,
-    pub rent_epoch: u64,
-    pub data: Vec<String>,
-    pub write_version: u64,
-}
-#[derive(Deserialize, Serialize, Debug, Clone)]
-pub(crate) struct SetJson {
-    pub status_code: u8,
-}
-
-#[derive(Debug, PartialEq)]
-enum Command {
-    Get { key: String },
-    Set { key: String, val: Account },
-}
-
-#[derive(Deserialize, Serialize, Debug, Clone)]
-pub(crate) struct VecHomeHtml {
-    pub account: Vec<HomeHtml2>,
-}
-#[derive(Deserialize, Serialize, Debug, Clone)]
-pub(crate) struct HomeHtml2 {
-    pub account: HomeHtml,
-}
-#[derive(Boilerplate, Deserialize, Serialize, Debug, Clone)]
-pub(crate) struct HomeHtml {
-    pub parsed: ShyftInfo,
-}
-#[axum_macros::debug_handler]
-
-async fn home(
-    Extension(page_config): Extension<Arc<ShardedDb>>,
-    b: String,
-) -> ServerResult<impl IntoResponse> {
-    // if b iz string
-
-    let body = serde_json::from_str::<Vec<HomeHtml2>>(&b).unwrap();
-    tokio::task::spawn_blocking(move || {
-    for i in 0..body.len() {
-            let mut pc = page_config.lock().unwrap();
-            let mut data = &body[i].account.parsed.data;
-            let mut data = data[0].clone();
-            // data is b64, we need &[u8] 
             
-            let mut data = general_purpose::STANDARD
-            .decode(&data).unwrap();
             
+    }
+    Ok(())
 
-            pc.insert(
-                body[i].account.parsed.pubkey.clone(),
-                Account {
-                    lamports: body[i].account.parsed.lamports,
-                    data: data,
-                    owner: Pubkey::from_str(&body[i].account.parsed.owner).unwrap(),
-                    executable: body[i].account.parsed.executable,
-                    rent_epoch: body[i].account.parsed.rent_epoch,
-                    
-                },
-            );
-        }
-        });
-    Ok(Json(SetJson { status_code: 200 }).into_response())
 }
 #[tokio::main]
 
 async fn main() {
-    let page_config = Arc::new(ShardedDb::new(Mutex::new(HashMap::new())));
+    let mut page_config = Arc::new(ShardedDb::new(Mutex::new(HashMap::new())));
 
-    let router = Router::new()
-        .route("/", post(home))
-        .layer(Extension(page_config.clone()))
-        .layer(
-            CorsLayer::new()
-                .allow_methods([http::Method::POST])
-                .allow_origin(Any),
-        );
-    let handle = Handle::new();
-
-    let addr = ("0.0.0.0", 3000)
-        .to_socket_addrs()
-        .unwrap()
-        .next()
-        .ok_or_else(|| anyhow::anyhow!("failed to get socket addrs"))
-        .unwrap();
-    println!("addr = {}", addr);
-
-    // Spawn as tokio task
-    tokio::spawn(async move {
-        let server = axum_server::Server::bind(addr)
-            .handle(handle)
-            .serve(router.into_make_service());
-
-        server.await
-    });
     let args = Args::parse();
     let cluster = match args.cluster.as_str() {
         "localnet" => Cluster::Localnet,
         "mainnet" => Cluster::Mainnet,
         _ => panic!("invalid cluster type"),
     };
-    let owner_kp_path = args.keypair.as_str();
-
     // ** setup RPC connection
     let connection_url = match cluster {
-        Cluster::Mainnet => "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9",
+        Cluster::Mainnet => "https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718",
         _ => cluster.url(),
     };
     println!("using connection: {}", connection_url);
 
     let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent());
+
+    let owner_kp_path = args.keypair.as_str();
 
     // setup anchor things
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
@@ -336,6 +339,11 @@ async fn main() {
     let serum_dir = PoolDir {
         pool_type: PoolType::SerumPoolType,
         dir_path: "../pools/serum/".to_string(),
+    };
+    pool_dirs.push(serum_dir);
+    let serum_dir = PoolDir {
+        pool_type: PoolType::SerumPoolType,
+        dir_path: "../pools/openbook/".to_string(),
     };
     pool_dirs.push(serum_dir);
 
@@ -414,20 +422,20 @@ async fn main() {
     let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
     let start_mint = usdc_mint;
     let owner: &Keypair = rc_owner.borrow();
-    let owner_start_addr = derive_token_address(&owner.pubkey(), &start_mint);
+    let src_ata = derive_token_address(&owner.pubkey(), &start_mint);
 
     // slide it in there
-    update_pks.push(owner_start_addr);
+    update_pks.push(src_ata);
     let pk_strings = update_pks.iter().map(|pk| pk.to_string()).collect::<Vec<String>>();
     std::fs::write("update_pks.json", serde_json::to_string(&pk_strings).unwrap()).unwrap();
     println!("getting pool amounts...");
     let mut update_accounts = vec![];
     for token_addr_chunk in update_pks.chunks(99) {
         let accounts = connection.get_multiple_accounts(token_addr_chunk).unwrap();
-        update_accounts.push(accounts);
+        update_accounts.extend(accounts);
+        println!("got {:?} accounts", update_accounts.clone().len());
     }
     let mut update_accounts = update_accounts
-        .concat()
         .into_iter()
         .filter(|s| s.is_some())
         .collect::<Vec<Option<Account>>>();
@@ -449,6 +457,27 @@ async fn main() {
     let mut graph = PoolGraph::new();
     let mut pool_count = 0;
     let mut account_ptr = 0;
+
+    let mut filter_map: HashMap<String, SubscribeRequestFilterAccounts> = HashMap::new();
+    for pk in update_pks {
+        let maybe = connection.get_account(&pk);
+        if maybe.is_err() {
+            continue;
+        }
+        let account = maybe.unwrap();
+        let mut filters: Vec<SubscribeRequestFilterAccountsFilter> = vec![];
+        
+        filter_map.insert(
+            pk.to_string(),
+            
+            SubscribeRequestFilterAccounts {
+                account: vec![pk.to_string()],
+                owner: vec![account.owner.to_string()],
+                filters: filters
+            },
+        );
+    }
+    println!("filter map is {:?}", filter_map.len());
 
     for mut pool in pools.iter_mut() {
         // update pool
@@ -493,142 +522,11 @@ let pool = pool.clone();
     let min_swap_amount = 10_u128.pow(4_u32); // scaled! -- 1 USDC
     let mut swap_start_amount = init_token_balance; // scaled!
     println!("swap start amount = {}", swap_start_amount);
+    // Spawn as tokio task
+  
+
     
-loop {
-
-    let init_token_acc = connection.get_account(&src_ata).unwrap();
-    let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128;
-    swap_start_amount /= 2;
-    if swap_start_amount < min_swap_amount {
-        swap_start_amount = init_token_balance;
-    }
-
-    // ** json pool -> pool object
-    let mut token_mints = vec![];
-
-    let mut all_mint_idxs = vec![];
-
-    let mut mint2idx = HashMap::new();
-    let mut graph_edges = vec![];
-    // ** define pool JSONs
-    let mut pool_dirs: Vec<PoolDir> = vec![];
-
-    let r_dir = PoolDir {
-        pool_type: PoolType::RaydiumPoolType,
-        dir_path: "../pools/raydium".to_string(),
-    };
-    pool_dirs.push(r_dir);
-    let orca_dir = PoolDir {
-        pool_type: PoolType::OrcaPoolType,
-        dir_path: "../pools/orca".to_string(),
-    };
-    pool_dirs.push(orca_dir);
-
-    let saber_dir = PoolDir {
-        pool_type: PoolType::SaberPoolType,
-        dir_path: "../pools/saber/".to_string(),
-    };
-    pool_dirs.push(saber_dir);
-
-    let serum_dir = PoolDir {
-        pool_type: PoolType::SerumPoolType,
-        dir_path: "../pools/serum/".to_string(),
-    };
-    pool_dirs.push(serum_dir);
-    
-
-    // !
-    let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
-    let start_mint = usdc_mint;
-
-    let owner: &Keypair = rc_owner.borrow();
-    let owner_start_addr = derive_token_address(&owner.pubkey(), &start_mint);
-
-
-    let mut graph = PoolGraph::new();
-    let mut pool_count = 0;
-    let mut account_ptr = 0;
-let mut start_mint_idx   = 0;
-    for mut pool in pools.iter_mut() {
-        let pool_mints = pool.get_mints();
-        let mut mint_idxs = vec![];
-        for mint in pool_mints {
-            let idx;
-            if !token_mints.contains(&mint) {
-                idx = token_mints.len();
-                mint2idx.insert(mint, idx);
-                token_mints.push(mint);
-                // graph_edges[idx] will always exist :)
-                graph_edges.push(HashSet::new());
-            } else {
-                idx = *mint2idx.get(&mint).unwrap();
-            }
-            mint_idxs.push(idx);
-            if mint == start_mint {
-                start_mint_idx = idx;
-            }
-        }
-
-        let mint0_idx = mint_idxs[0];
-        let mint1_idx = mint_idxs[1];
-
-        all_mint_idxs.push(mint0_idx);
-        all_mint_idxs.push(mint1_idx);
-
-        // record graph edges if they dont already exist
-        if !graph_edges[mint0_idx].contains(&mint1_idx) {
-            graph_edges[mint0_idx].insert(mint1_idx);
-        }
-        if !graph_edges[mint1_idx].contains(&mint0_idx) {
-            graph_edges[mint1_idx].insert(mint0_idx);
-        }
-        // update pool
-        let accounts = pool.get_update_accounts();
-        let pc = page_config.lock().unwrap();
-        let name = pool.get_name();
-        for acc in accounts {
-            let mut maybe =  pc.get(&acc.to_string());
-            if maybe.is_some(){
-                    let data: Account = maybe.unwrap().clone();
-                   pool.set_update_accounts2(Pubkey::from_str(&acc.to_string()).unwrap(), &data.data, Cluster::Mainnet);
-            }
-        }
-        // add pool to graph
-        let idxs = &all_mint_idxs[pool_count * 2..(pool_count + 1) * 2].to_vec();
-        let idx0 = PoolIndex(idxs[0]);
-        let idx1 = PoolIndex(idxs[1]);
-        let pool = pool.clone();
-        let mut pool_ptr = PoolQuote::new(Rc::new(pool));
-        add_pool_to_graph(&mut graph, idx0, idx1, &mut pool_ptr.clone());
-        add_pool_to_graph(&mut graph, idx1, idx0, &mut pool_ptr);
-
-        pool_count += 1;
-    }
-
-
-    let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent());
+        yellowstone(&mut page_config, token_mints, graph_edges, graph, &cluster, connection_url, filter_map, mint2idx).await;
 
    
-
-    let arbitrager =Arbitrager {
-        token_mints,
-        graph_edges,
-        graph,
-        cluster: Cluster::Mainnet,
-        connection,
-    };
-    
-            arbitrager.brute_force_search(
-                start_mint_idx,
-                init_token_balance,
-                swap_start_amount,
-                vec![start_mint_idx],
-                vec![],
-            ).await;
-
-    swap_start_amount /= 2;
-    if swap_start_amount < min_swap_amount {
-        swap_start_amount = init_token_balance;
-    }
-}
 }

@@ -33,6 +33,8 @@ use crate::monitor::pool_utils::stable::Stable;
 use crate::utils::{derive_token_address, str2pubkey};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+
 pub struct SaberPool {
     pub pool_account: WrappedPubkey,
     pub authority: WrappedPubkey,

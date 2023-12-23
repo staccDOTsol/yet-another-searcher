@@ -7,10 +7,10 @@ use anchor_client::solana_sdk::pubkey::Pubkey;
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
 use anchor_client::{Cluster, Program};
 use serde_json::json;
-use solana_address_lookup_table_program::state::AddressLookupTable;
+use solana_address_lookup_table_program::state::{AddressLookupTable};
 use solana_client::rpc_request::RpcRequest;
-use solana_program::address_lookup_table::AddressLookupTableAccount;
 use solana_program::message::{VersionedMessage, v0};
+use solana_sdk::address_lookup_table_account::AddressLookupTableAccount;
 use solana_sdk::commitment_config::{CommitmentLevel, CommitmentConfig};
 use solana_sdk::signature::{read_keypair_file, Signature};
 use solana_transaction_status::UiTransactionEncoding;
@@ -43,18 +43,18 @@ pub struct Arbitrager {
     pub connection: RpcClient,
 }
 impl Arbitrager {
-#[async_recursion::async_recursion]
 
-    pub async     fn brute_force_search(
+    pub      fn brute_force_search(
         &self,
         start_mint_idx: usize,
         init_balance: u128,
         curr_balance: u128,
         path: Vec<usize>,
         pool_path: Vec<PoolQuote>,
-    ) {
+        old_best: u128,
+    ) -> u128 {
         if curr_balance == 0 {
-            return;
+            return old_best;
         }
         let src_curr = path[path.len() - 1]; // last mint
         let src_mint = self.token_mints[src_curr];
@@ -64,7 +64,7 @@ impl Arbitrager {
         // path = 4 = A -> B -> C -> D
         // path >= 5 == not valid bc max tx size is swaps
         if path.len() == 4 {
-            return;
+            return old_best;
         };
 
         for dst_mint_idx in out_edges {
@@ -92,12 +92,17 @@ impl Arbitrager {
                 let mut new_pool_path = pool_path.clone();
                 new_pool_path.push(pool.clone()); // clone the pointer
                 if dst_mint_idx == start_mint_idx {
-                    
+                    let mut old_best = old_best;
                     // if new_balance > init_balance - 1086310399 {
                     if (new_balance as f64 > curr_balance as f64 * 1.001) && (new_balance  < u128::from((curr_balance * 333 )/ 100)) {
-                        // ... profitable arb!
-                        println!("found arbitrage: {:?} -> {:?}", curr_balance, new_balance);
-
+                        let arb: u128 = new_balance - init_balance;
+                        if (arb >  old_best) {
+                            old_best = arb ;
+                    
+                            // ... profitable arb!
+                            println! ("found new best rbitrage: {:?} -> {:?}", curr_balance, new_balance);
+                        }
+                        /*
                         // check if arb was sent with a larger size
                         // key = {mint_path}{pool_names}
                         let mint_keys: Vec<String> =
@@ -105,16 +110,17 @@ impl Arbitrager {
                         let pool_keys: Vec<String> =
                             new_pool_path.iter().map(|p| p.0.get_name()).collect();
                         let arb_key = format!("{}{}", mint_keys.join(""), pool_keys.join(""));
-                        println!("arbkey: {:?}", arb_key);
+                        println!("arbkey: {:?}", arb_key);/* 
                         let mut ixs = self.get_arbitrage_instructions(
                             init_balance,
                             &new_path,
                             &new_pool_path,
-                        ).await;
+                        ).await; */
                         let mut ix;
                         ixs.0.concat();
                             
     let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+                        
     let owner = owner3.try_pubkey().unwrap();
         let src_ata = derive_token_address(&owner, &dst_mint);
                                 // PROFIT OR REVERT instruction
@@ -224,7 +230,7 @@ impl Arbitrager {
                               let tx = Transaction::new_signed_with_payer(
                                 &ixs.0.concat(),
                                 Some(&owner),
-                                &[&owner3],
+                                &[&*owner3],
                                 self.connection.get_latest_blockhash().unwrap(),
                             );
                             let signature = self.connection
@@ -235,7 +241,7 @@ impl Arbitrager {
                                     println!("{}" , signature.err().unwrap());
                                     
                                 }
-                            
+                             */
                                 
                     }
                 } else if !path.contains(&dst_mint_idx) {
@@ -247,10 +253,12 @@ impl Arbitrager {
                         new_balance,   // !
                         new_path,      // !
                         new_pool_path, // !
-                    ).await;
+                        old_best
+                    );
                 }
             }
         }
+        return old_best;
     }
 
 async    fn get_arbitrage_instructions<'a>(
