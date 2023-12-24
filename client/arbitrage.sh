@@ -1,5 +1,5 @@
 while :
 
 do
- ./target/release/main --cluster mainnet --flashing no --keypair /Users/stevengavacs/.config/solana/id.json	
+ ./target/release/main --cluster mainnet --flashing no --keypair /root/.config/solana/id.json	
 done

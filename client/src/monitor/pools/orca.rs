@@ -69,13 +69,13 @@ async    fn swap_ix(
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, mint_in);
         let user_dst = derive_token_address(&owner, mint_out);
 
-        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
+        let owner_kp_path = "/root/.config/solana/id.json";
         // setup anchor things
         let provider = Client::new_with_options(
             Cluster::Mainnet,

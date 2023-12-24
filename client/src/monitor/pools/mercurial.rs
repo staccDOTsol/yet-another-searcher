@@ -65,7 +65,7 @@ impl PoolOperations for MercurialPool {
     ) -> (bool, Vec<Instruction>) {
         let swap_state_pda =
             Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-            let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
+            let owner_kp_path = "/root/.config/solana/id.json";
             let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
             let owner = owner2.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, mint_in);

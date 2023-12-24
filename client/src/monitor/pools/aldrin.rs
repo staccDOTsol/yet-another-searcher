@@ -75,9 +75,9 @@ async    fn swap_ix(
     ) -> (bool, Vec<Instruction>) {
         let state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
-        let owner_kp_path = "/Users/stevengavacs/.config/solana/id.json";
+        let owner_kp_path = "/root/.config/solana/id.json";
         // setup anchor things
-        let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
         
         let owner = owner3.try_pubkey().unwrap()    ;
         let provider = Client::new_with_options(

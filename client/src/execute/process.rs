@@ -141,7 +141,7 @@ pub async    fn get_arbitrage_instructions<'a>(
         mint_idxs: &Vec<usize>,
         pools: &Vec<PoolQuote>,    ) -> (Vec<Vec<Instruction>>, bool) {
             
-    let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
+    let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
 
     let owner = owner3.try_pubkey().unwrap();
         // gather swap ixs
