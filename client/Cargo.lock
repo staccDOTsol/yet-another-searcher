@@ -1215,6 +1215,7 @@ dependencies = [
  "base64 0.21.5",
  "bincode",
  "boilerplate",
+ "bs58 0.5.0",
  "bytemuck",
  "chrono",
  "clap 3.2.25",
@@ -1225,6 +1226,7 @@ dependencies = [
  "env_logger",
  "flash-loan-sdk",
  "futures",
+ "hex",
  "http 1.0.0",
  "indicatif 0.16.2",
  "lazy_static",
@@ -1236,10 +1238,12 @@ dependencies = [
  "openbook_dex",
  "ordered-float",
  "proptest",
+ "rand 0.8.5",
  "raydium-contract-instructions",
  "rayon",
  "redb",
  "roots",
+ "round",
  "serde",
  "serde_json",
  "sha2 0.10.8",
@@ -3667,6 +3671,12 @@ name = "roots"
 version = "0.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1c36d2bbc763f480668d6d6790ae2fdd2e52ac0c21a3a26d156f3534a3d9eea9"
+
+[[package]]
+name = "round"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b02705db4fa872ae37e464fc803b7ffa574e6c4a5e112c52a82550f9dd63b657"
 
 [[package]]
 name = "rpassword"

@@ -11,13 +11,13 @@ use std::sync::{Arc, Mutex};
 
 use anchor_client::Cluster;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct PoolDir {
     pub pool_type: PoolType,
     pub dir_path: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum PoolType {
     OrcaPoolType,
     MercurialPoolType,

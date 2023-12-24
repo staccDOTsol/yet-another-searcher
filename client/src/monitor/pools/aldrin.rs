@@ -29,7 +29,7 @@ use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::monitor::pool_utils::base::CurveType;
 use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
 use crate::serialize::pool::JSONFeeStructure2;
-use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
+use crate::serialize::token::{ Token, WrappedPubkey};
 use crate::utils::{derive_token_address, str2pubkey};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -246,8 +246,8 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
         let acc_data0 = &accounts[0].as_ref().unwrap().data;
         let acc_data1 = &accounts[1].as_ref().unwrap().data;
 
-        let amount0 = unpack_token_account(acc_data0).amount as u128;
-        let amount1 = unpack_token_account(acc_data1).amount as u128;
+        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap().amount as u128;
+        let amount1 = spl_token::state::Account::unpack(acc_data1).unwrap().amount as u128;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);

@@ -1,6 +1,6 @@
 use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::pool::JSONFeeStructure;
-use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
+use crate::serialize::token::{ Token, WrappedPubkey};
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Client, Cluster};
@@ -120,8 +120,13 @@ let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || progr
         mint_out: &Pubkey,
     ) -> u128 {
         
-        let pool_src_amount = self.pool_amounts.get(&mint_in.to_string()).unwrap();
-        let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string()).unwrap();
+        let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
+        let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
+        if pool_src_amount.is_none() || pool_dst_amount.is_none() {
+            return 0;
+        }
+        let pool_src_amount = pool_src_amount.unwrap();
+        let pool_dst_amount = pool_dst_amount.unwrap();
 
         // compute fees
         let trader_fee = &self.fee_structure.trader_fee;
@@ -190,11 +195,16 @@ let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || progr
         let id0 = &ids[0];
         let id1 = &ids[1];
 
-        let acc_data0 = &accounts[0].as_ref().unwrap().data;
-        let acc_data1 = &accounts[1].as_ref().unwrap().data;
+        let acc_data0 = &accounts[0].as_ref();
+        let acc_data1 = &accounts[1].as_ref();
+        if acc_data0.is_none() || acc_data1.is_none() {
+            return;
+        }
+        let acc_data0 = &acc_data0.unwrap().data;
+        let acc_data1 = &acc_data1.unwrap().data;
 
-        let amount0 = unpack_token_account(acc_data0).amount as u128;
-        let amount1 = unpack_token_account(acc_data1).amount as u128;
+        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap().amount as u128;
+        let amount1 = spl_token::state::Account::unpack(acc_data1).unwrap().amount as u128;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
@@ -209,13 +219,14 @@ let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || progr
         let id1 = &self.token_ids[1];
         if _mint.to_string() == id0.to_string() {
             self.pool_amounts
-                .remove(&id0.to_string());
-                self.pool_amounts.insert(id0.clone(), amount0.amount as u128);
+                .entry(id0.clone())
+                .and_modify(|e| *e = amount0.amount as u128)
+                .or_insert(amount0.amount as u128);
         } else if _mint.to_string() == id1.to_string() {
             self.pool_amounts
-                .remove(&id1.to_string());
-            self.pool_amounts
-                .insert(id1.clone(), amount0.amount as u128);
+                .entry(id1.clone())
+                .and_modify(|e| *e = amount0.amount as u128)
+                .or_insert(amount0.amount as u128);
         }
     }
 

@@ -1,7 +1,7 @@
 use crate::monitor::pool_utils::serum::FeeTier;
 use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::pool::JSONFeeStructure;
-use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
+use crate::serialize::token::{ Token, WrappedPubkey};
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Client, Cluster};
@@ -92,7 +92,9 @@ pub struct RaydiumPool {
     pub market_event_queue: WrappedPubkey,
     pub model_data_account: Option<WrappedPubkey>,
     #[serde(skip)]
-    pub accounts: Option<Vec<Option<Account>>>,
+    pub accounts: Vec<Option<Account>>,
+    #[serde(skip)]
+    pub pool_amounts: HashMap<String, u128>,
 }
 
 
@@ -286,30 +288,30 @@ async    fn swap_ix(
         };
         let fee_tier = FeeTier::from_srm_and_msrm_balances(&market_pk, 0, 0);
 
-        let market_acc = &self.accounts.as_ref().unwrap()[0];
-        let bids_acc = &self.accounts.as_ref().unwrap()[1];
-        let tval = self.accounts.as_ref().unwrap();
+        let market_acc = &self.accounts[0];
+        let bids_acc = &self.accounts[1];
+        let tval = &self.accounts;
         if tval.len() < 3 {
             return 0;
         }
 
-        let asks_acc = &self.accounts.as_ref().unwrap()[2];
+        let asks_acc = &self.accounts[2];
 
         // clone accounts for simulation (improve later?)
         let market_acc = &mut market_acc.clone().unwrap();
         let bid_acc = &mut bids_acc.clone().unwrap();
         let ask_acc = &mut asks_acc.clone().unwrap();
 
-        let market_acc_info = &account_info(&self.market_id, market_acc);
+        let market_acc_info = &account_info(&self.id,market_acc);
 
         let bids_acc = &account_info(&self.market_bids.0, bid_acc);
         let asks_acc = &account_info(&self.market_asks.0, ask_acc);
-        let mut m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
+        let mut m = Market::load(market_acc_info, &ammProgramID, true);
         if !m.is_ok() {
             
-            m = Market::load(market_acc_info, &stableProgramID, false);
+            m = Market::load(market_acc_info, &stableProgramID, true);
             if !m.is_ok()   {
-                
+                println!("not ok");
                 return 0;
             }
         }
@@ -358,48 +360,13 @@ async    fn swap_ix(
 
 
     fn can_trade(&self, mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
-        let market_acc = &self.accounts.as_ref().unwrap()[0];
-        let bids_acc = &self.accounts.as_ref().unwrap()[1];
-        let asks_acc = &self.accounts.as_ref().unwrap()[2];
-
-        // clone accounts for simulation (improve later?)
-        let market_acc = &mut market_acc.clone().unwrap();
-        let bid_acc = &mut bids_acc.clone().unwrap();
-        let ask_acc = &mut asks_acc.clone().unwrap();
-
-        let market_acc_info = &account_info(&self.market_id, market_acc);
-        let bids_acc = &account_info(&self.market_bids.0, bid_acc);
-        let asks_acc = &account_info(&self.market_asks.0, ask_acc);
-
-        let mut m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
-        if !m.is_ok() {
-            m = Market::load(market_acc_info, &stableProgramID, false);
-            if !m.is_ok()   {
-                
+        for amount in self.pool_amounts.values() {
+            if *amount == 0 {
                 return false;
             }
         }
-        let market = m.unwrap();
-        let bids = market.load_bids_mut(bids_acc).unwrap();
-        let asks = market.load_asks_mut(asks_acc).unwrap();
-
-        // is there a bid or ask we can trade with???
-        if *mint_in == self.quote_mint.0 {
-            // bid: quote -> base
-            match asks.find_min() {
-                // min = best ask
-                Some(_) => true,
-                None => false,
-            }
-        } else if *mint_in == self.base_mint.0 {
-            // ask: base -> quote
-            match bids.find_max() {
-                Some(_) => true,
-                None => false,
-            }
-        } else {
-            panic!("invalid mints");
-        }
+        true
+        
     }fn get_name(&self) -> String {
         "Raydium".to_string()
     }
@@ -408,86 +375,48 @@ async    fn swap_ix(
         self.id.0
     }
     fn get_update_accounts(&self) -> Vec<Pubkey> {
-        vec![self.market_id.0, self.base_vault.0, self.quote_vault.0]
+        vec![self.base_vault.0, self.quote_vault.0]
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster) {
-        self.accounts = Some(accounts);
+    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
+        let ids: Vec<String> = self
+            .get_mints()
+            .iter()
+            .map(|mint| mint.to_string())
+            .collect();
+        let id0 = &ids[0];
+        let id1 = &ids[1];
 
-        let oo_path = match cluster {
-            Cluster::Localnet => "./serum_open_orders.json",
-            Cluster::Mainnet => "./serum_open_orders.json",
-            _ => panic!("clsuter {} not supported", cluster),
-        };
-        let oo_str = std::fs::read_to_string(oo_path).unwrap();
-        let oo_book: HashMap<String, String> = serde_json::from_str(&oo_str).unwrap();
+        let acc_data0 = &accounts[0].as_ref().unwrap().data;
+        let acc_data1 = &accounts[1].as_ref().unwrap().data;
+
+        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap().amount as u128;
+        let amount1 = spl_token::state::Account::unpack(acc_data1).unwrap().amount as u128;
+
+        self.pool_amounts.insert(id0.clone(), amount0);
+        self.pool_amounts.insert(id1.clone(), amount1);
     }
 
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
-        let testing = self.accounts.clone();
-        let mut taccs = vec![];
-        if testing.is_some() {
-            taccs = testing.unwrap();
-        } else {
-            return;
-        }
-        if taccs.len() < 3 {
-            return;
-        }
-
-        let flags = Market::account_flags(data);
-        if flags.is_err() {
-            return;
-        }
-        let flags = flags.unwrap();
-        if flags.intersects(AccountFlag::Bids) {
-            if taccs.len() < 2 {
-                taccs.push(Some(Account {
-                    lamports: 0,
-                    data: data.to_vec(),
-                    owner: Pubkey::default(),
-                    executable: false,
-                    rent_epoch: 0,
-                }));
-            }
-            let mut bids = taccs.get(1).unwrap().clone().unwrap();
-            bids.data = data.to_vec();
-            let tval = taccs.get(2);
-            if tval.is_none() {
-                self.accounts = Some(vec![taccs.get(0).unwrap().clone(), Some(bids)]);
-            } else {
-                self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
-                    Some(bids),
-                    taccs.get(2).unwrap().clone(),
-                ]);
-            }
-        }
-        if flags.intersects(AccountFlag::Asks) {
-            if taccs.len() < 3 {
-                taccs.push(Some(Account {
-                    lamports: 0,
-                    data: data.to_vec(),
-                    owner: Pubkey::default(),
-                    executable: false,
-                    rent_epoch: 0,
-                }));
-                self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
-                    taccs.get(1).unwrap().clone(),
-                    (taccs.get(2).unwrap().clone()),
-                ]);
-            } else {
-                let mut asks = taccs.get(2).unwrap().clone().unwrap();
-                asks.data = data.to_vec();
-                self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
-                    taccs.get(1).unwrap().clone(),
-                    Some(asks),
-                ]);
-            }
+        let acc_data0 = data;
+        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();
+        let _mint = amount0.mint;
+        let _mint = amount0.mint;
+        let id0 = self.base_mint.0.to_string();
+        let id1 = self.quote_mint.0.to_string();
+        if _mint.to_string() == id0.to_string() {
+            self.pool_amounts
+                .entry(id0.clone())
+                .and_modify(|e| *e = amount0.amount as u128)
+                .or_insert(amount0.amount as u128);
+        } else if _mint.to_string() == id1.to_string() {
+            self.pool_amounts
+                .entry(id1.clone())
+                .and_modify(|e| *e = amount0.amount as u128)
+                .or_insert(amount0.amount as u128);
         }
     }
+
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey {
         if *mint == self.base_mint.0 {

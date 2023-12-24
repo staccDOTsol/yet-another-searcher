@@ -15,7 +15,7 @@ use anchor_client::{Client, Cluster};
 use std::str::FromStr;
 
 use crate::monitor::pools::{PoolOperations, PoolType};
-use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
+use crate::serialize::token::{ Token, WrappedPubkey};
 use serde;
 use serde::{Deserialize, Serialize};
 use solana_sdk::signature::Keypair;
@@ -131,8 +131,13 @@ async    fn swap_ix(
             fee_numerator: self.fee_numerator as u128,
             fee_denominator: self.fee_denominator as u128,
         };
-            let pool_src_amount = self.pool_amounts.get(&mint_in.to_string()).unwrap();
-            let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string()).unwrap();
+            let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
+            let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
+            if pool_src_amount.is_none() || pool_dst_amount.is_none() {
+                return 0;
+            }
+            let pool_src_amount = pool_src_amount.unwrap();
+            let pool_dst_amount = pool_dst_amount.unwrap();
             let pool_amounts = [*pool_src_amount, *pool_dst_amount];
             let percision_multipliers = [1, 1];
 
@@ -159,11 +164,22 @@ async    fn swap_ix(
         let id0 = &ids[0];
         let id1 = &ids[1];
 
-        let acc_data0 = &accounts[0].as_ref().unwrap().data;
-        let acc_data1 = &accounts[1].as_ref().unwrap().data;
+        let acc_data0 = &accounts[0].as_ref();
+        let acc_data1 = &accounts[1].as_ref();
+        if acc_data0.is_none() || acc_data1.is_none() {
+            return;
+        }
+        let acc_data0 = &acc_data0.unwrap().data;
+        let acc_data1 = &acc_data1.unwrap().data;
 
-        let amount0 = unpack_token_account(acc_data0).amount as u128;
-        let amount1 = unpack_token_account(acc_data1).amount as u128;
+        let amount0 = spl_token::state::Account::unpack(acc_data0);
+        let amount1 = spl_token::state::Account::unpack(acc_data1);
+        if amount0.is_err() || amount1.is_err() {
+            println!("saber pool amount err: {:?} {:?}", amount0, amount1);
+            return;
+        }
+        let amount0 = amount0.unwrap().amount as u128;
+        let amount1 = amount1.unwrap().amount as u128;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
@@ -183,13 +199,14 @@ async    fn swap_ix(
         let id1 = &self.token_ids[1];
         if _mint.to_string() == id0.to_string() {
             self.pool_amounts
-                .remove(&id0.to_string());
-                self.pool_amounts.insert(id0.clone(), amount0.amount as u128);
+                .entry(id0.clone())
+                .and_modify(|e| *e = amount0.amount as u128)
+                .or_insert(amount0.amount as u128);
         } else if _mint.to_string() == id1.to_string() {
             self.pool_amounts
-                .remove(&id1.to_string());
-            self.pool_amounts
-                .insert(id1.clone(), amount0.amount as u128);
+                .entry(id1.clone())
+                .and_modify(|e| *e = amount0.amount as u128)
+                .or_insert(amount0.amount as u128);
         }
     }
 
@@ -211,7 +228,11 @@ async    fn swap_ix(
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey {
         if self.tokens.contains_key(&mint.to_string()) {
-            let token = self.tokens.get(&mint.to_string()).unwrap();
+            let token = self.tokens.get(&mint.to_string());
+            if token.is_none() {
+                return Pubkey::new_from_array([0; 32]);
+            }
+            let token = token.unwrap();
 
             token.addr.0
         } else {

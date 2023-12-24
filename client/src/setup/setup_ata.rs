@@ -8,6 +8,7 @@ use anchor_client::solana_sdk::signature::Signer;
 use anchor_client::Cluster;
 
 use client::monitor::pools::pool::PoolDir;
+use solana_program::program_pack::Pack;
 use solana_sdk::instruction::Instruction;
 use solana_sdk::transaction::Transaction;
 
@@ -22,7 +23,6 @@ use log::warn;
 
 use client::constants::*;
 use client::monitor::pools::pool::{pool_factory, PoolOperations, PoolType};
-use client::serialize::token::unpack_token_account;
 use client::utils::{derive_token_address, read_json_dir};
 
 fn main() {
@@ -104,9 +104,9 @@ fn main() {
                 continue;
             }
             let acc_info = account.unwrap();
-            let amount =  unpack_token_account(&acc_info.data).amount as i64;
+            let amount =  spl_token::state::Account::unpack(&acc_info.data).unwrap().amount as i64;
             if amount > 0 {
-                let mint = unpack_token_account(&acc_info.data).mint;
+                let mint = spl_token::state::Account::unpack(&acc_info.data).unwrap().mint;
                 if !token_mints.contains(&mint) {
                     token_mints.push(mint);
                 }
@@ -141,7 +141,7 @@ fn main() {
                 Some(account) => {
                     let data = account.data;
 
-                    unpack_token_account(&data).amount as i64
+                    spl_token::state::Account::unpack(&data).unwrap().amount as i64
                 }
                 None => -1_i64, // no ATA!
             };

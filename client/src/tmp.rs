@@ -10,6 +10,7 @@ use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
 
 use anchor_client::{Client, Cluster};
+use solana_program::program_pack::Pack;
 
 use std::collections::{HashMap, HashSet};
 use std::fmt::Debug;
@@ -25,7 +26,6 @@ use log::{debug, info, warn};
 use solana_sdk::account::Account;
 
 use client::constants::*;
-use client::serialize::token::unpack_token_account;
 use client::utils::{
     derive_token_address, read_json_dir, PoolEdge, PoolGraph, PoolIndex, PoolQuote,
 };
@@ -206,7 +206,7 @@ fn main() {
     // slide it out here
     let init_token_acc = derive_token_address(&owner.pubkey(), &usdc_mint);
     let init_token_balance =
-        unpack_token_account(&connection.get_account(&init_token_acc).unwrap().data).amount as u128;
+        spl_token::state::Account::unpack(&connection.get_account(&init_token_acc).unwrap().data).unwrap().amount as u128;
     println!(
         "init token acc: {:?}, balance: {:#}",
         init_token_acc, init_token_balance

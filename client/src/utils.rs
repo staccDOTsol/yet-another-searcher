@@ -52,7 +52,7 @@ impl PoolQuote {
 unsafe impl Send for PoolQuote {}
 
 unsafe impl Sync for PoolQuote {}
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct PoolGraph(pub HashMap<PoolIndex, PoolEdge>);
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]

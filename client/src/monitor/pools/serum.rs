@@ -58,7 +58,7 @@ pub struct SerumPool {
     pub fee_rate_bps: String,
     // !!
     #[serde(skip)]
-    pub accounts: Option<Vec<Option<Account>>>,
+    pub accounts: Vec<Option<Account>>,
     #[serde(skip)]
     pub open_orders: Option<HashMap<String, String>>,
 }
@@ -219,7 +219,7 @@ impl PoolOperations for SerumPool {
     }
 
     fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster) {
-        self.accounts = Some(accounts);
+        self.accounts = accounts.clone();
 
         let oo_path = match cluster {
             Cluster::Localnet => "./serum_open_orders.json",
@@ -229,71 +229,44 @@ impl PoolOperations for SerumPool {
         let oo_str = std::fs::read_to_string(oo_path).unwrap();
         let oo_book: HashMap<String, String> = serde_json::from_str(&oo_str).unwrap();
         self.open_orders = Some(oo_book);
+        for account in accounts.clone() {
+            let flags = Market::account_flags(&account.clone().unwrap().data);
+            if flags.is_err() {
+                return;
+            }
+            let flags = flags.unwrap();
+            if flags.intersects(AccountFlag::Bids) {
+                    self.accounts[1] = (Some(account.clone().unwrap()))
+            }
+            if flags.intersects(AccountFlag::Asks) {
+                    self.accounts[2] = (Some(account.clone().unwrap()))
+            }
+        }
     }
 
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
-        let testing = self.accounts.clone();
-        let mut taccs = vec![];
-        if testing.is_some() {
-            taccs = testing.unwrap();
-        } else {
-            return;
-        }
-        if taccs.len() < 3 {
-            return;
-        }
-
-        let flags = Market::account_flags(data);
+        let flags = Market::account_flags(&data);
         if flags.is_err() {
             return;
         }
         let flags = flags.unwrap();
         if flags.intersects(AccountFlag::Bids) {
-            if taccs.len() < 2 {
-                taccs.push(Some(Account {
+                self.accounts[1] =Some(Account {
                     lamports: 0,
                     data: data.to_vec(),
                     owner: Pubkey::default(),
                     executable: false,
                     rent_epoch: 0,
-                }));
-            }
-            let mut bids = taccs.get(1).unwrap().clone().unwrap();
-            bids.data = data.to_vec();
-            let tval = taccs.get(2);
-            if tval.is_none() {
-                self.accounts = Some(vec![taccs.get(0).unwrap().clone(), Some(bids)]);
-            } else {
-                self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
-                    Some(bids),
-                    taccs.get(2).unwrap().clone(),
-                ]);
-            }
+                });
         }
         if flags.intersects(AccountFlag::Asks) {
-            if taccs.len() < 3 {
-                taccs.push(Some(Account {
+                self.accounts[2] = Some(Account {
                     lamports: 0,
                     data: data.to_vec(),
                     owner: Pubkey::default(),
                     executable: false,
                     rent_epoch: 0,
-                }));
-                self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
-                    taccs.get(1).unwrap().clone(),
-                    (taccs.get(2).unwrap().clone()),
-                ]);
-            } else {
-                let mut asks = taccs.get(2).unwrap().clone().unwrap();
-                asks.data = data.to_vec();
-                self.accounts = Some(vec![
-                    taccs.get(0).unwrap().clone(),
-                    taccs.get(1).unwrap().clone(),
-                    Some(asks),
-                ]);
-            }
+                });
         }
     }
 
@@ -335,20 +308,17 @@ impl PoolOperations for SerumPool {
             amount_in: amount_in as u64,
             amount_out: 0,
         };
-        if self.accounts.is_none() {
+        if self.accounts.len() < 2 {
             return 0;
         }
-        if self.accounts.as_ref().unwrap().len() < 2 {
-            return 0;
-        }
-        let market_acc = &self.accounts.as_ref().unwrap()[0];
-        let bids_acc = &self.accounts.as_ref().unwrap()[1];
-        let tval = self.accounts.as_ref().unwrap();
+        let market_acc = &self.accounts[0];
+        let bids_acc = &self.accounts[1];
+        let tval = &self.accounts;
         if tval.len() < 3 {
             return 0;
         }
 
-        let asks_acc = &self.accounts.as_ref().unwrap()[2];
+        let asks_acc = &self.accounts[2];
 
         // clone accounts for simulation (improve later?)
         let market_acc = &mut market_acc.clone().unwrap();
@@ -360,7 +330,7 @@ impl PoolOperations for SerumPool {
         let bids_acc = &account_info(&self.bids.0, bid_acc);
         let asks_acc = &account_info(&self.asks.0, ask_acc);
 
-        let m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
+        let m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, true);
         if !m.is_ok() {
             println!("{}", "m is none");
             return 0;
@@ -409,7 +379,11 @@ async    fn swap_ix(
         _mint_out: &Pubkey,
         start_bal: u128
     ) -> (bool, Vec<Instruction>) {
-        let oos = self.open_orders.as_ref().unwrap();
+        let oos = &self.open_orders;
+        if oos.is_none() {
+            return (false, vec![]);
+        }
+        let oos = oos.clone().unwrap();
         let open_orders =
             Pubkey::from_str(oos.get(&self.own_address.0.to_string()).unwrap()).unwrap();
 
@@ -500,11 +474,15 @@ async    fn swap_ix(
     }
 
     fn can_trade(&self, mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
-        let market_acc = &self.accounts.as_ref().unwrap()[0];
-        let bids_acc = &self.accounts.as_ref().unwrap()[1];
-        let asks_acc = &self.accounts.as_ref().unwrap()[2];
-
-        // clone accounts for simulation (improve later?)
+        let market_acc = &self.accounts[0];
+        let bids_acc = &self.accounts[1];
+        let asks_acc = &self.accounts[2];
+        let market_acc = &mut market_acc.clone();
+        let bid_acc = &mut bids_acc.clone();
+        let ask_acc = &mut asks_acc.clone();
+        if market_acc.is_none() || bid_acc.is_none() || ask_acc.is_none() {
+            return false;
+        }
         let market_acc = &mut market_acc.clone().unwrap();
         let bid_acc = &mut bids_acc.clone().unwrap();
         let ask_acc = &mut asks_acc.clone().unwrap();
@@ -513,7 +491,7 @@ async    fn swap_ix(
         let bids_acc = &account_info(&self.bids.0, bid_acc);
         let asks_acc = &account_info(&self.asks.0, ask_acc);
 
-        let m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, false);
+        let m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, true);
         if m.is_err() {
             return false;
         }

@@ -45,7 +45,11 @@ impl Stable {
 
         let x = xp[0] + dx;
         let leverage = compute_a(self.amp).unwrap();
-        let d = compute_d(leverage, xp[0], xp[1]).unwrap();
+        let d = compute_d(leverage, xp[0], xp[1]);
+        if d.is_none() {
+            return 0;
+        }
+        let d = d.unwrap();
         
         let y = compute_new_destination_amount(leverage, x, d);
         if y.is_none() {

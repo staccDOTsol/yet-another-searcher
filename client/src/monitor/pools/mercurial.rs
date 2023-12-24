@@ -1,9 +1,10 @@
 use crate::monitor::pools::{PoolOperations, PoolType};
-use crate::serialize::token::{unpack_token_account, Token, WrappedPubkey};
+use crate::serialize::token::{ Token, WrappedPubkey};
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use async_trait::async_trait;
 use serde;
+use solana_program::program_pack::Pack;
 use solana_sdk::signer::Signer;
 
 use std::sync::{Arc, Mutex};
@@ -180,8 +181,8 @@ impl PoolOperations for MercurialPool {
         let acc_data0 = &accounts[0].as_ref().unwrap().data;
         let acc_data1 = &accounts[1].as_ref().unwrap().data;
 
-        let amount0 = unpack_token_account(acc_data0).amount as u128;
-        let amount1 = unpack_token_account(acc_data1).amount as u128;
+        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap().amount as u128;
+        let amount1 = spl_token::state::Account::unpack(acc_data1).unwrap().amount as u128;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);

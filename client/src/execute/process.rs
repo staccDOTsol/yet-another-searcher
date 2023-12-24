@@ -33,235 +33,103 @@ use tmp::instruction as tmp_ix;
 use crate::monitor::pools::pool::{PoolOperations, PoolType};
 
 use crate::utils::{derive_token_address, PoolGraph, PoolIndex, PoolQuote};
-
+#[derive(Clone)]
 pub struct Arbitrager {
     pub token_mints: Vec<Pubkey>,
     pub graph_edges: Vec<HashSet<usize>>, // used for quick searching over the graph
     pub graph: PoolGraph,
     pub cluster: Cluster,
     // vv -- need to clone these explicitly -- vv
-    pub connection: RpcClient,
+    pub connection: Arc<RpcClient>,
 }
 impl Arbitrager {
+#[async_recursion::async_recursion]
+pub async fn brute_force_search(
+    &self,
+    start_mint_idx: usize,
+    init_balance: u128,
+    curr_balance: u128,
+    path: Vec<usize>,
+    pool_path: Vec<PoolQuote>,
+ //   sent_arbs: &mut HashSet<String>,
+) -> Option<(u128, Vec<usize>, Vec<PoolQuote>)> {
+    let src_curr = path[path.len() - 1]; // last mint
+    let src_mint = self.token_mints[src_curr];
 
-    pub      fn brute_force_search(
-        &self,
-        start_mint_idx: usize,
-        init_balance: u128,
-        curr_balance: u128,
-        path: Vec<usize>,
-        pool_path: Vec<PoolQuote>,
-        old_best: u128,
-    ) -> u128 {
-        if curr_balance == 0 {
-            return old_best;
+    let out_edges = &self.graph_edges[src_curr];
+
+    // path = 4 = A -> B -> C -> D
+    // path >= 5 == not valid bc max tx size is swaps
+    if path.len() == 8 {
+       return None 
+    };
+
+    for dst_mint_idx in out_edges {
+
+        if path.contains(dst_mint_idx) && *dst_mint_idx != start_mint_idx {
+            continue;
         }
-        let src_curr = path[path.len() - 1]; // last mint
-        let src_mint = self.token_mints[src_curr];
+        if self
+        .graph
+        .0
+        .get(&PoolIndex(src_curr))
+        .unwrap()
+        .0
+        .get(&PoolIndex(*dst_mint_idx)).is_none(){
+            continue;
+        }
+        let pools = self
+            .graph
+            .0
+            .get(&PoolIndex(src_curr))
+            .unwrap()
+            .0
+            .get(&PoolIndex(*dst_mint_idx))
+            .unwrap();
 
-        let out_edges = &self.graph_edges[src_curr];
+        let dst_mint_idx = *dst_mint_idx;
+        let dst_mint = self.token_mints[dst_mint_idx];
 
-        // path = 4 = A -> B -> C -> D
-        // path >= 5 == not valid bc max tx size is swaps
-        if path.len() == 4 {
-            return old_best;
-        };
+        for pool in pools {
+            let new_balance =
+                pool.0
+                    .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint);
+            if new_balance == 0 {
+                continue;
+            }
+            let mut new_path = path.clone();
+            new_path.push(dst_mint_idx);
 
-        for dst_mint_idx in out_edges {
-
+            let mut new_pool_path = pool_path.clone();
+            new_pool_path.push(pool.clone()); // clone the pointer
             
-            let pools = self
-                .graph
-                .0
-                .get(&PoolIndex(src_curr))
-                .unwrap()
-                .0
-                .get(&PoolIndex(*dst_mint_idx))
-                .unwrap();
+            if dst_mint_idx == start_mint_idx {
+                // println!("{:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
+                
+                // if new_balance > init_balance - 1086310399 {
+                if new_balance as f64 > init_balance as f64 * 1.000 {
+                    // ... profitable arb!
+                    println!("found arbitrage: {:?} -> {:?}", init_balance, new_balance);
 
-            let dst_mint_idx = *dst_mint_idx;
-            let dst_mint = self.token_mints[dst_mint_idx];
-
-            for pool in pools {
-                let new_balance =
-                    pool.0
-                        .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint);
-                let mut new_path = path.clone();
-                new_path.push(dst_mint_idx);
-
-                let mut new_pool_path = pool_path.clone();
-                new_pool_path.push(pool.clone()); // clone the pointer
-                if dst_mint_idx == start_mint_idx {
-                    let mut old_best = old_best;
-                    // if new_balance > init_balance - 1086310399 {
-                    if (new_balance as f64 > curr_balance as f64 * 1.001) && (new_balance  < u128::from((curr_balance * 333 )/ 100)) {
-                        let arb: u128 = new_balance - init_balance;
-                        if (arb >  old_best) {
-                            old_best = arb ;
-                    
-                            // ... profitable arb!
-                            println! ("found new best rbitrage: {:?} -> {:?}", curr_balance, new_balance);
-                        }
-                        /*
-                        // check if arb was sent with a larger size
-                        // key = {mint_path}{pool_names}
-                        let mint_keys: Vec<String> =
-                            new_path.clone().iter_mut().map(|i| i.to_string()).collect();
-                        let pool_keys: Vec<String> =
-                            new_pool_path.iter().map(|p| p.0.get_name()).collect();
-                        let arb_key = format!("{}{}", mint_keys.join(""), pool_keys.join(""));
-                        println!("arbkey: {:?}", arb_key);/* 
-                        let mut ixs = self.get_arbitrage_instructions(
-                            init_balance,
-                            &new_path,
-                            &new_pool_path,
-                        ).await; */
-                        let mut ix;
-                        ixs.0.concat();
-                            
-    let owner3 = Arc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
-                        
-    let owner = owner3.try_pubkey().unwrap();
-        let src_ata = derive_token_address(&owner, &dst_mint);
-                                // PROFIT OR REVERT instruction
-                                 ix = spl_token::instruction::transfer(
-                                    &spl_token::id(),
-                                    &src_ata,
-                                    &src_ata,
-                                    &owner,
-                                    &[
-                                    ],
-                                    init_balance as u64,
-                                );
-                                // flatten to Vec<Instructions>
-                                ixs.0.push(vec![ix.unwrap()]);
-                                let owner_keypair = Rc::new(read_keypair_file("/Users/stevengavacs/.config/solana/id.json".clone()).unwrap());
-                                /* 
-    let recent_slot = self.connection
-    .get_slot_with_commitment(CommitmentConfig::finalized())
-    .unwrap();
-                                let (create_ix, table_pk) =
-                                
-                                solana_address_lookup_table_program::instruction::create_lookup_table(
-                                    owner,
-                                    owner,
-                                    recent_slot,
-                                );
-
-                            let latest_blockhash =  self.connection.get_latest_blockhash().unwrap();
-                            self.connection
-                                .send_and_confirm_transaction(&Transaction::new_signed_with_payer(
-                                    &[create_ix],
-                                    Some(&owner),
-                                    &[&owner3],
-                                    self.connection.get_latest_blockhash().unwrap(),
-                                ))
-                                .unwrap();
-
-                            let mut pool_keys;
-                              for ix in ixs.0.iter_mut() {
-                                pool_keys = vec![];
-                                for ixx in ix.iter_mut() {
-                                    for key in &ixx.accounts {
-                                        pool_keys.push(key.pubkey);
-                                    }
-                                let extend_ix = solana_address_lookup_table_program::instruction::extend_lookup_table(
-                                    table_pk,
-                                    owner,
-                                    Some(owner),
-                                    pool_keys.to_vec(),
-                                );
-                        
-                                let signature = self.connection
-                                    .send_and_confirm_transaction(&Transaction::new_signed_with_payer(
-                                        &[extend_ix],
-                                        Some(&owner),
-                                        &[&owner3],
-                                        self.connection.get_latest_blockhash().unwrap()
-                                    ))
-                                    .unwrap();
-                              }
-                              
-                                
-                            } 
-                            let versioned_tx =
-                            create_tx_with_address_table_lookup(&self.connection, &ixs.0.concat(), 
-                                table_pk
-                                , &owner3);
-                        let serialized_versioned_tx = serialize(&versioned_tx).unwrap();
-                        println!(
-                            "The serialized versioned tx is {} bytes",
-                            serialized_versioned_tx.len()
-                        );
-                        let serialized_encoded = base64::encode(serialized_versioned_tx);
-                        let config: RpcSendTransactionConfig = RpcSendTransactionConfig {
-                            skip_preflight: true,
-                            preflight_commitment: Some(CommitmentLevel::Processed),
-                            encoding: Some(UiTransactionEncoding::Base64),
-                            ..RpcSendTransactionConfig::default()
-                        };
-                    
-                        let signature = self.connection
-                            .send::<String>(
-                                RpcRequest::SendTransaction,
-                                json!([serialized_encoded, config]),
-                            )
-                            ;
-                            if signature.is_err(){
-                                println!("signature error");
-                                println!("{}" , signature.err().unwrap());
-                                continue 
-                            }
-                            let signature = signature.unwrap();
-                        println!("Multi swap txid: {}", signature);
-                     let resulty =   self.connection
-                            .confirm_transaction_with_commitment(
-                                &Signature::from_str(signature.as_str()).unwrap(),
-                                CommitmentConfig::finalized(),
-                            );
-                            if resulty.is_err() {
-                                println!("resulty error");
-                                println!("{}" , resulty.err().unwrap());
-                                continue
-                            }
-                            let resulty = resulty.unwrap();
-                            println!("resulty: {:?}", resulty);
-                              */
-                              let tx = Transaction::new_signed_with_payer(
-                                &ixs.0.concat(),
-                                Some(&owner),
-                                &[&*owner3],
-                                self.connection.get_latest_blockhash().unwrap(),
-                            );
-                            let signature = self.connection
-                                .send_and_confirm_transaction(&tx)
-                                ;
-                                if signature.is_err() {
-                                    println!("signature error");
-                                    println!("{}" , signature.err().unwrap());
-                                    
-                                }
-                             */
-                                
-                    }
-                } else if !path.contains(&dst_mint_idx) {
-                    // ... search deeper
-                    
-                    self.brute_force_search(
-                        start_mint_idx,
-                        init_balance,
-                        new_balance,   // !
-                        new_path,      // !
-                        new_pool_path, // !
-                        old_best
-                    );
-                }
+                   return Some((new_balance, new_path, new_pool_path)) 
+            } else if !path.contains(&dst_mint_idx) {
+                println!("searching {:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
+                return (self.brute_force_search(
+                    start_mint_idx,
+                    init_balance,
+                    new_balance,   // !
+                    new_path,      // !
+                    new_pool_path, // !
+                ).await)
             }
         }
-        return old_best;
     }
+}
+None
+}
 
-async    fn get_arbitrage_instructions<'a>(
+
+pub async    fn get_arbitrage_instructions<'a>(
         &self,
         swap_start_amount: u128,
         mint_idxs: &Vec<usize>,
