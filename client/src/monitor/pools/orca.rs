@@ -159,7 +159,11 @@ let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || progr
             *pool_dst_amount,
             None,
         )
-        .unwrap();
+        ;
+        if amt.is_err() {
+            return 0;
+        }
+        let amt = amt.unwrap();
         if amt > 0 {
             amt - 1
         } else {

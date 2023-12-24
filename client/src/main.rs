@@ -256,7 +256,7 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
                            vec![start_mint_idx],
                            vec![],
                           // 0
-                       ).await;
+                       );
                           if arb.is_some() {
                             println!("found arb {:?}", arb);
                             arbs.push(arb.unwrap());
@@ -525,8 +525,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     for pool_dir in pool_dirs {
         debug!("pool dir: {:#?}", pool_dir);
         let mut pool_paths = read_json_dir(&pool_dir.dir_path);
-        let mut max = 500;
-        if pool_paths.len() < 500 {
+        let mut max = 1111;
+        if pool_paths.len() < 1111 {
             max = pool_paths.len();
         }
         for pool_path in &mut pool_paths[0..max] {

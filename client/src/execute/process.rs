@@ -43,8 +43,7 @@ pub struct Arbitrager {
     pub connection: Arc<RpcClient>,
 }
 impl Arbitrager {
-#[async_recursion::async_recursion]
-pub async fn brute_force_search(
+pub fn brute_force_search(
     &self,
     start_mint_idx: usize,
     init_balance: u128,
@@ -109,22 +108,21 @@ pub async fn brute_force_search(
                 // if new_balance > init_balance - 1086310399 {
                 if new_balance as f64 > init_balance as f64 * 1.000 {
                     // ... profitable arb!
-                    println!("found arbitrage: {:?} -> {:?}", init_balance, new_balance);
 
                    return Some((new_balance, new_path, new_pool_path)) 
+                }
             } else if !path.contains(&dst_mint_idx) {
-                println!("searching {:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
-                return (self.brute_force_search(
+                self.brute_force_search(
                     start_mint_idx,
                     init_balance,
                     new_balance,   // !
                     new_path,      // !
                     new_pool_path, // !
-                ).await)
+                );
             }
         }
-    }
 }
+
 None
 }
 

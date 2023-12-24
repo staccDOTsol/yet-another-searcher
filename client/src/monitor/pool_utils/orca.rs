@@ -48,7 +48,7 @@ pub fn get_pool_quote_with_amounts(
             curve_type: CurveType::Stable,
             calculator: Arc::new(StableCurve { amp }),
         };
-        quote = swap_curve
+        let iquote = swap_curve
             .swap(
                 amount_in,
                 input_token_pool_amount,
@@ -56,8 +56,11 @@ pub fn get_pool_quote_with_amounts(
                 trade_direction,
                 fees,
             )
-            .unwrap()
-            .destination_amount_swapped;
+            ;
+            if iquote.is_none() {
+                return Ok(0)
+            }
+             quote = iquote.unwrap().destination_amount_swapped;
     } else {
         panic!("invalid curve type for swap: {:?}", curve_type);
     }

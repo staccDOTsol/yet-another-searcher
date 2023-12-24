@@ -304,7 +304,7 @@ async    fn swap_ix(
             host_fee_denominator: 0,
         };
 
-        let ctype = if self.version == 1 {
+        let ctype = if self.version != 1 {
             CurveType::Stable
         } else {
             CurveType::ConstantProduct
