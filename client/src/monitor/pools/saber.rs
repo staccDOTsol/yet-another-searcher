@@ -6,7 +6,7 @@ use std::collections::HashMap;
 use solana_sdk::signature::Signer;
 
 use std::fmt::Debug;
-use std::rc::Rc;
+
 use std::sync::{Arc, Mutex};
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
@@ -18,7 +18,7 @@ use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::token::{ Token, WrappedPubkey};
 use serde;
 use serde::{Deserialize, Serialize};
-use solana_sdk::signature::Keypair;
+
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
 
@@ -67,13 +67,13 @@ async    fn swap_ix(
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
-        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
+        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, mint_in);
         let user_dst = derive_token_address(&owner, mint_out);
 
-        let owner_kp_path = "/root/.config/solana/id.json";
+        let _owner_kp_path = "/root/.config/solana/id.json";
         // setup anchor things
         let provider = Client::new_with_options(
             Cluster::Mainnet,
@@ -99,7 +99,7 @@ async    fn swap_ix(
                 }
         let pool_account = self.pool_account.0;
         let authority = self.authority.0;
-        let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || program            .request()
+        let        swap_ix = program            .request()
     
             .accounts(tmp_accounts::SaberSwap {
                 pool_account,
@@ -115,8 +115,11 @@ async    fn swap_ix(
                 token_program: *TOKEN_PROGRAM_ID,
             })
             .args(tmp_ix::SaberSwap {})
-            .instructions()
-            .unwrap()).await.unwrap();
+            .instructions();
+        if swap_ix.is_err() {
+            return (false, vec![]);
+        }
+        let swap_ix = swap_ix.unwrap();
         (false, swap_ix)
     }
 
@@ -190,19 +193,18 @@ async    fn swap_ix(
 
         let amount0 = spl_token::state::Account::unpack(acc_data0);
         if amount0.is_err() {
-            println!("saber pool amount err: {:?}", amount0);
             return;
         }
         let amount0 = amount0.unwrap();
         let _mint = amount0.mint;
         let id0 = &self.token_ids[0];
         let id1 = &self.token_ids[1];
-        if _mint.to_string() == id0.to_string() {
+        if _mint.to_string() == *id0 {
             self.pool_amounts
                 .entry(id0.clone())
                 .and_modify(|e| *e = amount0.amount as u128)
                 .or_insert(amount0.amount as u128);
-        } else if _mint.to_string() == id1.to_string() {
+        } else if _mint.to_string() == *id1 {
             self.pool_amounts
                 .entry(id1.clone())
                 .and_modify(|e| *e = amount0.amount as u128)

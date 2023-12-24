@@ -1,23 +1,23 @@
-use crate::monitor::pool_utils::constant_price::ConstantPriceCurve;
+
 use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
 use crate::monitor::pool_utils::serum::FeeTier;
 use crate::monitor::pools::{PoolOperations, PoolType};
-use crate::serialize::pool::JSONFeeStructure;
-use crate::serialize::token::{ Token, WrappedPubkey};
-use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
+
+use crate::serialize::token::{ WrappedPubkey};
+
 use anchor_client::solana_sdk::signature::read_keypair_file;
-use anchor_client::{Client, Cluster};
+use anchor_client::{Cluster};
 use async_trait::async_trait;
 use openbook_dex::critbit::SlabView;
 use openbook_dex::matching::OrderBookState;
-use openbook_dex::state::{Market, AccountFlag};
+
 use serde;
 use solana_program::account_info::AccountInfo;
 use solana_program::stake_history::Epoch;
 use solana_sdk::program_pack::Pack;
 use solana_sdk::signer::Signer;
 use std::sync::{Arc, Mutex};
-use std::ops::DerefMut;
+
 
 use raydium_contract_instructions::{
     amm_instruction::{ID as ammProgramID, swap_base_in as amm_swap},
@@ -28,10 +28,10 @@ use raydium_contract_instructions::{
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use std::collections::HashMap;
 use std::fmt::Debug;
-use std::rc::Rc;
+
 use std::str::FromStr;
 
-use solana_sdk::signature::Keypair;
+
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use serde::{Deserialize, Serialize};
@@ -39,12 +39,12 @@ use solana_sdk::account::Account;
 
 use solana_sdk::instruction::Instruction;
 
-use tmp::accounts as tmp_accounts;
-use tmp::instruction as tmp_ix;
 
-use crate::constants::*;
+
+
+
 use crate::monitor::pool_utils::base::CurveType;
-use crate::utils::{derive_token_address, str2pubkey};
+use crate::utils::{derive_token_address};
 
 struct Iteration {
     amount_in: u64,
@@ -112,11 +112,7 @@ fn bid_iteration(iteration: &mut Iteration, fee_tier: &FeeTier, ob: &mut OrderBo
     let mut pc_qty_remaining = max_pc_qty;
 
     let done = loop {
-        let flag = match ob.asks.find_min() {
-            // min = best ask
-            Some(_) => false,
-            None => true,
-        };
+        let flag = ob.asks.find_min().is_none();
         if flag {
             break true;
         }
@@ -220,8 +216,8 @@ async    fn swap_ix(
         mint_out: &Pubkey,
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
-        let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
+        let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
+        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, mint_in);
@@ -247,7 +243,7 @@ async    fn swap_ix(
         let market_base_vault = self.market_base_vault.clone();
         let market_quote_vault = self.market_quote_vault.clone();
         if ctype == CurveType::ConstantProduct {
-            let swap_ix: Result<Result<Instruction, anchor_lang::prelude::ProgramError>, tokio::task::JoinError> = tokio::task::spawn_blocking(move || 
+            let swap_ix =
                 amm_swap(
                     &ammProgramID,
                     &id,
@@ -268,17 +264,19 @@ async    fn swap_ix(
                     &user_dst,
                     &owner, 
                     _start_bal as u64,
-                    0 as u64
-                )).await;
+                    0_u64
+                )
+                ;
+
     
                 if swap_ix.is_err() {
                     return (false, vec![]);
                 }
                 let swap_ix = swap_ix.unwrap();
-                return (false, vec![swap_ix.unwrap()]);
+                return (false, vec![swap_ix]);
             } else {
                 let model_data_account = self.model_data_account.clone().unwrap();
-                  let  swap_ix = tokio::task::spawn_blocking(move || stable_swap(
+                  let  swap_ix = stable_swap(
                         &stableProgramID,
                         &id,
                         &authority,
@@ -298,14 +296,15 @@ async    fn swap_ix(
                         &user_dst,
                         &owner, 
                         _start_bal as u64,
-                        0 as u64
-                    )).await;
+                        0_u64
+                    );
+
     
             if swap_ix.is_err() {
                 return (false, vec![]);
             }
             let swap_ix = swap_ix.unwrap();
-            return (false, vec![swap_ix.unwrap()]);
+            return (false, vec![swap_ix]);
             }        
 
     }
@@ -364,7 +363,7 @@ async    fn swap_ix(
 
 
 
-    fn can_trade(&self, mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
+    fn can_trade(&self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
         for amount in self.pool_amounts.values() {
             if *amount == 0 {
                 return false;
@@ -409,12 +408,12 @@ async    fn swap_ix(
         let _mint = amount0.mint;
         let id0 = self.base_mint.0.to_string();
         let id1 = self.quote_mint.0.to_string();
-        if _mint.to_string() == id0.to_string() {
+        if _mint.to_string() == id0 {
             self.pool_amounts
                 .entry(id0.clone())
                 .and_modify(|e| *e = amount0.amount as u128)
                 .or_insert(amount0.amount as u128);
-        } else if _mint.to_string() == id1.to_string() {
+        } else if _mint.to_string() == id1 {
             self.pool_amounts
                 .entry(id1.clone())
                 .and_modify(|e| *e = amount0.amount as u128)

@@ -263,7 +263,7 @@ impl PoolOperations for SerumPool {
                     rent_epoch: 0,
                 });
         }
-        if flags.intersects(AccountFlag::Asks) {
+        else if flags.intersects(AccountFlag::Asks) {
                 self.accounts[2] = Some(Account {
                     lamports: 0,
                     data: data.to_vec(),
@@ -271,6 +271,15 @@ impl PoolOperations for SerumPool {
                     executable: false,
                     rent_epoch: 0,
                 });
+        }
+        else {
+            self.accounts[0] = Some(Account {
+                lamports: 0,
+                data: data.to_vec(),
+                owner: Pubkey::default(),
+                executable: false,
+                rent_epoch: 0,
+            });
         }
     }
 
@@ -477,8 +486,8 @@ async    fn swap_ix(
         let json_market_oo = serde_json::to_string(&market_to_open_orders).unwrap();
         std::fs::write("./serum_open_orders.json", json_market_oo).unwrap();
 
-
     }
+
     else {
         blargorders = Pubkey::from_str(open_orders.unwrap().as_str()).unwrap();
     }
@@ -535,41 +544,42 @@ let open_orders = blargorders;
         let bids = self.bids.0;
         let asks = self.asks.0;
         println!("{}", ts);
-        (
-            (true),
-            vec![
-                tokio::task::spawn_blocking(move || {
-                    openbook_dex::instruction::new_order(
-                &own_address,
-                &open_orders,
-                &request_queue,
-                &event_queue,
-                &bids,
-                &asks,
-                &payer_acc,
-                &owner,
-                &base_vault,
-                &quote_vault,
-                &TOKEN_PROGRAM_ID,
-                &solana_sdk::sysvar::rent::id(),
-                None,
-                &Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap(),
-                _side,
-                limit_price,
-                max_coin_qty,
-                OrderType::Limit,
-                0,
-                openbook_dex::instruction::SelfTradeBehavior::DecrementTake,
-                limit,
-                max_native_pc_qty_including_fees,
-                ts + 40000,
-                    )}).await.unwrap().unwrap()
-            ],
-            
-        )
+        let ix = openbook_dex::instruction::new_order(
+            &own_address,
+            &open_orders,
+            &request_queue,
+            &event_queue,
+            &bids,
+            &asks,
+            &payer_acc,
+            &owner,
+            &base_vault,
+            &quote_vault,
+            &TOKEN_PROGRAM_ID,
+            &solana_sdk::sysvar::rent::id(),
+            None,
+            &Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap(),
+            _side,
+            limit_price,
+            max_coin_qty,
+            OrderType::Limit,
+            0,
+            openbook_dex::instruction::SelfTradeBehavior::DecrementTake,
+            limit,
+            max_native_pc_qty_including_fees,
+            ts + 40000,
+                );
+                if ix.is_err() {
+                    return (false, vec![]);
+                }
+                let ix = ix.unwrap();
+        (true, vec![ix])
     }
 
     fn can_trade(&self, mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
+        if self.accounts.len() < 3 {
+            return false;
+        }
         let market_acc = &self.accounts[0];
         let bids_acc = &self.accounts[1];
         let asks_acc = &self.accounts[2];
@@ -577,6 +587,7 @@ let open_orders = blargorders;
         let bid_acc = &mut bids_acc.clone();
         let ask_acc = &mut asks_acc.clone();
         if market_acc.is_none() || bid_acc.is_none() || ask_acc.is_none() {
+            println!("can't trade 0");
             return false;
         }
         let market_acc = &mut market_acc.clone().unwrap();
@@ -589,6 +600,7 @@ let open_orders = blargorders;
 
         let m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, true);
         if m.is_err() {
+            println!("can't trade 1");
             return false;
         }
         let market = m.unwrap();
@@ -601,13 +613,20 @@ let open_orders = blargorders;
             match asks.find_min() {
                 // min = best ask
                 Some(_) => true,
-                None => false,
+                None => {
+                    
+            println!("can't trade 2");
+                    false
+                }
             }
         } else if *mint_in == self.base_mint.0 {
             // ask: base -> quote
             match bids.find_max() {
                 Some(_) => true,
-                None => false,
+                None => {
+                    println!("can't trade 3");
+                    false
+                }
             }
         } else {
             panic!("invalid mints");

@@ -13,10 +13,10 @@ use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use std::collections::HashMap;
 use std::fmt::Debug;
-use std::rc::Rc;
+
 use std::str::FromStr;
 
-use solana_sdk::signature::Keypair;
+
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use serde::{Deserialize, Serialize};
@@ -69,13 +69,13 @@ async    fn swap_ix(
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
+        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, mint_in);
         let user_dst = derive_token_address(&owner, mint_out);
 
-        let owner_kp_path = "/root/.config/solana/id.json";
+        let _owner_kp_path = "/root/.config/solana/id.json";
         // setup anchor things
         let provider = Client::new_with_options(
             Cluster::Mainnet,
@@ -91,7 +91,9 @@ async    fn swap_ix(
 let token_swap = self.address.0;
 let pool_mint= self.pool_token_mint.0;
 let fee_account = self.fee_account.0;
-let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || program            .request()
+
+
+ let  swap_ix =  program            .request()
             .accounts(tmp_accounts::OrcaSwap {
                 token_swap,
                 authority: authority_pda,
@@ -107,8 +109,11 @@ let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || progr
                 swap_state,
             })
             .args(tmp_ix::OrcaSwap {})
-            .instructions()
-            .unwrap()).await.unwrap();
+            .instructions();
+        if swap_ix.is_err() {
+            return (false, vec![]);
+        }
+        let swap_ix = swap_ix.unwrap();
 
         (false, swap_ix)
     }
@@ -216,17 +221,21 @@ let        swap_ix: Vec<Instruction> = tokio::task::spawn_blocking(move || progr
 
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
-        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();
+        let amount0 = spl_token::state::Account::unpack(acc_data0);
+        if amount0.is_err() {
+            return;
+        }
+        let amount0 = amount0.unwrap();
         let _mint = amount0.mint;
         let _mint = amount0.mint;
         let id0 = &self.token_ids[0];
         let id1 = &self.token_ids[1];
-        if _mint.to_string() == id0.to_string() {
+        if _mint.to_string() == *id0 {
             self.pool_amounts
                 .entry(id0.clone())
                 .and_modify(|e| *e = amount0.amount as u128)
                 .or_insert(amount0.amount as u128);
-        } else if _mint.to_string() == id1.to_string() {
+        } else if _mint.to_string() == *id1 {
             self.pool_amounts
                 .entry(id1.clone())
                 .and_modify(|e| *e = amount0.amount as u128)

@@ -109,7 +109,7 @@ impl RouteInstruction {
     /// Packs a [RouteInstruction](enum.RouteInstruction.html) into a byte buffer.
     pub fn pack(&self) -> Result<Vec<u8>, ProgramError> {
         let mut buf = Vec::with_capacity(size_of::<Self>());
-        match &*self {
+        match self {
             Self::RouteSwapIn(RouteSwapBaseInArgs {
                 amount_in,
                 minimum_amount_out,

@@ -1,4 +1,4 @@
-use anchor_client::solana_client::rpc_client::RpcClient;
+use solana_client::nonblocking::rpc_client::RpcClient;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use redb::Database;
@@ -22,8 +22,8 @@ use std::vec;
 
 use clap::Parser;
 
-use log::{debug, info, warn};
-use solana_sdk::account::Account;
+use log::{debug, warn};
+
 
 use client::constants::*;
 use client::utils::{
@@ -48,7 +48,7 @@ fn add_pool_to_graph<'a>(
         .0
         .entry(idx0)
         .or_insert_with(|| PoolEdge(HashMap::new()));
-    let quotes = edges.0.entry(idx1).or_insert_with(|| vec![]);
+    let quotes = edges.0.entry(idx1).or_default();
     quotes.push(quote.clone());
 }
 
@@ -70,14 +70,14 @@ fn main() {
 
     // ** setup RPC connection
     let connection_url = match cluster {
-        Cluster::Mainnet => "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9",
+        Cluster::Mainnet => "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9".to_string(),
         _ => cluster.url(),
     };
     println!("using connection: {}", connection_url);
 
     // setup anchor things
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
-    let owner2 = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
+    let owner2 = read_keypair_file(owner_kp_path).unwrap();
     let rc_owner = Rc::new(owner2);
     let rc_owner2 = Rc::new(owner);
     let provider = Client::new_with_options(
@@ -85,7 +85,7 @@ fn main() {
         rc_owner.clone(),
         CommitmentConfig::confirmed(),
     );
-    let program = provider.program(*ARB_PROGRAM_ID);
+    let _program = provider.program(*ARB_PROGRAM_ID);
 
     // ** define pool JSONs
     let mut pool_dirs: Vec<PoolDir> = vec![];
@@ -194,15 +194,15 @@ fn main() {
     // !
     let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
     let start_mint = usdc_mint;
-    let start_mint_idx = *mint2idx.get(&start_mint).unwrap();
+    let _start_mint_idx = *mint2idx.get(&start_mint).unwrap();
 
     let owner: &Keypair = rc_owner2.borrow();
-    let owner_start_addr = derive_token_address(&owner.pubkey(), &start_mint);
+    let _owner_start_addr = derive_token_address(&owner.pubkey(), &start_mint);
 
     println!("getting pool amounts...");
     let mut first = true;
 
-    let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::confirmed());
+    let connection = RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
     // slide it out here
     let init_token_acc = derive_token_address(&owner.pubkey(), &usdc_mint);
     let init_token_balance =
@@ -216,8 +216,8 @@ fn main() {
     println!("setting up exchange graph...");
 
     let mut graph = PoolGraph::new();
-    let mut pool_count = 0;
-    let mut account_ptr = 0;
+    let _pool_count = 0;
+    let _account_ptr = 0;
 
     let mut pool_count = 0;
     let mut account_ptr = 0;
@@ -231,7 +231,7 @@ fn main() {
     let mut pool_str = "".to_string();
     let db = Database::create("my_db.redb");
     if db.is_err() {
-        println!("{}", "uhoh");
+        println!("uhoh");
     }
 
     let db = db.unwrap();
@@ -243,7 +243,7 @@ fn main() {
             if !key.contains(&pool_addr) {
                 continue;
             }
-            pool_str = std::fs::read_to_string(&key).unwrap();
+            pool_str = std::fs::read_to_string(key).unwrap();
 
             if key.contains("orca") {
                 pool_type = PoolType::OrcaPoolType;
@@ -314,7 +314,7 @@ fn main() {
         let idx0 = PoolIndex(idxs[0]);
         let idx1 = PoolIndex(idxs[1]);
 
-        let mut pool_ptr = PoolQuote::new(Rc::new(pool));
+        let mut pool_ptr = PoolQuote::new(Arc::new(pool));
 
         add_pool_to_graph(&mut graph, idx0, idx1, &mut pool_ptr.clone());
         add_pool_to_graph(&mut graph, idx1, idx0, &mut pool_ptr);

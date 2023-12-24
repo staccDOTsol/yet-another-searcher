@@ -1,5 +1,6 @@
-use anchor_client::solana_client::rpc_client::RpcClient;
+use solana_client::nonblocking::rpc_client::RpcClient;
 use anchor_client::solana_client::rpc_config::RpcSendTransactionConfig;
+use anchor_lang::system_program;
 use bincode::serialize;
 
 use anchor_client::solana_sdk::pubkey::Pubkey;
@@ -9,6 +10,7 @@ use anchor_client::{Cluster, Program};
 use serde_json::json;
 use solana_address_lookup_table_program::state::{AddressLookupTable};
 use solana_client::rpc_request::RpcRequest;
+use solana_program::instruction::AccountMeta;
 use solana_program::message::{VersionedMessage, v0};
 use solana_sdk::address_lookup_table_account::AddressLookupTableAccount;
 use solana_sdk::commitment_config::{CommitmentLevel, CommitmentConfig};
@@ -30,6 +32,7 @@ use log::info;
 use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 
+use crate::constants::{ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID};
 use crate::monitor::pools::pool::{PoolOperations, PoolType};
 
 use crate::utils::{derive_token_address, PoolGraph, PoolIndex, PoolQuote};
@@ -102,6 +105,11 @@ pub fn brute_force_search(
 
         let dst_mint_idx = *dst_mint_idx;
         let dst_mint = self.token_mints[dst_mint_idx];
+
+    let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
+
+    let owner = owner3.try_pubkey().unwrap();
+        let dst_mint_acc = derive_token_address(&owner, &dst_mint);
 
         for pool in pools {
             // choose a pool at random instead
@@ -186,7 +194,7 @@ pub async    fn get_arbitrage_instructions<'a>(
 
         // initialize swap ix
         let ix = 
-        tokio::task::spawn_blocking(move || program
+            program
             .request()
             .accounts(tmp_accounts::TokenAndSwapState {
                 swap_state: swap_state_pda,
@@ -194,8 +202,14 @@ pub async    fn get_arbitrage_instructions<'a>(
             .args(tmp_ix::StartSwap {
                 swap_input: swap_start_amount as u64,
             })
-            .instructions()
-            .unwrap()).await.unwrap();
+            .instructions();
+if ix.is_err() {
+    println!("ix is err");
+return (vec![], false);
+}
+let ix = ix.unwrap();
+
+            
         ixs.push(ix);
         let mut flag = false;
         let pubkey = owner;
@@ -241,20 +255,20 @@ pub async    fn get_arbitrage_instructions<'a>(
 }
 
 // from https://github.com/solana-labs/solana/blob/10d677a0927b2ca450b784f750477f05ff6afffe/sdk/program/src/message/versions/v0/mod.rs#L209
-fn create_tx_with_address_table_lookup(
+async fn create_tx_with_address_table_lookup(
     client: &RpcClient,
     instructions: &[Instruction],
     address_lookup_table_key: Pubkey,
     payer: &Keypair,
 ) -> VersionedTransaction {
-    let raw_account = client.get_account(&address_lookup_table_key).unwrap();
+    let raw_account = client.get_account(&address_lookup_table_key).await.unwrap();
     let address_lookup_table = AddressLookupTable::deserialize(&raw_account.data).unwrap();
     let address_lookup_table_account = AddressLookupTableAccount {
         key: address_lookup_table_key,
         addresses: address_lookup_table.addresses.to_vec(),
     };
 
-    let blockhash = client.get_latest_blockhash().unwrap();
+    let blockhash = client.get_latest_blockhash().await.unwrap();
     let tx = VersionedTransaction::try_new(
         VersionedMessage::V0(v0::Message::try_compile(
             &payer.pubkey(),

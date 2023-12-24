@@ -10,7 +10,7 @@ use std::str::FromStr;
 
 use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
-use std::rc::Rc;
+
 
 use serde;
 use serde::{Deserialize, Serialize};
@@ -20,7 +20,7 @@ use anchor_client::solana_sdk::pubkey::Pubkey;
 use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
 
-use solana_sdk::signature::Keypair;
+
 use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 
@@ -75,9 +75,9 @@ async    fn swap_ix(
     ) -> (bool, Vec<Instruction>) {
         let state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
-        let owner_kp_path = "/root/.config/solana/id.json";
+        let _owner_kp_path = "/root/.config/solana/id.json";
         // setup anchor things
-        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
+        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
         
         let owner = owner3.try_pubkey().unwrap()    ;
         let provider = Client::new_with_options(
@@ -104,7 +104,7 @@ let pool_public_key = self.pool_public_key.0;
 let pool_signer = self.pool_signer.0;
 let pool_mint = self.pool_mint.0;
 let fee_pool_token_account = self.fee_pool_token_account.0;
-            swap_ix = tokio::task::spawn_blocking(move || program
+            swap_ix = tokio::task::spawn(async move {program
                 .request()
                 .accounts(tmp_accounts::AldrinSwapV1 {
                     pool_public_key,
@@ -123,7 +123,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
                 })
                 .args(tmp_ix::AldrinSwapV1 { is_inverted })
                 .instructions()
-                .unwrap())
+                .unwrap()})
             
         } else {
             let pool_public_key = self.pool_public_key.0;
@@ -131,7 +131,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
             let pool_mint = self.pool_mint.0;
             let fee_pool_token_account = self.fee_pool_token_account.0;
             let curve = self.curve.0;
-            swap_ix = tokio::task::spawn_blocking(move || program
+            swap_ix = tokio::task::spawn(async move { program
                 .request()
                 .accounts(tmp_accounts::AldrinSwapV2 {
                     pool_public_key,
@@ -151,7 +151,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
                 })
                 .args(tmp_ix::AldrinSwapV2 { is_inverted })
                 .instructions()
-                .unwrap())
+                .unwrap()})
 
         }
         (false, swap_ix.await.unwrap())
@@ -260,11 +260,11 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
         let _mint = amount0.mint;
         let id0 = &self.token_ids[0];
         let id1 = &self.token_ids[1];
-        if _mint.to_string() == id0.to_string() {
+        if _mint.to_string() == *id0 {
             self.pool_amounts
                 .insert(id0.clone(), amount0.amount as u128);
 
-            } else if _mint.to_string() == id1.to_string() {
+            } else if _mint.to_string() == *id1 {
                 
                             self.pool_amounts
                 .insert(id1.clone(), amount0.amount as u128);

@@ -1,4 +1,4 @@
-use anchor_client::solana_client::rpc_client::RpcClient;
+use solana_client::nonblocking::rpc_client::RpcClient;
 
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 
@@ -13,32 +13,32 @@ use solana_sdk::instruction::Instruction;
 use solana_sdk::transaction::Transaction;
 
 use std::collections::HashMap;
-use std::fmt::Debug;
+
 use std::vec;
 
 use solana_sdk::instruction::AccountMeta;
 use solana_sdk::system_program;
 
-use log::warn;
+
 
 use client::constants::*;
 use client::monitor::pools::pool::{pool_factory, PoolOperations, PoolType};
 use client::utils::{derive_token_address, read_json_dir};
 
 fn main() {
-    let cluster = Cluster::Mainnet;
+    let _cluster = Cluster::Mainnet;
 
     env_logger::init();
     let owner_kp_path = "/root/.config/solana/id.json";
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
 
     // ** setup RPC connection
     let connection = RpcClient::new_with_commitment(
-        "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9",
+        "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9".to_string(),
         CommitmentConfig::confirmed(),
     );
     let send_tx_connection =
-        RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::confirmed());
+        RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9".to_string(), CommitmentConfig::confirmed());
         let mut pool_dirs: Vec<PoolDir> = vec![];
 
         let r_dir = PoolDir {
@@ -80,7 +80,7 @@ fn main() {
             let json_str = std::fs::read_to_string(&pool_path).unwrap();
             let pool = pool_factory(&pool_dir.pool_type, &json_str);
             let accounts = pool.get_update_accounts();
-            let mut ii = 0;
+            let _ii = 0;
             for account in accounts {
                 account_pks.push(account);
                 map_account_pks_to_pool_paths.insert(account.to_string(), pool_path.clone());

@@ -1,4 +1,4 @@
-use anchor_client::solana_client::rpc_client::RpcClient;
+use solana_client::nonblocking::rpc_client::RpcClient;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::signature::Keypair;
@@ -45,7 +45,7 @@ fn test_all_pool_quotes(pool_dir: String, pool_type: PoolType) {
     // setup stuff
     let _cluster = Cluster::Mainnet;
     let connection = RpcClient::new_with_commitment(
-        "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9",
+        "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9".to_string(),
         CommitmentConfig::processed(),
     );
 
@@ -55,7 +55,7 @@ fn test_all_pool_quotes(pool_dir: String, pool_type: PoolType) {
     // setup anchor things
     // println!("owner: {}", owner.pubkey());
     // let program = provider.program(*ARB_PROGRAM_ID).unwrap();
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
 
     let pool_paths = read_json_dir(&pool_dir);
     let mut err_count = 0;

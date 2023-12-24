@@ -3,8 +3,10 @@ use crate::monitor::pools::PoolOperations;
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use std::collections::HashMap;
 use std::fs;
+use std::ops::{DerefMut, Deref};
 use std::rc::Rc;
 use std::str::FromStr;
+use std::sync::Arc;
 
 pub fn read_json_dir(dir: &String) -> Vec<String> {
     let _paths = fs::read_dir(dir).unwrap();
@@ -42,11 +44,22 @@ pub fn derive_token_address(owner: &Pubkey, mint: &Pubkey) -> Pubkey {
 }
 
 #[derive(Debug, Clone)]
-pub struct PoolQuote(pub Rc<Box<dyn PoolOperations>>);
+pub struct PoolQuote(pub Box<dyn PoolOperations>);
 
 impl PoolQuote {
-    pub fn new(quote: Rc<Box<dyn PoolOperations>>) -> Self {
+    pub fn new(quote: Box<dyn PoolOperations>) -> Self {
         Self(quote)
+    }
+}
+impl DerefMut for PoolQuote {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+impl Deref for PoolQuote {
+    type Target = Box<dyn PoolOperations>;
+    fn deref(&self) -> &Self::Target {
+        &self.0
     }
 }
 unsafe impl Send for PoolQuote {}
@@ -60,6 +73,12 @@ pub struct PoolIndex(pub usize);
 
 #[derive(Debug, Clone)]
 pub struct PoolEdge(pub HashMap<PoolIndex, Vec<PoolQuote>>);
+
+impl Default for PoolGraph {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl PoolGraph {
     pub fn new() -> Self {
