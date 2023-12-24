@@ -529,8 +529,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     for pool_dir in pool_dirs {
         debug!("pool dir: {:#?}", pool_dir);
         let mut pool_paths = read_json_dir(&pool_dir.dir_path);
-        let mut max = 11111;
-        if pool_paths.len() < 11111 {
+        let mut max = 1111;
+        if pool_paths.len() < 1111 {
             max = pool_paths.len();
         }
         for pool_path in &mut pool_paths[0..max] {

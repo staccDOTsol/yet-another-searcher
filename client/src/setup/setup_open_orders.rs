@@ -95,6 +95,7 @@ fn main() {
             println!("already have open orders for {}", pool.own_address.0.to_string());
             continue;
         }
+        
         // do a swap and check the amount
         let mut PROGRAM_LAYOUT_VERSIONS = HashMap::new();
         PROGRAM_LAYOUT_VERSIONS.insert("4ckmDgGdxQoPDLUkDT3vHgSAkzA3QRdNq5ywwY4sUSJn", 1);

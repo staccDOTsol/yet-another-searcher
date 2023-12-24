@@ -1,15 +1,19 @@
 use async_trait::async_trait;
 use bytemuck::bytes_of;
 use chrono::Utc;
+use solana_client::nonblocking::rpc_client::RpcClient;
+use solana_sdk::commitment_config::CommitmentConfig;
 use solana_sdk::signer::Signer;
+use solana_sdk::transaction::Transaction;
 use core::panic;
 use std::num::NonZeroU64;
+use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use crate::monitor::pools::PoolOperations;
 use crate::serialize::token::WrappedPubkey;
-use anchor_client::Cluster;
+use anchor_client::{Cluster, Client};
 use openbook_dex::matching::OrderType;
 use openbook_dex::matching::Side;
 use openbook_dex::state::AccountFlag;
@@ -384,9 +388,101 @@ async    fn swap_ix(
             return (false, vec![]);
         }
         let oos = oos.clone().unwrap();
-        let open_orders =
-            Pubkey::from_str(oos.get(&self.own_address.0.to_string()).unwrap()).unwrap();
+        let mut blargorders: Pubkey = Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap();
+        let mut open_orders =
+            (oos.get(&self.own_address.0.to_string()));
+        if open_orders.is_none() {
+            let owner_kp_path = "/root/.config/solana/id.json";
+            let owner = Arc::new(read_keypair_file(owner_kp_path.clone()).unwrap());
+            let oo_path: &str = "./serum_open_orders.json";
+            let oo_str = std::fs::read_to_string(oo_path).unwrap();
+            let oo: HashMap<String, String> = serde_json::from_str(&oo_str).unwrap();
+            let mut oos: Vec<String> = vec![];
 
+            let mut market_to_open_orders = HashMap::new();
+            for (market, oo) in oo {
+               oos.push(market.clone());
+               market_to_open_orders.insert(
+                   market,
+                   oo
+               );
+        
+            }
+            println!("open orders: {:?}", oos.len());   
+                
+        // do a swap and check the amount
+        let mut PROGRAM_LAYOUT_VERSIONS = HashMap::new();
+        PROGRAM_LAYOUT_VERSIONS.insert("4ckmDgGdxQoPDLUkDT3vHgSAkzA3QRdNq5ywwY4sUSJn", 1);
+        PROGRAM_LAYOUT_VERSIONS.insert("BJ3jrUzddfuSrZHXSCxMUUQsjKEyLmuuyZebkcaFp2fg", 1);
+        PROGRAM_LAYOUT_VERSIONS.insert("EUqojwWA2rd19FZrzeBncJsm38Jm1hEhE3zsmX3bRc2o", 2);
+        PROGRAM_LAYOUT_VERSIONS.insert("9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin", 3);
+
+        let LAYOUT_V1_SPAN = 3220;
+        let LAYOUT_V2_SPAN = 3228;
+
+        let space = LAYOUT_V2_SPAN;
+
+        let connection = RpcClient::new_with_commitment("https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718".to_string(), CommitmentConfig::recent());
+
+        let provider = Client::new_with_options(
+            Cluster::Custom("https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718".to_string(),
+            "https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718".to_string())
+            , (owner.clone()), CommitmentConfig::recent());
+        let program = provider.program(*ARB_PROGRAM_ID).unwrap();
+        let open_orders_kp = Keypair::new();
+            blargorders = open_orders_kp.pubkey();
+        let rent_exemption_amount = connection
+            .get_minimum_balance_for_rent_exemption(space)
+            .await.unwrap();
+
+            let create_account_ix = solana_sdk::system_instruction::create_account(
+                &owner.clone().pubkey(),
+                &open_orders_kp.pubkey(),
+                rent_exemption_amount,
+                space as u64,
+                &SERUM_PROGRAM_ID,
+            );
+    
+            let init_ix = openbook_dex::instruction::init_open_orders(
+                &Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap(),
+                &open_orders_kp.pubkey(),
+&owner.clone().pubkey(),
+            &    self.own_address.0,
+                None
+            ).unwrap();
+            let tx = Transaction::new_signed_with_payer(
+                &[create_account_ix.clone(), init_ix.clone()],
+                Some(&owner.clone().pubkey()),
+                &[(&owner), (&open_orders_kp)],
+                connection.get_latest_blockhash().await.unwrap(),
+            );
+            let signature = connection
+                                .send_and_confirm_transaction(
+                                    &tx
+                                ).await
+                                ;
+                                if signature.is_err() {
+                                    println!("error: {:#?}", signature.err().unwrap()); 
+                                }
+                                else {
+                            println!("signature: {:?}", signature.unwrap());
+                                }
+
+        market_to_open_orders.insert(
+            self.own_address.0.to_string(),
+            open_orders_kp.pubkey().to_string(),
+        );
+
+        // save open orders accounts as .JSON
+        let json_market_oo = serde_json::to_string(&market_to_open_orders).unwrap();
+        std::fs::write("./serum_open_orders.json", json_market_oo).unwrap();
+
+
+    }
+    else {
+        blargorders = Pubkey::from_str(open_orders.unwrap().as_str()).unwrap();
+    }
+let open_orders = blargorders;
         let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let _space = 3228;
         let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
