@@ -244,7 +244,6 @@ async    fn swap_ix(
         let base_vault = self.base_vault.clone();
         let quote_vault = self.quote_vault.clone();
         let market_authority = self.market_authority.clone();
-        let model_data_account = self.model_data_account.clone().unwrap();
         let market_base_vault = self.market_base_vault.clone();
         let market_quote_vault = self.market_quote_vault.clone();
         if ctype == CurveType::ConstantProduct {
@@ -278,6 +277,7 @@ async    fn swap_ix(
                 let swap_ix = swap_ix.unwrap();
                 return (false, vec![swap_ix.unwrap()]);
             } else {
+                let model_data_account = self.model_data_account.clone().unwrap();
                   let  swap_ix = tokio::task::spawn_blocking(move || stable_swap(
                         &stableProgramID,
                         &id,

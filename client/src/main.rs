@@ -290,8 +290,6 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
                                 let arb_path = arb_paths[largest_idx].clone();
                                 let arb_pools = arb_pools[largest_idx].clone();
                                 let arb_amount = arb_amounts[largest_idx].clone();
-                                println!("lorgest arb path is {:?}", arb_path);
-                                println!("lorgest arb pools is {:?}", arb_pools);
                                 println!("lorgest arb amount is {:?}", arb_amount);
 
                                 let mint_keys: Vec<String> =
@@ -331,7 +329,7 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
             .collect::<Vec<Pubkey>>())
         .collect::<Vec<Pubkey>>().as_slice(),
         &connection);
-        //println!("recent fees: {:?}", recent_fees);
+        println!("recent fees: {:?}", recent_fees);
 
             let mut  needed_keys = ixs.
             iter()
@@ -418,12 +416,12 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
                 ).unwrap();
 
                     let signature = connection
-                        .send_transaction_with_config(
+                        .send_transaction(
                             &tx,
-                            solana_client::rpc_config::RpcSendTransactionConfig {
+                         /*    solana_client::rpc_config::RpcSendTransactionConfig {
                                 skip_preflight: false,
                                 ..solana_client::rpc_config::RpcSendTransactionConfig::default()
-                            }, 
+                            }, */
                         )
                         ;
                         if signature.is_ok() {

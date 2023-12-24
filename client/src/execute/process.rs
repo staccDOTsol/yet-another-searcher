@@ -124,19 +124,20 @@ pub fn brute_force_search(
                 if (new_balance as f64 > init_balance as f64 * 1.0001) && (new_balance as f64 <= init_balance as f64 * 2.0) {
                     // ... profitable arb!
 
-                println!("found arb... {:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
-                
-                   old_best = new_balance;
-                   return self.brute_force_search(
-                    start_mint_idx,
-                    init_balance,
-                    old_best,
-                    new_balance,   // !
-                    new_path.clone(),      // !
-                    new_path,
-                    new_pool_path.clone(), // !
-                    new_pool_path
-                );
+                println!("found arb... {:?} -> {:?} (-{:?})", init_balance, new_balance, new_balance - init_balance);
+                if new_balance > old_best {
+                    old_best = new_balance;
+                    return self.brute_force_search(
+                        start_mint_idx,
+                        init_balance,
+                        old_best,
+                        new_balance,   // !
+                        new_path.clone(),      // !
+                        new_path,
+                        new_pool_path.clone(), // !
+                        new_pool_path
+                    );
+                }
                 }
             } else if !path.contains(&dst_mint_idx) {
                 return self.brute_force_search(
