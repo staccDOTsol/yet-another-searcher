@@ -1,3 +1,5 @@
+use crate::monitor::pool_utils::constant_price::ConstantPriceCurve;
+use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
 use crate::monitor::pool_utils::serum::FeeTier;
 use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::pool::JSONFeeStructure;
@@ -281,79 +283,49 @@ async    fn swap_ix(
         mint_in: &Pubkey,
         mint_out: &Pubkey,
     ) -> u128 {
-        let market_pk = self.id.0;
-        let mut iteration = Iteration {
-            amount_in: scaled_amount_in as u64,
-            amount_out: 0,
-        };
-        let fee_tier = FeeTier::from_srm_and_msrm_balances(&market_pk, 0, 0);
-
-        let market_acc = &self.accounts[0];
-        let bids_acc = &self.accounts[1];
-        let tval = &self.accounts;
-        if tval.len() < 3 {
+        
+        let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
+        let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
+        if pool_src_amount.is_none() || pool_dst_amount.is_none() {
             return 0;
         }
-
-        let asks_acc = &self.accounts[2];
-
-        // clone accounts for simulation (improve later?)
-        let market_acc = &mut market_acc.clone().unwrap();
-        let bid_acc = &mut bids_acc.clone().unwrap();
-        let ask_acc = &mut asks_acc.clone().unwrap();
-
-        let market_acc_info = &account_info(&self.id,market_acc);
-
-        let bids_acc = &account_info(&self.market_bids.0, bid_acc);
-        let asks_acc = &account_info(&self.market_asks.0, ask_acc);
-        let mut m = Market::load(market_acc_info, &ammProgramID, true);
-        if !m.is_ok() {
-            
-            m = Market::load(market_acc_info, &stableProgramID, true);
-            if !m.is_ok()   {
-                println!("not ok");
-                return 0;
-            }
-        }
-        let mut market = m.unwrap();
-        let mut bids = market.load_bids_mut(bids_acc);
-        if bids.is_err() {
-            return 0;
-        }
-        let mut bids = bids.unwrap();
-        let mut asks = market.load_asks_mut(asks_acc).unwrap();
-        // are these ordered correctly?
-        let mut ob = OrderBookState {
-            bids: bids.deref_mut(),
-            asks: asks.deref_mut(),
-            market_state: market.deref_mut(),
+        let pool_src_amount = pool_src_amount.unwrap();
+        let pool_dst_amount = pool_dst_amount.unwrap();
+        
+        // compute fees
+        let fees = Fees {
+            trade_fee_numerator: 0,
+            trade_fee_denominator: 1,
+            owner_trade_fee_numerator: 0,
+            owner_trade_fee_denominator: 1,
+            owner_withdraw_fee_numerator: 0,
+            owner_withdraw_fee_denominator: 0,
+            host_fee_numerator: 0,
+            host_fee_denominator: 0,
         };
 
-        if *mint_in == self.quote_mint.0 {
-            // bid: quote -> base
-            let mut count = 0;
-            loop {
-                count += 1;
-                let done = bid_iteration(&mut iteration, &fee_tier, &mut ob);
-                if done || iteration.amount_out == 0 || count == 5 {
-                    break;
-                }
-            }
-            iteration.amount_out as u128
-        } else if *mint_in == self.base_mint.0 {
-            // ask: base -> quote
-            let mut count = 0;
-            loop {
-                count += 1;
-                let done = ask_iteration(&mut iteration, &fee_tier, &mut ob);
-                if done || iteration.amount_in == 0 || count == 5 {
-                    break;
-                }
-            }
-            iteration.amount_out as u128 
+        let ctype = if self.version == 1 {
+            CurveType::Stable
         } else {
-            println!("{}", 0);
-            0
+            CurveType::ConstantProduct
+        };
+
+        // get quote -- works for either constant product or stable swap
+
+        let amt = get_pool_quote_with_amounts(
+            scaled_amount_in,
+            ctype,
+            170, // from sdk
+            &fees,
+            *pool_src_amount,
+            *pool_dst_amount,
+            None,
+        )
+        .unwrap();
+        if amt > 0 {
+            amt - 1
+        } else {
+            amt
         }
     }
 

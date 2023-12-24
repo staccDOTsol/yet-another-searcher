@@ -524,9 +524,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut futures = vec![];
     for pool_dir in pool_dirs {
         debug!("pool dir: {:#?}", pool_dir);
-        let pool_paths = read_json_dir(&pool_dir.dir_path);
-
-        for pool_path in pool_paths {
+        let mut pool_paths = read_json_dir(&pool_dir.dir_path);
+        let mut max = 500;
+        if pool_paths.len() < 500 {
+            max = pool_paths.len();
+        }
+        for pool_path in &mut pool_paths[0..max] {
             let cluster = cluster.clone();
             let connection = connection.clone();
             let pool_factory = pool_factory.clone();
