@@ -51,7 +51,7 @@ pub fn brute_force_search(
     path: Vec<usize>,
     pool_path: Vec<PoolQuote>,
  //   sent_arbs: &mut HashSet<String>,
-) -> Option<(u128, Vec<usize>, Vec<PoolQuote>)> {
+) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()> {
     let src_curr = path[path.len() - 1]; // last mint
     let src_mint = self.token_mints[src_curr];
 
@@ -60,11 +60,16 @@ pub fn brute_force_search(
     // path = 4 = A -> B -> C -> D
     // path >= 5 == not valid bc max tx size is swaps
     if path.len() == 8 {
-       return None 
-    };
+       return Ok(None) 
+    }
+    else {
+        info!("path: {:?}", path);
+    }
 
     for dst_mint_idx in out_edges {
-
+        let random = rand::random::<usize>() % out_edges.len();
+        let dst_mint_idx = out_edges.iter().nth(random).unwrap();
+        
         if path.contains(dst_mint_idx) && *dst_mint_idx != start_mint_idx {
             continue;
         }
@@ -90,6 +95,9 @@ pub fn brute_force_search(
         let dst_mint = self.token_mints[dst_mint_idx];
 
         for pool in pools {
+            // choose a pool at random instead
+            let random = rand::random::<usize>() % pools.len();
+            let pool = pools[random].clone();
             let new_balance =
                 pool.0
                     .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint);
@@ -106,13 +114,13 @@ pub fn brute_force_search(
                 // println!("{:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
                 
                 // if new_balance > init_balance - 1086310399 {
-                if new_balance as f64 > init_balance as f64 * 1.000 {
+                if (new_balance as f64 > init_balance as f64 * 1.0001) && (new_balance as f64 <= init_balance as f64 * 2.0) {
                     // ... profitable arb!
 
-                   return Some((new_balance, new_path, new_pool_path)) 
+                   return Ok(Some((new_balance, new_path, new_pool_path)))
                 }
             } else if !path.contains(&dst_mint_idx) {
-                self.brute_force_search(
+                return self.brute_force_search(
                     start_mint_idx,
                     init_balance,
                     new_balance,   // !
@@ -123,7 +131,7 @@ pub fn brute_force_search(
         }
 }
 
-None
+Ok(None)
 }
 
 

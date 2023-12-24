@@ -249,7 +249,7 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
                         }
                        }
                        let mut arbitrager = arbitrager.clone();
-                       let arb = arbitrager.brute_force_search(
+                       let mut arb = arbitrager.brute_force_search(
                            start_mint_idx,
                            init_token_balance,
                            swap_start_amount,
@@ -257,9 +257,11 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
                            vec![],
                           // 0
                        );
-                          if arb.is_some() {
-                            println!("found arb {:?}", arb);
-                            arbs.push(arb.unwrap());
+                          if arb.is_ok() {
+                            let arb = arb.unwrap();
+                            if arb.is_some() {
+                               let arb = arb.unwrap();
+                            arbs.push(arb);
                             if arbs.len() > 100 {
                                 let mut arb_paths = vec![];
                                 let mut arb_pools = vec![];
@@ -429,6 +431,7 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
                 
     
                                 arbs = vec![];
+                    }
                             }
                           }
 
