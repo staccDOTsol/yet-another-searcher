@@ -227,54 +227,87 @@ async    fn swap_ix(
         let user_src = derive_token_address(&owner, mint_in);
         let user_dst = derive_token_address(&owner, mint_out);
 
-        let mut swap_ix = amm_swap(
-            &ammProgramID,
-            &self.id,
-            &self.authority,
-            &self.open_orders,
-            &self.target_orders,
-            &self.base_vault,
-            &self.quote_vault,
-            &self.market_program_id,
-            &self.market_id,
-            &self.market_bids,
-            &self.market_asks,
-            &self.market_event_queue,
-            &self.base_vault,
-            &self.quote_vault,
-            &self.market_authority,
-            &user_src,
-            &user_dst,
-            &owner, 
-            _start_bal as u64,
-            0 as u64
-        );
-    if swap_ix.is_err() {
-        swap_ix = stable_swap(
-            &stableProgramID,
-            &self.id,
-            &self.authority,
-            &self.open_orders,
-            &self.base_vault,
-            &self.quote_vault,
-            &self.model_data_account.as_ref().unwrap(),
-            &self.market_program_id,
-            &self.market_id,
-            &self.market_bids,
-            &self.market_asks,
-            &self.market_event_queue,
-            &self.base_vault,
-            &self.quote_vault,
-            &self.market_authority,
-            &user_src,
-            &user_dst,
-            &owner, 
-            _start_bal as u64,
-            0 as u64
-        );
-    }        
+        let ctype = if self.version == 1 {
+            CurveType::Stable
+        } else {
+            CurveType::ConstantProduct
+        };
+        let id = self.id.clone();
+        let authority = self.authority.clone();
+        let open_orders = self.open_orders.clone();
+        let target_orders = self.target_orders.clone();
+        let market_program_id = self.market_program_id.clone();
+        let market_id = self.market_id.clone();
+        let market_bids = self.market_bids.clone();
+        let market_asks = self.market_asks.clone();
+        let market_event_queue = self.market_event_queue.clone();
+        let base_vault = self.base_vault.clone();
+        let quote_vault = self.quote_vault.clone();
+        let market_authority = self.market_authority.clone();
+        let model_data_account = self.model_data_account.clone().unwrap();
+        let market_base_vault = self.market_base_vault.clone();
+        let market_quote_vault = self.market_quote_vault.clone();
+        if ctype == CurveType::ConstantProduct {
+            let swap_ix: Result<Result<Instruction, anchor_lang::prelude::ProgramError>, tokio::task::JoinError> = tokio::task::spawn_blocking(move || 
+                amm_swap(
+                    &ammProgramID,
+                    &id,
+                    &authority,
+                    &open_orders,
+                    &target_orders,
+                    &base_vault,
+                    &quote_vault,
+                    &market_program_id,
+                    &market_id,
+                    &market_bids,
+                    &market_asks,
+                    &market_event_queue,
+                    &market_base_vault,
+                    &market_quote_vault,
+                    &market_authority,
+                    &user_src,
+                    &user_dst,
+                    &owner, 
+                    _start_bal as u64,
+                    0 as u64
+                )).await;
+    
+                if swap_ix.is_err() {
+                    return (false, vec![]);
+                }
+                let swap_ix = swap_ix.unwrap();
+                return (false, vec![swap_ix.unwrap()]);
+            } else {
+                  let  swap_ix = tokio::task::spawn_blocking(move || stable_swap(
+                        &stableProgramID,
+                        &id,
+                        &authority,
+                        &open_orders,
+                        &base_vault,
+                        &quote_vault,
+                        &model_data_account,
+                        &market_program_id,
+                        &market_id,
+                        &market_bids,
+                        &market_asks,
+                        &market_event_queue,
+                        &market_base_vault,
+                        &market_quote_vault,
+                        &market_authority,
+                        &user_src,
+                        &user_dst,
+                        &owner, 
+                        _start_bal as u64,
+                        0 as u64
+                    )).await;
+    
+            if swap_ix.is_err() {
+                return (false, vec![]);
+            }
+            let swap_ix = swap_ix.unwrap();
+            return (false, vec![swap_ix.unwrap()]);
+            }        
 
-        (false, vec![swap_ix.unwrap()])
     }
 
     fn get_quote_with_amounts_scaled(
@@ -304,7 +337,7 @@ async    fn swap_ix(
             host_fee_denominator: 0,
         };
 
-        let ctype = if self.version != 1 {
+        let ctype = if self.version == 1 {
             CurveType::Stable
         } else {
             CurveType::ConstantProduct

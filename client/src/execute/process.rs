@@ -47,9 +47,12 @@ pub fn brute_force_search(
     &self,
     start_mint_idx: usize,
     init_balance: u128,
+    mut old_best: u128,
     curr_balance: u128,
     path: Vec<usize>,
+    best_path: Vec<usize>,
     pool_path: Vec<PoolQuote>,
+    best_pool_path: Vec<PoolQuote>,
  //   sent_arbs: &mut HashSet<String>,
 ) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()> {
     let src_curr = path[path.len() - 1]; // last mint
@@ -59,8 +62,14 @@ pub fn brute_force_search(
 
     // path = 4 = A -> B -> C -> D
     // path >= 5 == not valid bc max tx size is swaps
-    if path.len() == 8 {
-       return Ok(None) 
+    if path.len() == 6 {
+        if old_best > init_balance {
+            println!("most profitable arb... {:?} -> {:?} (-{:?})", init_balance, old_best, init_balance - old_best);
+            return Ok(Some((old_best, best_path, best_pool_path)))
+        }
+        else {
+            return Ok(None)
+        }
     }
     else {
         info!("path: {:?}", path);
@@ -96,8 +105,6 @@ pub fn brute_force_search(
 
         for pool in pools {
             // choose a pool at random instead
-            let random = rand::random::<usize>() % pools.len();
-            let pool = pools[random].clone();
             let new_balance =
                 pool.0
                     .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint);
@@ -117,15 +124,30 @@ pub fn brute_force_search(
                 if (new_balance as f64 > init_balance as f64 * 1.0001) && (new_balance as f64 <= init_balance as f64 * 2.0) {
                     // ... profitable arb!
 
-                   return Ok(Some((new_balance, new_path, new_pool_path)))
+                println!("found arb... {:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
+                
+                   old_best = new_balance;
+                   return self.brute_force_search(
+                    start_mint_idx,
+                    init_balance,
+                    old_best,
+                    new_balance,   // !
+                    new_path.clone(),      // !
+                    new_path,
+                    new_pool_path.clone(), // !
+                    new_pool_path
+                );
                 }
             } else if !path.contains(&dst_mint_idx) {
                 return self.brute_force_search(
                     start_mint_idx,
                     init_balance,
+                    old_best,
                     new_balance,   // !
                     new_path,      // !
+                    path,      // !
                     new_pool_path, // !
+                    pool_path, // !
                 );
             }
         }
@@ -157,7 +179,7 @@ pub async    fn get_arbitrage_instructions<'a>(
     let provider = anchor_client::Client::new_with_options(
         Cluster::Mainnet,
         owner3.clone(),
-        solana_sdk::commitment_config::CommitmentConfig::recent(),
+        solana_sdk::commitment_config::CommitmentConfig::confirmed(),
     );
     let program = provider.program(*crate::constants::ARB_PROGRAM_ID).unwrap();
 
@@ -176,6 +198,7 @@ pub async    fn get_arbitrage_instructions<'a>(
         ixs.push(ix);
         let mut flag = false;
         let pubkey = owner;
+        let mut swap_start_amount = swap_start_amount;
         for i in 0..mint_idxs.len() - 1 {
             let [mint_idx0, mint_idx1] = [mint_idxs[i], mint_idxs[i + 1]];
             let [mint0, mint1] = [self.token_mints[mint_idx0], self.token_mints[mint_idx1]];
@@ -183,6 +206,12 @@ pub async    fn get_arbitrage_instructions<'a>(
             let mut swap_ix = pool
                 .0
                 .swap_ix(&mint0, &mint1, swap_start_amount);
+
+            swap_start_amount = pool.0.get_quote_with_amounts_scaled(
+                swap_start_amount,
+                &mint0,
+                &mint1);
+                
             ixs.push(swap_ix.await.1);
             let pool_type = pool.0.get_pool_type();
             match pool_type {

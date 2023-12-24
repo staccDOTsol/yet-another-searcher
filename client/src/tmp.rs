@@ -83,7 +83,7 @@ fn main() {
     let provider = Client::new_with_options(
         cluster.clone(),
         rc_owner.clone(),
-        CommitmentConfig::recent(),
+        CommitmentConfig::confirmed(),
     );
     let program = provider.program(*ARB_PROGRAM_ID);
 
@@ -202,7 +202,7 @@ fn main() {
     println!("getting pool amounts...");
     let mut first = true;
 
-    let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent());
+    let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::confirmed());
     // slide it out here
     let init_token_acc = derive_token_address(&owner.pubkey(), &usdc_mint);
     let init_token_balance =

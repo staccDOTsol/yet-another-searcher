@@ -197,7 +197,7 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
      ) -> Option<u128> {
 
 
-        let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent());
+        let connection = RpcClient::new_with_commitment(connection_url, CommitmentConfig::confirmed());
 
         let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
 
@@ -218,7 +218,7 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
     let mut client = GeyserGrpcClient::connect("https://jarrett-solana-7ba9.mainnet.rpcpool.com", Some("8d890735-edf2-4a75-af84-92f7c9e31718".to_string()), None).unwrap();
     let (mut subscribe_tx, mut stream) = client.subscribe().await.unwrap();
 
-    let commitment: CommitmentLevel = CommitmentLevel::Processed.into();
+    let commitment: CommitmentLevel = CommitmentLevel::Confirmed.into();
     subscribe_tx
         .send(SubscribeRequest {
             slots: HashMap::new(),
@@ -252,8 +252,11 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
                        let mut arb = arbitrager.brute_force_search(
                            start_mint_idx,
                            init_token_balance,
+                           init_token_balance,
                            swap_start_amount,
                            vec![start_mint_idx],
+                           vec![start_mint_idx],
+                           vec![],
                            vec![],
                           // 0
                        );
@@ -307,11 +310,11 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
                           let ix = spl_token::instruction::transfer(
                             &spl_token::id(),
                             &src_ata,
-                            &hydra_ata,
+                            &src_ata,
                             &rc_owner.pubkey(),
                             &[  
                             ],
-                            init_token_balance as u64 / 10 as u64,
+                            init_token_balance as u64,
                         ).unwrap();
                         ixs.push(ix);
     let recent_fees = calculate_recent_fee(ixs.
@@ -388,7 +391,7 @@ async fn yellowstone(og_pools: &mut Vec<Box<dyn PoolOperations>>,
             .collect::<Vec<(AddressLookupTableAccount, usize)>>();
         usized_lutties.sort_by(|a, b| a.1.cmp(&b.1));
         usized_lutties.reverse();
-        let rounded = round::round(usized_lutties.len() as f64 / 4.0, 0) as usize;
+        let rounded = round::round(usized_lutties.len() as f64 / 1.0, 0) as usize;
         usized_lutties = usized_lutties[0..rounded].to_vec();
         lutties = usized_lutties.iter().map(|lut| lut.0.clone()).collect::<Vec<AddressLookupTableAccount>>();
         lutties.append(&mut new_lutties);
@@ -466,7 +469,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let connection_url = "https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718";
     println!("using connection: {}", connection_url);
 
-    let connection = Arc::new(RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent()));
+    let connection = Arc::new(RpcClient::new_with_commitment(connection_url, CommitmentConfig::confirmed()));
 
     let owner_kp_path = "/root/.config/solana/id.json";
 
@@ -479,7 +482,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let provider = Client::new_with_options(
         cluster.clone(),
         rc_owner.clone(),
-        CommitmentConfig::recent(),
+        CommitmentConfig::confirmed(),
     );
     let program = provider.program(*ARB_PROGRAM_ID);
 
@@ -529,14 +532,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     for pool_dir in pool_dirs {
         debug!("pool dir: {:#?}", pool_dir);
         let mut pool_paths = read_json_dir(&pool_dir.dir_path);
-        let mut max = 1111;
-        if pool_paths.len() < 1111 {
+       
+        let mut max = 16661;
+        if pool_paths.len() < 16661 {
             max = pool_paths.len();
         }
-        for pool_path in &mut pool_paths[0..max] {
+        for pool_path in &mut pool_paths.clone()[0..max] {
             let cluster = cluster.clone();
             let connection = connection.clone();
-            let pool_factory = pool_factory.clone();
 
             let json_str = std::fs::read_to_string(&pool_path).unwrap();
             let mut pool = pool_factory(&pool_dir.pool_type, &json_str);
@@ -564,21 +567,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
                 mint_idxs.push(idx);
             }
-            let mut all_mint_idxs = all_mint_idxs.clone();
-            let mut graph_edges = graph_edges.clone();
-            let mut graph = graph.clone();
             futures.push(tokio::spawn(async move {
             // get accounts which need account println to be updated (e.g. pool src/dst amounts for xy=k)
             let uas = pool.get_update_accounts();
             let account_infos = connection.get_multiple_accounts(&uas).unwrap();
             
             pool.set_update_accounts(account_infos.clone(), cluster.clone());
- let mints = pool.get_mints();
+            let mints = pool.get_mints();
             if !pool.can_trade(&mints[0], &mints[1]) {
                 println!("can't trade {:?}", pool.get_own_addr());
                 return None
             }
-            pool_count += 1;
             Some((pool,account_infos.clone(), uas))
         }));
         if futures.len() > 70 {
@@ -660,7 +659,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let src_ata = derive_token_address(&rc_owner.pubkey(), &usdc_mint);
 
-        let connection = Arc::new(RpcClient::new_with_commitment(connection_url, CommitmentConfig::recent()));
+        let connection = Arc::new(RpcClient::new_with_commitment(connection_url, CommitmentConfig::confirmed()));
 
         let init_token_acc = connection.clone().get_account(&src_ata).unwrap();
         let init_token_balance: u128 = spl_token::state::Account::unpack(&init_token_acc.data).unwrap().amount as u128;
@@ -742,12 +741,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             connection_url.to_string()),
         connection
     };
-    let mut futures = vec![tokio::spawn(async move {
         let owner = Arc::new(read_keypair_file(owner_kp_path.clone()).unwrap());
-        yellowstone(&mut pools.clone(), Arc::new(arbitrager), connection_url, filter_map, owner, start_mint_idx).await
-    })];
-
-        let results = join_all(futures).await;
+        yellowstone(&mut pools.clone(), Arc::new(arbitrager), connection_url, filter_map, owner, start_mint_idx).await;
        
 Ok(())
    
@@ -848,7 +843,7 @@ fn create_and_or_extend_luts(
             );
             let latest_blockhash = connection.get_latest_blockhash().unwrap(); 
             //println!("extending lut: {:?}", lut.key);
-            connection
+            let sig = connection
                 .send_transaction(&VersionedTransaction::try_new(
                         VersionedMessage::V0(v0::Message::try_compile(
                             &payer.pubkey(),
@@ -858,7 +853,13 @@ fn create_and_or_extend_luts(
                         ).unwrap()),
                         &[payer],
                     ).unwrap()
-                ).unwrap();
+                );
+                if sig.is_ok() {
+                    connection.confirm_transaction_with_commitment(&sig.unwrap(), CommitmentConfig::confirmed()).unwrap();
+                }
+                else {
+                    println!("error: {:?}", sig.err().unwrap());
+                }
 
                     
             used_luts.push(lut);
@@ -890,7 +891,7 @@ fn create_new_lut(
 ) -> Result<AddressLookupTableAccount, Box<dyn std::error::Error>> {
     // Create a new AddressLookupTable
     let recent_slot = connection
-    .get_slot_with_commitment(CommitmentConfig::processed())
+    .get_slot_with_commitment(CommitmentConfig::confirmed())
     .unwrap()//"237009123 is not a recent slot"
     - 50;
     let (create_ix, table_pk) =
@@ -902,8 +903,8 @@ fn create_new_lut(
     let latest_blockhash = connection.get_latest_blockhash().unwrap();  
     
     //println!("creating lut: {:?}", table_pk);
-    connection
-    .send_and_confirm_transaction_with_spinner(&VersionedTransaction::try_new(
+   let signature =  connection
+    .send_transaction(&VersionedTransaction::try_new(
             VersionedMessage::V0(v0::Message::try_compile(
                 &payer.pubkey(),
                 &[create_ix],
@@ -913,6 +914,8 @@ fn create_new_lut(
             &[payer],
         ).unwrap()
     ).unwrap();
+
+    connection.confirm_transaction_with_commitment(&signature, CommitmentConfig::confirmed()).unwrap();
 
     let lut = AddressLookupTableAccount {
         key: table_pk,
@@ -960,7 +963,7 @@ pub fn calculate_recent_fee(
     for chunk in chunks {
             let account_infos = connection.get_multiple_accounts_with_commitment(
                 chunk,
-                CommitmentConfig::processed()
+                CommitmentConfig::confirmed()
             ).unwrap().value;
             let mut index = 0;
             let write_locked_accounts = &account_infos

@@ -422,12 +422,12 @@ async    fn swap_ix(
 
         let space = LAYOUT_V2_SPAN;
 
-        let connection = RpcClient::new_with_commitment("https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718".to_string(), CommitmentConfig::recent());
+        let connection = RpcClient::new_with_commitment("https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718".to_string(), CommitmentConfig::confirmed());
 
         let provider = Client::new_with_options(
             Cluster::Custom("https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718".to_string(),
             "https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718".to_string())
-            , (owner.clone()), CommitmentConfig::recent());
+            , (owner.clone()), CommitmentConfig::confirmed());
         let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let open_orders_kp = Keypair::new();
             blargorders = open_orders_kp.pubkey();

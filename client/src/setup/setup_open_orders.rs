@@ -57,9 +57,9 @@ fn main() {
     }
     println!("open orders: {:?}", open_orders.len());   
     // ** setup RPC connection
-    let connection = RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::recent());
+    let connection = RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::confirmed());
 
-    let provider = Client::new_with_options(cluster, Rc::new(owner), CommitmentConfig::recent());
+    let provider = Client::new_with_options(cluster, Rc::new(owner), CommitmentConfig::confirmed());
     let program = provider.program(*ARB_PROGRAM_ID).unwrap();
     let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
 
@@ -95,7 +95,7 @@ fn main() {
             println!("already have open orders for {}", pool.own_address.0.to_string());
             continue;
         }
-        
+
         // do a swap and check the amount
         let mut PROGRAM_LAYOUT_VERSIONS = HashMap::new();
         PROGRAM_LAYOUT_VERSIONS.insert("4ckmDgGdxQoPDLUkDT3vHgSAkzA3QRdNq5ywwY4sUSJn", 1);

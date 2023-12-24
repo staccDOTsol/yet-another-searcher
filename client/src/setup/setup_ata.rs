@@ -35,10 +35,10 @@ fn main() {
     // ** setup RPC connection
     let connection = RpcClient::new_with_commitment(
         "https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9",
-        CommitmentConfig::recent(),
+        CommitmentConfig::confirmed(),
     );
     let send_tx_connection =
-        RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::recent());
+        RpcClient::new_with_commitment("https://rpc.shyft.to?api_key=jdXnGbRsn0Jvt5t9", CommitmentConfig::confirmed());
         let mut pool_dirs: Vec<PoolDir> = vec![];
 
         let r_dir = PoolDir {
