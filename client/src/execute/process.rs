@@ -1,5 +1,6 @@
 use anyhow::Error;
 use futures::lock::Mutex;
+use rand::Rng;
 use rand::seq::SliceRandom;
 use solana_address_lookup_table_program::instruction::{extend_lookup_table, create_lookup_table};
 use solana_client::nonblocking::rpc_client::RpcClient;
@@ -27,6 +28,7 @@ use solana_sdk::commitment_config::{CommitmentLevel, CommitmentConfig};
 use solana_sdk::compute_budget::ComputeBudgetInstruction;
 use solana_sdk::signature::{read_keypair_file, Signature};
 use solana_transaction_status::UiTransactionEncoding;
+use std::cell::RefCell;
 use std::collections::{HashMap, HashSet, BinaryHeap};
 use std::pin::Pin;
 use std::sync::Arc;
@@ -58,71 +60,100 @@ pub struct Arbitrager {
     pub connection: Arc<RpcClient>,
 }
 impl Arbitrager {
+    #[async_recursion::async_recursion]
+    async fn optimized_search_recursive(
+        &self,
+        current_amount: u128,
+        mint_idx: usize,
+        path: Vec<usize>,
+        pool_path: Vec<PoolQuote>,
+        token_mints: &Vec<Pubkey>,
+        graph_edges: &Vec<HashSet<usize>>,
+        graph: &PoolGraph,
+        rng: u64,
+        shared_state: Arc<Mutex<(u128, Vec<usize>, Vec<PoolQuote>)>>
+    ) -> Result<(u128, Vec<usize>, Vec<PoolQuote>), anyhow::Error> {
+        let out_edges = &graph_edges[mint_idx];
+        for &dst_mint_idx in out_edges {
+            let modded = rng % out_edges.len() as u64;
+            let dst_mint_idx = *out_edges.get(&(modded as usize)).unwrap_or(&mint_idx);
+
+            if path.len() > 6 {
+                continue;
+            }
+
+            if let Some(pools) = graph
+                .0
+                .get(&PoolIndex(mint_idx))
+                .and_then(|p| p.0.get(&PoolIndex(dst_mint_idx)))
+            {
+                for pool in pools {
+                    let new_balance = pool.get_quote_with_amounts_scaled(current_amount, &token_mints[mint_idx], &token_mints[dst_mint_idx]);
+
+                    if new_balance == 0 {
+                        continue;
+                    }
+
+                    let mut new_path = path.clone();
+                    new_path.push(dst_mint_idx);
+
+                    let mut new_pool_path = pool_path.clone();
+                    new_pool_path.push(pool.clone());
+
+                    // Update shared state if this path is better
+                    let mut state = shared_state.lock().await;
+
+                    if new_balance > state.0 {
+                        *state = (new_balance, new_path.clone(), new_pool_path.clone());
+                    }
+                    drop(state);
+
+                    // Recurse
+                    self.optimized_search_recursive(
+                        new_balance,
+                        dst_mint_idx,
+                        new_path,
+                        new_pool_path,
+                        token_mints,
+                        graph_edges,
+                        graph,
+                        rng,
+                        Arc::clone(&shared_state)
+                    ).await?;
+                }
+            }
+        }
+        Ok(shared_state.lock().await.clone())
+    }
+
     pub async fn optimized_search(
-        &mut self,
+        self,
         start_mint_idx: usize,
         init_balance: u128,
         path: Vec<usize>,
         token_mints: Vec<Pubkey>,
         graph_edges: Vec<HashSet<usize>>,
         graph: PoolGraph,
+        rng: u64,
     ) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, anyhow::Error> {
-        let mut best_profit = 0;
-        let mut current_amount = init_balance;
-        let mut best_path = Vec::new();
-        let mut best_pool_path = Vec::new();
-        let mut best_routes = BinaryHeap::new(); // Keep track of the top 10 most profitable routes
+        let shared_state = Arc::new(Mutex::new((0, Vec::new(), Vec::new())));
 
-        let mut queue = BinaryHeap::new();
-        queue.push((0, start_mint_idx, path, Vec::new()));
-
-        while let Some((profit, mint_idx, path, pool_path)) = queue.pop() {
-            let profit = -(profit as i128);
-            let out_edges = &graph_edges[mint_idx];
-
-            for dst_mint_idx in out_edges.clone() {
-                if let Some(pools) = graph
-                    .0
-                    .get(&PoolIndex(mint_idx))
-                    .and_then(|p| p.0.get(&PoolIndex(dst_mint_idx)))
-                {
-                    for mut pool in pools {
-                        pool = pools.choose(&mut rand::thread_rng()).unwrap();
-                        let mut profit = profit as u128;
-                        let new_balance = pool.get_quote_with_amounts_scaled(current_amount, &token_mints.clone()[mint_idx], &token_mints.clone()[dst_mint_idx]);
-
-                        if new_balance == 0 {
-                            continue;
-                        }
-                        current_amount = new_balance;
-
-                        let mut new_path = path.clone();
-                        new_path.push(dst_mint_idx);
-
-                        let mut new_pool_path = pool_path.clone();
-                        new_pool_path.push(pool.clone());
-
-                        best_profit = new_balance;
-                        best_path = new_path.clone();
-                        best_pool_path = new_pool_path.clone();
-                        profit = new_balance - init_balance;
-
-                        if new_path.len() >= 2 && dst_mint_idx == start_mint_idx && new_balance > init_balance && new_balance <= init_balance * 3 {
-                            best_routes.push((current_amount, new_path.clone(), new_pool_path.clone()));
-                            println!("best routes len {}", best_routes.len());
-                            if best_routes.len() > 3 {
-                                println!("best_routes.len() > 10");
-                                return Ok(Some((best_profit, best_path, best_pool_path)));
-                            }
-                        }
-                        queue.push((-(profit as i128), dst_mint_idx, new_path, new_pool_path));
-                    }
-                                    }
-            }
-
+        let state = self.optimized_search_recursive(
+            init_balance,
+            start_mint_idx,
+            path,
+            Vec::new(),
+            &token_mints,
+            &graph_edges,
+            &graph,
+            rng,
+            Arc::clone(&shared_state.clone())
+        ).await?;
+        if state.0 > 0 {
+            Ok(Some((state.0, state.1.clone(), state.2.clone())))
+        } else {
+            Ok(None)
         }
-
-        Ok(None)
     }
     
 }
@@ -196,15 +227,15 @@ let ix = ix.unwrap();
             let pool3 = pool.clone();
             let token_mints = token_mints.clone();
             println!("getting quote with amounts scaled {} {} {} ", i, mint0_clone, mint1_clone);
-            let swap_ix =tokio::task::spawn_blocking(move || { pool3.swap_ix(token_mints[mint_idx0].clone(), token_mints[mint_idx1].clone(), swap_start_amount) }).await.unwrap();
+            let swap_ix = pool3.swap_ix(token_mints[mint_idx0].clone(), token_mints[mint_idx1].clone(), swap_start_amount);
             
             let pool2 = pool.0.clone();
-             swap_start_amount = tokio::task::spawn_blocking(move || {
+             swap_start_amount = 
  pool2.get_quote_with_amounts_scaled(
                 swap_start_amount,
                 &mint0,
                 &mint1
-            )}).await.unwrap();
+            );
             if swap_start_amount == 0 {
                 return (vec![], false);
             }

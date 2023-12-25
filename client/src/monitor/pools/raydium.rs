@@ -446,22 +446,6 @@ impl PoolOperations for RaydiumPool {
 
 
     fn can_trade(&self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
-        let amount = get_amount_from_redis(&_mint_in.to_string());
-        if amount.is_err() {
-            return false;
-        }
-        let amount = amount.unwrap();
-        if amount == 0 {
-            return false;
-        }
-        let amount = get_amount_from_redis(&_mint_out.to_string());
-        if amount.is_err() {
-            return false;
-        }
-        let amount = amount.unwrap();
-        if amount == 0 {
-            return false;
-        }
         for amount in self.pool_amounts.values() {
             if *amount == 0 {
                 return false;
