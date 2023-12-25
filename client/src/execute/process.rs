@@ -66,7 +66,7 @@ pub async fn brute_force_search(
 
     let out_edges = &self.graph_edges[src_curr];
 
-    if path.len() == 6 {
+    if path.len() == 8 {
         if old_best > init_balance {
             println!("most profitable arb... {:?} -> {:?} (-{:?})", init_balance, old_best, init_balance - old_best);
             return Box::pin(async move {Ok(Some((old_best, best_path, best_pool_path)))}) as Pin<Box<dyn std::future::Future<Output = Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>>;
@@ -110,10 +110,14 @@ pub async fn brute_force_search(
         let dst_mint_acc = derive_token_address(&owner, &dst_mint);
 
         for pool in pools {
+            let arandom = rand::random::<usize>() % pools.len();
+            let pool = pools.iter().nth(arandom).unwrap();
             // choose a pool at random instead
             let new_balance =
                 pool.0
                     .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint);
+                println!("new balance {}", new_balance);
+
             if new_balance == 0 {
                 continue;
             }

@@ -396,9 +396,7 @@ async    fn swap_ix(
 
         let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap().amount as u128;
         let amount1 = spl_token::state::Account::unpack(acc_data1).unwrap().amount as u128;
-        if amount0 < 1000 || amount1 < 1000 {
-            return;
-        }
+     
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
     }
@@ -411,9 +409,6 @@ async    fn swap_ix(
         let id0 = self.base_mint.0.to_string();
         let id1 = self.quote_mint.0.to_string();
 
-        if amount0.amount < 1000 || amount0.amount < 1000 {
-            return;
-        }
         if _mint.to_string() == id0 {
             self.pool_amounts
                 .entry(id0.clone())

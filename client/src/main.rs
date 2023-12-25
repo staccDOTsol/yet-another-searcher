@@ -304,7 +304,6 @@ let signers = [rc_owner_signer];
         .await.unwrap();
         println!("searching for arbitrages5...");
     
-        let mut newfuts = vec![];
 
     while let Some(message) = stream.next().await {
         match message {
@@ -330,7 +329,7 @@ let signers = [rc_owner_signer];
                         let connection = RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
                                 let mut arbs = vec![];
                                     println!("searching for arbitrages6...");
-                          newfuts.push(a.brute_force_search(
+                         let arb = a.brute_force_search(
                             start_mint_idx,
                             init_token_balance,
                             init_token_balance,
@@ -340,24 +339,21 @@ let signers = [rc_owner_signer];
                             vec![],
                             vec![],
                            // 0
-                        ).await);
-                        if newfuts.len() > 70 {
-                            let results = join_all(newfuts).await;
-                            for result in results {
-
-                                if result.is_err() {
-                                    continue;
-                                }
-                                let arb = result.unwrap();
-                                if arb.is_none() {
-                                    continue;
-                                }
-                                let arb = arb.unwrap();
-                                arbs.push(arb);
-                            }
-
-                            newfuts = vec![];
+                        ).await.await;
+                        if arb.is_err() {
+                            println!("arb is err {:?} ", arb.err().unwrap());
+                            continue;
                         }
+                        let arb = arb.unwrap();
+                        if arb.is_none() {
+                            println!("arb is none");
+                            continue;
+                        }
+                        let arb = arb.unwrap();
+
+
+                                arbs.push(arb);
+
                         println!("searching for arbitrages7...");
                      println!("there are {} arbs", arbs.len());
                              
@@ -682,11 +678,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
                 let account_infos = result.unwrap().value;
                 for i in 0..account_infos.len(){
-                    if account_infos[i].is_none() {
-                        continue;
-                    }
-                    let account = account_infos[i].clone().unwrap();
-                    update_accounts.push(Some(account));
+                   
+                    let account = account_infos[i].clone();
+                    update_accounts.push(account);
                     let update_pk = tupdate_pks[i].clone();
                     update_pks.push(update_pk);
                 }
@@ -715,29 +709,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let mut updatepkpks = vec![];
             for update_pk in update_pks.clone() {
                 if uas.contains(&update_pk) {
-                    let update_account = update_accounts[index].clone();
-                    updatepkpks.push(update_pk);
-                    updateuauas.push(update_account);
+                    updateuauas.push(update_accounts[index].clone());
+                    updatepkpks.push(index);
                 }
                 index += 1;
             }
-            if updateuauas.len() != uas.len() {
-               
-            }
-            else {
-                
-                pool.set_update_accounts(updateuauas.clone(), cluster.clone());
-                let mut index = 0;
-                for data in updateuauas {
-                    if data.is_none() {
-                        continue;
-                    }
-                    let data = data.unwrap();
-                    let pubkey = updatepkpks[index];
-                pool.set_update_accounts2(pubkey, &data.clone().data, cluster.clone());
-                index += 1;
-                }
-            }
+            pool.set_update_accounts(updateuauas.clone(), cluster.clone());
+            
             if !pool.can_trade(&pool_mints[0], &pool_mints[1]) {
                 println!("skipping pool can't trade {:?} ", pool_path);
                 continue;
