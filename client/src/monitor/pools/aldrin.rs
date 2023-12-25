@@ -66,7 +66,7 @@ impl PoolOperations for AldrinPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::AldrinPoolType
     }
-async    fn swap_ix(
+    async fn swap_ix(
         &self,
         //impl<C: Deref<Target = impl Signer> + Clone> Program<C>
         _mint_in: &Pubkey,
@@ -104,7 +104,7 @@ let pool_public_key = self.pool_public_key.0;
 let pool_signer = self.pool_signer.0;
 let pool_mint = self.pool_mint.0;
 let fee_pool_token_account = self.fee_pool_token_account.0;
-            swap_ix = tokio::task::spawn(async move {program
+            swap_ix = program
                 .request()
                 .accounts(tmp_accounts::AldrinSwapV1 {
                     pool_public_key,
@@ -123,7 +123,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
                 })
                 .args(tmp_ix::AldrinSwapV1 { is_inverted })
                 .instructions()
-                .unwrap()})
+                .unwrap();
             
         } else {
             let pool_public_key = self.pool_public_key.0;
@@ -131,7 +131,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
             let pool_mint = self.pool_mint.0;
             let fee_pool_token_account = self.fee_pool_token_account.0;
             let curve = self.curve.0;
-            swap_ix = tokio::task::spawn(async move { program
+            swap_ix =  program
                 .request()
                 .accounts(tmp_accounts::AldrinSwapV2 {
                     pool_public_key,
@@ -151,10 +151,10 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
                 })
                 .args(tmp_ix::AldrinSwapV2 { is_inverted })
                 .instructions()
-                .unwrap()})
+                .unwrap();
 
         }
-        (false, swap_ix.await.unwrap())
+        (false, swap_ix)
     }
 
     fn get_quote_with_amounts_scaled(

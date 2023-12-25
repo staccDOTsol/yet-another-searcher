@@ -71,14 +71,15 @@ pub  fn brute_force_search(
             return Ok(Some((old_best, best_path, best_pool_path)))
         }
         else {
+            
             return Ok(None)
         }
     }
         
     for dst_mint_idx in out_edges {
-        if path.contains(dst_mint_idx) && *dst_mint_idx != start_mint_idx {
-            continue;
-        }
+        let arandom = rand::random::<usize>() % out_edges.len();
+        let dst_mint_idx = out_edges.iter().nth(arandom).unwrap();
+       
         if self
         .graph
         .0
@@ -122,30 +123,23 @@ pub  fn brute_force_search(
 continue;
             }
             println!("new balance: {:?}", new_balance);
-            
+            if new_balance > old_best {
+                old_best = new_balance;
+
+            }
             if dst_mint_idx == start_mint_idx {
                 // println!("{:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
                 
                 // if new_balance > init_balance - 1086310399 {
-                if (new_balance as f64 > init_balance as f64 * 1.0001) && (new_balance as f64 <= init_balance as f64 * 2.0) {
+                if (old_best as f64 > init_balance as f64 * 1.0001) && (old_best as f64 <= init_balance as f64 * 2.0) {
                     // ... profitable arb!
 
-                println!("found arb... {:?} -> {:?} (-{:?})", init_balance, new_balance, new_balance - init_balance);
-                if new_balance > old_best {
+                println!("found arb... {:?} -> {:?} (-{:?})", init_balance, old_best, old_best - init_balance);
                     old_best = new_balance;
-                    return self.brute_force_search(
-                        start_mint_idx,
-                        init_balance,
-                        old_best,
-                        new_balance,   // !
-                        new_path.clone(),      // !
-                        new_path,
-                        new_pool_path.clone(), // !
-                        new_pool_path
-                    )
+                    
+                   return Ok(Some((old_best, new_path, new_pool_path)))
                 }
-                }
-            } else if !path.contains(&dst_mint_idx) {
+            } else  {
                 return self.brute_force_search(
                     start_mint_idx,
                     init_balance,
@@ -215,16 +209,20 @@ let ix = ix.unwrap();
             let [mint_idx0, mint_idx1] = [mint_idxs[i], mint_idxs[i + 1]];
             let [mint0, mint1] = [self.token_mints[mint_idx0], self.token_mints[mint_idx1]];
             let pool = &pools[i];
-            let mut swap_ix = pool
+            let runtime = 
+            tokio::runtime::Runtime::new().unwrap();
+            let swap_ix =  runtime.block_on(
+            pool
                 .0
-                .swap_ix(&mint0, &mint1, swap_start_amount);
+                .swap_ix(&mint0, &mint1, swap_start_amount)
+            );
 
             swap_start_amount = pool.0.get_quote_with_amounts_scaled(
                 swap_start_amount,
                 &mint0,
                 &mint1);
                 
-            ixs.push(swap_ix.await.1);
+            ixs.push(swap_ix.1);
             let pool_type = pool.0.get_pool_type();
             match pool_type {
                 PoolType::OrcaPoolType => {

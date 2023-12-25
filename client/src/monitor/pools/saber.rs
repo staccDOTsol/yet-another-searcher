@@ -59,7 +59,7 @@ impl PoolOperations for SaberPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::SaberPoolType
     }
-async    fn swap_ix(
+    async  fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,

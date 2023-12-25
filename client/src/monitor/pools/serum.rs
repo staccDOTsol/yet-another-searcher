@@ -386,7 +386,7 @@ impl PoolOperations for SerumPool {
         }
     }
 
-async    fn swap_ix(
+    async fn swap_ix(
         &self,
         mint_in: &Pubkey,
         _mint_out: &Pubkey,
@@ -400,7 +400,7 @@ async    fn swap_ix(
         let mut blargorders: Pubkey = Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap();
         let mut open_orders =
             (oos.get(&self.own_address.0.to_string()));
-        if open_orders.is_none() {
+        if open_orders.is_none() {/*
             let owner_kp_path = "/root/.config/solana/id.json";
             let owner = Arc::new(read_keypair_file(owner_kp_path.clone()).unwrap());
             let oo_path: &str = "./serum_open_orders.json";
@@ -485,7 +485,7 @@ async    fn swap_ix(
         // save open orders accounts as .JSON
         let json_market_oo = serde_json::to_string(&market_to_open_orders).unwrap();
         std::fs::write("./serum_open_orders.json", json_market_oo).unwrap();
-
+ */
     }
 
     else {

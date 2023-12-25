@@ -57,7 +57,7 @@ impl PoolOperations for MercurialPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::MercurialPoolType
     }
-   async fn swap_ix(
+    async  fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,

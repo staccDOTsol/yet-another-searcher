@@ -646,7 +646,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let fut = program_async.get_multiple_accounts_with_commitment(&chunk, CommitmentConfig::confirmed());
         futures.push(fut);
-        if futures.len() > 100 {
+        if futures.len() > 20 {
             println!("futures length is {:?} update_accounts length is {:?}", futures.len(), update_accounts.len());
                 
             let results = join_all(futures).await;

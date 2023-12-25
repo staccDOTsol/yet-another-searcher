@@ -79,7 +79,7 @@ pub trait PoolOperations: Debug + Send {
         mint_in: &Pubkey,
         mint_out: &Pubkey,
     ) -> u128;
-   async fn swap_ix(
+    async  fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
