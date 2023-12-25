@@ -391,6 +391,10 @@ async    fn swap_ix(
         let id0 = &ids[0];
         let id1 = &ids[1];
 
+        if accounts.len() < 2 {
+            return;
+        }
+
         let acc_data0 = &accounts[0].as_ref().unwrap().data;
         let acc_data1 = &accounts[1].as_ref().unwrap().data;
 

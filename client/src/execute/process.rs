@@ -47,8 +47,7 @@ pub struct Arbitrager {
     pub connection: Arc<RpcClient>,
 }
 impl Arbitrager {
-    #[async_recursion::async_recursion]
-pub async fn brute_force_search(
+pub  fn brute_force_search(
     &self,
     start_mint_idx: usize,
     init_balance: u128,
@@ -59,7 +58,7 @@ pub async fn brute_force_search(
     pool_path: Vec<PoolQuote>,
     best_pool_path: Vec<PoolQuote>,
  //   sent_arbs: &mut HashSet<String>,
-) -> Pin<Box<dyn std::future::Future<Output = Result<std::option::Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>> {
+) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, Box<dyn std::error::Error>> {
 
     let src_curr = path[path.len() - 1]; // last mint
     let src_mint = self.token_mints[src_curr];
@@ -69,17 +68,14 @@ pub async fn brute_force_search(
     if path.len() == 8 {
         if old_best > init_balance {
             println!("most profitable arb... {:?} -> {:?} (-{:?})", init_balance, old_best, init_balance - old_best);
-            return Box::pin(async move {Ok(Some((old_best, best_path, best_pool_path)))}) as Pin<Box<dyn std::future::Future<Output = Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>>;
+            return Ok(Some((old_best, best_path, best_pool_path)))
         }
         else {
-            return Box::pin(async {Ok(None)}) as Pin<Box<dyn std::future::Future<Output = Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>>;
+            return Ok(None)
         }
     }
         
     for dst_mint_idx in out_edges {
-        let random = rand::random::<usize>() % out_edges.len();
-        let dst_mint_idx = out_edges.iter().nth(random).unwrap();
-        
         if path.contains(dst_mint_idx) && *dst_mint_idx != start_mint_idx {
             continue;
         }
@@ -110,22 +106,22 @@ pub async fn brute_force_search(
         let dst_mint_acc = derive_token_address(&owner, &dst_mint);
 
         for pool in pools {
-            let arandom = rand::random::<usize>() % pools.len();
-            let pool = pools.iter().nth(arandom).unwrap();
             // choose a pool at random instead
+            let arandom = rand::random::<usize>() % pools.len();
+            let pool = pools[arandom].clone();
             let new_balance =
                 pool.0
                     .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint);
-                println!("new balance {}", new_balance);
 
+                    let mut new_path = path.clone();
+                    new_path.push(dst_mint_idx);
+        
+                    let mut new_pool_path = pool_path.clone();
+                    new_pool_path.push(pool.clone()); // clone the pointer
             if new_balance == 0 {
-                continue;
+continue;
             }
-            let mut new_path = path.clone();
-            new_path.push(dst_mint_idx);
-
-            let mut new_pool_path = pool_path.clone();
-            new_pool_path.push(pool.clone()); // clone the pointer
+            println!("new balance: {:?}", new_balance);
             
             if dst_mint_idx == start_mint_idx {
                 // println!("{:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
@@ -137,7 +133,7 @@ pub async fn brute_force_search(
                 println!("found arb... {:?} -> {:?} (-{:?})", init_balance, new_balance, new_balance - init_balance);
                 if new_balance > old_best {
                     old_best = new_balance;
-                    let r = self.brute_force_search(
+                    return self.brute_force_search(
                         start_mint_idx,
                         init_balance,
                         old_best,
@@ -146,13 +142,11 @@ pub async fn brute_force_search(
                         new_path,
                         new_pool_path.clone(), // !
                         new_pool_path
-                    ).await; // Add .await here
-                
-                    return (r as Pin<Box<dyn std::future::Future<Output = Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>>)
+                    )
                 }
                 }
             } else if !path.contains(&dst_mint_idx) {
-                let r = self.brute_force_search(
+                return self.brute_force_search(
                     start_mint_idx,
                     init_balance,
                     old_best,
@@ -161,13 +155,12 @@ pub async fn brute_force_search(
                     path,
                     new_pool_path.clone(), // !
                     pool_path
-                ).await; // Add .await here
+                ) // Add .await here
             
-                return (r as Pin<Box<dyn std::future::Future<Output = Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>>)
             }
         }
     }
-    return Box::pin(async {Ok(None)}) as Pin<Box<dyn std::future::Future<Output = Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>>;
+    return Ok(None)
 
 }
 pub async    fn get_arbitrage_instructions<'a>(

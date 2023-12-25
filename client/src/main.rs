@@ -339,7 +339,7 @@ let signers = [rc_owner_signer];
                             vec![],
                             vec![],
                            // 0
-                        ).await.await;
+                        );
                         if arb.is_err() {
                             println!("arb is err {:?} ", arb.err().unwrap());
                             continue;
@@ -709,6 +709,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 if uas.contains(&update_pk) {
                     updateuauas.push(update_accounts[index].clone());
                     updatepkpks.push(index);
+                    let acc = update_accounts[index].clone();
+                    if acc.is_none() {
+                        continue;
+                    }
+                    let acc = acc.unwrap();
+                    pool.set_update_accounts2(update_pk, &acc.data, cluster.clone());
+
                 }
                 index += 1;
             }
@@ -720,19 +727,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             // ** record pool
             pools.push( pool.clone());
-            let locked_pc = page_config.try_lock();
-            if locked_pc.is_err() {
-                continue;
-            }
-            let mut pc = locked_pc.unwrap();
-            let pool_quote = PoolQuote::new(pool.clone().into());
-            let pool_quote = Arc::new(Mutex::new(pool_quote));
-
-            pc.insert(
-                pool.get_own_addr().to_string(),
-                pool_quote.clone(),
-            );
-            drop(pc)
         }
     }
 
