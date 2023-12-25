@@ -657,11 +657,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
                 let account_infos = result.unwrap().value;
                 for i in 0..account_infos.len(){
-                    if account_infos[i].is_none() {
-                        continue;
-                    }
-                    let account = account_infos[i].clone().unwrap();
-                    update_accounts.push(Some(account));
+                   
+                    let account = account_infos[i].clone();
+                    update_accounts.push(account);
                     let update_pk = tupdate_pks[i].clone();
                     update_pks.push(update_pk);
                 }
