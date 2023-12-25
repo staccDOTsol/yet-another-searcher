@@ -5,6 +5,7 @@ use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Client, Cluster};
 use async_trait::async_trait;
+use futures::executor::block_on;
 use serde;
 use solana_sdk::program_pack::Pack;
 use solana_sdk::signer::Signer;
@@ -62,7 +63,7 @@ impl PoolOperations for OrcaPool {
         PoolType::OrcaPoolType
     }
     
-    fn swap_ix(
+    async fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
@@ -93,7 +94,8 @@ let pool_mint= self.pool_token_mint.0;
 let fee_account = self.fee_account.0;
 
 
- let  swap_ix =  program            .request()
+ let  swap_ix =  tokio::task::spawn_blocking(move ||
+ program            .request()
             .accounts(tmp_accounts::OrcaSwap {
                 token_swap,
                 authority: authority_pda,
@@ -109,7 +111,9 @@ let fee_account = self.fee_account.0;
                 swap_state,
             })
             .args(tmp_ix::OrcaSwap {})
-            .instructions();
+            .instructions()
+            .unwrap())
+            .await;
         if swap_ix.is_err() {
             return (false, vec![]);
         }

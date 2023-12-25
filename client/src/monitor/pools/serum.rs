@@ -386,7 +386,7 @@ impl PoolOperations for SerumPool {
         }
     }
 
-    fn swap_ix(
+    async fn swap_ix(
         &self,
         mint_in: &Pubkey,
         _mint_out: &Pubkey,

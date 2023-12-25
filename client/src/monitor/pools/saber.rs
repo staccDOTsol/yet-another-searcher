@@ -59,7 +59,7 @@ impl PoolOperations for SaberPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::SaberPoolType
     }
-      fn swap_ix(
+      async fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
@@ -99,8 +99,9 @@ impl PoolOperations for SaberPool {
                 }
         let pool_account = self.pool_account.0;
         let authority = self.authority.0;
-        let        swap_ix = program            .request()
-    
+        
+ let  swap_ix =  tokio::task::spawn_blocking(move ||
+    program            .request()
             .accounts(tmp_accounts::SaberSwap {
                 pool_account,
                 authority,
@@ -115,7 +116,9 @@ impl PoolOperations for SaberPool {
                 token_program: *TOKEN_PROGRAM_ID,
             })
             .args(tmp_ix::SaberSwap {})
-            .instructions();
+            .instructions()
+            .unwrap())
+            .await;
         if swap_ix.is_err() {
             return (false, vec![]);
         }

@@ -210,7 +210,7 @@ impl PoolOperations for RaydiumPool {
         PoolType::RaydiumPoolType
     }
     
-    fn swap_ix(
+    async fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,

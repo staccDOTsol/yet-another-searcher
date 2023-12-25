@@ -66,7 +66,7 @@ impl PoolOperations for AldrinPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::AldrinPoolType
     }
-    fn swap_ix(
+    async fn swap_ix(
         &self,
         //impl<C: Deref<Target = impl Signer> + Clone> Program<C>
         _mint_in: &Pubkey,
