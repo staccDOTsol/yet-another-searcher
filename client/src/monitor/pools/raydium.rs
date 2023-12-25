@@ -44,7 +44,7 @@ use solana_sdk::instruction::Instruction;
 
 
 use crate::monitor::pool_utils::base::CurveType;
-use crate::utils::{derive_token_address};
+use crate::utils::{derive_token_address, store_amount_in_redis, get_amount_from_redis};
 
 struct Iteration {
     amount_in: u64,
@@ -217,13 +217,13 @@ impl PoolOperations for RaydiumPool {
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
+        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, mint_in);
         let user_dst = derive_token_address(&owner, mint_out);
 
-        let ctype = if self.version == 1 {
+        let ctype = if self.version != 1 {
             CurveType::Stable
         } else {
             CurveType::ConstantProduct
@@ -309,20 +309,22 @@ impl PoolOperations for RaydiumPool {
 
     }
 
-    fn get_quote_with_amounts_scaled(
+    async fn get_quote_with_amounts_scaled(
         & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
     ) -> u128 {
-        
         let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
         let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
+
         if pool_src_amount.is_none() || pool_dst_amount.is_none() {
             return 0;
         }
-        let pool_src_amount = pool_src_amount.unwrap();
-        let pool_dst_amount = pool_dst_amount.unwrap();
+        let pool_src_amount = *pool_src_amount.unwrap();
+        let pool_dst_amount = *pool_dst_amount.unwrap();
+
+
         
         // compute fees
         let fees = Fees {
@@ -336,7 +338,7 @@ impl PoolOperations for RaydiumPool {
             host_fee_denominator: 0,
         };
 
-        let ctype = if self.version == 1 {
+        let ctype = if self.version != 1 {
             CurveType::Stable
         } else {
             CurveType::ConstantProduct
@@ -347,10 +349,10 @@ impl PoolOperations for RaydiumPool {
         let amt = get_pool_quote_with_amounts(
             scaled_amount_in,
             ctype,
-            170, // from sdk
+            100, // from sdk
             &fees,
-            *pool_src_amount,
-            *pool_dst_amount,
+            pool_src_amount,
+            pool_dst_amount,
             None,
         )
         .unwrap();
@@ -364,6 +366,22 @@ impl PoolOperations for RaydiumPool {
 
 
     fn can_trade(&self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
+        let amount = get_amount_from_redis(&_mint_in.to_string());
+        if amount.is_err() {
+            return false;
+        }
+        let amount = amount.unwrap();
+        if amount == 0 {
+            return false;
+        }
+        let amount = get_amount_from_redis(&_mint_out.to_string());
+        if amount.is_err() {
+            return false;
+        }
+        let amount = amount.unwrap();
+        if amount == 0 {
+            return false;
+        }
         for amount in self.pool_amounts.values() {
             if *amount == 0 {
                 return false;
@@ -405,7 +423,7 @@ impl PoolOperations for RaydiumPool {
         self.pool_amounts.insert(id1.clone(), amount1);
     }
 
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    async fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
         let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();
         let _mint = amount0.mint;
@@ -413,7 +431,13 @@ impl PoolOperations for RaydiumPool {
         let id0 = self.base_mint.0.to_string();
         let id1 = self.quote_mint.0.to_string();
 
-        if _mint.to_string() == id0 {
+
+        let mut done =        store_amount_in_redis(&_mint.to_string(), amount0.amount);
+        while done.is_err() {
+            tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+          done =  store_amount_in_redis(&_mint.to_string(), amount0.amount);
+        }               
+                if _mint.to_string() == id0 {
             self.pool_amounts
                 .entry(id0.clone())
                 .and_modify(|e| *e = amount0.amount as u128)

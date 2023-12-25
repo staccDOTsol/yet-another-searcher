@@ -30,7 +30,7 @@ use tmp::instruction as tmp_ix;
 
 use crate::constants::*;
 use crate::monitor::pool_utils::stable::Stable;
-use crate::utils::{derive_token_address, str2pubkey};
+use crate::utils::{derive_token_address, str2pubkey, store_amount_in_redis, get_amount_from_redis};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -67,13 +67,13 @@ impl PoolOperations for SaberPool {
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
-        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
+        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, mint_in);
         let user_dst = derive_token_address(&owner, mint_out);
 
-        let _owner_kp_path = "/root/.config/solana/id.json";
+        let _owner_kp_path = "/home/ubuntu/.config/solana/id.json";
         // setup anchor things
         let provider = Client::new_with_options(
             Cluster::Mainnet,
@@ -99,9 +99,10 @@ impl PoolOperations for SaberPool {
                 }
         let pool_account = self.pool_account.0;
         let authority = self.authority.0;
-        
- let  swap_ix =  tokio::task::spawn_blocking(move ||
-    program            .request()
+        let  swap_ix =
+        tokio::task::spawn_blocking(
+                   move ||
+          program            .request()
             .accounts(tmp_accounts::SaberSwap {
                 pool_account,
                 authority,
@@ -117,8 +118,12 @@ impl PoolOperations for SaberPool {
             })
             .args(tmp_ix::SaberSwap {})
             .instructions()
-            .unwrap())
-            .await;
+        )
+        .await;
+    if swap_ix.is_err() {
+        return (false, vec![]);
+    }
+    let swap_ix = swap_ix.unwrap();
         if swap_ix.is_err() {
             return (false, vec![]);
         }
@@ -126,7 +131,7 @@ impl PoolOperations for SaberPool {
         (false, swap_ix)
     }
 
-    fn get_quote_with_amounts_scaled(
+    async fn get_quote_with_amounts_scaled(
         & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
@@ -137,14 +142,17 @@ impl PoolOperations for SaberPool {
             fee_numerator: self.fee_numerator as u128,
             fee_denominator: self.fee_denominator as u128,
         };
-            let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
-            let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
-            if pool_src_amount.is_none() || pool_dst_amount.is_none() {
-                return 0;
-            }
-            let pool_src_amount = pool_src_amount.unwrap();
-            let pool_dst_amount = pool_dst_amount.unwrap();
-            let pool_amounts = [*pool_src_amount, *pool_dst_amount];
+        let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
+        let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
+
+        if pool_src_amount.is_none() || pool_dst_amount.is_none() {
+            return 0;
+        }
+        let pool_src_amount = *pool_src_amount.unwrap();
+        let pool_dst_amount = *pool_dst_amount.unwrap();
+
+
+            let pool_amounts = [pool_src_amount, pool_dst_amount];
             let percision_multipliers = [1, 1];
 
             calculator.get_quote(pool_amounts, percision_multipliers, scaled_amount_in)
@@ -195,7 +203,7 @@ impl PoolOperations for SaberPool {
         self.pool_amounts.insert(id1.clone(), amount1);
     }
 
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    async fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
 
         let amount0 = spl_token::state::Account::unpack(acc_data0);
@@ -206,7 +214,15 @@ impl PoolOperations for SaberPool {
         let _mint = amount0.mint;
         let id0 = &self.token_ids[0];
         let id1 = &self.token_ids[1];
-        if _mint.to_string() == *id0 {
+
+
+        let mut done =        store_amount_in_redis(&_mint.to_string(), amount0.amount);
+        while done.is_err() {
+            // sleep 
+            tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+          done =  store_amount_in_redis(&_mint.to_string(), amount0.amount);
+        }               
+                if _mint.to_string() == *id0 {
             self.pool_amounts
                 .entry(id0.clone())
                 .and_modify(|e| *e = amount0.amount as u128)

@@ -75,9 +75,9 @@ impl PoolOperations for AldrinPool {
     ) -> (bool, Vec<Instruction>) {
         let state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
-        let _owner_kp_path = "/root/.config/solana/id.json";
+        let _owner_kp_path = "/home/ubuntu/.config/solana/id.json";
         // setup anchor things
-        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
+        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
         
         let owner = owner3.try_pubkey().unwrap()    ;
         let provider = Client::new_with_options(
@@ -157,7 +157,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
         (false, swap_ix)
     }
 
-    fn get_quote_with_amounts_scaled(
+    async fn get_quote_with_amounts_scaled(
         & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
@@ -253,7 +253,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
         self.pool_amounts.insert(id1.clone(), amount1);
     }
     
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    async fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
 
         let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();

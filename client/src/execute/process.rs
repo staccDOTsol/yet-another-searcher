@@ -12,6 +12,7 @@ use solana_address_lookup_table_program::state::{AddressLookupTable};
 use solana_client::rpc_request::RpcRequest;
 use solana_program::instruction::AccountMeta;
 use solana_program::message::{VersionedMessage, v0};
+use solana_program::program_pack::Pack;
 use solana_sdk::address_lookup_table_account::AddressLookupTableAccount;
 use solana_sdk::commitment_config::{CommitmentLevel, CommitmentConfig};
 use solana_sdk::signature::{read_keypair_file, Signature};
@@ -36,7 +37,7 @@ use tmp::instruction as tmp_ix;
 use crate::constants::{ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID};
 use crate::monitor::pools::pool::{PoolOperations, PoolType};
 
-use crate::utils::{derive_token_address, PoolGraph, PoolIndex, PoolQuote};
+use crate::utils::{derive_token_address, PoolGraph, PoolIndex, PoolQuote, store_amount_in_redis};
 #[derive(Clone)]
 pub struct Arbitrager {
     pub token_mints: Vec<Pubkey>,
@@ -47,7 +48,8 @@ pub struct Arbitrager {
     pub connection: Arc<RpcClient>,
 }
 impl Arbitrager {
-pub  fn brute_force_search(
+    #[async_recursion::async_recursion]
+pub async fn brute_force_search(
     &self,
     start_mint_idx: usize,
     init_balance: u128,
@@ -57,29 +59,27 @@ pub  fn brute_force_search(
     best_path: Vec<usize>,
     pool_path: Vec<PoolQuote>,
     best_pool_path: Vec<PoolQuote>,
+    owner3: Arc<Keypair>
  //   sent_arbs: &mut HashSet<String>,
-) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, Box<dyn std::error::Error>> {
-
-    let src_curr = path[path.len() - 1]; // last mint
+) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, anyhow::Error> {
+        let src_curr = path[path.len() - 1]; // last mint
     let src_mint = self.token_mints[src_curr];
 
     let out_edges = &self.graph_edges[src_curr];
 
     if path.len() == 8 {
         if old_best > init_balance {
-            println!("most profitable arb... {:?} -> {:?} (-{:?})", init_balance, old_best, init_balance - old_best);
+            println!(" profitable arb... {:?} -> {:?}", init_balance, old_best);
             return Ok(Some((old_best, best_path, best_pool_path)))
-        }
-        else {
-            
+        } else {
             return Ok(None)
         }
+
     }
         
     for dst_mint_idx in out_edges {
         let arandom = rand::random::<usize>() % out_edges.len();
         let dst_mint_idx = out_edges.iter().nth(arandom).unwrap();
-       
         if self
         .graph
         .0
@@ -101,8 +101,6 @@ pub  fn brute_force_search(
         let dst_mint_idx = *dst_mint_idx;
         let dst_mint = self.token_mints[dst_mint_idx];
 
-    let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
-
     let owner = owner3.try_pubkey().unwrap();
         let dst_mint_acc = derive_token_address(&owner, &dst_mint);
 
@@ -110,37 +108,39 @@ pub  fn brute_force_search(
             // choose a pool at random instead
             let arandom = rand::random::<usize>() % pools.len();
             let pool = pools[arandom].clone();
-            let new_balance =
+            let mut new_balance =
                 pool.0
-                    .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint);
-
+                    .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint).await;
                     let mut new_path = path.clone();
                     new_path.push(dst_mint_idx);
         
                     let mut new_pool_path = pool_path.clone();
                     new_pool_path.push(pool.clone()); // clone the pointer
             if new_balance == 0 {
-continue;
+                continue;
             }
-            println!("new balance: {:?}", new_balance);
-            if new_balance > old_best {
-                old_best = new_balance;
-
-            }
-            if dst_mint_idx == start_mint_idx {
+            if dst_mint_idx == start_mint_idx && new_balance > old_best && new_balance <= old_best * 2 {
                 // println!("{:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
                 
                 // if new_balance > init_balance - 1086310399 {
-                if (old_best as f64 > init_balance as f64 * 1.0001) && (old_best as f64 <= init_balance as f64 * 2.0) {
                     // ... profitable arb!
 
-                println!("found arb... {:?} -> {:?} (-{:?})", init_balance, old_best, old_best - init_balance);
                     old_best = new_balance;
+                    println!(" profitable arb... {:?} -> {:?}", curr_balance, old_best);
                     
-                   return Ok(Some((old_best, new_path, new_pool_path)))
-                }
-            } else  {
-                return self.brute_force_search(
+                    return (self.brute_force_search(
+                        start_mint_idx,
+                        init_balance,
+                        old_best,
+                        new_balance,   // !
+                        new_path.clone(),      // !
+                        new_path,
+                        new_pool_path.clone(), // !
+                        new_pool_path,
+                        owner3
+                    )).await
+            } else if dst_mint_idx != start_mint_idx && !path.contains(&dst_mint_idx) {
+                return (self.brute_force_search(
                     start_mint_idx,
                     init_balance,
                     old_best,
@@ -148,14 +148,16 @@ continue;
                     new_path.clone(),      // !
                     path,
                     new_pool_path.clone(), // !
-                    pool_path
-                ) // Add .await here
-            
+                    pool_path,
+                    owner3
+                )).await
+
             }
         }
     }
     return Ok(None)
-
+   
+    
 }
 }
 

@@ -248,7 +248,7 @@ impl PoolOperations for SerumPool {
         }
     }
 
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    async fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let flags = Market::account_flags(&data);
         if flags.is_err() {
             return;
@@ -309,7 +309,7 @@ impl PoolOperations for SerumPool {
         }
     }
 
-    fn get_quote_with_amounts_scaled(
+    async fn get_quote_with_amounts_scaled(
         & self,
         amount_in: u128,
         mint_in: &Pubkey,
@@ -401,7 +401,7 @@ impl PoolOperations for SerumPool {
         let mut open_orders =
             (oos.get(&self.own_address.0.to_string()));
         if open_orders.is_none() {/*
-            let owner_kp_path = "/root/.config/solana/id.json";
+            let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
             let owner = Arc::new(read_keypair_file(owner_kp_path.clone()).unwrap());
             let oo_path: &str = "./serum_open_orders.json";
             let oo_str = std::fs::read_to_string(oo_path).unwrap();
@@ -494,7 +494,7 @@ impl PoolOperations for SerumPool {
 let open_orders = blargorders;
         let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let _space = 3228;
-        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
+        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json".clone()).unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
 

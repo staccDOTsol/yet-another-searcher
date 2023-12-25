@@ -29,7 +29,7 @@ fn main() {
     let _cluster = Cluster::Mainnet;
 
     env_logger::init();
-    let owner_kp_path = "/root/.config/solana/id.json";
+    let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
     let owner = read_keypair_file(owner_kp_path).unwrap();
 
     // ** setup RPC connection
@@ -91,11 +91,12 @@ fn main() {
     let mut update_pks = vec![];
     let mut update_accounts = vec![];
     for token_addr_chunk in account_pks.chunks(99) {
-        let accounts = connection.get_multiple_accounts(token_addr_chunk).unwrap();
+        let accounts = connection.get_multiple_accounts(token_addr_chunk);
         update_accounts.push(accounts);
         update_pks.push(token_addr_chunk);
 
     }
+    
     let mut  a = 0;
     let mut b = 0;
     for accounts in update_accounts {
@@ -135,7 +136,7 @@ fn main() {
     let mut token_amounts = vec![];
     // max 100 accounts per get_multiple_accounts
     for token_addr_chunk in user_token_addrs.chunks(99) {
-        let token_accounts = connection.get_multiple_accounts(token_addr_chunk).unwrap();
+        let token_accounts = connection.get_multiple_accounts(token_addr_chunk);
         for account in token_accounts {
             let amount = match account {
                 Some(account) => {
@@ -188,7 +189,7 @@ fn main() {
     );
     for chunck_ixs in create_ata_ixs.chunks(9) {
         let tx = {
-            let recent_hash = send_tx_connection.get_latest_blockhash().unwrap();
+            let recent_hash = send_tx_connection.get_latest_blockhash();
             Transaction::new_signed_with_payer(
                 chunck_ixs,
                 Some(&owner.pubkey()),
@@ -197,7 +198,7 @@ fn main() {
             )
         };
         println!("creating {} token accounts in tx...", chunck_ixs.len());
-        let signature = send_tx_connection.send_transaction(&tx).unwrap();
+        let signature = send_tx_connection.send_transaction(&tx);
         println!("signature: {}", signature);
     }
 

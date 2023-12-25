@@ -5,7 +5,6 @@ use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Client, Cluster};
 use async_trait::async_trait;
-use futures::executor::block_on;
 use serde;
 use solana_sdk::program_pack::Pack;
 use solana_sdk::signer::Signer;
@@ -31,7 +30,7 @@ use tmp::instruction as tmp_ix;
 use crate::constants::*;
 use crate::monitor::pool_utils::base::CurveType;
 use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
-use crate::utils::{derive_token_address, str2pubkey};
+use crate::utils::{derive_token_address, str2pubkey, get_amount_from_redis, store_amount_in_redis};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -63,20 +62,20 @@ impl PoolOperations for OrcaPool {
         PoolType::OrcaPoolType
     }
     
-    async fn swap_ix(
+async fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
+        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, mint_in);
         let user_dst = derive_token_address(&owner, mint_out);
 
-        let _owner_kp_path = "/root/.config/solana/id.json";
+        let _owner_kp_path = "/home/ubuntu/.config/solana/config/id.json";
         // setup anchor things
         let provider = Client::new_with_options(
             Cluster::Mainnet,
@@ -94,8 +93,10 @@ let pool_mint= self.pool_token_mint.0;
 let fee_account = self.fee_account.0;
 
 
- let  swap_ix =  tokio::task::spawn_blocking(move ||
- program            .request()
+ let  swap_ix =
+ tokio::task::spawn_blocking(
+            move ||
+   program            .request()
             .accounts(tmp_accounts::OrcaSwap {
                 token_swap,
                 authority: authority_pda,
@@ -112,8 +113,14 @@ let fee_account = self.fee_account.0;
             })
             .args(tmp_ix::OrcaSwap {})
             .instructions()
-            .unwrap())
-            .await;
+        )
+        .await;
+    if swap_ix.is_err() {
+        return (false, vec![]);
+    }
+    let swap_ix = swap_ix.unwrap();
+    
+
         if swap_ix.is_err() {
             return (false, vec![]);
         }
@@ -122,20 +129,22 @@ let fee_account = self.fee_account.0;
         (false, swap_ix)
     }
 
-    fn get_quote_with_amounts_scaled(
+    async fn get_quote_with_amounts_scaled(
         & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
     ) -> u128 {
-        
         let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
         let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
+
         if pool_src_amount.is_none() || pool_dst_amount.is_none() {
             return 0;
         }
-        let pool_src_amount = pool_src_amount.unwrap();
-        let pool_dst_amount = pool_dst_amount.unwrap();
+        let pool_src_amount = *pool_src_amount.unwrap();
+        let pool_dst_amount = *pool_dst_amount.unwrap();
+
+
 
         // compute fees
         let trader_fee = &self.fee_structure.trader_fee;
@@ -164,8 +173,8 @@ let fee_account = self.fee_account.0;
             ctype,
             self.amp,
             &fees,
-            *pool_src_amount,
-            *pool_dst_amount,
+            pool_src_amount,
+            pool_dst_amount,
             None,
         )
         ;
@@ -207,6 +216,7 @@ let fee_account = self.fee_account.0;
             .collect();
         let id0 = &ids[0];
         let id1 = &ids[1];
+
         if accounts.len() < 2 {
             return;
         }
@@ -226,15 +236,21 @@ let fee_account = self.fee_account.0;
         self.pool_amounts.insert(id1.clone(), amount1);
     }
 
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    async fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
         let amount0 = spl_token::state::Account::unpack(acc_data0);
         if amount0.is_err() {
             return;
         }
         let amount0 = amount0.unwrap();
+        
         let _mint = amount0.mint;
         let _mint = amount0.mint;
+let mut done =        store_amount_in_redis(&_mint.to_string(), amount0.amount);
+while done.is_err() {
+    tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+  done =  store_amount_in_redis(&_mint.to_string(), amount0.amount);
+}               
         let id0 = &self.token_ids[0];
         let id1 = &self.token_ids[1];
         if _mint.to_string() == *id0 {
