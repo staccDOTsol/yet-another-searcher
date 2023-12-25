@@ -1,6 +1,5 @@
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use async_trait::async_trait;
-use futures::Future;
 use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
 
@@ -8,7 +7,6 @@ use solana_sdk::instruction::Instruction;
 use crate::monitor::pools::*;
 use std::collections::HashMap;
 use std::fmt::Debug;
-use std::pin::Pin;
 use std::sync::{Arc, Mutex};
 
 use anchor_client::Cluster;
@@ -81,13 +79,12 @@ pub trait PoolOperations: Debug + Send {
         mint_in: &Pubkey,
         mint_out: &Pubkey,
     ) -> u128;
-    async  fn swap_ix(
+    fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
         start_bal: u128
-    ) ->         Pin<Box<dyn Future<Output = Result<(bool, Vec<Instruction>), Box<Arc<dyn std::error::Error>>>>>>;
-
+    ) -> (bool, Vec<Instruction>);
 
     fn can_trade(&self, mint_in: &Pubkey, mint_out: &Pubkey) -> bool; // used for tests
 }

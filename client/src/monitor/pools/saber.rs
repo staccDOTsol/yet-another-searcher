@@ -1,10 +1,8 @@
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use async_trait::async_trait;
-use futures::Future;
 use solana_sdk::program_pack::Pack;
 use std::collections::HashMap;
-use std::pin::Pin;
 use solana_sdk::signature::Signer;
 
 use std::fmt::Debug;
@@ -61,13 +59,12 @@ impl PoolOperations for SaberPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::SaberPoolType
     }
-    async  fn swap_ix(
+      fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
         _start_bal: u128,
-    ) ->        Pin<Box<dyn Future<Output = Result<(bool, Vec<Instruction>), Box<Arc<dyn std::error::Error>>>>>> {
-
+    ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
         let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
@@ -86,8 +83,7 @@ impl PoolOperations for SaberPool {
         let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let pool_src = self.tokens.get(&mint_in.to_string()).unwrap().addr.0;
         if !self.tokens.contains_key(&mint_out.to_string()) {
-          return  Box::pin(futures::future::ready(Ok((false, vec![]))))
-
+            return (false, vec![]);
         }
         let pool_dst = self.tokens.get(&mint_out.to_string()).unwrap().addr.0;
         let fee_acc;
@@ -99,7 +95,7 @@ impl PoolOperations for SaberPool {
                 .clone();
                 }
                 else {
-                    return  Box::pin(futures::future::ready(Ok((false, vec![]))))
+                    return (false, vec![]);
                 }
         let pool_account = self.pool_account.0;
         let authority = self.authority.0;
@@ -121,13 +117,11 @@ impl PoolOperations for SaberPool {
             .args(tmp_ix::SaberSwap {})
             .instructions();
         if swap_ix.is_err() {
-            return  Box::pin(futures::future::ready(Ok((false, vec![]))))
-
+            return (false, vec![]);
         }
         let swap_ix = swap_ix.unwrap();
-
-        Box::pin(futures::future::ready(Ok((false, swap_ix))))
-        }
+        (false, swap_ix)
+    }
 
     fn get_quote_with_amounts_scaled(
         & self,

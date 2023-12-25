@@ -5,11 +5,9 @@ use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Client, Cluster};
 use async_trait::async_trait;
-use futures::Future;
 use serde;
 use solana_sdk::program_pack::Pack;
 use solana_sdk::signer::Signer;
-use std::pin::Pin;
 use std::sync::{Arc, Mutex};
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
@@ -64,13 +62,12 @@ impl PoolOperations for OrcaPool {
         PoolType::OrcaPoolType
     }
     
-async    fn swap_ix(
+    fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
         _start_bal: u128,
-    ) ->         Pin<Box<dyn Future<Output = Result<(bool, Vec<Instruction>), Box<Arc<dyn std::error::Error>>>>>> {
-
+    ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
 
@@ -114,14 +111,12 @@ let fee_account = self.fee_account.0;
             .args(tmp_ix::OrcaSwap {})
             .instructions();
         if swap_ix.is_err() {
-
-          return  Box::pin(futures::future::ready(Ok((false, vec![]))))
-                }
+            return (false, vec![]);
+        }
         let swap_ix = swap_ix.unwrap();
 
-
-        Box::pin(futures::future::ready(Ok((false, swap_ix))))
-        }
+        (false, swap_ix)
+    }
 
     fn get_quote_with_amounts_scaled(
         & self,

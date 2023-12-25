@@ -3,12 +3,10 @@ use crate::serialize::token::{ Token, WrappedPubkey};
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use async_trait::async_trait;
-use futures::Future;
 use serde;
 use solana_program::program_pack::Pack;
 use solana_sdk::signer::Signer;
 
-use std::pin::Pin;
 use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use anchor_client::{Client, Cluster};
@@ -59,13 +57,12 @@ impl PoolOperations for MercurialPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::MercurialPoolType
     }
-    async  fn swap_ix(
+    fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
         _start_bal: u128,
-    ) ->         Pin<Box<dyn Future<Output = Result<(bool, Vec<Instruction>), Box<Arc<dyn std::error::Error>>>>>> {
-
+    ) -> (bool, Vec<Instruction>) {
         let swap_state_pda =
             Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
             let owner_kp_path = "/root/.config/solana/id.json";
@@ -103,9 +100,8 @@ impl PoolOperations for MercurialPool {
             .instructions()
             .unwrap();
 
-
-            Box::pin(futures::future::ready(Ok((false, swap_ix))))
-            }
+        (false, swap_ix)
+    }
 
     fn get_quote_with_amounts_scaled(
         & self,

@@ -1,14 +1,12 @@
 use async_trait::async_trait;
 use bytemuck::bytes_of;
 use chrono::Utc;
-use futures::Future;
 use solana_client::nonblocking::rpc_client::RpcClient;
 use solana_sdk::commitment_config::CommitmentConfig;
 use solana_sdk::signer::Signer;
 use solana_sdk::transaction::Transaction;
 use core::panic;
 use std::num::NonZeroU64;
-use std::pin::Pin;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
@@ -388,17 +386,15 @@ impl PoolOperations for SerumPool {
         }
     }
 
-    async fn swap_ix(
+    fn swap_ix(
         &self,
         mint_in: &Pubkey,
         _mint_out: &Pubkey,
         start_bal: u128
-    ) ->         Pin<Box<dyn Future<Output = Result<(bool, Vec<Instruction>), Box<Arc<dyn std::error::Error>>>>>> {
-
+    ) -> (bool, Vec<Instruction>) {
         let oos = &self.open_orders;
         if oos.is_none() {
-            return  Box::pin(futures::future::ready(Ok((false, vec![]))))
-
+            return (false, vec![]);
         }
         let oos = oos.clone().unwrap();
         let mut blargorders: Pubkey = Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap();
@@ -489,7 +485,7 @@ impl PoolOperations for SerumPool {
         // save open orders accounts as .JSON
         let json_market_oo = serde_json::to_string(&market_to_open_orders).unwrap();
         std::fs::write("./serum_open_orders.json", json_market_oo).unwrap();
- */
+*/
     }
 
     else {
@@ -574,12 +570,11 @@ let open_orders = blargorders;
             ts + 40000,
                 );
                 if ix.is_err() {
-                    return  Box::pin(futures::future::ready(Ok((false, vec![]))))
+                    return (false, vec![]);
                 }
                 let ix = ix.unwrap();
-
-              return  Box::pin(futures::future::ready(Ok((false, vec![ix]))))
-                }
+        (true, vec![ix])
+    }
 
     fn can_trade(&self, mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
         if self.accounts.len() < 3 {

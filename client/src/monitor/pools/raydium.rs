@@ -8,7 +8,6 @@ use crate::serialize::token::{ WrappedPubkey};
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Cluster};
 use async_trait::async_trait;
-use futures::Future;
 use openbook_dex::critbit::SlabView;
 use openbook_dex::matching::OrderBookState;
 
@@ -17,7 +16,6 @@ use solana_program::account_info::AccountInfo;
 use solana_program::stake_history::Epoch;
 use solana_sdk::program_pack::Pack;
 use solana_sdk::signer::Signer;
-use std::pin::Pin;
 use std::sync::{Arc, Mutex};
 
 
@@ -212,13 +210,12 @@ impl PoolOperations for RaydiumPool {
         PoolType::RaydiumPoolType
     }
     
-    async  fn swap_ix(
+    fn swap_ix(
         &self,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
         _start_bal: u128,
-    ) ->         Pin<Box<dyn Future<Output = Result<(bool, Vec<Instruction>), Box<Arc<dyn std::error::Error>>>>>> {
-
+    ) -> (bool, Vec<Instruction>) {
         let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
 
@@ -245,9 +242,8 @@ impl PoolOperations for RaydiumPool {
         let market_authority = self.market_authority.clone();
         let market_base_vault = self.market_base_vault.clone();
         let market_quote_vault = self.market_quote_vault.clone();
-        let mut swap_ix;
         if ctype == CurveType::ConstantProduct {
-            let ix =
+            let swap_ix =
                 amm_swap(
                     &ammProgramID,
                     &id,
@@ -273,15 +269,14 @@ impl PoolOperations for RaydiumPool {
                 ;
 
     
-                if ix.is_err() {
-
-                  return  Box::pin(futures::future::ready(Ok((false, vec![]))))
-                                }
-                 swap_ix = ix.unwrap();
-
-                        } else {
+                if swap_ix.is_err() {
+                    return (false, vec![]);
+                }
+                let swap_ix = swap_ix.unwrap();
+                return (false, vec![swap_ix]);
+            } else {
                 let model_data_account = self.model_data_account.clone().unwrap();
-                  let  ix = stable_swap(
+                  let  swap_ix = stable_swap(
                         &stableProgramID,
                         &id,
                         &authority,
@@ -305,15 +300,13 @@ impl PoolOperations for RaydiumPool {
                     );
 
     
-            if ix.is_err() {
+            if swap_ix.is_err() {
+                return (false, vec![]);
+            }
+            let swap_ix = swap_ix.unwrap();
+            return (false, vec![swap_ix]);
+            }        
 
-             return   Box::pin(futures::future::ready(Ok((false, vec![]))))
-                        }
-             swap_ix = ix.unwrap();
-
-          
-                    }        
-                    Box::pin(futures::future::ready(Ok((false, vec![swap_ix]))))
     }
 
     fn get_quote_with_amounts_scaled(

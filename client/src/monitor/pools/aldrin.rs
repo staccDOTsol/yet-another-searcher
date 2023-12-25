@@ -2,12 +2,10 @@ use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Client, Cluster};
 use async_trait::async_trait;
-use futures::Future;
 use solana_sdk::program_pack::Pack;
 use solana_sdk::signer::Signer;
 use std::collections::HashMap;
 use std::fmt::Debug;
-use std::pin::Pin;
 use std::str::FromStr;
 
 use std::sync::{Arc, Mutex};
@@ -68,15 +66,13 @@ impl PoolOperations for AldrinPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::AldrinPoolType
     }
-    async fn swap_ix(
+    fn swap_ix(
         &self,
         //impl<C: Deref<Target = impl Signer> + Clone> Program<C>
         _mint_in: &Pubkey,
         mint_out: &Pubkey,
         _start_bal: u128,
-    ) -> 
-        //
-        Pin<Box<dyn Future<Output = Result<(bool, Vec<Instruction>), Box<Arc<dyn std::error::Error>>>>>> {
+    ) -> (bool, Vec<Instruction>) {
         let state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
         let _owner_kp_path = "/root/.config/solana/id.json";
@@ -158,8 +154,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
                 .unwrap();
 
         }
-
-       Box::pin(futures::future::ready(Ok((false, swap_ix))))
+        (false, swap_ix)
     }
 
     fn get_quote_with_amounts_scaled(
