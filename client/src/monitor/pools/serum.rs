@@ -1,12 +1,14 @@
 use async_trait::async_trait;
 use bytemuck::bytes_of;
 use chrono::Utc;
+use futures::Future;
 use solana_client::nonblocking::rpc_client::RpcClient;
 use solana_sdk::commitment_config::CommitmentConfig;
 use solana_sdk::signer::Signer;
 use solana_sdk::transaction::Transaction;
 use core::panic;
 use std::num::NonZeroU64;
+use std::pin::Pin;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
@@ -391,10 +393,12 @@ impl PoolOperations for SerumPool {
         mint_in: &Pubkey,
         _mint_out: &Pubkey,
         start_bal: u128
-    ) -> (bool, Vec<Instruction>) {
+    ) ->         Pin<Box<dyn Future<Output = Result<(bool, Vec<Instruction>), Box<Arc<dyn std::error::Error>>>>>> {
+
         let oos = &self.open_orders;
         if oos.is_none() {
-            return (false, vec![]);
+            return  Box::pin(futures::future::ready(Ok((false, vec![]))))
+
         }
         let oos = oos.clone().unwrap();
         let mut blargorders: Pubkey = Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap();
@@ -570,11 +574,12 @@ let open_orders = blargorders;
             ts + 40000,
                 );
                 if ix.is_err() {
-                    return (false, vec![]);
+                    return  Box::pin(futures::future::ready(Ok((false, vec![]))))
                 }
                 let ix = ix.unwrap();
-        (true, vec![ix])
-    }
+
+              return  Box::pin(futures::future::ready(Ok((false, vec![ix]))))
+                }
 
     fn can_trade(&self, mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
         if self.accounts.len() < 3 {

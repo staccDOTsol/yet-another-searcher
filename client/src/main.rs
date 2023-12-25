@@ -19,6 +19,7 @@ use solana_program::instruction::Instruction;
 use solana_program::message::{VersionedMessage, v0};
 use solana_sdk::compute_budget::ComputeBudgetInstruction;
 use core::panic;
+use std::pin::Pin;
 use redb::{ReadableTable, TableDefinition};
 use solana_sdk::program_pack::Pack;
  // 0.2.23
@@ -165,13 +166,15 @@ fn add_pool_to_graph<'a>(
     quotes.push(quote.clone());
 }
 
-pub    fn get_arbitrage_instructions<'a>(
+pub  async  fn get_arbitrage_instructions<'a>(
     token_mints: &Vec<Pubkey>,
     src_mint: Pubkey,
         swap_start_amount: u128,
         mint_idxs: &Vec<usize>,
-        pools: &Vec<PoolQuote>,    ) -> (Vec<Vec<Instruction>>, bool) {
-            
+        pools: &Vec<PoolQuote>,    ) -> 
+        //return a future
+        // use athread safe error like Arc
+        Pin<Box<dyn Future<Output = Result<(Vec<Vec<Instruction>>, bool), Box<Arc<dyn std::error::Error>>>>>> {
     let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
 
     let owner = owner3.try_pubkey().unwrap();
@@ -204,7 +207,7 @@ pub    fn get_arbitrage_instructions<'a>(
             .instructions();
 if ix.is_err() {
     println!("ix is err");
-return (vec![], false);
+return Box::pin(futures::future::ready(Ok((vec![], false))));
 }
 let ix = ix.unwrap();
 
@@ -217,14 +220,11 @@ let ix = ix.unwrap();
             let [mint_idx0, mint_idx1] = [mint_idxs[i], mint_idxs[i + 1]];
             let [mint0, mint1] = [token_mints[mint_idx0], token_mints[mint_idx1]];
             let pool = &pools[i];
-            let runtime = tokio::runtime::Runtime::new().unwrap();
 
             let swap_ix =
-            runtime.block_on(
              pool
                 .0
-                .swap_ix(&mint0, &mint1, swap_start_amount)
-            );
+                .swap_ix(&mint0, &mint1, swap_start_amount).await;
 
             swap_start_amount = pool.0.get_quote_with_amounts_scaled(
                 swap_start_amount,
@@ -252,7 +252,7 @@ let ix = ix.unwrap();
         }
        
         ixs.concat();
-        (ixs,  flag) 
+return Box::pin(futures::future::ready(Ok((ixs, flag))));
 
     }
 
@@ -384,13 +384,24 @@ loop {
          let _arb_key = format!("{}{}", mint_keys.join(""), pool_keys.join(""));
          //println!("arbkey: {:?}", arb_key);/* 
         
-         let ixs: (Vec<Vec<solana_program::instruction::Instruction>>, bool) = get_arbitrage_instructions(
+         let ixs = get_arbitrage_instructions(
             &token_mints.clone(),
             usdc_mint,
             init_token_balance,
              &arb_path,
              &arb_pools,
-         );
+            ).await;
+            // get the output 
+            let ixs = ixs.await;
+            
+
+            if ixs.is_err() {
+                println!("ixs is err");
+                continue;
+            }
+            let ixs = ixs.unwrap();
+
+            
         let mut ixs =  ixs.0.concat();
         let _hydra_ata = derive_token_address(&Pubkey::from_str("2bxwkKqwzkvwUqj3xYs4Rpmo1ncPcA1TedAPzTXN1yHu").unwrap(), &usdc_mint);
         let ix = spl_token::instruction::transfer(
