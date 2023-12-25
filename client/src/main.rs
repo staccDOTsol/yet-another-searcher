@@ -304,6 +304,7 @@ let signers = [rc_owner_signer];
         .await.unwrap();
         println!("searching for arbitrages5...");
     
+        let mut newfuts = vec![];
 
     while let Some(message) = stream.next().await {
         match message {
@@ -329,7 +330,7 @@ let signers = [rc_owner_signer];
                         let connection = RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
                                 let mut arbs = vec![];
                                     println!("searching for arbitrages6...");
-                          let arb =  a.brute_force_search(
+                          newfuts.push(a.brute_force_search(
                             start_mint_idx,
                             init_token_balance,
                             init_token_balance,
@@ -339,18 +340,25 @@ let signers = [rc_owner_signer];
                             vec![],
                             vec![],
                            // 0
-                        );
-                         if arb.is_err(){
-                            continue
-                         }
-                         let arb = arb.unwrap();
-                         if arb.is_none() {
-                           continue
-                         }
-                         
-                    
-                         let arb = arb.unwrap();
-                         arbs.push(arb);
+                        ).await);
+                        if newfuts.len() > 70 {
+                            let results = join_all(newfuts).await;
+                            for result in results {
+
+                                if result.is_err() {
+                                    continue;
+                                }
+                                let arb = result.unwrap();
+                                if arb.is_none() {
+                                    continue;
+                                }
+                                let arb = arb.unwrap();
+                                arbs.push(arb);
+                            }
+
+                            newfuts = vec![];
+                        }
+                        println!("searching for arbitrages7...");
                      println!("there are {} arbs", arbs.len());
                              
                          let mut arb_paths = vec![];
@@ -516,8 +524,6 @@ let signers = [rc_owner_signer];
                                 let sig = sig.unwrap();
                                 println!("sent tx: {:?}", sig);
                                 }
-
-                            
 
                     _ => {}
 
