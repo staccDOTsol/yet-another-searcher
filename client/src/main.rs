@@ -743,7 +743,6 @@ while let Some(result) = futures.next().await {
     match result {
         Ok(result) => {
             if result.is_none() {
-                println!("result is none");
                 continue;
             }
             
@@ -774,7 +773,7 @@ for i in 0..arb_amounts.clone().len() {
     }
 }
 
-if arb_paths.len() > 1 {
+if arb_paths.len() >= 1 {
 let ab = arb_amounts;
 let app = arb_pools;
 let ap = arb_paths;

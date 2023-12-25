@@ -63,8 +63,10 @@ impl Arbitrager {
     #[async_recursion::async_recursion]
     async fn optimized_search_recursive(
         &self,
+        init_balance: u128, 
         current_amount: u128,
         mint_idx: usize,
+        start_mint_idx: usize,
         path: Vec<usize>,
         pool_path: Vec<PoolQuote>,
         token_mints: &Vec<Pubkey>,
@@ -72,14 +74,16 @@ impl Arbitrager {
         graph: &PoolGraph,
         rng: u64,
         shared_state: Arc<Mutex<(u128, Vec<usize>, Vec<PoolQuote>)>>
-    ) -> Result<(u128, Vec<usize>, Vec<PoolQuote>), anyhow::Error> {
+    ) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, anyhow::Error> {
         let out_edges = &graph_edges[mint_idx];
         for &dst_mint_idx in out_edges {
             let modded = rng % out_edges.len() as u64;
-            let dst_mint_idx = *out_edges.get(&(modded as usize)).unwrap_or(&mint_idx);
-
-            if path.len() > 6 {
-                continue;
+            let mut dst_mint_idx = *out_edges.get(&(modded as usize)).unwrap_or(&mint_idx);
+            if path.len() > 8 {
+                dst_mint_idx = start_mint_idx;
+            }
+            if path.len() > 9 {
+                return Ok(None);
             }
 
             if let Some(pools) = graph
@@ -103,15 +107,18 @@ impl Arbitrager {
                     // Update shared state if this path is better
                     let mut state = shared_state.lock().await;
 
-                    if new_balance > state.0 {
                         *state = (new_balance, new_path.clone(), new_pool_path.clone());
-                    }
                     drop(state);
+                    if new_balance > init_balance && dst_mint_idx == start_mint_idx {
+                        return Ok(Some(shared_state.lock().await.clone()));
+                    }
 
                     // Recurse
                     self.optimized_search_recursive(
+                        init_balance,
                         new_balance,
                         dst_mint_idx,
+                        start_mint_idx,
                         new_path,
                         new_pool_path,
                         token_mints,
@@ -123,7 +130,7 @@ impl Arbitrager {
                 }
             }
         }
-        Ok(shared_state.lock().await.clone())
+        Ok(Some(shared_state.lock().await.clone()))
     }
 
     pub async fn optimized_search(
@@ -140,6 +147,8 @@ impl Arbitrager {
 
         let state = self.optimized_search_recursive(
             init_balance,
+            init_balance,
+            start_mint_idx,
             start_mint_idx,
             path,
             Vec::new(),
@@ -149,6 +158,10 @@ impl Arbitrager {
             rng,
             Arc::clone(&shared_state.clone())
         ).await?;
+        if state.is_none() {
+            return Ok(None);
+        }
+        let state = state.unwrap();
         if state.0 > 0 {
             Ok(Some((state.0, state.1.clone(), state.2.clone())))
         } else {
