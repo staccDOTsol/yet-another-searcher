@@ -134,8 +134,14 @@ impl PoolOperations for SaberPool {
             fee_numerator: self.fee_numerator as u128,
             fee_denominator: self.fee_denominator as u128,
         };
-                let pool_src_amount = *self.pool_amounts.get(&mint_in.to_string()).unwrap();
-        let pool_dst_amount = *self.pool_amounts.get(&mint_out.to_string()).unwrap();
+                let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
+        let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
+        if pool_src_amount.is_none() || pool_dst_amount.is_none() {
+            return 0;
+        }
+        let pool_src_amount = *pool_src_amount.unwrap();
+        let pool_dst_amount = *pool_dst_amount.unwrap();
+        
 
 
             let pool_amounts = [pool_src_amount, pool_dst_amount];
