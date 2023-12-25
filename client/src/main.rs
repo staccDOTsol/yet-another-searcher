@@ -1,4 +1,4 @@
-use solana_client::nonblocking::rpc_client::RpcClient;
+use solana_client::rpc_client::RpcClient;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use anchor_client::solana_sdk::signature::read_keypair_file;
@@ -165,7 +165,7 @@ fn add_pool_to_graph<'a>(
     quotes.push(quote.clone());
 }
 
-pub async    fn get_arbitrage_instructions<'a>(
+pub    fn get_arbitrage_instructions<'a>(
     token_mints: &Vec<Pubkey>,
     src_mint: Pubkey,
         swap_start_amount: u128,
@@ -217,16 +217,21 @@ let ix = ix.unwrap();
             let [mint_idx0, mint_idx1] = [mint_idxs[i], mint_idxs[i + 1]];
             let [mint0, mint1] = [token_mints[mint_idx0], token_mints[mint_idx1]];
             let pool = &pools[i];
-            let mut swap_ix = pool
+            let runtime = tokio::runtime::Runtime::new().unwrap();
+
+            let swap_ix =
+            runtime.block_on(
+             pool
                 .0
-                .swap_ix(&mint0, &mint1, swap_start_amount);
+                .swap_ix(&mint0, &mint1, swap_start_amount)
+            );
 
             swap_start_amount = pool.0.get_quote_with_amounts_scaled(
                 swap_start_amount,
                 &mint0,
                 &mint1);
                 
-            ixs.push(swap_ix.await.1);
+            ixs.push(swap_ix.1);
             let pool_type = pool.0.get_pool_type();
             match pool_type {
                 PoolType::OrcaPoolType => {
@@ -275,11 +280,11 @@ async fn yellowstone( mut og_pools: &mut  Vec<Box< dyn PoolOperations>>,
 
 let rc_owner_signer: &dyn solana_sdk::signature::Signer = &*rc_owner;
 let signers = [rc_owner_signer];
-    let init_token_acc = connection.get_account(&src_ata).await.unwrap();
+    let init_token_acc = connection.get_account(&src_ata).unwrap();
     let init_token_balance: u128 = spl_token::state::Account::unpack(&init_token_acc.data).unwrap().amount as u128;
     let swap_start_amount = init_token_balance; // scaled!
     println!("swap start amount = {}", swap_start_amount); // track what arbs we did with a larger size
-    let _init_token_acc = connection.get_account(&src_ata).await.unwrap();
+    let _init_token_acc = connection.get_account(&src_ata).unwrap();
 
     println!("searching for arbitrages...");
     let _min_swap_amount = 10_u128.pow(4_u32); // scaled! -- 1 USDC
@@ -303,6 +308,214 @@ let signers = [rc_owner_signer];
         })
         .await.unwrap();
         println!("searching for arbitrages5...");
+
+        tokio::spawn(async move {
+            let connection_url = "https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718";
+            let a = arbitrager.clone();
+            let token_mints = a.token_mints.clone();
+            let rc_owner = rc_owner.clone();
+
+loop {
+
+
+            let a = arbitrager.clone();
+            let token_mints = a.token_mints.clone();
+            let rc_owner = rc_owner.clone();
+            let connection = RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
+                    let mut arbs = vec![];
+                        println!("searching for arbitrages6...");
+             let arb = a.brute_force_search(
+                start_mint_idx,
+                init_token_balance,
+                init_token_balance,
+                swap_start_amount,
+                vec![start_mint_idx],
+                vec![start_mint_idx],
+                vec![],
+                vec![],
+               // 0
+            );
+            if arb.is_err() {
+                println!("arb is err {:?} ", arb.err().unwrap());
+                continue;
+            }
+            let arb = arb.unwrap();
+            if arb.is_none() {
+                println!("arb is none");
+                continue;
+            }
+            let arb = arb.unwrap();
+
+
+                    arbs.push(arb);
+
+            println!("searching for arbitrages7...");
+         println!("there are {} arbs", arbs.len());
+                 
+             let mut arb_paths = vec![];
+             let mut arb_pools = vec![];
+             let arb_amounts = arbs.iter()
+             .map(|arb| {
+                 let arb_amount = arb.0;
+                 arb_paths.push(arb.1.clone());
+                 arb_pools.push(arb.2.clone());
+                 arb_amount
+             })
+             .collect::<Vec<u128>>();
+             let arb_amounts = arb_amounts.clone();
+             // find largest
+             let mut largest = 0;
+             let mut largest_idx = 0;
+             for (i, arb_amount) in arb_amounts.iter().enumerate() {
+                 if *arb_amount > largest {
+                     largest = *arb_amount;
+                     largest_idx = i;
+                 }
+             }
+             let arb_path = arb_paths[largest_idx].clone();
+             let arb_pools = arb_pools[largest_idx].clone();
+             let arb_amount = arb_amounts[largest_idx];
+             println!("lorgest arb amount is {:?}", arb_amount);
+        
+             let mint_keys: Vec<String> =
+             arb_path.clone().iter_mut().map(|i| i.to_string()).collect();
+         let pool_keys: Vec<String> =
+         arb_pools.iter().map(|p| p.0.get_name()).collect();
+         let _arb_key = format!("{}{}", mint_keys.join(""), pool_keys.join(""));
+         //println!("arbkey: {:?}", arb_key);/* 
+        
+         let ixs: (Vec<Vec<solana_program::instruction::Instruction>>, bool) = get_arbitrage_instructions(
+            &token_mints.clone(),
+            usdc_mint,
+            init_token_balance,
+             &arb_path,
+             &arb_pools,
+         );
+        let mut ixs =  ixs.0.concat();
+        let _hydra_ata = derive_token_address(&Pubkey::from_str("2bxwkKqwzkvwUqj3xYs4Rpmo1ncPcA1TedAPzTXN1yHu").unwrap(), &usdc_mint);
+        let ix = spl_token::instruction::transfer(
+         &spl_token::id(),
+         &src_ata,
+         &src_ata,
+         &rc_owner.pubkey(),
+         &[  
+         ],
+         init_token_balance as u64,
+        ).unwrap();
+        ixs.push(ix);
+        let recent_fees = calculate_recent_fee(ixs.
+        iter()
+        .flat_map(|ix| ix.accounts.iter().map(|acc| 
+        if acc.is_writable { acc.pubkey } else { Pubkey::default() })
+        .collect::<Vec<Pubkey>>()
+        .iter()
+        .cloned()
+        .collect::<std::collections::HashSet<Pubkey>>()
+        .iter()
+        .filter(|pubkey| **pubkey != Pubkey::default())
+        .cloned()
+        .collect::<Vec<Pubkey>>())
+        .collect::<Vec<Pubkey>>().as_slice(),
+        &connection);
+        println!("recent fees: {:?}", recent_fees);
+        
+        let mut  needed_keys = ixs.
+        iter()
+        .flat_map(|ix| ix.accounts.iter().map(|acc| 
+        acc.pubkey.to_string()
+        )
+        .collect::<Vec<String>>())
+        .collect::<Vec<String>>();
+        let mut missing_keys = Vec::new();
+        
+        let file = std::fs::read("./src/luts.json").unwrap();
+        let string = String::from_utf8(file).unwrap();
+        let mut lutties: Vec<String> = serde_json::from_str(&string).unwrap();
+        ////println !("lutties: {:?}", lutties.len());
+        // dedupe
+        lutties.sort();
+        lutties.dedup();
+        let mut lutties: Vec<AddressLookupTableAccount> = get_address_lookup_table_accounts(&connection, lutties.clone(), rc_owner.clone().pubkey());
+        
+        let mut lutties_public_keys = lutties.
+        iter()
+        .flat_map(|lut| {
+        lut.addresses.clone()
+        })
+        .collect::<Vec<Pubkey>>();
+        
+        lutties_public_keys.sort();
+        lutties_public_keys.dedup();
+        needed_keys.sort();
+        needed_keys.dedup();
+        for key in needed_keys.clone() {
+        if !lutties_public_keys.contains(&Pubkey::from_str(&key).unwrap()) {
+        missing_keys.push(key);
+        }
+        }
+        //println!("missing keys: {:?}", missing_keys.len());
+        let mut new_lutties = create_and_or_extend_luts(
+        &missing_keys.iter().map(|key| Pubkey::from_str(key).unwrap()).collect::<Vec<Pubkey>>(),
+        &connection,
+        &mut lutties,
+        &rc_owner,
+        ).unwrap();
+        // find the top 4 luts with the most needed keys
+        let mut usized_lutties = lutties.
+        iter()
+        .map(|lut| {
+        let mut num_keys = 0;
+        for key in &needed_keys.clone() {
+        if lut.addresses.contains(&Pubkey::from_str(key).unwrap()) {
+        num_keys += 1;
+        }
+        }
+        (lut.clone(), num_keys)
+        })
+        .collect::<Vec<(AddressLookupTableAccount, usize)>>()
+        .iter().filter(|&lut| lut.1 > 5).cloned()
+        .collect::<Vec<(AddressLookupTableAccount, usize)>>();
+        usized_lutties.sort_by(|a, b| a.1.cmp(&b.1));
+        usized_lutties.reverse();
+        let rounded = round::round(usized_lutties.len() as f64 / 1.0, 0) as usize;
+        usized_lutties = usized_lutties[0..rounded].to_vec();
+        lutties = usized_lutties.iter().map(|lut| lut.0.clone()).collect::<Vec<AddressLookupTableAccount>>();
+        lutties.append(&mut new_lutties);
+        println!("lutties {:?}, needed_keys {:?}, missing_keys {:?}", lutties.len(), needed_keys.len(), missing_keys.len());
+        // find needed_keys that are missing from lutties
+        
+        
+        let priority_fee_ix = ComputeBudgetInstruction::set_compute_unit_price(
+        recent_fees );
+        ixs.insert(
+        0, priority_fee_ix
+        );
+        arbs = vec![];
+        let blockhash = connection.get_latest_blockhash().unwrap();
+
+        let rc_owner_signer: &dyn solana_sdk::signature::Signer = &*rc_owner;
+        let signers = [rc_owner_signer];
+           
+            
+                    let tx = VersionedTransaction::try_new( VersionedMessage::V0(v0::Message::try_compile(
+                        &rc_owner.pubkey(),
+                        &ixs,
+                        &lutties,
+                        blockhash,
+                        ).unwrap()), &[&*rc_owner]);
+                    if tx.is_err() {
+                        continue;
+                    }
+                    let tx = tx.unwrap();
+                    let connection = RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
+                    let sig = connection.send_transaction(&tx);
+                    if sig.is_err() {
+                        continue;
+                    }
+                    let sig = sig.unwrap();
+                    println!("sent tx: {:?}", sig);
+                }
+                });
     
 
     while let Some(message) = stream.next().await {
@@ -321,204 +534,6 @@ let signers = [rc_owner_signer];
                             }
                         }
 
-
-
-                        let a = arbitrager.clone();
-                        let token_mints = a.token_mints.clone();
-                        let rc_owner = rc_owner.clone();
-                        let connection = RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
-                                let mut arbs = vec![];
-                                    println!("searching for arbitrages6...");
-                         let arb = a.brute_force_search(
-                            start_mint_idx,
-                            init_token_balance,
-                            init_token_balance,
-                            swap_start_amount,
-                            vec![start_mint_idx],
-                            vec![start_mint_idx],
-                            vec![],
-                            vec![],
-                           // 0
-                        );
-                        if arb.is_err() {
-                            println!("arb is err {:?} ", arb.err().unwrap());
-                            continue;
-                        }
-                        let arb = arb.unwrap();
-                        if arb.is_none() {
-                            println!("arb is none");
-                            continue;
-                        }
-                        let arb = arb.unwrap();
-
-
-                                arbs.push(arb);
-
-                        println!("searching for arbitrages7...");
-                     println!("there are {} arbs", arbs.len());
-                             
-                         let mut arb_paths = vec![];
-                         let mut arb_pools = vec![];
-                         let arb_amounts = arbs.iter()
-                         .map(|arb| {
-                             let arb_amount = arb.0;
-                             arb_paths.push(arb.1.clone());
-                             arb_pools.push(arb.2.clone());
-                             arb_amount
-                         })
-                         .collect::<Vec<u128>>();
-                         let arb_amounts = arb_amounts.clone();
-                         // find largest
-                         let mut largest = 0;
-                         let mut largest_idx = 0;
-                         for (i, arb_amount) in arb_amounts.iter().enumerate() {
-                             if *arb_amount > largest {
-                                 largest = *arb_amount;
-                                 largest_idx = i;
-                             }
-                         }
-                         let arb_path = arb_paths[largest_idx].clone();
-                         let arb_pools = arb_pools[largest_idx].clone();
-                         let arb_amount = arb_amounts[largest_idx];
-                         println!("lorgest arb amount is {:?}", arb_amount);
-                    
-                         let mint_keys: Vec<String> =
-                         arb_path.clone().iter_mut().map(|i| i.to_string()).collect();
-                     let pool_keys: Vec<String> =
-                     arb_pools.iter().map(|p| p.0.get_name()).collect();
-                     let _arb_key = format!("{}{}", mint_keys.join(""), pool_keys.join(""));
-                     //println!("arbkey: {:?}", arb_key);/* 
-                    
-                     let ixs: (Vec<Vec<solana_program::instruction::Instruction>>, bool) = get_arbitrage_instructions(
-                        &token_mints.clone(),
-                        usdc_mint,
-                        init_token_balance,
-                         &arb_path,
-                         &arb_pools,
-                     ).await;
-                    let mut ixs =  ixs.0.concat();
-                    let _hydra_ata = derive_token_address(&Pubkey::from_str("2bxwkKqwzkvwUqj3xYs4Rpmo1ncPcA1TedAPzTXN1yHu").unwrap(), &usdc_mint);
-                    let ix = spl_token::instruction::transfer(
-                     &spl_token::id(),
-                     &src_ata,
-                     &src_ata,
-                     &rc_owner.pubkey(),
-                     &[  
-                     ],
-                     init_token_balance as u64,
-                    ).unwrap();
-                    ixs.push(ix);
-                    let recent_fees = calculate_recent_fee(ixs.
-                    iter()
-                    .flat_map(|ix| ix.accounts.iter().map(|acc| 
-                    if acc.is_writable { acc.pubkey } else { Pubkey::default() })
-                    .collect::<Vec<Pubkey>>()
-                    .iter()
-                    .cloned()
-                    .collect::<std::collections::HashSet<Pubkey>>()
-                    .iter()
-                    .filter(|pubkey| **pubkey != Pubkey::default())
-                    .cloned()
-                    .collect::<Vec<Pubkey>>())
-                    .collect::<Vec<Pubkey>>().as_slice(),
-                    &connection).await;
-                    println!("recent fees: {:?}", recent_fees);
-                    
-                    let mut  needed_keys = ixs.
-                    iter()
-                    .flat_map(|ix| ix.accounts.iter().map(|acc| 
-                    acc.pubkey.to_string()
-                    )
-                    .collect::<Vec<String>>())
-                    .collect::<Vec<String>>();
-                    let mut missing_keys = Vec::new();
-                    
-                    let file = std::fs::read("./src/luts.json").unwrap();
-                    let string = String::from_utf8(file).unwrap();
-                    let mut lutties: Vec<String> = serde_json::from_str(&string).unwrap();
-                    ////println !("lutties: {:?}", lutties.len());
-                    // dedupe
-                    lutties.sort();
-                    lutties.dedup();
-                    let mut lutties: Vec<AddressLookupTableAccount> = get_address_lookup_table_accounts(&connection, lutties.clone(), rc_owner.clone().pubkey()).await;
-                    
-                    let mut lutties_public_keys = lutties.
-                    iter()
-                    .flat_map(|lut| {
-                    lut.addresses.clone()
-                    })
-                    .collect::<Vec<Pubkey>>();
-                    
-                    lutties_public_keys.sort();
-                    lutties_public_keys.dedup();
-                    needed_keys.sort();
-                    needed_keys.dedup();
-                    for key in needed_keys.clone() {
-                    if !lutties_public_keys.contains(&Pubkey::from_str(&key).unwrap()) {
-                    missing_keys.push(key);
-                    }
-                    }
-                    //println!("missing keys: {:?}", missing_keys.len());
-                    let mut new_lutties = create_and_or_extend_luts(
-                    &missing_keys.iter().map(|key| Pubkey::from_str(key).unwrap()).collect::<Vec<Pubkey>>(),
-                    &connection,
-                    &mut lutties,
-                    &rc_owner,
-                    ).await.unwrap();
-                    // find the top 4 luts with the most needed keys
-                    let mut usized_lutties = lutties.
-                    iter()
-                    .map(|lut| {
-                    let mut num_keys = 0;
-                    for key in &needed_keys.clone() {
-                    if lut.addresses.contains(&Pubkey::from_str(key).unwrap()) {
-                    num_keys += 1;
-                    }
-                    }
-                    (lut.clone(), num_keys)
-                    })
-                    .collect::<Vec<(AddressLookupTableAccount, usize)>>()
-                    .iter().filter(|&lut| lut.1 > 5).cloned()
-                    .collect::<Vec<(AddressLookupTableAccount, usize)>>();
-                    usized_lutties.sort_by(|a, b| a.1.cmp(&b.1));
-                    usized_lutties.reverse();
-                    let rounded = round::round(usized_lutties.len() as f64 / 1.0, 0) as usize;
-                    usized_lutties = usized_lutties[0..rounded].to_vec();
-                    lutties = usized_lutties.iter().map(|lut| lut.0.clone()).collect::<Vec<AddressLookupTableAccount>>();
-                    lutties.append(&mut new_lutties);
-                    println!("lutties {:?}, needed_keys {:?}, missing_keys {:?}", lutties.len(), needed_keys.len(), missing_keys.len());
-                    // find needed_keys that are missing from lutties
-                    
-                    
-                    let priority_fee_ix = ComputeBudgetInstruction::set_compute_unit_price(
-                    recent_fees );
-                    ixs.insert(
-                    0, priority_fee_ix
-                    );
-                    arbs = vec![];
-                    let blockhash = connection.get_latest_blockhash().await.unwrap();
-
-                    let rc_owner_signer: &dyn solana_sdk::signature::Signer = &*rc_owner;
-                    let signers = [rc_owner_signer];
-                       
-                        
-                                let tx = VersionedTransaction::try_new( VersionedMessage::V0(v0::Message::try_compile(
-                                    &rc_owner.pubkey(),
-                                    &ixs,
-                                    &lutties,
-                                    blockhash,
-                                    ).unwrap()), &signers);
-                                if tx.is_err() {
-                                    continue;
-                                }
-                                let tx = tx.unwrap();
-                                let connection = RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
-                                let sig = connection.send_transaction(&tx).await;
-                                if sig.is_err() {
-                                    continue;
-                                }
-                                let sig = sig.unwrap();
-                                println!("sent tx: {:?}", sig);
                                 }
 
                     _ => {}
@@ -646,7 +661,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let fut = program_async.get_multiple_accounts_with_commitment(&chunk, CommitmentConfig::confirmed());
         futures.push(fut);
-        if futures.len() > 20 {
+        if futures.len() > 120 {
             println!("futures length is {:?} update_accounts length is {:?}", futures.len(), update_accounts.len());
                 
             let results = join_all(futures).await;
@@ -790,7 +805,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let connection = Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed()));
 
-        let init_token_acc = connection.clone().get_account(&src_ata).await.unwrap();
+        let init_token_acc = connection.clone().get_account(&src_ata).unwrap();
         let init_token_balance: u128 = spl_token::state::Account::unpack(&init_token_acc.data).unwrap().amount as u128;
     println!("update accounts is {:?}", update_accounts.len());
     // slide it out here
@@ -845,11 +860,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let src_ata = derive_token_address(&rc_owner.pubkey(), &usdc_mint);
 
-    let init_token_acc = connection.clone().get_account(&src_ata).await.unwrap();
+    let init_token_acc = connection.clone().get_account(&src_ata).unwrap();
     let init_token_balance: u128 = spl_token::state::Account::unpack(&init_token_acc.data).unwrap().amount as u128;
     let swap_start_amount = init_token_balance; // scaled!
     println!("swap start amount = {}", swap_start_amount); // track what arbs we did with a larger size
-    let init_token_acc = connection.clone().get_account(&src_ata).await.unwrap();
+    let init_token_acc = connection.clone().get_account(&src_ata).unwrap();
     let init_token_balance: u128 = spl_token::state::Account::unpack(&init_token_acc.data).unwrap().amount as u128;
 
     
@@ -868,7 +883,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         cluster: Cluster::Custom(
             connection_url.to_string(),
             connection_url.to_string()),
-        connection
+        connection: Arc::new(solana_client::nonblocking::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed())),
     };
         let owner = Arc::new(read_keypair_file(owner_kp_path).unwrap());
       
@@ -958,7 +973,7 @@ unique_public_keys
     .cloned()
     .collect()}
 
-async fn create_and_or_extend_luts(
+ fn create_and_or_extend_luts(
     remaining_public_keys: &Vec<Pubkey>,
     connection: &RpcClient,
     luts: &mut Vec<AddressLookupTableAccount>,
@@ -967,14 +982,14 @@ async fn create_and_or_extend_luts(
     let mut used_luts = Vec::new();
 
     for pubkeys in remaining_public_keys.chunks(25) {
-        let (lut, _index) = find_or_create_lut(connection, payer, luts, remaining_public_keys.len()).await?;
+        let (lut, _index) = find_or_create_lut(connection, payer, luts, remaining_public_keys.len())?;
             let extend_ix = extend_lookup_table(
                 lut.key,
                 payer.pubkey(),
                 Some(payer.pubkey()),
                 pubkeys.to_vec(),
             );
-            let latest_blockhash = connection.get_latest_blockhash().await.unwrap(); 
+            let latest_blockhash = connection.get_latest_blockhash().unwrap(); 
             //println!("extending lut: {:?}", lut.key);
            let hm = connection
                 .send_transaction(&VersionedTransaction::try_new(
@@ -986,7 +1001,7 @@ async fn create_and_or_extend_luts(
                         ).unwrap()),
                         &[payer],
                     ).unwrap()
-                ).await;
+                );
                 if !hm.is_err() {
                     let signature = hm.unwrap();
                     
@@ -999,7 +1014,7 @@ async fn create_and_or_extend_luts(
 
     Ok(used_luts)
 }
-async fn find_or_create_lut(
+fn find_or_create_lut(
     connection:  &RpcClient,
     payer: &Keypair,
     luts: &mut Vec<AddressLookupTableAccount>,
@@ -1007,23 +1022,23 @@ async fn find_or_create_lut(
 ) -> Result<(AddressLookupTableAccount, usize), Box<dyn std::error::Error>> {
     luts.shuffle(&mut rand::thread_rng());
     for (index, lut) in luts.iter().enumerate() {
-        let acc = connection.get_account(&lut.key).await.unwrap();
+        let acc = connection.get_account(&lut.key).unwrap();
         let address_lookup_table = AddressLookupTable::deserialize(&acc.data).unwrap();
         //println!("{}, {}", lut.addresses.len(), address_lookup_table.meta.authority.unwrap() == payer.pubkey());
         if lut.addresses.len() < (255_usize -howmany) && address_lookup_table.meta.authority.unwrap() == payer.pubkey() {
             return Ok((lut.clone(), index));
         }
     }
-    Ok((create_new_lut(connection, payer).await.unwrap(), luts.len()))
+    Ok((create_new_lut(connection, payer).unwrap(), luts.len()))
 }
 
-async fn create_new_lut(
+fn create_new_lut(
     connection: &RpcClient,
     payer: &Keypair,
 ) -> Result<AddressLookupTableAccount, Box<dyn std::error::Error>> {
     // Create a new AddressLookupTable
     let recent_slot = connection
-    .get_slot_with_commitment(CommitmentConfig::confirmed()).await
+    .get_slot_with_commitment(CommitmentConfig::confirmed())
     .unwrap()//"237009123 is not a recent slot"
     - 50;
     let (create_ix, table_pk) =
@@ -1032,7 +1047,7 @@ async fn create_new_lut(
             payer.pubkey(),
             recent_slot,
         );
-    let latest_blockhash = connection.get_latest_blockhash().await.unwrap();  
+    let latest_blockhash = connection.get_latest_blockhash().unwrap();  
     
     //println!("creating lut: {:?}", table_pk);
   let hm = connection
@@ -1045,7 +1060,7 @@ async fn create_new_lut(
             ).unwrap()),
             &[payer],
         ).unwrap()
-    ).await;
+    );
     if !hm.is_err() {
         let signature = hm.unwrap();
         
@@ -1086,7 +1101,7 @@ fn save_luts_to_file(lutties: &Vec<String>) -> Result<(), Box<dyn std::error::Er
 
     Ok(())
 }
-pub async fn calculate_recent_fee(
+pub fn calculate_recent_fee(
     write_locked_accounts: &[Pubkey],
     connection: &RpcClient
 ) -> u64 {
@@ -1099,7 +1114,7 @@ pub async fn calculate_recent_fee(
             let account_infos = connection.get_multiple_accounts_with_commitment(
                 chunk,
                 CommitmentConfig::confirmed()
-            ).await.unwrap().value;
+            ).unwrap().value;
             let mut index = 0;
             let write_locked_accounts = &account_infos
             .into_iter()
@@ -1123,7 +1138,7 @@ pub async fn calculate_recent_fee(
             //println!("write locked accounts that were resolved on this cluster: {:?}", write_locked_accounts.len());
             let recent_fees = connection.get_recent_prioritization_fees(
                 write_locked_accounts
-            ).await.unwrap_or_default();
+            ).unwrap_or_default();
             let fee = recent_fees
             .iter()
             .map(|fee| fee.prioritization_fee)
@@ -1140,7 +1155,7 @@ pub async fn calculate_recent_fee(
     138
 }
 
-async fn get_address_lookup_table_accounts(client: &RpcClient, keys: Vec<String>, payer: Pubkey) -> Vec<AddressLookupTableAccount> {
+fn get_address_lookup_table_accounts(client: &RpcClient, keys: Vec<String>, payer: Pubkey) -> Vec<AddressLookupTableAccount> {
     let keys = &keys.iter().
     map(|key| {
         Pubkey::from_str(key).unwrap()
@@ -1152,7 +1167,7 @@ async fn get_address_lookup_table_accounts(client: &RpcClient, keys: Vec<String>
     let  chunks= keys.chunks(100);
     
     for chunk in chunks {
-            let raw_accounts = client.get_multiple_accounts(chunk).await.unwrap();
+            let raw_accounts = client.get_multiple_accounts(chunk).unwrap();
 
             for i in 0..raw_accounts.len() {
                 if raw_accounts[i].is_some() {
