@@ -17,6 +17,7 @@ use solana_sdk::commitment_config::{CommitmentLevel, CommitmentConfig};
 use solana_sdk::signature::{read_keypair_file, Signature};
 use solana_transaction_status::UiTransactionEncoding;
 use std::collections::{HashMap, HashSet};
+use std::pin::Pin;
 use std::sync::Arc;
 
 use solana_sdk::instruction::Instruction;
@@ -46,7 +47,8 @@ pub struct Arbitrager {
     pub connection: Arc<RpcClient>,
 }
 impl Arbitrager {
-pub fn brute_force_search(
+    #[async_recursion::async_recursion]
+pub async fn brute_force_search(
     &self,
     start_mint_idx: usize,
     init_balance: u128,
@@ -57,27 +59,23 @@ pub fn brute_force_search(
     pool_path: Vec<PoolQuote>,
     best_pool_path: Vec<PoolQuote>,
  //   sent_arbs: &mut HashSet<String>,
-) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()> {
+) -> Pin<Box<dyn std::future::Future<Output = Result<std::option::Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>> {
+
     let src_curr = path[path.len() - 1]; // last mint
     let src_mint = self.token_mints[src_curr];
 
     let out_edges = &self.graph_edges[src_curr];
 
-    // path = 4 = A -> B -> C -> D
-    // path >= 5 == not valid bc max tx size is swaps
     if path.len() == 6 {
         if old_best > init_balance {
             println!("most profitable arb... {:?} -> {:?} (-{:?})", init_balance, old_best, init_balance - old_best);
-            return Ok(Some((old_best, best_path, best_pool_path)))
+            return Box::pin(async move {Ok(Some((old_best, best_path, best_pool_path)))}) as Pin<Box<dyn std::future::Future<Output = Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>>;
         }
         else {
-            return Ok(None)
+            return Box::pin(async {Ok(None)}) as Pin<Box<dyn std::future::Future<Output = Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>>;
         }
     }
-    else {
-        info!("path: {:?}", path);
-    }
-
+        
     for dst_mint_idx in out_edges {
         let random = rand::random::<usize>() % out_edges.len();
         let dst_mint_idx = out_edges.iter().nth(random).unwrap();
@@ -135,7 +133,7 @@ pub fn brute_force_search(
                 println!("found arb... {:?} -> {:?} (-{:?})", init_balance, new_balance, new_balance - init_balance);
                 if new_balance > old_best {
                     old_best = new_balance;
-                    return self.brute_force_search(
+                    let r = self.brute_force_search(
                         start_mint_idx,
                         init_balance,
                         old_best,
@@ -144,28 +142,30 @@ pub fn brute_force_search(
                         new_path,
                         new_pool_path.clone(), // !
                         new_pool_path
-                    );
+                    ).await; // Add .await here
+                
+                    return (r as Pin<Box<dyn std::future::Future<Output = Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>>)
                 }
                 }
             } else if !path.contains(&dst_mint_idx) {
-                return self.brute_force_search(
+                let r = self.brute_force_search(
                     start_mint_idx,
                     init_balance,
                     old_best,
                     new_balance,   // !
-                    new_path,      // !
-                    path,      // !
-                    new_pool_path, // !
-                    pool_path, // !
-                );
+                    new_path.clone(),      // !
+                    path,
+                    new_pool_path.clone(), // !
+                    pool_path
+                ).await; // Add .await here
+            
+                return (r as Pin<Box<dyn std::future::Future<Output = Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>>)
             }
         }
+    }
+    return Box::pin(async {Ok(None)}) as Pin<Box<dyn std::future::Future<Output = Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, ()>> + Send>>;
+
 }
-
-Ok(None)
-}
-
-
 pub async    fn get_arbitrage_instructions<'a>(
         &self,
         swap_start_amount: u128,

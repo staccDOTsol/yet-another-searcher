@@ -252,7 +252,7 @@ let ix = ix.unwrap();
     }
 
 
-async fn yellowstone( page_config:&mut ShardedDb,
+async fn yellowstone( mut og_pools: &mut  Vec<Box< dyn PoolOperations>>,
     arbitrager: Arc<Arbitrager>,
     connection_url: &str,
      accounts: HashMap<String, SubscribeRequestFilterAccounts>,
@@ -260,7 +260,6 @@ async fn yellowstone( page_config:&mut ShardedDb,
      start_mint_idx: usize
      ) -> Result<(), Box<dyn std::error::Error>> {
 
-        let mut newfuts = vec![];
         let token_mints = arbitrager.clone().token_mints.clone();
                         
         let connection = RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
@@ -312,26 +311,13 @@ let signers = [rc_owner_signer];
                 match msg.update_oneof {
                     Some(UpdateOneof::Account(account)) => {
                         let account: AccountPretty = account.into();
-                       let pc_locked = page_config.try_lock();
-                          if pc_locked.is_err() {
-                            continue;
-                          }
-                            let mut pc = pc_locked.unwrap();
-                            let pool = pc.get_mut(&account.pubkey.to_string());
-                            if pool.is_none() {
-                                continue;
-                            }
-                            let pool = pool.unwrap();
-                            let pool = pool.try_lock();
-                            if pool.is_err() {
-                                continue;
-                            }
-
-                            let mut pool = pool.unwrap();
-                        let update_accounts = pool.0.get_update_accounts();
-                        for update_account in update_accounts {
-                            if update_account == account.pubkey {
-                                pool.0.set_update_accounts2(account.pubkey, &account.data, Cluster::Mainnet);
+                        for pool in og_pools.iter_mut() {
+                            let update_accounts = pool.get_update_accounts();
+                            for update_account in update_accounts {
+                                if update_account == account.pubkey {
+                                    println!("found update account {} with data {:?}", update_account, account.data.len());
+                                    pool.set_update_accounts2(account.pubkey, &account.data, Cluster::Mainnet);
+                                }
                             }
                         }
 
@@ -341,11 +327,8 @@ let signers = [rc_owner_signer];
                         let token_mints = a.token_mints.clone();
                         let rc_owner = rc_owner.clone();
                         let connection = RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
-                        newfuts.push(tokio::spawn(
-                            
-                            async move {
                                 let mut arbs = vec![];
-                                    
+                                    println!("searching for arbitrages6...");
                           let arb =  a.brute_force_search(
                             start_mint_idx,
                             init_token_balance,
@@ -357,25 +340,12 @@ let signers = [rc_owner_signer];
                             vec![],
                            // 0
                         );
-                     let blockhash = connection.get_latest_blockhash().await.unwrap();
                          if arb.is_err(){
-                            return 
-                                VersionedMessage::V0(v0::Message::try_compile(
-                                &rc_owner.pubkey(),
-                                &[] as &[Instruction],
-                                &[] as &[AddressLookupTableAccount],
-                                blockhash,
-                                ).unwrap())
+                            continue
                          }
                          let arb = arb.unwrap();
                          if arb.is_none() {
-                           return 
-                                VersionedMessage::V0(v0::Message::try_compile(
-                                &rc_owner.pubkey(),
-                                &[] as &[Instruction],
-                                &[] as &[AddressLookupTableAccount],
-                                blockhash,
-                                ).unwrap())
+                           continue
                          }
                          
                     
@@ -526,24 +496,14 @@ let signers = [rc_owner_signer];
 
                     let rc_owner_signer: &dyn solana_sdk::signature::Signer = &*rc_owner;
                     let signers = [rc_owner_signer];
-                        VersionedMessage::V0(v0::Message::try_compile(
-                        &rc_owner.pubkey(),
-                        &ixs,
-                        &lutties,
-                        blockhash,
-                        ).unwrap())
-
-                            }));
-                            let results = join_all(newfuts).await;
-                            newfuts = vec![];
-                            for result in results {
-                                if result.is_err() {
-                                    continue;
-                                }
-                                let result = result.unwrap();
-                                
-                                if result.instructions().len() > 0 {
-                                let tx = VersionedTransaction::try_new(result, &signers);
+                       
+                        
+                                let tx = VersionedTransaction::try_new( VersionedMessage::V0(v0::Message::try_compile(
+                                    &rc_owner.pubkey(),
+                                    &ixs,
+                                    &lutties,
+                                    blockhash,
+                                    ).unwrap()), &signers);
                                 if tx.is_err() {
                                     continue;
                                 }
@@ -557,8 +517,7 @@ let signers = [rc_owner_signer];
                                 println!("sent tx: {:?}", sig);
                                 }
 
-                            }
-                            }
+                            
 
                     _ => {}
 
@@ -778,7 +737,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 continue;
             }
             // ** record pool
-            pools.push(pool.clone());
+            pools.push( pool.clone());
             let locked_pc = page_config.try_lock();
             if locked_pc.is_err() {
                 continue;
@@ -795,7 +754,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    for pool in pools.clone(){ 
+    for pool in pools.clone() { 
 
         let mints = pool.get_mints();
         
@@ -870,7 +829,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .filter(|maybe| maybe.is_some())
         .collect::<Vec<Option<Account>>>();
     let mut filter_map: HashMap<String, SubscribeRequestFilterAccounts> = HashMap::new();
-    let update_accounts_chunks: std::slice::Chunks<'_, Option<Account>> = update_accounts.chunks(6666);
+    let update_accounts_chunks: std::slice::Chunks<'_, Option<Account>> = update_accounts.chunks(2666);
     let owners = update_accounts_chunks.clone().map(|chunk| {
         chunk
             .iter()
@@ -937,7 +896,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
         let owner = Arc::new(read_keypair_file(owner_kp_path).unwrap());
       
-        yellowstone(&mut page_config, Arc::new(arbitrager), connection_url, filter_map, owner, start_mint_idx)
+        yellowstone(&mut pools.clone(), Arc::new(arbitrager), connection_url, filter_map, owner, start_mint_idx)
         .await
         .unwrap()
         ;
