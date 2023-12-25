@@ -79,6 +79,14 @@ pub trait PoolOperations: Debug + Send {
         mint_in: &Pubkey,
         mint_out: &Pubkey,
     ) -> u128;
+    async fn get_quote_with_amounts_scaled_new(
+        &self,
+        amount_in: u128,
+        mint_in: &Pubkey,
+        mint_out: &Pubkey,
+        amount: u128,
+        amount_out: u128,
+    ) -> u128;
     async fn swap_ix(
         &self,
         mint_in: &Pubkey,

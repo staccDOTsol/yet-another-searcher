@@ -1,3 +1,4 @@
+use rand::seq::SliceRandom;
 use solana_client::nonblocking::rpc_client::RpcClient;
 use anchor_client::solana_client::rpc_config::RpcSendTransactionConfig;
 use anchor_lang::system_program;
@@ -17,7 +18,7 @@ use solana_sdk::address_lookup_table_account::AddressLookupTableAccount;
 use solana_sdk::commitment_config::{CommitmentLevel, CommitmentConfig};
 use solana_sdk::signature::{read_keypair_file, Signature};
 use solana_transaction_status::UiTransactionEncoding;
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap, HashSet, BinaryHeap};
 use std::pin::Pin;
 use std::sync::Arc;
 
@@ -48,117 +49,90 @@ pub struct Arbitrager {
     pub connection: Arc<RpcClient>,
 }
 impl Arbitrager {
-    #[async_recursion::async_recursion]
-pub async fn brute_force_search(
-    &self,
-    start_mint_idx: usize,
-    init_balance: u128,
-    mut old_best: u128,
-    curr_balance: u128,
-    path: Vec<usize>,
-    best_path: Vec<usize>,
-    pool_path: Vec<PoolQuote>,
-    best_pool_path: Vec<PoolQuote>,
-    owner3: Arc<Keypair>
- //   sent_arbs: &mut HashSet<String>,
-) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, anyhow::Error> {
-        let src_curr = path[path.len() - 1]; // last mint
-    let src_mint = self.token_mints[src_curr];
+    pub async fn optimized_search(
+        &mut self,
+        start_mint_idx: usize,
+        init_balance: u128,
+        path: Vec<usize>,
+    ) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, anyhow::Error> {
+    let mut best_profit = 0;
+    let mut best_path = Vec::new();
+    let mut best_pool_path = Vec::new();
 
-    let out_edges = &self.graph_edges[src_curr];
+    let mut queue = BinaryHeap::new();
+    queue.push((0, start_mint_idx, Vec::new(), Vec::new()));
 
-    if path.len() == 8 {
-        if old_best > init_balance {
-            println!(" profitable arb... {:?} -> {:?}", init_balance, old_best);
-            return Ok(Some((old_best, best_path, best_pool_path)))
-        } else {
-            return Ok(None)
-        }
+    while let Some((profit, mint_idx, path, pool_path)) = queue.pop() {
+        let profit = -(profit as i128);
+        let out_edges = self.graph_edges[mint_idx].clone();
+        for dst_mint_idx in out_edges {
+            let pools = &mut self
+                .graph
+                .0
+                .get(&PoolIndex(mint_idx))
+                .unwrap()
+                .0
+                .get(&PoolIndex(dst_mint_idx))
+                .unwrap();
 
-    }
-        
-    for dst_mint_idx in out_edges {
-        let arandom = rand::random::<usize>() % out_edges.len();
-        let dst_mint_idx = out_edges.iter().nth(arandom).unwrap();
-        if self
-        .graph
-        .0
-        .get(&PoolIndex(src_curr))
-        .unwrap()
-        .0
-        .get(&PoolIndex(*dst_mint_idx)).is_none(){
-            continue;
-        }
-        let pools = self
-            .graph
-            .0
-            .get(&PoolIndex(src_curr))
-            .unwrap()
-            .0
-            .get(&PoolIndex(*dst_mint_idx))
-            .unwrap();
+            let mut pools = pools.clone();
+            pools.shuffle(&mut rand::thread_rng());
+            for pool in pools {
+                // Get updated accounts for the pool
+                let updated_accounts = pool.get_update_accounts();
 
-        let dst_mint_idx = *dst_mint_idx;
-        let dst_mint = self.token_mints[dst_mint_idx];
+                // Get the unpacked token balance for the pool
+                let token_accounts = self.connection.get_multiple_accounts(&updated_accounts).await?;
+                let ata2 = token_accounts.get(1).unwrap().clone();
+                let ata1 = token_accounts.get(0).unwrap().clone();
+                if ata1.is_none() || ata2.is_none() {
+                    continue;
+                }
 
-    let owner = owner3.try_pubkey().unwrap();
-        let dst_mint_acc = derive_token_address(&owner, &dst_mint);
+                let token_amounts = [spl_token::state::Account::unpack(
+                    &ata1.unwrap().data,
+                )?.amount, spl_token::state::Account::unpack(&ata2.unwrap().data)?.amount];
+                let pool_src_amt = token_amounts[0] as u128;
+                let pool_dst_amt = token_amounts[1] as u128;
 
-        for pool in pools {
-            // choose a pool at random instead
-            let arandom = rand::random::<usize>() % pools.len();
-            let pool = pools[arandom].clone();
-            let mut new_balance =
-                pool.0
-                    .get_quote_with_amounts_scaled(curr_balance, &src_mint, &dst_mint).await;
+                let profit = profit as u128;
+                let new_balance = pool.get_quote_with_amounts_scaled_new(profit, &self.token_mints[mint_idx], &self.token_mints[dst_mint_idx], pool_src_amt, pool_dst_amt).await;
+                if new_balance == 0 {
+                    continue;
+                }
+
                     let mut new_path = path.clone();
                     new_path.push(dst_mint_idx);
-        
+
                     let mut new_pool_path = pool_path.clone();
-                    new_pool_path.push(pool.clone()); // clone the pointer
-            if new_balance == 0 {
-                continue;
-            }
-            if dst_mint_idx == start_mint_idx && new_balance > old_best && new_balance <= old_best * 2 {
-                // println!("{:?} -> {:?} (-{:?})", init_balance, new_balance, init_balance - new_balance);
-                
-                // if new_balance > init_balance - 1086310399 {
-                    // ... profitable arb!
+                    new_pool_path.push(pool.clone());
+                    println!("new balance, dst_mint, start_mint: {} {} {}", new_balance, dst_mint_idx, start_mint_idx);
 
-                    old_best = new_balance;
-                    println!(" profitable arb... {:?} -> {:?}", curr_balance, old_best);
-                    
-                    return (self.brute_force_search(
-                        start_mint_idx,
-                        init_balance,
-                        old_best,
-                        new_balance,   // !
-                        new_path.clone(),      // !
-                        new_path,
-                        new_pool_path.clone(), // !
-                        new_pool_path,
-                        owner3
-                    )).await
-            } else if dst_mint_idx != start_mint_idx && !path.contains(&dst_mint_idx) {
-                return (self.brute_force_search(
-                    start_mint_idx,
-                    init_balance,
-                    old_best,
-                    new_balance,   // !
-                    new_path.clone(),      // !
-                    path,
-                    new_pool_path.clone(), // !
-                    pool_path,
-                    owner3
-                )).await
+                    if new_balance > profit && start_mint_idx == dst_mint_idx {
+                        let new_profit = new_balance - init_balance;
+                        if new_profit > best_profit {
+                            best_profit = new_profit;
+                            best_path = new_path.clone();
+                            best_pool_path = new_pool_path.clone();
+                            println!("new best profit: {}", best_profit);
+                        }
 
+                    }
+
+                    if new_path.len() == 5 {
+                        if dst_mint_idx != start_mint_idx {
+                            return Ok(None);
+                        }
+                        println!("best path: {:?}", best_path);
+                        println!("best pool path: {:?}", best_pool_path);
+                        return Ok(Some((best_profit, best_path, best_pool_path)));
+                    }
+                    queue.push((-(new_balance as i128), dst_mint_idx, new_path, new_pool_path));
+                }
             }
         }
+        Ok(None)
     }
-    return Ok(None)
-   
-    
-}
 }
 
 // from https://github.com/solana-labs/solana/blob/10d677a0927b2ca450b784f750477f05ff6afffe/sdk/program/src/message/versions/v0/mod.rs#L209

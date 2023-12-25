@@ -796,23 +796,17 @@ let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
             connection_url.to_string()),
         connection: Arc::new(solana_client::nonblocking::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed()))
     };
-    let a = arbitrager.clone();
+    let mut a = arbitrager.clone();
     let token_mints = a.token_mints.clone();
     let owner = owner.clone();
     let connection = solana_client::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
             let mut arbs = vec![];
             loop {
-
-     let arb = a.brute_force_search(
+     let arb = a.optimized_search(
         start_mint_idx,
         init_token_balance,
-        init_token_balance,
-        swap_start_amount,
-        vec![start_mint_idx],
-        vec![start_mint_idx],
-        vec![],
-        vec![],
-        owner.clone()
+        [start_mint_idx].to_vec()  
+        
        // 0
     ).await;
     match arb {

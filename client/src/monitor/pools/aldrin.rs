@@ -156,7 +156,16 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
         }
         (false, swap_ix)
     }
-
+    async fn get_quote_with_amounts_scaled_new(
+        & self,
+        scaled_amount_in: u128,
+        mint_in: &Pubkey,
+        mint_out: &Pubkey,
+        amt1: u128, 
+        amt2: u128
+    ) -> u128 {
+        1 as u128 // TODO
+    }
     async fn get_quote_with_amounts_scaled(
         & self,
         scaled_amount_in: u128,

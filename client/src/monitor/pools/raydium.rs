@@ -2,9 +2,8 @@
 use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
 use crate::monitor::pool_utils::serum::FeeTier;
 use crate::monitor::pools::{PoolOperations, PoolType};
-
 use crate::serialize::token::{ WrappedPubkey};
-
+use crate::monitor::pools::math;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Cluster};
 use async_trait::async_trait;
@@ -203,6 +202,7 @@ fn ask_iteration(iteration: &mut Iteration, fee_tier: &FeeTier, ob: &mut OrderBo
 
 
 impl PoolOperations for RaydiumPool {
+    
     fn clone_box(&self) -> Box<dyn PoolOperations> {
         Box::new(self.clone())
     }
@@ -308,7 +308,87 @@ impl PoolOperations for RaydiumPool {
             }        
 
     }
+    async fn get_quote_with_amounts_scaled_new(
+        & self,
+        scaled_amount_in: u128,
+        mint_in: &Pubkey,
+        mint_out: &Pubkey,
+        amt1: u128, 
+        amt2: u128
+    ) -> u128 {
+        let mut pool_src_amount = 0;
+        let mut pool_dst_amount = 0;
+        let idx0 = self.base_mint.0.to_string();
+        let idx1 = self.quote_mint.0.to_string();
+        if mint_in.to_string() == idx0 {
+            pool_src_amount = scaled_amount_in;
+            pool_dst_amount = 0;
+        } else if mint_in.to_string() == idx1 {
+            pool_src_amount = 0;
+            pool_dst_amount = scaled_amount_in;
+        }
+        
+        // compute fees
+        let fees = Fees {
+            trade_fee_numerator: 0,
+            trade_fee_denominator: 1,
+            owner_trade_fee_numerator: 0,
+            owner_trade_fee_denominator: 1,
+            owner_withdraw_fee_numerator: 0,
+            owner_withdraw_fee_denominator: 0,
+            host_fee_numerator: 0,
+            host_fee_denominator: 0,
+        };
 
+        let ctype = if self.version != 1 {
+            CurveType::Stable
+        } else {
+            CurveType::ConstantProduct
+        };
+
+        // get quote -- works for either constant product or stable swap
+
+       let coin_token_amount_in = pool_src_amount;
+        let pc_token_amount_in = pool_dst_amount;
+        let coin_balance = amt1;
+        let pc_balance = amt2;
+        if (coin_token_amount_in == 0 && pc_token_amount_in == 0)
+            || (coin_token_amount_in > 0 && pc_token_amount_in > 0)
+        {
+            println!("Error: One and only one of token amounts must be non-zero");
+            return 0;
+        }
+        if coin_balance == 0 || pc_balance == 0 {
+            println!("Error: Can't swap in an empty pool");
+            return 0;
+        }
+        if coin_token_amount_in == 0 {
+            // pc to coin
+            let amount_in_no_fee = math::get_no_fee_amount(
+                pc_token_amount_in.try_into().unwrap(),
+                0,
+                1,
+            ).unwrap() as u128;
+            let estimated_coin_amount = math::checked_as_u64(math::checked_div(
+                math::checked_mul(coin_balance as u128, amount_in_no_fee).unwrap(),
+                math::checked_add(pc_balance as u128, amount_in_no_fee).unwrap(),
+            ).unwrap()).unwrap();
+            math::get_no_fee_amount(estimated_coin_amount, 3, 100).unwrap().into()
+        } else {
+            // coin to pc
+            let amount_in_no_fee = math::get_no_fee_amount(
+                coin_token_amount_in.try_into().unwrap(),
+                0,
+                1,
+            ).unwrap() as u128;
+            let estimated_pc_amount = math::checked_as_u64(math::checked_div(
+                math::checked_mul(pc_balance as u128, amount_in_no_fee).unwrap(),
+                math::checked_add(coin_balance as u128, amount_in_no_fee).unwrap(),
+            ).unwrap()).unwrap();
+            math::get_no_fee_amount(estimated_pc_amount, 3, 100).unwrap().into()
+        }
+    }
+    
     async fn get_quote_with_amounts_scaled(
         & self,
         scaled_amount_in: u128,

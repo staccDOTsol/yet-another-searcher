@@ -129,6 +129,72 @@ let fee_account = self.fee_account.0;
         (false, swap_ix)
     }
 
+    async fn get_quote_with_amounts_scaled_new(
+        & self,
+        scaled_amount_in: u128,
+        mint_in: &Pubkey,
+        mint_out: &Pubkey,
+        amt1: u128, 
+        amt2: u128
+    ) -> u128 {
+        let mut pool_src_amount = amt1;
+        let mut pool_dst_amount = amt2;
+        let idx0 = self.token_ids[0].clone();
+        let idx1 = self.token_ids[1].clone();
+        if mint_in.to_string() == idx0 {
+            pool_src_amount = amt1;
+            pool_dst_amount = amt2;
+        } else if mint_in.to_string() == idx1 {
+            pool_src_amount = amt2;
+            pool_dst_amount = amt1;
+        }
+
+            let pool_amounts = [pool_src_amount, pool_dst_amount];
+            let percision_multipliers = [1, 1];
+
+
+        // compute fees
+        let trader_fee = &self.fee_structure.trader_fee;
+        let owner_fee = &self.fee_structure.owner_fee;
+        let fees = Fees {
+            trade_fee_numerator: trader_fee.numerator,
+            trade_fee_denominator: trader_fee.denominator,
+            owner_trade_fee_numerator: owner_fee.numerator,
+            owner_trade_fee_denominator: owner_fee.denominator,
+            owner_withdraw_fee_numerator: 0,
+            owner_withdraw_fee_denominator: 0,
+            host_fee_numerator: 0,
+            host_fee_denominator: 0,
+        };
+        let ctype = if self.curve_type == 0 {
+            CurveType::ConstantProduct
+        } else if self.curve_type == 2 {
+            CurveType::Stable
+        } else {
+            panic!("invalid self curve type: {:?}", self.curve_type);
+        };
+
+        // get quote -- works for either constant product or stable swap
+        let amt = get_pool_quote_with_amounts(
+            scaled_amount_in,
+            ctype,
+            self.amp,
+            &fees,
+            pool_src_amount,
+            pool_dst_amount,
+            None,
+        )
+        ;
+        if amt.is_err() {
+            return 0;
+        }
+        let amt = amt.unwrap();
+        if amt > 0 {
+            amt - 1
+        } else {
+            amt
+        }
+    }
     async fn get_quote_with_amounts_scaled(
         & self,
         scaled_amount_in: u128,

@@ -142,14 +142,40 @@ impl PoolOperations for SaberPool {
             fee_numerator: self.fee_numerator as u128,
             fee_denominator: self.fee_denominator as u128,
         };
-        let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
-        let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
+                let pool_src_amount = *self.pool_amounts.get(&mint_in.to_string()).unwrap();
+        let pool_dst_amount = *self.pool_amounts.get(&mint_out.to_string()).unwrap();
 
-        if pool_src_amount.is_none() || pool_dst_amount.is_none() {
-            return 0;
+
+            let pool_amounts = [pool_src_amount, pool_dst_amount];
+            let percision_multipliers = [1, 1];
+
+            calculator.get_quote(pool_amounts, percision_multipliers, scaled_amount_in)
+        
+    }
+    async fn get_quote_with_amounts_scaled_new(
+        & self,
+        scaled_amount_in: u128,
+        mint_in: &Pubkey,
+        mint_out: &Pubkey,
+        amt1: u128, 
+        amt2: u128
+    ) -> u128 {
+        let calculator = Stable {
+            amp: self.target_amp,
+            fee_numerator: self.fee_numerator as u128,
+            fee_denominator: self.fee_denominator as u128,
+        };
+        let mut pool_src_amount = amt1;
+        let mut pool_dst_amount = amt2;
+        let idx0 = self.token_ids[0].clone();
+        let idx1 = self.token_ids[1].clone();
+        if mint_in.to_string() == idx0 {
+            pool_src_amount = amt1;
+            pool_dst_amount = amt2;
+        } else if mint_in.to_string() == idx1 {
+            pool_src_amount = amt2;
+            pool_dst_amount = amt1;
         }
-        let pool_src_amount = *pool_src_amount.unwrap();
-        let pool_dst_amount = *pool_dst_amount.unwrap();
 
 
             let pool_amounts = [pool_src_amount, pool_dst_amount];

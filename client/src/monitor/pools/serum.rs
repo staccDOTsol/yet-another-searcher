@@ -309,6 +309,18 @@ impl PoolOperations for SerumPool {
         }
     }
 
+    async fn get_quote_with_amounts_scaled_new(
+        & self,
+        scaled_amount_in: u128,
+        mint_in: &Pubkey,
+        mint_out: &Pubkey,
+        amt1: u128, 
+        amt2: u128
+    ) -> u128 {
+        let pool_src_amount = amt1;
+        let pool_dst_amount = amt2;
+    amt2 as u128
+    }
     async fn get_quote_with_amounts_scaled(
         & self,
         amount_in: u128,
