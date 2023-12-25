@@ -248,7 +248,7 @@ impl PoolOperations for SerumPool {
         }
     }
 
-    async fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let flags = Market::account_flags(&data);
         if flags.is_err() {
             return;
@@ -321,7 +321,7 @@ impl PoolOperations for SerumPool {
         let pool_dst_amount = amt2;
     amt2 as u128
     }
-    async fn get_quote_with_amounts_scaled(
+    fn get_quote_with_amounts_scaled(
         & self,
         amount_in: u128,
         mint_in: &Pubkey,
@@ -398,10 +398,10 @@ impl PoolOperations for SerumPool {
         }
     }
 
-    async fn swap_ix(
+    fn swap_ix(
         &self,
-        mint_in: &Pubkey,
-        _mint_out: &Pubkey,
+        mint_in: Pubkey,
+        mint_out: Pubkey,
         start_bal: u128
     ) -> (bool, Vec<Instruction>) {
         let oos = &self.open_orders;
@@ -513,7 +513,7 @@ let open_orders = blargorders;
         let base_ata = derive_token_address(&owner, &self.base_mint);
         let quote_ata = derive_token_address(&owner, &self.quote_mint);
 
-        let side = if *mint_in == self.quote_mint.0 {
+        let side = if *&mint_in == self.quote_mint.0 {
             Side::Bid
         } else {
             Side::Ask

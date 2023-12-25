@@ -67,13 +67,13 @@ pub trait PoolOperations: Debug + Send {
     fn get_own_addr(&self) -> Pubkey;
     fn get_update_accounts(&self) -> Vec<Pubkey>;
     fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster);
-    async fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], cluster: Cluster);
+    fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], cluster: Cluster);
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey;
     fn get_mints(&self) -> Vec<Pubkey>;
     fn mint_2_scale(&self, mint: &Pubkey) -> u64;
 
-    async fn get_quote_with_amounts_scaled(
+    fn get_quote_with_amounts_scaled(
         &self,
         amount_in: u128,
         mint_in: &Pubkey,
@@ -87,10 +87,10 @@ pub trait PoolOperations: Debug + Send {
         amount: u128,
         amount_out: u128,
     ) -> u128;
-    async fn swap_ix(
+    fn swap_ix(
         &self,
-        mint_in: &Pubkey,
-        mint_out: &Pubkey,
+        mint_in: Pubkey,
+        mint_out: Pubkey,
         start_bal: u128
     ) -> (bool, Vec<Instruction>);
 

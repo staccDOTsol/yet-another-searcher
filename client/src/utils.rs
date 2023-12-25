@@ -83,8 +83,8 @@ impl PoolQuote {
         let mints_0 = self.0.get_mints();
         let mints_1 = other.0.get_mints();
         if mints_0[0] == mints_1[0] {
-            Some(self.0.get_quote_with_amounts_scaled(1_000_000, &mints_0[0], &mints_0[1]).await
-            .cmp(&other.0.get_quote_with_amounts_scaled(1_000_000, &mints_1[0], &mints_1[1]).await))
+            Some(self.0.get_quote_with_amounts_scaled(1_000_000, &mints_0[0], &mints_0[1])
+            .cmp(&other.0.get_quote_with_amounts_scaled(1_000_000, &mints_1[0], &mints_1[1])))
         } 
         else {
             None 
@@ -95,8 +95,8 @@ impl PoolQuote {
         let mints_0 = self.0.get_mints();
         let mints_1 = other.0.get_mints();
         if mints_0[0] == mints_1[0] {
-            (self.0.get_quote_with_amounts_scaled(1_000_000, &mints_0[0], &mints_0[1]).await
-            .partial_cmp(&other.0.get_quote_with_amounts_scaled(1_000_000, &mints_1[0], &mints_1[1]).await))
+            (self.0.get_quote_with_amounts_scaled(1_000_000, &mints_0[0], &mints_0[1])
+            .partial_cmp(&other.0.get_quote_with_amounts_scaled(1_000_000, &mints_1[0], &mints_1[1])))
         } 
         else {
             None

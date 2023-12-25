@@ -57,10 +57,10 @@ impl PoolOperations for MercurialPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::MercurialPoolType
     }
-    async fn swap_ix(
+    fn swap_ix(
         &self,
-        mint_in: &Pubkey,
-        mint_out: &Pubkey,
+        mint_in: Pubkey,
+        mint_out: Pubkey,
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let swap_state_pda =
@@ -68,8 +68,8 @@ impl PoolOperations for MercurialPool {
             let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
             let owner2 = read_keypair_file(owner_kp_path).unwrap();
             let owner = owner2.try_pubkey().unwrap();
-        let user_src = derive_token_address(&owner, mint_in);
-        let user_dst = derive_token_address(&owner, mint_out);
+        let user_src = derive_token_address(&owner, &mint_in);
+        let user_dst = derive_token_address(&owner, &mint_out);
 
         // setup anchor things
         let rc_owner = Rc::new(owner2);
@@ -112,7 +112,7 @@ impl PoolOperations for MercurialPool {
     ) -> u128 {
         1 as u128 // TODO
     }
-    async fn get_quote_with_amounts_scaled(
+    fn get_quote_with_amounts_scaled(
         & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
@@ -177,7 +177,7 @@ impl PoolOperations for MercurialPool {
             .collect();
         accounts
     }
-    async fn set_update_accounts2(&mut self, _pubkey: Pubkey, _data: &[u8], _cluster: Cluster) {}
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, _data: &[u8], _cluster: Cluster) {}
     fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
         let ids: Vec<String> = self
             .get_mints()

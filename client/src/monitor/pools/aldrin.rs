@@ -66,11 +66,11 @@ impl PoolOperations for AldrinPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::AldrinPoolType
     }
-    async fn swap_ix(
+    fn swap_ix(
         &self,
         //impl<C: Deref<Target = impl Signer> + Clone> Program<C>
-        _mint_in: &Pubkey,
-        mint_out: &Pubkey,
+        _mint_in: Pubkey,
+        mint_out: Pubkey,
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
@@ -166,7 +166,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
     ) -> u128 {
         1 as u128 // TODO
     }
-    async fn get_quote_with_amounts_scaled(
+    fn get_quote_with_amounts_scaled(
         & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
@@ -262,7 +262,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
         self.pool_amounts.insert(id1.clone(), amount1);
     }
     
-    async fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
 
         let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();

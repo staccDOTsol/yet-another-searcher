@@ -55,7 +55,9 @@ impl Arbitrager {
         init_balance: u128,
         path: Vec<usize>,
     ) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, anyhow::Error> {
+        loop {
     let mut best_profit = 0;
+    let mut current_amount = init_balance;
     let mut best_path = Vec::new();
     let mut best_pool_path = Vec::new();
 
@@ -65,7 +67,8 @@ impl Arbitrager {
     while let Some((profit, mint_idx, path, pool_path)) = queue.pop() {
         let profit = -(profit as i128);
         let out_edges = self.graph_edges[mint_idx].clone();
-        for dst_mint_idx in out_edges {
+        for mut dst_mint_idx in out_edges {
+           
             let pools = &mut self
                 .graph
                 .0
@@ -79,6 +82,7 @@ impl Arbitrager {
             pools.shuffle(&mut rand::thread_rng());
             for pool in pools {
                 // Get updated accounts for the pool
+                /*
                 let updated_accounts = pool.get_update_accounts();
 
                 // Get the unpacked token balance for the pool
@@ -94,45 +98,44 @@ impl Arbitrager {
                 )?.amount, spl_token::state::Account::unpack(&ata2.unwrap().data)?.amount];
                 let pool_src_amt = token_amounts[0] as u128;
                 let pool_dst_amt = token_amounts[1] as u128;
+                */
+                let mut profit = profit as u128;
+                
+                let new_balance = pool.get_quote_with_amounts_scaled(current_amount, &self.token_mints[mint_idx], &self.token_mints[dst_mint_idx]);
 
-                let profit = profit as u128;
-                let new_balance = pool.get_quote_with_amounts_scaled_new(profit, &self.token_mints[mint_idx], &self.token_mints[dst_mint_idx], pool_src_amt, pool_dst_amt).await;
                 if new_balance == 0 {
                     continue;
                 }
+                current_amount = new_balance;
 
                     let mut new_path = path.clone();
                     new_path.push(dst_mint_idx);
 
                     let mut new_pool_path = pool_path.clone();
                     new_pool_path.push(pool.clone());
-                    println!("new balance, dst_mint, start_mint: {} {} {}", new_balance, dst_mint_idx, start_mint_idx);
-
-                    if new_balance > profit && start_mint_idx == dst_mint_idx {
-                        let new_profit = new_balance - init_balance;
-                        if new_profit > best_profit {
-                            best_profit = new_profit;
-                            best_path = new_path.clone();
-                            best_pool_path = new_pool_path.clone();
-                            println!("new best profit: {}", best_profit);
-                        }
-
+                    profit = new_balance - init_balance;
+                    if profit > best_profit {
+                        best_profit = profit;
+                        best_path = new_path.clone();
+                        best_pool_path = new_pool_path.clone();
                     }
+                    
 
-                    if new_path.len() == 5 {
-                        if dst_mint_idx != start_mint_idx {
-                            return Ok(None);
-                        }
+                    if new_path.len() >= 3 && dst_mint_idx == start_mint_idx && new_balance > init_balance {
                         println!("best path: {:?}", best_path);
                         println!("best pool path: {:?}", best_pool_path);
-                        return Ok(Some((best_profit, best_path, best_pool_path)));
+                        return Ok(Some((current_amount, new_path, new_pool_path)));
+                    }
+                    if new_path.len() > 7 {
+                        return Ok(None)
                     }
                     queue.push((-(new_balance as i128), dst_mint_idx, new_path, new_pool_path));
                 }
             }
         }
-        Ok(None)
+        return Ok(None)
     }
+}
 }
 
 // from https://github.com/solana-labs/solana/blob/10d677a0927b2ca450b784f750477f05ff6afffe/sdk/program/src/message/versions/v0/mod.rs#L209

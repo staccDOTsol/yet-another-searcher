@@ -59,10 +59,10 @@ impl PoolOperations for SaberPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::SaberPoolType
     }
-      async fn swap_ix(
+      fn swap_ix(
         &self,
-        mint_in: &Pubkey,
-        mint_out: &Pubkey,
+        mint_in: Pubkey,
+        mint_out: Pubkey,
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
@@ -70,8 +70,8 @@ impl PoolOperations for SaberPool {
         let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
-        let user_src = derive_token_address(&owner, mint_in);
-        let user_dst = derive_token_address(&owner, mint_out);
+        let user_src = derive_token_address(&owner, &mint_in);
+        let user_dst = derive_token_address(&owner, &mint_out);
 
         let _owner_kp_path = "/home/ubuntu/.config/solana/id.json";
         // setup anchor things
@@ -100,8 +100,6 @@ impl PoolOperations for SaberPool {
         let pool_account = self.pool_account.0;
         let authority = self.authority.0;
         let  swap_ix =
-        tokio::task::spawn_blocking(
-                   move ||
           program            .request()
             .accounts(tmp_accounts::SaberSwap {
                 pool_account,
@@ -117,21 +115,15 @@ impl PoolOperations for SaberPool {
                 token_program: *TOKEN_PROGRAM_ID,
             })
             .args(tmp_ix::SaberSwap {})
-            .instructions()
-        )
-        .await;
+            .instructions();
     if swap_ix.is_err() {
         return (false, vec![]);
     }
     let swap_ix = swap_ix.unwrap();
-        if swap_ix.is_err() {
-            return (false, vec![]);
-        }
-        let swap_ix = swap_ix.unwrap();
         (false, swap_ix)
     }
 
-    async fn get_quote_with_amounts_scaled(
+    fn get_quote_with_amounts_scaled(
         & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
@@ -229,7 +221,7 @@ impl PoolOperations for SaberPool {
         self.pool_amounts.insert(id1.clone(), amount1);
     }
 
-    async fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
 
         let amount0 = spl_token::state::Account::unpack(acc_data0);
@@ -241,13 +233,7 @@ impl PoolOperations for SaberPool {
         let id0 = &self.token_ids[0];
         let id1 = &self.token_ids[1];
 
-
-        let mut done =        store_amount_in_redis(&_mint.to_string(), amount0.amount);
-        while done.is_err() {
-            // sleep 
-            tokio::time::sleep(std::time::Duration::from_millis(100)).await;
-          done =  store_amount_in_redis(&_mint.to_string(), amount0.amount);
-        }               
+      
                 if _mint.to_string() == *id0 {
             self.pool_amounts
                 .entry(id0.clone())

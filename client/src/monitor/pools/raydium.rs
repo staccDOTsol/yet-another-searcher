@@ -210,18 +210,18 @@ impl PoolOperations for RaydiumPool {
         PoolType::RaydiumPoolType
     }
     
-    async fn swap_ix(
+    fn swap_ix(
         &self,
-        mint_in: &Pubkey,
-        mint_out: &Pubkey,
+        mint_in: Pubkey,
+        mint_out: Pubkey,
         _start_bal: u128,
     ) -> (bool, Vec<Instruction>) {
         let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
-        let user_src = derive_token_address(&owner, mint_in);
-        let user_dst = derive_token_address(&owner, mint_out);
+        let user_src = derive_token_address(&owner, &mint_in);
+        let user_dst = derive_token_address(&owner, &mint_out);
 
         let ctype = if self.version != 1 {
             CurveType::Stable
@@ -389,7 +389,7 @@ impl PoolOperations for RaydiumPool {
         }
     }
     
-    async fn get_quote_with_amounts_scaled(
+    fn get_quote_with_amounts_scaled(
         & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
@@ -503,7 +503,7 @@ impl PoolOperations for RaydiumPool {
         self.pool_amounts.insert(id1.clone(), amount1);
     }
 
-    async fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
         let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();
         let _mint = amount0.mint;
@@ -511,12 +511,7 @@ impl PoolOperations for RaydiumPool {
         let id0 = self.base_mint.0.to_string();
         let id1 = self.quote_mint.0.to_string();
 
-
-        let mut done =        store_amount_in_redis(&_mint.to_string(), amount0.amount);
-        while done.is_err() {
-            tokio::time::sleep(std::time::Duration::from_millis(100)).await;
-          done =  store_amount_in_redis(&_mint.to_string(), amount0.amount);
-        }               
+ 
                 if _mint.to_string() == id0 {
             self.pool_amounts
                 .entry(id0.clone())
