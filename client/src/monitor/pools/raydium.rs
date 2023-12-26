@@ -282,7 +282,7 @@ if user_src_acc.is_err() {
         &pubkey,
         &pubkey,
         &mint_in,
-        &spl_token::state::Account::unpack(&user_src_acc.unwrap().data).unwrap().owner
+        &spl_token::ID
     );
     ixs.insert(0, create_ata_ix);
 
@@ -293,7 +293,7 @@ if user_dst_acc.is_err() {
         &pubkey,
         &pubkey,
         &mint_out,
-        &spl_token::state::Account::unpack(&user_dst_acc.unwrap().data).unwrap().owner
+        &spl_token::ID
 
     );
     ixs.insert(0, create_ata_ix);
@@ -337,7 +337,7 @@ if user_dst_acc.is_err() {
                     &pubkey,
                     &pubkey,
                     &mint_in,
-                    &spl_token::state::Account::unpack(&user_src_acc.unwrap().data).unwrap().owner
+                    &spl_token::ID
                 );
                 ixs.insert(0, create_ata_ix);
             
@@ -348,7 +348,7 @@ if user_dst_acc.is_err() {
                     &pubkey,
                     &pubkey,
                     &mint_out,
-                    &spl_token::state::Account::unpack(&user_dst_acc.unwrap().data).unwrap().owner
+                    &spl_token::ID
             
                 );
                 ixs.insert(0, create_ata_ix);
