@@ -139,12 +139,12 @@ impl Arbitrager {
                 return Some(path);
             }
             else {
-                if path.total_length == max_hops - 2 {
+                if path.total_length == max_hops - 1 {
                     if let Some(edges) = self.graph_edges.get(path.last_node()) {
 
                         let futures = edges.iter()
                         .filter(|&edge| edge == &start_mint_idx)  
-                        .map(|&edge| self.construct_new_path(&path, edge, start_mint_idx, max_hops))
+                        .map(|&edge| self.construct_new_path(&path, edge, start_mint_idx, max_hops, max_output))
                         .collect::<Vec<_>>();
                     
         
@@ -160,7 +160,7 @@ impl Arbitrager {
             if let Some(edges) = self.graph_edges.get(path.last_node()) {
                 let futures = edges.iter()
                 .filter(|&edge| !path.contains_node(*edge))
-                    .map(|&edge| self.construct_new_path(&path, edge, start_mint_idx, max_hops))
+                    .map(|&edge| self.construct_new_path(&path, edge, start_mint_idx, max_hops, max_output))
                     .collect::<Vec<_>>();
     
                 futures::future::join_all(futures).await
@@ -176,11 +176,11 @@ impl Arbitrager {
         let last_node = path.last_node();
         let total_yield = path.total_yield;
         let total_length = path.total_length;
-        last_node == start_mint_idx && total_yield > 0 && total_length == max_hops - 1
+        last_node == start_mint_idx && total_yield > 0 
 
     }
-    async fn construct_new_path(&self, path: &Path, edge: usize, start_mint_idx: usize, max_hops: usize) -> Path {
-        let new_yield = self.get_yield(path.last_node(), edge, start_mint_idx, max_hops, 0, 1_000_000).await;
+    async fn construct_new_path(&self, path: &Path, edge: usize, start_mint_idx: usize, max_hops: usize, max_output: u128) -> Path {
+        let new_yield = self.get_yield(path.last_node(), edge, start_mint_idx, max_hops, 0, max_output).await;
         
         let mut new_path = path.clone();
         if new_yield.0 > 0 && (!path.contains_node(edge) || path.total_length <  2 || edge == start_mint_idx) {
@@ -192,7 +192,7 @@ impl Arbitrager {
     #[async_recursion::async_recursion]
     async fn get_yield(&self, from: usize, to: usize, start_mint_idx: usize, max_hops: usize, current_hops: usize, amount: u128) -> (u128, Option<PoolQuote>) {
         if let Some(edges) = self.graph_edges.get(from) {
-            if current_hops == max_hops - 2 {
+            if current_hops == max_hops - 1 {
                 return self.find_yield_recursive(edges, start_mint_idx, start_mint_idx, max_hops, current_hops, amount).await;
             }
             if edges.contains(&to) {

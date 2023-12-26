@@ -91,6 +91,7 @@ round = "0.1.2"
 redis = "0.24.0"
 switchboard-utils = "*"
 switchboard-solana = "0.29.79"
+spl-associated-token-account = "*"
 
 [dev-dependencies]
 solana-sdk = "1.9.9"

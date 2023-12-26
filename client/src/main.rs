@@ -751,8 +751,8 @@ loop {
 
                   let result = c.find_yield(
                         start_mint_idx,
-                        7,
-                        1_000_000 * 1.01 as u128,
+                        4,
+                        init_token_balance - 10000
                     ).await;
                       
             if result.is_none() {

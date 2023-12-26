@@ -77,7 +77,9 @@ fn swap_ix(
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let user_src = derive_token_address(&owner, &mint_in);
         let user_dst = derive_token_address(&owner, &mint_out);
-
+        let user_src_acc = program.rpc().get_account(&user_src);
+        let user_dst_acc = program.rpc().get_account(&user_dst);
+       
         let (authority_pda, _) =
             Pubkey::find_program_address(&[&self.address.to_bytes()], &ORCA_PROGRAM_ID);
 
@@ -92,7 +94,7 @@ fn swap_ix(
 let token_swap = self.address.0;
 let pool_mint= self.pool_token_mint.0;
 let fee_account = self.fee_account.0;
-let swap_ix = program
+let mut swap_ix = program
 .request()
 .accounts(tmp_accounts::OrcaSwap {
     token_swap: self.address.0,
@@ -111,8 +113,27 @@ let swap_ix = program
 .args(tmp_ix::OrcaSwap {})
 .instructions()
 .unwrap();
+if user_src_acc.is_err() {
+    let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
+        &owner,
+        &owner,
+        &mint_in,
+        &spl_token::state::Account::unpack(&user_src_acc.unwrap().data).unwrap().owner
+    );
+    swap_ix.insert(0, create_ata_ix);
 
+}
+if user_dst_acc.is_err() {
+    // create ata
+    let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
+        &owner,
+        &owner,
+        &mint_out,
+        &spl_token::state::Account::unpack(&user_dst_acc.unwrap().data).unwrap().owner
 
+    );
+    swap_ix.insert(0, create_ata_ix);
+}
 
 
 

@@ -223,6 +223,8 @@ impl PoolOperations for RaydiumPool {
         let user_src = derive_token_address(&pubkey, &mint_in);
         let user_dst = derive_token_address(&pubkey, &mint_out);
 
+        let user_src_acc = program.rpc().get_account(&user_src);
+        let user_dst_acc = program.rpc().get_account(&user_dst);
         let ctype = if self.version == 1 {
             CurveType::Stable
         } else {
@@ -272,8 +274,32 @@ impl PoolOperations for RaydiumPool {
                 if swap_ix.is_err() {
                     return (false, vec![]);
                 }
-                let swap_ix = swap_ix.unwrap();
-                return (false, vec![swap_ix]);
+                let mut ixs = vec![];
+                let   swap_ix = swap_ix.unwrap();
+ixs.push(swap_ix);
+if user_src_acc.is_err() {
+    let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
+        &pubkey,
+        &pubkey,
+        &mint_in,
+        &spl_token::state::Account::unpack(&user_src_acc.unwrap().data).unwrap().owner
+    );
+    ixs.insert(0, create_ata_ix);
+
+}
+if user_dst_acc.is_err() {
+    // create ata
+    let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
+        &pubkey,
+        &pubkey,
+        &mint_out,
+        &spl_token::state::Account::unpack(&user_dst_acc.unwrap().data).unwrap().owner
+
+    );
+    ixs.insert(0, create_ata_ix);
+}
+
+                return (false, ixs);
             } else {
                 let model_data_account = self.model_data_account.clone().unwrap();
                   let  swap_ix = stable_swap(
@@ -303,8 +329,32 @@ impl PoolOperations for RaydiumPool {
             if swap_ix.is_err() {
                 return (false, vec![]);
             }
-            let swap_ix = swap_ix.unwrap();
-            return (false, vec![swap_ix]);
+            let   swap_ix = swap_ix.unwrap();
+            let mut ixs = vec![];
+            ixs.push(swap_ix);
+            if user_src_acc.is_err() {
+                let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
+                    &pubkey,
+                    &pubkey,
+                    &mint_in,
+                    &spl_token::state::Account::unpack(&user_src_acc.unwrap().data).unwrap().owner
+                );
+                ixs.insert(0, create_ata_ix);
+            
+            }
+            if user_dst_acc.is_err() {
+                // create ata
+                let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
+                    &pubkey,
+                    &pubkey,
+                    &mint_out,
+                    &spl_token::state::Account::unpack(&user_dst_acc.unwrap().data).unwrap().owner
+            
+                );
+                ixs.insert(0, create_ata_ix);
+            }
+            
+                            return (false, ixs);
             }        
 
     }

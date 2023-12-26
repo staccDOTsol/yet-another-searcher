@@ -74,6 +74,8 @@ impl PoolOperations for SaberPool {
 
         let user_src = derive_token_address(&pubkey, &mint_in);
         let user_dst = derive_token_address(&pubkey, &mint_out);
+        let user_src_acc = program.rpc().get_account(&user_src);
+        let user_dst_acc = program.rpc().get_account(&user_dst);
 
         let pool_src = self.tokens.get(&mint_in.to_string()).unwrap().addr.0;
         if !self.tokens.contains_key(&mint_out.to_string()) {
@@ -93,7 +95,7 @@ impl PoolOperations for SaberPool {
                 }
         let pool_account = self.pool_account.0;
         let authority = self.authority.0;
-        let swap_ix = program
+        let mut swap_ix = program
         .request()
         .accounts(tmp_accounts::SaberSwap{
             pool_account: self.pool_account.0, 
@@ -111,6 +113,29 @@ impl PoolOperations for SaberPool {
         .args(tmp_ix::SaberSwap {}) 
         .instructions()
         .unwrap();
+if user_src_acc.is_err() {
+    let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
+        &pubkey,
+        &pubkey,
+        &mint_in,
+        &spl_token::state::Account::unpack(&user_src_acc.unwrap().data).unwrap().owner
+    );
+    swap_ix.insert(0, create_ata_ix);
+
+}
+if user_dst_acc.is_err() {
+    // create ata
+    let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
+        &pubkey,
+        &pubkey,
+        &mint_out,
+        &spl_token::state::Account::unpack(&user_dst_acc.unwrap().data).unwrap().owner
+
+    );
+    swap_ix.insert(0, create_ata_ix);
+}
+
+                return (false, swap_ix);
         (false, swap_ix)
     }
 
