@@ -792,6 +792,7 @@ let owner2 = rc_owner.clone();
 let usdc_mint = Arc::new(usdc_mint.clone());
 let arb_pools = Arc::new(arb_pools.clone());
 let a = Arc::new(b.clone());
+println!("arbin amounts: {:?}", arbin_amounts);
 let ixs = get_arbitrage_instructions(
 Arc::new(a.token_mints.clone()),
 *usdc_mints.get(0).unwrap(),

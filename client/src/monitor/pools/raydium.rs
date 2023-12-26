@@ -223,7 +223,7 @@ impl PoolOperations for RaydiumPool {
         let user_src = derive_token_address(&pubkey, &mint_in);
         let user_dst = derive_token_address(&pubkey, &mint_out);
 
-        let ctype = if self.version != 1 {
+        let ctype = if self.version == 1 {
             CurveType::Stable
         } else {
             CurveType::ConstantProduct
@@ -418,7 +418,7 @@ impl PoolOperations for RaydiumPool {
             host_fee_denominator: 0,
         };
 
-        let ctype = if self.version != 1 {
+        let ctype = if self.version == 1 {
             CurveType::Stable
         } else {
             CurveType::ConstantProduct

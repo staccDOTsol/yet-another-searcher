@@ -118,6 +118,9 @@ impl Arbitrager {
             for mut edge in edges {
                 let timestamp = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() % edges.len() as u128;
                 edge = &edges.iter().nth(timestamp as usize).unwrap();
+                if path.contains(edge) {
+                    continue;
+                }
                 if current_hop >= max_hops - 1 {
                     edge = &start_mint_idx;
                 }
@@ -145,13 +148,9 @@ impl Arbitrager {
                             let mut new_path = path.clone();
                             new_path.push(edge);
 
-                            if start_mint_idx == edge {
+                            if start_mint_idx == edge  && new_balance as f64 > init_amount as f64 * 1.02 && new_balance as f64 <= init_amount as f64 * 3.0{
                                 println!("found a path with yield {} {:?}", new_balance as f64 / init_amount as f64, new_path);
-                            }
-                            else {
-                                println!("found a path with yield {:?}",  new_path.len());
-                            }
-                            if start_mint_idx == edge && new_balance as f64 > init_amount as f64 * 1.02 {
+
                                 return Ok(Some((new_path, new_balance as u64, new_pool_path, new_balances)));
                             }
                             
