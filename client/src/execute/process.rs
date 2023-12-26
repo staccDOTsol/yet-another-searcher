@@ -101,7 +101,9 @@ impl Arbitrager {
                 .and_then(|p| p.0.get(&PoolIndex(start_mint_idx)))
                 {
                     for pool in pools.1.iter() {
-                        let new_yield = pool.get_quote_with_amounts_scaled(1_000_000, &self.token_mints[edge], &self.token_mints[start_mint_idx]);
+                        let a_dollar = pool.get_quote_with_amounts_scaled(1_000_000, &self.token_mints[start_mint_idx], &self.token_mints[edge]);
+                        println!("a dollar: {}", a_dollar);
+                        let new_yield = pool.get_quote_with_amounts_scaled(a_dollar, &self.token_mints[edge], &self.token_mints[start_mint_idx]);
         
                         if new_yield > max_yields[start_mint_idx] {
                             max_yields[start_mint_idx] = new_yield;
