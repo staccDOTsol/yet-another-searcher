@@ -5,7 +5,7 @@ use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::token::{ WrappedPubkey};
 use crate::monitor::pools::math;
 use anchor_client::solana_sdk::signature::read_keypair_file;
-use anchor_client::{Cluster};
+use anchor_client::{Cluster, Program};
 use async_trait::async_trait;
 use openbook_dex::critbit::SlabView;
 use openbook_dex::matching::OrderBookState;
@@ -14,6 +14,7 @@ use serde;
 use solana_program::account_info::AccountInfo;
 use solana_program::stake_history::Epoch;
 use solana_sdk::program_pack::Pack;
+use solana_sdk::signature::Keypair;
 use solana_sdk::signer::Signer;
 use std::sync::{Arc, Mutex};
 
@@ -215,13 +216,12 @@ impl PoolOperations for RaydiumPool {
         mint_in: Pubkey,
         mint_out: Pubkey,
         _start_bal: u128,
+        pubkey: Pubkey,
+        program: Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
-
-        let owner = owner3.try_pubkey().unwrap();
-        let user_src = derive_token_address(&owner, &mint_in);
-        let user_dst = derive_token_address(&owner, &mint_out);
+        let user_src = derive_token_address(&pubkey, &mint_in);
+        let user_dst = derive_token_address(&pubkey, &mint_out);
 
         let ctype = if self.version != 1 {
             CurveType::Stable
@@ -262,7 +262,7 @@ impl PoolOperations for RaydiumPool {
                     &market_authority,
                     &user_src,
                     &user_dst,
-                    &owner, 
+                    &pubkey, 
                     _start_bal as u64,
                     0_u64
                 )
@@ -294,7 +294,7 @@ impl PoolOperations for RaydiumPool {
                         &market_authority,
                         &user_src,
                         &user_dst,
-                        &owner, 
+                        &pubkey, 
                         _start_bal as u64,
                         0_u64
                     );
@@ -435,7 +435,12 @@ impl PoolOperations for RaydiumPool {
             pool_dst_amount,
             None,
         )
-        .unwrap();
+        ;
+        if amt.is_err(){
+            println!("raydium error {} {} {} {}", scaled_amount_in, mint_in.to_string(), mint_out.to_string(), amt.err().unwrap());
+            return 0;
+        }
+        let amt = amt.unwrap();
         if amt > 0 {
             amt - 1
         } else {

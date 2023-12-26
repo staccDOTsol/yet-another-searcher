@@ -1,11 +1,12 @@
 use anyhow::Error;
+use chrono::Utc;
 use futures::lock::Mutex;
 use rand::Rng;
 use rand::seq::SliceRandom;
 use solana_address_lookup_table_program::instruction::{extend_lookup_table, create_lookup_table};
 use solana_client::nonblocking::rpc_client::RpcClient;
 use anchor_client::solana_client::rpc_config::RpcSendTransactionConfig;
-use anchor_lang::system_program;
+use anchor_lang::{system_program, AnchorSerialize};
 use bincode::serialize;
 use rayon::prelude::*;
 use futures::stream::{FuturesUnordered, StreamExt};
@@ -28,8 +29,11 @@ use solana_sdk::commitment_config::{CommitmentLevel, CommitmentConfig};
 use solana_sdk::compute_budget::ComputeBudgetInstruction;
 use solana_sdk::signature::{read_keypair_file, Signature};
 use solana_transaction_status::UiTransactionEncoding;
+use switchboard_solana::get_ixn_discriminator;
 use std::cell::RefCell;
+use std::cmp::Reverse;
 use std::collections::{HashMap, HashSet, BinaryHeap};
+use std::f32::consts::E;
 use std::pin::Pin;
 use std::sync::Arc;
 
@@ -59,118 +63,131 @@ pub struct Arbitrager {
     // vv -- need to clone these explicitly -- vv
     pub connection: Arc<RpcClient>,
 }
-impl Arbitrager {
-    #[async_recursion::async_recursion]
-    async fn optimized_search_recursive(
-        &self,
-        init_balance: u128, 
-        current_amount: u128,
-        mint_idx: usize,
-        start_mint_idx: usize,
-        path: Vec<usize>,
-        pool_path: Vec<PoolQuote>,
-        token_mints: &Vec<Pubkey>,
-        graph_edges: &Vec<HashSet<usize>>,
-        graph: &PoolGraph,
-        rng: u64,
-        shared_state: Arc<Mutex<(u128, Vec<usize>, Vec<PoolQuote>)>>
-    ) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, anyhow::Error> {
-        let out_edges = &graph_edges[mint_idx];
-        for &dst_mint_idx in out_edges {
-            let modded = rng % out_edges.len() as u64;
-            let mut dst_mint_idx = *out_edges.get(&(modded as usize)).unwrap_or(&mint_idx);
-            if path.len() > 8 {
-                dst_mint_idx = start_mint_idx;
+// Assuming each edge has an associated cost or weight.
+// This is a placeholder - replace it with your actual method to get the edge weight.
+impl Arbitrager {    
+    // Entry function
+    pub fn find_weights(&self, start_mint_idx: usize, init_balance: u128, max_hops: usize) -> Vec<(usize, u128, Vec<PoolQuote>, Vec<usize>, Vec<u128>)> {
+        let mut routes = self.find_weights_recursive(start_mint_idx, start_mint_idx, init_balance, max_hops, 0, Vec::new(), vec![start_mint_idx], vec![init_balance]);
+
+        // Sort routes by yield (second element of the tuple), in descending order
+        routes.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+        for route in routes.clone() {
+            if route.1 > init_balance {
+                println!("new bal, init bal {}, {}", route.1, init_balance); 
             }
-            if path.len() > 9 {
-                return Ok(None);
-            }
+        }
+        routes
+    }
 
-            if let Some(pools) = graph
-                .0
-                .get(&PoolIndex(mint_idx))
-                .and_then(|p| p.0.get(&PoolIndex(dst_mint_idx)))
-            {
-                for pool in pools {
-                    let new_balance = pool.get_quote_with_amounts_scaled(current_amount, &token_mints[mint_idx], &token_mints[dst_mint_idx]);
+    // Recursive function
+    fn find_weights_recursive(&self, current_mint_idx: usize, start_mint_idx: usize, amount: u128, max_hops: usize, current_hop: usize, pool_path: Vec<PoolQuote>, path: Vec<usize>, balances: Vec<u128>) -> Vec<(usize, u128, Vec<PoolQuote>, Vec<usize>, Vec<u128>)> {
+        if current_hop >= max_hops {
+            return vec![];
+        }
 
-                    if new_balance == 0 {
-                        continue;
+        let mut routes = Vec::new();
+
+        if let Some(out_edges) = self.graph_edges.get(current_mint_idx) {
+            for mut edge in out_edges {
+                let timestamp = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() % (max_hops as u64 - 6);
+                if current_hop >= max_hops - timestamp as usize {
+                    // mod timestamp by four 
+                    edge = &start_mint_idx;
+                }
+                let edge = *edge;
+
+                if let Some(pools) = self.graph
+                    .0
+                    .get(&PoolIndex(current_mint_idx))
+                    .and_then(|p| p.0.get(&PoolIndex(edge)))
+                {
+                    for pool in pools.1.iter() {
+                        let new_balance = pool.get_quote_with_amounts_scaled(amount, &self.token_mints[current_mint_idx], &self.token_mints[edge]);
+
+                        if new_balance > 0 {
+                            let mut new_pool_path = pool_path.clone();
+                            new_pool_path.push(pool.clone());
+
+                            let mut new_path = path.clone();
+                            new_path.push(edge);
+
+                            let mut new_balances = balances.clone();
+                            new_balances.push(new_balance);
+
+                            if edge == start_mint_idx {
+                                // Found a cycle
+                                routes.push((edge, new_balance, new_pool_path, new_path, new_balances.clone()));
+                                // return 
+                                if new_balance as f64 > new_balances[0] as f64 * 1.02 {
+                                    return routes;
+                                }
+                            } else {
+                                // Recursively find routes for next hop
+                                let next_hop_routes = self.find_weights_recursive(edge, start_mint_idx, new_balance, max_hops, current_hop + 1, new_pool_path, new_path, new_balances);
+
+                                // Combine current edge with routes from next hop
+                                for next_route in next_hop_routes {
+                                    routes.push(next_route);
+                                }
+                            }
+                        }
                     }
-
-                    let mut new_path = path.clone();
-                    new_path.push(dst_mint_idx);
-
-                    let mut new_pool_path = pool_path.clone();
-                    new_pool_path.push(pool.clone());
-
-                    // Update shared state if this path is better
-                    let mut state = shared_state.lock().await;
-
-                        *state = (new_balance, new_path.clone(), new_pool_path.clone());
-                    drop(state);
-                    if new_balance > init_balance && dst_mint_idx == start_mint_idx {
-                        return Ok(Some(shared_state.lock().await.clone()));
-                    }
-
-                    // Recurse
-                    self.optimized_search_recursive(
-                        init_balance,
-                        new_balance,
-                        dst_mint_idx,
-                        start_mint_idx,
-                        new_path,
-                        new_pool_path,
-                        token_mints,
-                        graph_edges,
-                        graph,
-                        rng,
-                        Arc::clone(&shared_state)
-                    ).await?;
                 }
             }
         }
-        Ok(Some(shared_state.lock().await.clone()))
+
+        routes
     }
 
+    #[async_recursion::async_recursion]
+    async fn optimized_search_recursive(
+        &self,
+        current_balance: u128,
+        init_balance: u128,
+        mint_idx: usize,
+        start_mint_idx: usize,
+        path: Vec<usize>,
+        amounts: Vec<u128>,
+        pool_path: Vec<PoolQuote>,
+        best_balance: u128
+    ) -> Result<Option<(Vec<PoolQuote>, Vec<usize>, Vec<u128>)>, Box<dyn std::error::Error + Send>> {
+      
+    
+       
+    
+        // Recursively explore each edge
+        let mut edge_weight_vecs = self.find_weights(mint_idx, current_balance, 8);
+        if edge_weight_vecs.len() == 0 {
+            return Ok(None);
+        }
+
+
+        for mut edge_weights in edge_weight_vecs {
+            if edge_weights.1 < init_balance {
+                return Ok(None);
+            }
+            else {
+                return Ok(Some((edge_weights.2, edge_weights.3, edge_weights.4)));
+            }
+
+
+    }
+        Ok(None)
+    }
+    
+    
+    // Wrapper function to start the recursion
     pub async fn optimized_search(
         self,
         start_mint_idx: usize,
-        init_balance: u128,
-        path: Vec<usize>,
-        token_mints: Vec<Pubkey>,
-        graph_edges: Vec<HashSet<usize>>,
-        graph: PoolGraph,
-        rng: u64,
-    ) -> Result<Option<(u128, Vec<usize>, Vec<PoolQuote>)>, anyhow::Error> {
-        let shared_state = Arc::new(Mutex::new((0, Vec::new(), Vec::new())));
-
-        let state = self.optimized_search_recursive(
-            init_balance,
-            init_balance,
-            start_mint_idx,
-            start_mint_idx,
-            path,
-            Vec::new(),
-            &token_mints,
-            &graph_edges,
-            &graph,
-            rng,
-            Arc::clone(&shared_state.clone())
-        ).await?;
-        if state.is_none() {
-            return Ok(None);
-        }
-        let state = state.unwrap();
-        if state.0 > 0 {
-            Ok(Some((state.0, state.1.clone(), state.2.clone())))
-        } else {
-            Ok(None)
-        }
+        init_balance: u128
+    ) -> Result<Option<(Vec<PoolQuote>, Vec<usize>, Vec<u128>)>, Box<dyn std::error::Error + Send>> {
+        self.optimized_search_recursive(init_balance, init_balance, start_mint_idx, start_mint_idx, vec![start_mint_idx], vec![init_balance], vec![], init_balance).await
     }
     
+    
 }
-
 
 
 
@@ -180,6 +197,7 @@ pub  async  fn get_arbitrage_instructions<'a>(
     src_mint: Pubkey,
         swap_start_amount: u128,
         mint_idxs: Vec<usize>,
+        amounts: Vec<u128>,
         pools: Arc<Vec<PoolQuote>>,   
     owner: Arc<Keypair>
      ) -> (Vec<Vec<Instruction>>, bool) {
@@ -190,24 +208,15 @@ pub  async  fn get_arbitrage_instructions<'a>(
             (Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap());
         let src_ata = derive_token_address(&owner.clone().pubkey(), &src_mint);
 
-
-    // setup anchor things
-    let connection_url: &str = "https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718";
-
     let provider = anchor_client::Client::new_with_options(
-        Cluster::Custom(
-            connection_url.to_string(),
-            connection_url.to_string(),
-        ),
+        Cluster::Mainnet,
         owner.clone(),
         solana_sdk::commitment_config::CommitmentConfig::confirmed(),
     );
-    let program = provider.program(*ARB_PROGRAM_ID).unwrap();
-println!("getting quote with amounts scaled");
-        // initialize swap ix
-        let ix = 
+        let program: Program<Arc<Keypair>> = provider.program(*crate::constants::ARB_PROGRAM_ID).unwrap();
 
-            program
+        // initialize swap ix
+        let ix = program
             .request()
             .accounts(tmp_accounts::TokenAndSwapState {
                 swap_state: swap_state_pda,
@@ -215,61 +224,35 @@ println!("getting quote with amounts scaled");
             .args(tmp_ix::StartSwap {
                 swap_input: swap_start_amount as u64,
             })
-            .instructions();
-        println ! ("ix issss");
-if ix.is_err() {
-    println!("ix is err");
-return (vec![], false);
-}
-let ix = ix.unwrap();
-
+            .instructions()
+            .unwrap();
             
         ixs.push(ix);
         let mut flag = false;
-        let pubkey = owner;
-        let mut swap_start_amount = swap_start_amount;
+        println!("{:?}", amounts);
+        let mut swap_start_amount = amounts[0];
 
 
         for i in 0..mint_idxs.len() - 1 {
+
+            let program: Program<Arc<Keypair>> = provider.program(*crate::constants::ARB_PROGRAM_ID).unwrap();
+
             let [mint_idx0, mint_idx1] = [mint_idxs[i], mint_idxs[i + 1]];
-            let mint0 = token_mints[mint_idx0].clone();
-            let mint1 = token_mints[mint_idx1].clone();
+            println!("mint idxs are {} {}", mint_idx0, mint_idx1);
             let pool = &pools[i];
-            let mint0_clone = mint0.clone();
-            let mint1_clone = mint1.clone();
             let pool3 = pool.clone();
             let token_mints = token_mints.clone();
-            println!("getting quote with amounts scaled {} {} {} ", i, mint0_clone, mint1_clone);
-            let swap_ix = pool3.swap_ix(token_mints[mint_idx0].clone(), token_mints[mint_idx1].clone(), swap_start_amount);
-            
-            let pool2 = pool.0.clone();
-             swap_start_amount = 
- pool2.get_quote_with_amounts_scaled(
-                swap_start_amount,
-                &mint0,
-                &mint1
-            );
+            println!("getting quote with amounts scaled {} {} {} ", i, token_mints[mint_idx0].clone(), token_mints[mint_idx1].clone());
+            let swap_ix = pool3.swap_ix(token_mints[mint_idx0].clone(),
+            token_mints[mint_idx1].clone(), swap_start_amount,
+            owner.clone().pubkey(), program);
+            println!("swap ix is {:?}", swap_ix.1.len());
+             swap_start_amount = amounts[i];
             if swap_start_amount == 0 {
                 return (vec![], false);
             }
             ixs.push(swap_ix.1);
-            let pool_type = pool.0.get_pool_type();
-            match pool_type {
-                PoolType::OrcaPoolType => {
-                }
-                PoolType::MercurialPoolType => {
-                }
-                PoolType::SaberPoolType => {
-                }
-                PoolType::AldrinPoolType => {
-                }
-                PoolType::RaydiumPoolType => {
-                }
-                PoolType::SerumPoolType => {
-                    
-                    flag = true;
-                }
-            }
+            println!("ixs is {}", ixs.len());
         }
        
         ixs.concat();

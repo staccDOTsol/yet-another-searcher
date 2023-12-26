@@ -5,11 +5,12 @@ use anchor_client::solana_sdk::signature::read_keypair_file;
 use async_trait::async_trait;
 use serde;
 use solana_program::program_pack::Pack;
+use solana_sdk::signature::Keypair;
 use solana_sdk::signer::Signer;
 
 use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
-use anchor_client::{Client, Cluster};
+use anchor_client::{Client, Cluster, Program};
 
 use std::collections::HashMap;
 use std::fmt::Debug;
@@ -62,6 +63,8 @@ impl PoolOperations for MercurialPool {
         mint_in: Pubkey,
         mint_out: Pubkey,
         _start_bal: u128,
+        owner: Pubkey,
+        program: Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let swap_state_pda =
             Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();

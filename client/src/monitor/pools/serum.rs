@@ -13,7 +13,7 @@ use std::sync::{Arc, Mutex};
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use crate::monitor::pools::PoolOperations;
 use crate::serialize::token::WrappedPubkey;
-use anchor_client::{Cluster, Client};
+use anchor_client::{Cluster, Client, Program};
 use openbook_dex::matching::OrderType;
 use openbook_dex::matching::Side;
 use openbook_dex::state::AccountFlag;
@@ -402,7 +402,9 @@ impl PoolOperations for SerumPool {
         &self,
         mint_in: Pubkey,
         mint_out: Pubkey,
-        start_bal: u128
+        start_bal: u128,
+        owner: Pubkey,
+        program: Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let oos = &self.open_orders;
         if oos.is_none() {

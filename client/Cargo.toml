@@ -89,6 +89,8 @@ bs58 = "0.5.0"
 rand = "0.8.5"
 round = "0.1.2"
 redis = "0.24.0"
+switchboard-utils = "*"
+switchboard-solana = "0.29.79"
 
 [dev-dependencies]
 solana-sdk = "1.9.9"

@@ -4,6 +4,7 @@ use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
+use solana_client::rpc_config::RpcSendTransactionConfig;
 use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 use futures::stream::FuturesUnordered;
@@ -154,20 +155,21 @@ pub struct Args {
     
 
 }
-
 fn add_pool_to_graph<'a>(
     graph: &mut PoolGraph,
     idx0: PoolIndex,
     idx1: PoolIndex,
     quote: &PoolQuote,
 ) {
-    // idx0 = A, idx1 = B
-    let edges = graph
+    let pool_edge = graph
         .0
         .entry(idx0)
-        .or_insert_with(|| PoolEdge(HashMap::new()));
-    let quotes = edges.0.entry(idx1).or_default();
-    quotes.push(quote.clone());
+        .or_insert_with(|| PoolEdge(HashMap::new()))
+        .0
+        .entry(idx1)
+        .or_insert_with(|| (vec![(0, 0)], vec![]));
+
+    pool_edge.1.push(PoolQuote::new(quote.0.clone()));
 }
 async fn yellowstone( mut og_pools: &mut  Vec<Box< dyn PoolOperations>>,
     arbitrager: Arc<Arbitrager>,
@@ -179,7 +181,7 @@ async fn yellowstone( mut og_pools: &mut  Vec<Box< dyn PoolOperations>>,
 
         let token_mints = arbitrager.clone().token_mints.clone();
                         
-        let connection = solana_client::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
+        let connection = solana_client::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized());
 
         let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
 
@@ -271,11 +273,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         _ => panic!("invalid cluster type"),
     };
     // ** setup RPC connection
-    let connection_url = "https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718";
+    let connection_url: &str = "https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718";
     
     println!("using connection: {}", connection_url);
 
-    let connection = Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed()));
+    let connection = Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized()));
 
     let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
 
@@ -289,7 +291,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             connection_url.to_string(),
         ),
         rc_owner.clone(),
-        solana_sdk::commitment_config::CommitmentConfig::confirmed(),
+        solana_sdk::commitment_config::CommitmentConfig::finalized(),
     );
     let program = provider.program(*ARB_PROGRAM_ID).unwrap();
     let program_async = program.async_rpc();
@@ -299,7 +301,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let provider = Client::new_with_options(
         cluster.clone(),
         rc_owner.clone(),
-        CommitmentConfig::confirmed(),
+        CommitmentConfig::finalized(),
     );
     let _program = provider.program(*ARB_PROGRAM_ID);
 
@@ -370,7 +372,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     for chunk in tuas.chunks(100) {
 
-        let fut = program_async.get_multiple_accounts_with_commitment(&chunk, CommitmentConfig::confirmed());
+        let fut = program_async.get_multiple_accounts_with_commitment(&chunk, CommitmentConfig::finalized());
         futures.push(fut);
         if futures.len() > 66 {
             println!("futures length is {:?} update_accounts length is {:?}", futures.len(), update_accounts.len());
@@ -499,6 +501,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         
     }
+    println!("graph edges is {:?}", graph_edges.len());
     // !
     let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
     let start_mint = usdc_mint;
@@ -516,7 +519,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let src_ata = derive_token_address(&rc_owner.pubkey(), &usdc_mint);
 
-        let connection = Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed()));
+        let connection = Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized()));
 
         let init_token_acc = connection.clone().get_account(&src_ata).await.unwrap();
         let init_token_balance: u128 = spl_token::state::Account::unpack(&init_token_acc.data).unwrap().amount as u128;
@@ -597,28 +600,57 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         cluster: Cluster::Custom(
             connection_url.to_string(),
             connection_url.to_string()),
-        connection
+        connection: Arc::new(solana_client::nonblocking::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized()))
     };
 
+    // for edge in graph_edges, do edge_weight and add to weights
+    
+    println!("graph edges len {} ", graph_edges.clone().len());
+    /*
+    for edge_set in graph_edges.clone() {
+        let arbitrager = &arbitrager.clone();
+        for mint_idx in edge_set {
+            let future = edge_weight(arbitrager.clone(), mint_idx, start_mint_idx);
+            futures.push(future);
+            println!("futures len {} ", futures.len());
+        }
+    }
+
+    
+    // batch 24 futures at once
+    let results = join_all(futures).await;
+
+    for result in results {
+        let (mint_idx, start_mint_idx, weight) = result;
+        graph
+        .0
+        .entry(PoolIndex(start_mint_idx))
+        .or_insert_with(|| PoolEdge(HashMap::new()))
+        .0
+        .entry(PoolIndex(mint_idx))
+        .or_insert_with(|| (vec![(0, 0)], vec![]))
+        .0
+        .extend(weight.clone());
+        weights.extend(weight);
+        println!("weights len {} ", weights.len()); 
+    }
+    weights.sort_by(|a, b: &(usize, u128)| b.1.cmp(&a.1));
+   */
     tokio::spawn(async move {
             
         let arbitrager = Arc::new(arbitrager.clone());
             yellowstone(&mut pools.clone(), (arbitrager.clone()), connection_url, filter_map, (rc_owner.clone()), start_mint_idx).await
 
     });
-    
-        
-    let arbitrager =Arbitrager {
+    let mut arbitrager = Arbitrager {
         token_mints: token_mints.clone(),
-        graph_edges: graph_edges.clone(),
+        graph_edges: graph_edges.clone(),   
         graph: graph.clone(),
         cluster: Cluster::Custom(
             connection_url.to_string(),
             connection_url.to_string()),
-        connection: Arc::new(solana_client::nonblocking::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed()))
+        connection: Arc::new(solana_client::nonblocking::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized()))
     };
-        let arbitrager = Arc::new(arbitrager.clone());
-        
                     doit(
                         &arbitrager.clone().token_mints,
                         &arbitrager.clone().graph_edges,
@@ -640,12 +672,17 @@ async fn doit( token_mints: &Vec<Pubkey>,
     owner: Arc<Keypair>,
     rc_owner: Arc<Keypair>,
     mint2idx: HashMap<Pubkey, usize>,
-) {
+) -> ! {
     println!("starting doit...");
 
-    let usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
+    let mut usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
     let start_mint = usdc_mint;
-
+    let mut usdc_mints = vec![usdc_mint.clone()];//, Pubkey::from_str("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263").unwrap(), Pubkey::from_str("So11111111111111111111111111111111111111112").unwrap()];
+    let mut mint_idxs = vec![mint2idx.get(&usdc_mint).unwrap().clone()];//,  mint2idx.get(&Pubkey::from_str("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263").unwrap()).unwrap().clone(),  mint2idx.get(&Pubkey::from_str("So11111111111111111111111111111111111111112").unwrap()).unwrap().clone()];
+    // select a random number 1-3
+//    let onetothree = rand::thread_rng().gen_range(0..0);
+    let start_mint_idx = mint_idxs[0];
+    usdc_mint = usdc_mints[0].clone();
     let owner: &Keypair = &rc_owner.borrow();
     let _src_ata = derive_token_address(&owner.pubkey(), &start_mint);
 
@@ -659,7 +696,7 @@ async fn doit( token_mints: &Vec<Pubkey>,
 
         let src_ata = derive_token_address(&rc_owner.pubkey(), &usdc_mint);
 
-        let connection = Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed()));
+        let connection = Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized()));
         let mut arbitrager: Arbitrager = Arbitrager {
             token_mints: token_mints.clone(),
             graph_edges: graph_edges.clone(),
@@ -667,7 +704,7 @@ async fn doit( token_mints: &Vec<Pubkey>,
             cluster: Cluster::Custom(
                 connection_url.to_string(),
                 connection_url.to_string()),
-            connection: Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed())),
+            connection: Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized())),
             };
             
             
@@ -688,10 +725,10 @@ let mut b: Arbitrager =Arbitrager {
         connection_url.to_string()),
     connection,
 };
+let mut futures = vec![];
 loop {
-    let mut futures = FuturesUnordered::new();
+    if futures.len() < 24 {
 
-    for i in 0..24 {
             let mut arbitrager = b.clone();
             let token_mints = arbitrager.clone().token_mints.clone();
             let graph_edges = arbitrager.clone().graph_edges.clone();
@@ -704,88 +741,41 @@ loop {
                 cluster: Cluster::Custom(
                     connection_url.to_string(),
                     connection_url.to_string()),
-                connection: Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed())),
+                connection: Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized())),
                 };
-                let mut rng = rand::thread_rng();
-                let mut mint_idxs = vec![mint2idx.get(&usdc_mint).unwrap().clone(), 
-                mint2idx.get(&Pubkey::from_str("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263").unwrap()).unwrap().clone(),
-                mint2idx.get(&Pubkey::from_str("So11111111111111111111111111111111111111112").unwrap()).unwrap().clone()];
-                mint_idxs.shuffle(&mut rng);
-                let start_mint_idx = mint_idxs[0];
-                let rng_u64 = rand::thread_rng().gen_range(0..1000);
-            let future = async move {
-                // choose a random starmintidx out of mint2idx DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263, EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v, So11111111111111111111111111111111111111112
-                // pick a random number 1-3
                
-                
-                c.optimized_search(
-                    start_mint_idx,
-                    init_token_balance,
-                    [start_mint_idx].to_vec(),
-                    token_mints.clone(),
-                    graph_edges.clone(),
-                    graph.clone(),
-                    rng_u64
-                )
-                .await
-            };
+                let future = tokio::spawn(
+                    c.optimized_search(
+                        start_mint_idx,
+                        init_token_balance
+                    )   
+                );
             // delay tokio 138 ms
             futures.push(future);
-        }
-let mut arb_paths =  vec![];
-let mut arb_pools =  vec![];
-let mut arb_amounts = vec![];
-//stream next futuure
 
-println!("futures len... {:?}", futures.len());
+//stream next futuure
+        }
+else {
+    println!("futures len... {:?}", futures.len());
 // Stream futures.
-while let Some(result) = futures.next().await {
-    match result {
-        Ok(result) => {
+let results = futures::stream::iter(futures).buffer_unordered(24).collect::<Vec<_>>().await;
+futures = vec![];
+for result in results {
+        if result.is_err() {
+            continue;
+        }
+        let result = result.unwrap();
+        if result.is_err() {
+            continue;
+        }
+        let result = result.unwrap();
+        
             if result.is_none() {
                 continue;
             }
             
-
-            let  (amount, path, pools) = result.unwrap();
-            arb_paths.push(path);
-            arb_pools.push(pools);
-            arb_amounts.push(amount);
-        }
-        Err(e) => {
-            println!("error: {}", e);
-        }
-    }
-}
-futures = FuturesUnordered::new();
-for i in 0..arb_amounts.len() {
-    println!("arb amount is {:?}", arb_amounts.clone()[i]);
-}
-
-
-                
-let mut largest_idx = 0;
-let mut largest_amount = 0;
-for i in 0..arb_amounts.clone().len() {
-    if arb_amounts.clone()[i] > largest_amount {
-        largest_idx = i;
-        largest_amount = arb_amounts.clone()[i];
-    }
-}
-
-if arb_paths.len() >= 1 {
-let ab = arb_amounts;
-let app = arb_pools;
-let ap = arb_paths;
-arb_amounts = vec![];
-arb_pools = vec![];
-arb_paths = vec![];
-    let arb_path = ap[largest_idx].clone();
-let arb_pools = app[largest_idx].clone();
-let arb_amount = ab[largest_idx];
-println!("lorgest arb amount is {:?}", arb_amount);
-
-let mint_keys: Vec<String> =
+let (arb_pools, arb_path, arbin_amounts) = result.unwrap();
+let mint_keys: Vec<String> = 
 arb_path.clone().iter_mut().map(|i| i.to_string()).collect();
 let pool_keys: Vec<String> =
 arb_pools.iter().map(|p| p.0.get_name()).collect();
@@ -802,9 +792,10 @@ let arb_pools = Arc::new(arb_pools.clone());
 let a = Arc::new(b.clone());
 let ixs = get_arbitrage_instructions(
 Arc::new(a.token_mints.clone()),
-*usdc_mint.clone(),
+*usdc_mints.get(0).unwrap(),
 init_token_balance.clone(),
 arb_path.clone(),
+arbin_amounts,
 arb_pools.clone(),
 owner2.clone(),
 ).await;
@@ -823,7 +814,7 @@ let ix = spl_token::instruction::transfer(
 init_token_balance as u64,
 ).unwrap();
 ixs.push(ix);
-let connection = solana_client::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
+let connection = solana_client::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized());
 let recent_fees = calculate_recent_fee(ixs.
 iter()
 .flat_map(|ix| ix.accounts.iter().map(|acc| 
@@ -928,15 +919,20 @@ let signers = [owner_signer];
         continue;
     }
     let tx = tx.unwrap();
-    let connection = solana_client::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::confirmed());
-    let sig = connection.send_transaction(&tx);
+    let connection = solana_client::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized());
+    let sig = connection.send_transaction_with_config(&tx, 
+        RpcSendTransactionConfig {
+            skip_preflight: true,
+            ..RpcSendTransactionConfig::default()
+        });
     if sig.is_err() {
         print!("sig is err {} ", sig.err().unwrap());
         continue;
     }
     let sig = sig.unwrap();
-    println!("sent tx: {:?}", sig);
+    println!("https://solscan.io/tx/{:?}", sig);
 }
 
+}
 }
 }

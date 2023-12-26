@@ -2,6 +2,8 @@ use anchor_client::solana_sdk::pubkey::Pubkey;
 use async_trait::async_trait;
 use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
+use solana_sdk::signature::Keypair;
+use solana_sdk::signer::Signer;
 
 
 use crate::monitor::pools::*;
@@ -9,7 +11,7 @@ use std::collections::HashMap;
 use std::fmt::Debug;
 use std::sync::{Arc, Mutex};
 
-use anchor_client::Cluster;
+use anchor_client::{Cluster, Program};
 
 #[derive(Debug, Clone)]
 pub struct PoolDir {
@@ -91,7 +93,9 @@ pub trait PoolOperations: Debug + Send {
         &self,
         mint_in: Pubkey,
         mint_out: Pubkey,
-        start_bal: u128
+        start_bal: u128,
+        owner: Pubkey,
+        program: Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>);
 
     fn can_trade(&self, mint_in: &Pubkey, mint_out: &Pubkey) -> bool; // used for tests

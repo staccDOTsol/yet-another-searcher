@@ -1,16 +1,19 @@
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
+use anchor_lang::AnchorSerialize;
 use async_trait::async_trait;
+use solana_program::instruction::AccountMeta;
 use solana_sdk::program_pack::Pack;
+use switchboard_solana::get_ixn_discriminator;
 use std::collections::HashMap;
-use solana_sdk::signature::Signer;
+use solana_sdk::signature::{Signer, Keypair};
 
 use std::fmt::Debug;
 
 use std::sync::{Arc, Mutex};
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
-use anchor_client::{Client, Cluster};
+use anchor_client::{Client, Cluster, Program};
 
 use std::str::FromStr;
 
@@ -64,23 +67,14 @@ impl PoolOperations for SaberPool {
         mint_in: Pubkey,
         mint_out: Pubkey,
         _start_bal: u128,
+        pubkey: Pubkey,
+        program: Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
-        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
+        let user_src = derive_token_address(&pubkey, &mint_in);
+        let user_dst = derive_token_address(&pubkey, &mint_out);
 
-        let owner = owner3.try_pubkey().unwrap();
-        let user_src = derive_token_address(&owner, &mint_in);
-        let user_dst = derive_token_address(&owner, &mint_out);
-
-        let _owner_kp_path = "/home/ubuntu/.config/solana/id.json";
-        // setup anchor things
-        let provider = Client::new_with_options(
-            Cluster::Mainnet,
-            owner3.clone(),
-            CommitmentConfig::processed(),
-        );
-        let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let pool_src = self.tokens.get(&mint_in.to_string()).unwrap().addr.0;
         if !self.tokens.contains_key(&mint_out.to_string()) {
             return (false, vec![]);
@@ -99,27 +93,24 @@ impl PoolOperations for SaberPool {
                 }
         let pool_account = self.pool_account.0;
         let authority = self.authority.0;
-        let  swap_ix =
-          program            .request()
-            .accounts(tmp_accounts::SaberSwap {
-                pool_account,
-                authority,
-                user_transfer_authority: owner,
-                user_src,
-                user_dst,
-                pool_src,
-                pool_dst,
-                fee_dst: fee_acc.0,
-                saber_swap_program: *SABER_PROGRAM_ID,
-                swap_state,
-                token_program: *TOKEN_PROGRAM_ID,
-            })
-            .args(tmp_ix::SaberSwap {})
-            .instructions();
-    if swap_ix.is_err() {
-        return (false, vec![]);
-    }
-    let swap_ix = swap_ix.unwrap();
+        let swap_ix = program
+        .request()
+        .accounts(tmp_accounts::SaberSwap{
+            pool_account: self.pool_account.0, 
+            authority: self.authority.0, 
+            user_transfer_authority: pubkey, 
+            user_src, 
+            user_dst, 
+            pool_src, 
+            pool_dst, 
+            fee_dst: fee_acc.0, 
+            saber_swap_program: *SABER_PROGRAM_ID, 
+            swap_state, 
+            token_program: *TOKEN_PROGRAM_ID,
+        }) 
+        .args(tmp_ix::SaberSwap {}) 
+        .instructions()
+        .unwrap();
         (false, swap_ix)
     }
 

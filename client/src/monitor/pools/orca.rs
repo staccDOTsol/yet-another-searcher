@@ -3,11 +3,15 @@ use crate::serialize::pool::JSONFeeStructure;
 use crate::serialize::token::{ Token, WrappedPubkey};
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
-use anchor_client::{Client, Cluster};
+use anchor_client::{Client, Cluster, Program};
+use anchor_lang::AnchorSerialize;
 use async_trait::async_trait;
 use serde;
+use solana_program::instruction::AccountMeta;
 use solana_sdk::program_pack::Pack;
+use solana_sdk::signature::Keypair;
 use solana_sdk::signer::Signer;
+use switchboard_solana::get_ixn_discriminator;
 use std::sync::{Arc, Mutex};
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
@@ -67,22 +71,13 @@ fn swap_ix(
         mint_in: Pubkey,
         mint_out: Pubkey,
         _start_bal: u128,
+        owner: Pubkey,
+        program: Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
-
-        let owner = owner3.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, &mint_in);
         let user_dst = derive_token_address(&owner, &mint_out);
 
-        let _owner_kp_path = "/home/ubuntu/.config/solana/config/id.json";
-        // setup anchor things
-        let provider = Client::new_with_options(
-            Cluster::Mainnet,
-            owner3.clone(),
-            CommitmentConfig::processed(),
-        );
-        let program = provider.program(*ARB_PROGRAM_ID).unwrap();
         let (authority_pda, _) =
             Pubkey::find_program_address(&[&self.address.to_bytes()], &ORCA_PROGRAM_ID);
 
@@ -97,31 +92,29 @@ fn swap_ix(
 let token_swap = self.address.0;
 let pool_mint= self.pool_token_mint.0;
 let fee_account = self.fee_account.0;
+let swap_ix = program
+.request()
+.accounts(tmp_accounts::OrcaSwap {
+    token_swap: self.address.0,
+    authority: authority_pda,
+    user_transfer_authority: owner,
+    user_src,
+    pool_src,
+    user_dst,
+    pool_dst,
+    pool_mint: self.pool_token_mint.0,
+    fee_account: self.fee_account.0,
+    token_program: *TOKEN_PROGRAM_ID,
+    token_swap_program: *ORCA_PROGRAM_ID,
+    swap_state,
+})
+.args(tmp_ix::OrcaSwap {})
+.instructions()
+.unwrap();
 
 
- let  swap_ix =
-   program            .request()
-            .accounts(tmp_accounts::OrcaSwap {
-                token_swap,
-                authority: authority_pda,
-                user_transfer_authority: owner,
-                user_src,
-                pool_src,
-                user_dst,
-                pool_dst,
-                pool_mint ,
-                fee_account ,
-                token_program: *TOKEN_PROGRAM_ID,
-                token_swap_program: *ORCA_PROGRAM_ID,
-                swap_state,
-            })
-            .args(tmp_ix::OrcaSwap {})
-            .instructions();
-    if swap_ix.is_err() {
-        return (false, vec![]);
-    }
-    let swap_ix = swap_ix.unwrap();
-    
+
+
 
         (false, swap_ix)
     }
@@ -227,7 +220,7 @@ let fee_account = self.fee_account.0;
         } else if self.curve_type == 2 {
             CurveType::Stable
         } else {
-            panic!("invalid self curve type: {:?}", self.curve_type);
+            return 0;
         };
 
         // get quote -- works for either constant product or stable swap

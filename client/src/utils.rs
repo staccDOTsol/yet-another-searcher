@@ -191,7 +191,7 @@ pub struct PoolGraph(pub HashMap<PoolIndex, PoolEdge>);
 pub struct PoolIndex(pub usize);
 
 #[derive(Debug, Clone)]
-pub struct PoolEdge(pub HashMap<PoolIndex, Vec<PoolQuote>>);
+pub struct PoolEdge(pub HashMap<PoolIndex, (Vec<(usize, u128)>, Vec<PoolQuote>)>);
 
 impl Default for PoolGraph {
     fn default() -> Self {
