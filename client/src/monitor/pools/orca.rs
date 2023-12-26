@@ -1,6 +1,6 @@
 use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::pool::JSONFeeStructure;
-use crate::serialize::token::{ Token, WrappedPubkey};
+use crate::serialize::token::{ Token, WrappedPubkey, unpack_token_account};
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Client, Cluster, Program};
@@ -264,7 +264,7 @@ let swap_ix = program
         true
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
+    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, _cluster: Cluster) {
         let ids: Vec<String> = self
             .get_mints()
             .iter()
@@ -285,8 +285,8 @@ let swap_ix = program
         let acc_data0 = &acc_data0.unwrap().data;
         let acc_data1 = &acc_data1.unwrap().data;
 
-        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap().amount as u128;
-        let amount1 = spl_token::state::Account::unpack(acc_data1).unwrap().amount as u128;
+        let amount0 = unpack_token_account(acc_data0).amount as u128;
+        let amount1 = unpack_token_account(acc_data1).amount as u128;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
@@ -294,11 +294,8 @@ let swap_ix = program
 
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
-        let amount0 = spl_token::state::Account::unpack(acc_data0);
-        if amount0.is_err() {
-            return;
-        }
-        let amount0 = amount0.unwrap();
+        let amount0 = unpack_token_account(acc_data0);
+        
         
         let _mint = amount0.mint;
         let _mint = amount0.mint;

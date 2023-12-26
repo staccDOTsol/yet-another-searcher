@@ -82,6 +82,7 @@ let prism = await Prism.init({
 }
 });
 function transformRaydium(data: any): any {
+  console.log(data)
     const transformedData = {
       id: data.poolCoinTokenAccount.toBase58(),
       baseMint: data.coinMintAddress.toBase58(),

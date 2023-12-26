@@ -1,3 +1,4 @@
+use client::serialize::token::unpack_token_account;
 use rand::Rng;
 use solana_client::nonblocking::rpc_client::RpcClient;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
@@ -133,7 +134,7 @@ type ShardedDb = Arc<Mutex<HashMap<String, Arc<Mutex<PoolQuote>>>>>;
 
 use client::constants::*;
 use client::monitor::pools::pool::{pool_factory, PoolDir, PoolOperations, PoolType, self};
-// use spl_token spl_token::state::Account::unpack
+// use spl_token unpack_token_account
 
 
 use client::utils::{
@@ -161,15 +162,13 @@ fn add_pool_to_graph<'a>(
     idx1: PoolIndex,
     quote: &PoolQuote,
 ) {
-    let pool_edge = graph
+    let edges = graph
         .0
         .entry(idx0)
-        .or_insert_with(|| PoolEdge(HashMap::new()))
-        .0
-        .entry(idx1)
-        .or_insert_with(|| (vec![(0, 0)], vec![]));
-
-    pool_edge.1.push(PoolQuote::new(quote.0.clone()));
+        .or_insert_with(|| PoolEdge(HashMap::new()));
+    let quotes = edges.0.entry(idx1).or_insert_with(|| vec![]);
+    quotes.push(quote.clone());
+    
 }
 async fn yellowstone( mut og_pools: &mut  Vec<Box< dyn PoolOperations>>,
     arbitrager: Arc<Arbitrager>,
@@ -188,7 +187,7 @@ async fn yellowstone( mut og_pools: &mut  Vec<Box< dyn PoolOperations>>,
         let start_mint: Pubkey = usdc_mint;
         
     let _min_swap_amount = 10_u128.pow(3_u32); // scaled! -- 1 USDC
-    let _owner_kp_path = "/root/.config/solana/id.json";
+    let _owner_kp_path = "/home/ubuntu/.config/solana/id.json";
     let rc_owner = owner;
     let src_ata = derive_token_address(&rc_owner.pubkey(), &start_mint);
 
@@ -200,7 +199,7 @@ let signers = [rc_owner_signer];
         return ;
     }
     let init_token_acc = init_token_acc.unwrap();
-    let init_token_balance: u128 = spl_token::state::Account::unpack(&init_token_acc.data).unwrap().amount as u128;
+    let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128 - 1000;
     let swap_start_amount = init_token_balance; // scaled!
     println!("swap start amount = {}", swap_start_amount); // track what arbs we did with a larger size
     let _init_token_acc = connection.get_account(&src_ata);
@@ -261,7 +260,7 @@ let signers = [rc_owner_signer];
     }
 
 }
-#[tokio::main(worker_threads = 250)]
+#[tokio::main(worker_threads = 23)]
 
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut page_config = ShardedDb::new(Mutex::new(HashMap::new()));
@@ -279,7 +278,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let connection = Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized()));
 
-    let owner_kp_path = "/root/.config/solana/id.json";
+    let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
 
     // setup anchor things
     let owner = read_keypair_file(owner_kp_path).unwrap();
@@ -334,7 +333,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut token_mints = vec![];
     let mut pools = vec![];
 
-    let mut update_pks = vec![];
+    let mut update_pks = HashMap::new();
     let mut all_mint_idxs = vec![];
 
     let mut mint2idx = HashMap::new();
@@ -345,7 +344,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let _pool_count = 0;
     let _account_ptr = 0;
     println!("extracting pool + mints...");
-    let mut update_accounts: Vec<Option<Account>> = vec![];
+    let mut update_accounts: Vec<Account> = vec![];
     let mut tuas = vec![];
     let mut tupdate_pks = vec![];
     for pool_dir in pool_dirs.clone() {
@@ -369,95 +368,99 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("getting update accounts... tuas length is {:?}", tuas.len());
 
     let mut futures = vec![];
+let step = 70;
+let mut indexy = 0;
+let mut maybe_pools = vec![];
+for pool_dir in pool_dirs.clone() {
+    debug!("pool dir: {:#?}", pool_dir);
+    let pool_paths = read_json_dir(&pool_dir.dir_path);
+    for pool_path in &mut pool_paths.clone() {
+      
+        let json_str = std::fs::read_to_string(&pool_path).unwrap();
+        let mut pool = pool_factory(&pool_dir.pool_type, &json_str);
 
+        let pool_mints = pool.get_mints();
+        if pool_mints.len() != 2 {
+            // only support 2 mint pools
+            println!("skipping pool with mints != 2: {:?}", pool_path);
+            continue;
+        }
+        
+        maybe_pools.push(pool.clone());
+        
+    }
+}
+
+let maybe_pools = maybe_pools.clone();
     for chunk in tuas.chunks(100) {
-
         let fut = program_async.get_multiple_accounts_with_commitment(&chunk, CommitmentConfig::finalized());
         futures.push(fut);
-        if futures.len() > 66 {
-            println!("futures length is {:?} update_accounts length is {:?}", futures.len(), update_accounts.len());
-                
-            let results = join_all(futures).await;
-            futures = vec![];
-            for result in results {
-                if result.is_err() {
-                    continue;
-                }
-                let account_infos = result.unwrap().value;
-                for i in 0..account_infos.len(){
-                   
-                    let account = account_infos[i].clone();
-                    update_accounts.push(account);
-                    let update_pk = tupdate_pks[i].clone();
-                    update_pks.push(update_pk);
-                }
-                futures = vec![];
-            }
-        }
     }
-    
-            let results = join_all(futures).await;
-            futures = vec![];
-            for result in results {
-                if result.is_err() {
-                    continue;
-                }
-                let account_infos = result.unwrap().value;
-                for i in 0..account_infos.len(){
-                   
-                    let account = account_infos[i].clone();
-                    update_accounts.push(account);
-                    let update_pk = tupdate_pks[i].clone();
-                    update_pks.push(update_pk);
-                }
-                futures = vec![];
-            }
-    for pool_dir in pool_dirs.clone() {
-        debug!("pool dir: {:#?}", pool_dir);
-        let pool_paths = read_json_dir(&pool_dir.dir_path);
-        for pool_path in &mut pool_paths.clone() {
-            let cluster = cluster.clone();
-            let connection = connection.clone();
-
-            let json_str = std::fs::read_to_string(&pool_path).unwrap();
-            let mut pool = pool_factory(&pool_dir.pool_type, &json_str);
-
-            let pool_mints = pool.get_mints();
-            if pool_mints.len() != 2 {
-                // only support 2 mint pools
-                println!("skipping pool with mints != 2: {:?}", pool_path);
-                continue;
-            }
-            
-            let uas = pool.get_update_accounts();
-            let mut index = 0;
-            let mut updateuauas = vec![];
-            let mut updatepkpks = vec![];
-            for update_pk in update_pks.clone() {
-                if uas.contains(&update_pk) {
-                    updateuauas.push(update_accounts[index].clone());
-                    updatepkpks.push(index);
-                    let acc = update_accounts[index].clone();
-                    if acc.is_none() {
+let mut cycles = 0;
+while !futures.is_empty() {
+    println!("futures is {:?}", futures.len());
+    let chunk_futures = futures.split_off(std::cmp::min(futures.len(), futures.len() - step));
+    let results = join_all(chunk_futures).await;
+    if futures.len() < step {
+        break 
+    }
+    cycles += 1;
+    for (i, result) in results.into_iter().enumerate() {
+            println!("futures {:?}", (cycles * step + i) * 100);
+            if let Ok(account_info) = result {
+              
+                let accounts = account_info.value;
+                for account in accounts {
+                    indexy += 1;
+                
+                    if account.is_none() {
                         continue;
                     }
-                    let acc = acc.unwrap();
-                  pool.set_update_accounts2(update_pk, &acc.data, cluster.clone());
+                    let account = account.unwrap();
+                    update_pks.insert(
+                        tupdate_pks[indexy].clone(),
+                        account.clone(),
+                    );
 
-                    
+
                 }
-                
-                index += 1;
             }
-            pool.set_update_accounts(updateuauas.clone(), cluster.clone());
-            
-            if !pool.can_trade(&pool_mints[0], &pool_mints[1]) {
-                continue;
-            }
-            // ** record pool
-            pools.push( pool.clone());
         }
     }
+    println!("update accounts is {:?}", update_accounts.len());
+    println!("update pks is {:?}", update_pks.len());
+    println!("maybe pools is {:?}", maybe_pools.len());
+    let update_pks_set: HashSet<_> = update_pks.iter().map(|(pubkey, _)| pubkey.clone()).collect();
+
+    let mut indexy = 0;
+    for mut pool in maybe_pools {
+        indexy += 1;
+        let uas = pool.get_update_accounts();
+        let mut counter = 0;
+        let mut two_keys = vec![];
+        for pubkey in uas {
+            // get both update accounts
+            if update_pks_set.contains(&pubkey) {
+
+                if let Some(account) = update_pks.iter().find(|(pk, _)| pk == &&pubkey) {
+
+                    two_keys.push(Some(account.1));
+                }
+            }
+        }
+        if two_keys.len() != 2 {
+            continue;
+        }
+
+        pool.set_update_accounts(two_keys, cluster.clone());
+        
+            let pool_mints = pool.get_mints();
+            if pool.can_trade(&pool_mints[0], &pool_mints[1]) {
+                pools.push(pool.clone());
+                println!("{} / {}", indexy, pools.len());
+            }
+    }
+    
     println!("pool is {:?}", pools.clone().len());
 
     for pool in pools.clone() { 
@@ -514,7 +517,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("getting pool amounts...");
 
 
-
+let update_accounts = update_pks.clone().into_iter().map(|(_, account)| {
+    account
+}).collect::<Vec<Account>>();
         println!("added {:?} update accounts", update_accounts.clone().len());
 
         let src_ata = derive_token_address(&rc_owner.pubkey(), &usdc_mint);
@@ -522,7 +527,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let connection = Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized()));
 
         let init_token_acc = connection.clone().get_account(&src_ata).await.unwrap();
-        let init_token_balance: u128 = spl_token::state::Account::unpack(&init_token_acc.data).unwrap().amount as u128;
+        let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128 - 1000;
     println!("update accounts is {:?}", update_accounts.len());
     // slide it out here
     println!(
@@ -531,18 +536,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
     println!("starting balance = {}", init_token_balance);
 
-    update_accounts = update_accounts
-        .into_iter()
-        .filter(|maybe| maybe.is_some())
-        .collect::<Vec<Option<Account>>>();
     let mut filter_map: HashMap<String, SubscribeRequestFilterAccounts> = HashMap::new();
-    let update_accounts_chunks: std::slice::Chunks<'_, Option<Account>> = update_accounts.chunks(2666);
+    let update_accounts_chunks = update_accounts.chunks(2666);
     let owners = update_accounts_chunks.clone().map(|chunk| {
         chunk
             .iter()
             .map(|maybe| {
-                let account = maybe.as_ref().unwrap();
-                account.owner.to_string()
+                maybe.owner.to_string()
             })
             .collect::<Vec<String>>()
     });
@@ -554,6 +554,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             end = update_pks.len();
         }
         println!("chunk is {:?}", chunk.len());
+        let update_pks = update_pks.clone()
+        .iter()
+        .map(|(pk, _)| {
+            pk.to_string()
+        })
+        .collect::<Vec<String>>();
         filter_map.insert(
             i.to_string(),
             
@@ -578,11 +584,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let src_ata = derive_token_address(&rc_owner.pubkey(), &usdc_mint);
 
     let init_token_acc = connection.clone().get_account(&src_ata).await.unwrap();
-    let init_token_balance: u128 = spl_token::state::Account::unpack(&init_token_acc.data).unwrap().amount as u128;
+    let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128 - 1000;
     let swap_start_amount = init_token_balance; // scaled!
     println!("swap start amount = {}", swap_start_amount); // track what arbs we did with a larger size
     let init_token_acc = connection.clone().get_account(&src_ata).await.unwrap();
-    let init_token_balance: u128 = spl_token::state::Account::unpack(&init_token_acc.data).unwrap().amount as u128;
+    let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128 - 1000;
 
     
     println!("searching for arbitrages...");
@@ -617,7 +623,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     
-    // batch 250 futures at once
+    // batch 23 futures at once
     let results = join_all(futures).await;
 
     for result in results {
@@ -709,8 +715,8 @@ async fn doit( token_mints: &Vec<Pubkey>,
             
             
         let init_token_acc = connection.clone().get_account(&src_ata).await.unwrap();
-        let init_token_balance: u128 = spl_token::state::Account::unpack(&init_token_acc.data).unwrap().amount as u128;
-    let graph_edges = arbitrager.clone().graph_edges.clone();
+        let init_token_balance: u128 = unpack_token_account(&init_token_acc.data).amount as u128 - 1000;
+    let graph_edges = arbitrager.clone().graph_edges.clone(); 
     let graph = arbitrager.clone().graph.clone();
     let token_mints = arbitrager.clone().token_mints.clone();
 
@@ -727,7 +733,7 @@ let mut b: Arbitrager =Arbitrager {
 };
 let mut futures = vec![];
 loop {
-    if futures.len() < 250 {
+    if futures.len() < 23 {
 
             let mut arbitrager = b.clone();
             let token_mints = arbitrager.clone().token_mints.clone();
@@ -758,7 +764,7 @@ loop {
 else {
     println!("futures len... {:?}", futures.len());
 // Stream futures.
-let results = futures::stream::iter(futures).buffer_unordered(250).collect::<Vec<_>>().await;
+let results = futures::stream::iter(futures).buffer_unordered(23).collect::<Vec<_>>().await;
 futures = vec![];
 for result in results {
         if result.is_err() {
@@ -774,12 +780,8 @@ for result in results {
                 continue;
             }
             
-let (arb_pools, arb_path, arbin_amounts) = result.unwrap();
-let mint_keys: Vec<String> = 
-arb_path.clone().iter_mut().map(|i| i.to_string()).collect();
-let pool_keys: Vec<String> =
-arb_pools.iter().map(|p| p.0.get_name()).collect();
-let _arb_key = format!("{}{}", mint_keys.join(""), pool_keys.join(""));
+let ( arb_path, _, arb_pools, arbin_amounts) = result.unwrap();
+
 //println!("arbkey: {:?}", arb_key);/* 
 let usdc_mint = usdc_mint.clone();
 let src_ata = src_ata.clone();
@@ -906,7 +908,10 @@ let blockhash = connection.get_latest_blockhash();
 
 let owner_signer: &dyn solana_sdk::signature::Signer = &*rc_owner;
 let signers = [owner_signer];
-
+if ixs.len() < 4 {
+println!("ixs len is less than 4");
+continue;
+}
 
     let tx = VersionedTransaction::try_new( VersionedMessage::V0(v0::Message::try_compile(
         &rc_owner.pubkey(),

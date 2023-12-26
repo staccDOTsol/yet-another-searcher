@@ -2,7 +2,7 @@
 use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
 use crate::monitor::pool_utils::serum::FeeTier;
 use crate::monitor::pools::{PoolOperations, PoolType};
-use crate::serialize::token::{ WrappedPubkey};
+use crate::serialize::token::{ WrappedPubkey, unpack_token_account};
 use crate::monitor::pools::math;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Cluster, Program};
@@ -397,7 +397,7 @@ impl PoolOperations for RaydiumPool {
     ) -> u128 {
         let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
         let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
-
+        
         if pool_src_amount.is_none() || pool_dst_amount.is_none() {
             return 0;
         }
@@ -451,12 +451,8 @@ impl PoolOperations for RaydiumPool {
 
 
     fn can_trade(&self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
-        for amount in self.pool_amounts.values() {
-            if *amount == 0 {
-                return false;
-            }
-        }
-        true
+        let quote = self.get_quote_with_amounts_scaled(1_000_000, _mint_in, _mint_out);
+        quote > 0
         
     }fn get_name(&self) -> String {
         "Raydium".to_string()
@@ -466,10 +462,10 @@ impl PoolOperations for RaydiumPool {
         self.id.0
     }
     fn get_update_accounts(&self) -> Vec<Pubkey> {
-        vec![self.base_vault.0, self.quote_vault.0]
+        vec![self.market_base_vault.0, self.market_quote_vault.0]
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
+    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, _cluster: Cluster) {
         let ids: Vec<String> = self
             .get_mints()
             .iter()
@@ -478,15 +474,11 @@ impl PoolOperations for RaydiumPool {
         let id0 = &ids[0];
         let id1 = &ids[1];
 
-        if accounts.len() < 2 {
-            return;
-        }
-
         let acc_data0 = &accounts[0].as_ref().unwrap().data;
         let acc_data1 = &accounts[1].as_ref().unwrap().data;
 
-        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap().amount as u128;
-        let amount1 = spl_token::state::Account::unpack(acc_data1).unwrap().amount as u128;
+        let amount0 = unpack_token_account(acc_data0).amount as u128;
+        let amount1 = unpack_token_account(acc_data1).amount as u128;
      
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
@@ -494,11 +486,13 @@ impl PoolOperations for RaydiumPool {
 
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
-        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();
+        let mut amount0 = unpack_token_account(acc_data0);
+        
         let _mint = amount0.mint;
         let _mint = amount0.mint;
         let id0 = self.base_mint.0.to_string();
         let id1 = self.quote_mint.0.to_string();
+        println!("raydium {} {} {} {}", _mint.to_string(), id0, id1, amount0.amount);
 
  
                 if _mint.to_string() == id0 {

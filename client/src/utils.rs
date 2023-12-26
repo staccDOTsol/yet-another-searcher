@@ -73,117 +73,19 @@ pub fn derive_token_address(owner: &Pubkey, mint: &Pubkey) -> Pubkey {
 }
 
 #[derive(Debug, Clone)]
-pub struct PoolQuote(pub Box<dyn PoolOperations>);
+pub struct PoolQuote(pub Rc<Box<dyn PoolOperations>>);
 
-impl PoolQuote {
-    pub fn new(quote: Box<dyn PoolOperations>) -> Self {
-        Self(quote)
-    }
-    async fn async_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        let mints_0 = self.0.get_mints();
-        let mints_1 = other.0.get_mints();
-        if mints_0[0] == mints_1[0] {
-            Some(self.0.get_quote_with_amounts_scaled(1_000_000, &mints_0[0], &mints_0[1])
-            .cmp(&other.0.get_quote_with_amounts_scaled(1_000_000, &mints_1[0], &mints_1[1])))
-        } 
-        else {
-            None 
-        }
-    }
-
-    pub async fn async_partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        let mints_0 = self.0.get_mints();
-        let mints_1 = other.0.get_mints();
-        if mints_0[0] == mints_1[0] {
-            (self.0.get_quote_with_amounts_scaled(1_000_000, &mints_0[0], &mints_0[1])
-            .partial_cmp(&other.0.get_quote_with_amounts_scaled(1_000_000, &mints_1[0], &mints_1[1])))
-        } 
-        else {
-            None
-        }
-    }
-}
-#[async_trait::async_trait]
-impl Ord for PoolQuote {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        let runtime = tokio::runtime::Runtime::new().unwrap();
-        let ordering = runtime.block_on(self.async_cmp(other));
-        if ordering.is_none() {
-            panic!("mints dont match");
-        }
-        ordering.unwrap()
-
-    }
-}
-impl PartialOrd for PoolQuote {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        let runtime = tokio::runtime::Runtime::new().unwrap();
-        let res = runtime.block_on(self.async_partial_cmp(other));
-        res
-    }
-}
-#[async_trait::async_trait]
-impl PartialEq for PoolQuote {
-    fn eq(&self, other: &Self) -> bool {
-        let mints_0 = self.0.get_mints();
-        let mints_1 = other.0.get_mints();
-        let runtime = tokio::runtime::Runtime::new().unwrap();
-        if mints_0[0] == mints_1[0] {
-        let res = runtime.block_on(
-            self.async_partial_cmp(other)
-        );
-        if res.is_none() {
-            panic!("mints dont match");
-        }
-        res.unwrap() == std::cmp::Ordering::Equal
-        } else if mints_0[0] == mints_1[1] {
-        let res = runtime.block_on(
-            self.async_partial_cmp(other)
-        );
-        if res.is_none() {
-            panic!("mints dont match");
-        }
-        res.unwrap() == std::cmp::Ordering::Equal
-        } else if mints_0[1] == mints_1[0] {
-        let res = runtime.block_on(
-            self.async_partial_cmp(other)
-        );
-        if res.is_none() {
-            panic!("mints dont match");
-        }
-        res.unwrap() == std::cmp::Ordering::Equal
-        } else if mints_0[1] == mints_1[1] {
-        let res = runtime.block_on(
-            self.async_partial_cmp(other)
-        );
-
-        if res.is_none() {
-            panic!("mints dont match");
-        }
-        res.unwrap() == std::cmp::Ordering::Equal
-        } else {
-            false
-        }
-
-
-    }
-}
-impl Eq for PoolQuote {}
-
-impl DerefMut for PoolQuote {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl Deref for PoolQuote {
-    type Target = Box<dyn PoolOperations>;
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
 unsafe impl Send for PoolQuote {}
 
 unsafe impl Sync for PoolQuote {}
+
+
+impl PoolQuote {
+    pub fn new(quote: Rc<Box<dyn PoolOperations>>) -> Self {
+        Self(quote)
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct PoolGraph(pub HashMap<PoolIndex, PoolEdge>);
 
@@ -191,13 +93,7 @@ pub struct PoolGraph(pub HashMap<PoolIndex, PoolEdge>);
 pub struct PoolIndex(pub usize);
 
 #[derive(Debug, Clone)]
-pub struct PoolEdge(pub HashMap<PoolIndex, (Vec<(usize, u128)>, Vec<PoolQuote>)>);
-
-impl Default for PoolGraph {
-    fn default() -> Self {
-        Self::new()
-    }
-}
+pub struct PoolEdge(pub HashMap<PoolIndex, Vec<PoolQuote>>);
 
 impl PoolGraph {
     pub fn new() -> Self {

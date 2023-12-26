@@ -1,4 +1,5 @@
 use anyhow::Error;
+use axum::extract::path;
 use chrono::Utc;
 use futures::lock::Mutex;
 use rand::Rng;
@@ -67,126 +68,128 @@ pub struct Arbitrager {
 // This is a placeholder - replace it with your actual method to get the edge weight.
 impl Arbitrager {    
     // Entry function
-    pub fn find_weights(&self, start_mint_idx: usize, init_balance: u128, max_hops: usize) -> Vec<(usize, u128, Vec<PoolQuote>, Vec<usize>, Vec<u128>)> {
-        let mut routes = self.find_weights_recursive(start_mint_idx, start_mint_idx, init_balance, max_hops, 0, Vec::new(), vec![start_mint_idx], vec![init_balance]);
-
-        // Sort routes by yield (second element of the tuple), in descending order
-        routes.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
-        for route in routes.clone() {
-            if route.1 > init_balance {
-                println!("new bal, init bal {}, {}", route.1, init_balance); 
-            }
+    pub async fn find_weights(&self, start_mint_idx: usize, init_balance: u128, max_hops: usize) -> (Vec<usize>, u64, Vec<PoolQuote>, Vec<u128>) {
+        let mut routes = self.find_weights_recursive(start_mint_idx, start_mint_idx, init_balance, max_hops, 0, Vec::new(), vec![start_mint_idx], vec![init_balance]).await;
+        if routes.is_err()
+        {
+            return (vec![], 0, vec![], vec![]);
         }
+        let mut routes = routes.unwrap();
+        if routes.is_none() {
+            return (vec![], 0, vec![], vec![]);
+        }
+        let mut routes = routes.unwrap();
         routes
+
+
     }
-
-    pub fn find_max_yield_path(&self, start_mint_idx: usize) -> Vec<usize> {
-        let mut max_yields = vec![0; self.token_mints.len()];
-        let mut prev = vec![None; self.token_mints.len()];
-        let mut heap = BinaryHeap::new();
-    
-        max_yields[start_mint_idx] = u128::MAX;
-        heap.push((u128::MAX, start_mint_idx));
-    
-        while let Some((yield_value, mint_idx)) = heap.pop() {
-            if yield_value != max_yields[mint_idx] {
-                continue;
-            }
-            if let Some(edges) = self.graph_edges.get(mint_idx) {
-                for &edge in edges {
-                   
-                if let Some(pools) = self.graph
-                .0
-                .get(&PoolIndex(edge))
-                .and_then(|p| p.0.get(&PoolIndex(start_mint_idx)))
-                {
-                    for pool in pools.1.iter() {
-                        let a_dollar = pool.get_quote_with_amounts_scaled(1_000_000, &self.token_mints[start_mint_idx], &self.token_mints[edge]);
-                        println!("a dollar: {}", a_dollar);
-                        let new_yield = pool.get_quote_with_amounts_scaled(a_dollar, &self.token_mints[edge], &self.token_mints[start_mint_idx]);
-        
-                        if new_yield > max_yields[start_mint_idx] {
-                            max_yields[start_mint_idx] = new_yield;
-                            prev[start_mint_idx] = Some(mint_idx);
-                            println!("new yield: {}", new_yield);
-                            heap.push((new_yield, start_mint_idx));
-                        }
-                    }
-                }
-
-            }
+    pub async fn find_max_yield_path(&self, mint_idx: usize, 
+        pool_path: Vec<PoolQuote>, balances: Vec<u128>, 
+        start_mint_idx: usize, amount: u128, max_hops: usize) -> Result<Option<(Vec<usize>, u64, Vec<PoolQuote>, Vec<u128>)>, Box<dyn std::error::Error + Send>> {
+        let path = self.find_yield_recursive(mint_idx, 
+            pool_path,
+            balances,
+            start_mint_idx, amount, amount, max_hops, 0, vec![start_mint_idx], 0).await?;
+        if path.is_none(){
+            return Ok(None);
+        }
+        let path = path.unwrap();
+        if path.0.len() > 2 {
+            println!("path is {:?}", path.0);
+            
+        Ok(Some(path))
+        }
+        else {
+            Ok(None)
         }
     }
-    
-        let mut path = vec![];
-        let mut current = start_mint_idx;
-    
-        while let Some(prev_mint) = prev[current] {
-            path.push(current);
-            current = prev_mint;
-        }
-    
-        path.push(start_mint_idx);
-        path.reverse();
-    
-        path
-    }
-    // Recursive function
-    fn find_weights_recursive(&self, current_mint_idx: usize, start_mint_idx: usize, amount: u128, max_hops: usize, current_hop: usize, pool_path: Vec<PoolQuote>, path: Vec<usize>, balances: Vec<u128>) -> Vec<(usize, u128, Vec<PoolQuote>, Vec<usize>, Vec<u128>)> {
+    #[async_recursion::async_recursion]
+
+    async fn find_yield_recursive (&self, current_mint_idx: usize,
+        pool_path: Vec<PoolQuote>, balances: Vec<u128>,
+
+         start_mint_idx: usize, init_amount: u128, amount: u128, max_hops: usize, current_hop: usize, path: Vec<usize>, current_yield: u64) -> Result<Option<(Vec<usize>, u64, Vec<PoolQuote>, Vec<u128>)>, Box<dyn std::error::Error + Send>> {
         if current_hop >= max_hops {
-            return vec![];
+            return Ok(None);
         }
 
-        let mut routes = Vec::new();
-        let max_yield = self.find_max_yield_path(current_mint_idx);
-        let mut edge = &max_yield.clone()[0];
-        
-                let timestamp = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() % (max_hops as u64 - 6);
-                if current_hop >= max_hops - timestamp as usize {
-                    // mod timestamp by four 
+
+        if let Some(edges) = self.graph_edges.get(current_mint_idx) {
+            for mut edge in edges {
+                let timestamp = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() % edges.len() as u128;
+                edge = &edges.iter().nth(timestamp as usize).unwrap();
+                if current_hop >= max_hops - 1 {
                     edge = &start_mint_idx;
                 }
                 let edge = *edge;
-
-                if let Some(pools) = self.graph
+                let pools = self.graph
                     .0
                     .get(&PoolIndex(current_mint_idx))
-                    .and_then(|p| p.0.get(&PoolIndex(edge)))
-                {
-                    for pool in pools.1.iter() {
-                        let new_balance = pool.get_quote_with_amounts_scaled(amount, &self.token_mints[current_mint_idx], &self.token_mints[edge]);
+                    .and_then(|p| p.0.get(&PoolIndex(edge)));
+                   if pools.is_none() {
+                       continue;
+                     }
+                let pool = pools.unwrap();
+                let timestamp = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() % pool.len() as u128;
 
-                        if new_balance > 0 {
-                            let mut new_pool_path = pool_path.clone();
+                let pool = pool[timestamp as usize].clone();
+                    let new_balance = pool.0.get_quote_with_amounts_scaled(amount, &self.token_mints[current_mint_idx], &self.token_mints[edge]);
+                    if new_balance > 0 {
+                        let mut new_pool_path = pool_path.clone();
                             new_pool_path.push(pool.clone());
 
-                            let mut new_path = path.clone();
-                            new_path.push(edge);
 
                             let mut new_balances = balances.clone();
                             new_balances.push(new_balance);
 
-                            if edge == start_mint_idx {
-                                // Found a cycle
-                                routes.push((edge, new_balance, new_pool_path, new_path, new_balances.clone()));
-                                // return 
-                                if new_balance as f64 > new_balances[0] as f64 * 1.02 {
-                                    return routes;
-                                }
-                            } else {
-                                // Recursively find routes for next hop
-                                let next_hop_routes = self.find_weights_recursive(edge, start_mint_idx, new_balance, max_hops, current_hop + 1, new_pool_path, new_path, new_balances);
+                            let mut new_path = path.clone();
+                            new_path.push(edge);
 
-                                // Combine current edge with routes from next hop
-                                for next_route in next_hop_routes {
-                                    routes.push(next_route);
-                                }
+                            if start_mint_idx == edge {
+                                println!("found a path with yield {} {:?}", new_balance as f64 / init_amount as f64, new_path);
                             }
+                            else {
+                                println!("found a path with yield {:?}",  new_path.len());
+                            }
+                            if start_mint_idx == edge && new_balance as f64 > init_amount as f64 * 1.02 {
+                                return Ok(Some((new_path, new_balance as u64, new_pool_path, new_balances)));
+                            }
+                            
+                           return Ok(self.find_yield_recursive(edge, new_pool_path, new_balances, start_mint_idx, init_amount, new_balance, max_hops, current_hop + 1, new_path, new_balance as u64).await?)
+                            
                         }
                     }
-                }
 
-        routes
+
+    }
+    Ok(None)
+
+}
+                        
+                                // Recursive function
+   async fn find_weights_recursive(&self, current_mint_idx: usize, start_mint_idx: usize, amount: u128, max_hops: usize, current_hop: usize, pool_path: Vec<PoolQuote>, path: Vec<usize>, balances: Vec<u128>) ->
+   
+   Result<Option<(Vec<usize>, u64, Vec<PoolQuote>, Vec<u128>)>, Box<dyn std::error::Error + Send>> {
+      
+        
+        if let Some(edges) = self.graph_edges.get(current_mint_idx) {
+            for mut edge in edges {
+                let pp: Vec<PoolQuote> = vec![];
+                let new_edge = self.find_max_yield_path(*edge, pp, vec![amount], start_mint_idx, amount, max_hops-current_hop).await.unwrap();
+                if new_edge.is_none() {
+                    continue;
+                }
+                let new_edge = new_edge.unwrap();
+                if new_edge.0.len() == 0 {
+                    continue;
+                }
+                
+                return Ok(Some((new_edge.0, new_edge.1, new_edge.2, new_edge.3)));
+                }
+            }
+        Ok(None)
+        
+
     }
 
     #[async_recursion::async_recursion]
@@ -200,29 +203,19 @@ impl Arbitrager {
         amounts: Vec<u128>,
         pool_path: Vec<PoolQuote>,
         best_balance: u128
-    ) -> Result<Option<(Vec<PoolQuote>, Vec<usize>, Vec<u128>)>, Box<dyn std::error::Error + Send>> {
+    ) -> Result<Option<(Vec<usize>, u64, Vec<PoolQuote>, Vec<u128>)>, Box<dyn std::error::Error + Send>> {
       
     
        
     
         // Recursively explore each edge
-        let mut edge_weight_vecs = self.find_weights(mint_idx, current_balance, 8);
-        if edge_weight_vecs.len() == 0 {
+        let mut edge_weight_vecs = self.find_weights(mint_idx, current_balance, 8).await;
+        
+        if edge_weight_vecs.0.len() == 0 {
             return Ok(None);
         }
 
-
-        for mut edge_weights in edge_weight_vecs {
-            if edge_weights.1 < init_balance {
-                return Ok(None);
-            }
-            else {
-                return Ok(Some((edge_weights.2, edge_weights.3, edge_weights.4)));
-            }
-
-
-    }
-        Ok(None)
+        Ok(Some(edge_weight_vecs))
     }
     
     
@@ -231,7 +224,7 @@ impl Arbitrager {
         self,
         start_mint_idx: usize,
         init_balance: u128
-    ) -> Result<Option<(Vec<PoolQuote>, Vec<usize>, Vec<u128>)>, Box<dyn std::error::Error + Send>> {
+    ) -> Result<Option<(Vec<usize>, u64, Vec<PoolQuote>, Vec<u128>)>, Box<dyn std::error::Error + Send>> {
         self.optimized_search_recursive(init_balance, init_balance, start_mint_idx, start_mint_idx, vec![start_mint_idx], vec![init_balance], vec![], init_balance).await
     }
     
@@ -292,7 +285,7 @@ pub  async  fn get_arbitrage_instructions<'a>(
             let pool3 = pool.clone();
             let token_mints = token_mints.clone();
             println!("getting quote with amounts scaled {} {} {} ", i, token_mints[mint_idx0].clone(), token_mints[mint_idx1].clone());
-            let swap_ix = pool3.swap_ix(token_mints[mint_idx0].clone(),
+            let swap_ix = pool3.0.swap_ix(token_mints[mint_idx0].clone(),
             token_mints[mint_idx1].clone(), swap_start_amount,
             owner.clone().pubkey(), program);
             println!("swap ix is {:?}", swap_ix.1.len());

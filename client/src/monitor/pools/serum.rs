@@ -222,8 +222,8 @@ impl PoolOperations for SerumPool {
         vec![self.own_address.0, self.bids.0, self.asks.0]
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster) {
-        self.accounts = accounts.clone();
+    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, cluster: Cluster) {
+        //self.accounts = accounts.clone();
 
         let oo_path = match cluster {
             Cluster::Localnet => "./serum_open_orders.json",
@@ -240,10 +240,10 @@ impl PoolOperations for SerumPool {
             }
             let flags = flags.unwrap();
             if flags.intersects(AccountFlag::Bids) {
-                    self.accounts[1] = (Some(account.clone().unwrap()))
+                   // self.accounts[1] = (Some(account.clone().unwrap()))
             }
             if flags.intersects(AccountFlag::Asks) {
-                    self.accounts[2] = (Some(account.clone().unwrap()))
+                   // self.accounts[2] = (Some(account.clone().unwrap()))
             }
         }
     }
@@ -415,7 +415,7 @@ impl PoolOperations for SerumPool {
         let mut open_orders =
             (oos.get(&self.own_address.0.to_string()));
         if open_orders.is_none() {/*
-            let owner_kp_path = "/root/.config/solana/id.json";
+            let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
             let owner = Arc::new(read_keypair_file(owner_kp_path.clone()).unwrap());
             let oo_path: &str = "./serum_open_orders.json";
             let oo_str = std::fs::read_to_string(oo_path).unwrap();
@@ -508,7 +508,7 @@ impl PoolOperations for SerumPool {
 let open_orders = blargorders;
         let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let _space = 3228;
-        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json".clone()).unwrap());
+        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json".clone()).unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
 

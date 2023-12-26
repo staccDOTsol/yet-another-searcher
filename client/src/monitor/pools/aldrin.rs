@@ -30,7 +30,7 @@ use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::monitor::pool_utils::base::CurveType;
 use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
 use crate::serialize::pool::JSONFeeStructure2;
-use crate::serialize::token::{ Token, WrappedPubkey};
+use crate::serialize::token::{ Token, WrappedPubkey, unpack_token_account};
 use crate::utils::{derive_token_address, str2pubkey};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -78,9 +78,9 @@ impl PoolOperations for AldrinPool {
     ) -> (bool, Vec<Instruction>) {
         let state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
-        let _owner_kp_path = "/root/.config/solana/id.json";
+        let _owner_kp_path = "/home/ubuntu/.config/solana/id.json";
         // setup anchor things
-        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
+        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
         
         let owner = owner3.try_pubkey().unwrap()    ;
         let provider = Client::new_with_options(
@@ -246,7 +246,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
         accounts
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
+    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, _cluster: Cluster) {
         let ids: Vec<String> = self
             .get_mints()
             .iter()
@@ -258,8 +258,8 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
         let acc_data0 = &accounts[0].as_ref().unwrap().data;
         let acc_data1 = &accounts[1].as_ref().unwrap().data;
 
-        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap().amount as u128;
-        let amount1 = spl_token::state::Account::unpack(acc_data1).unwrap().amount as u128;
+        let amount0 = unpack_token_account(acc_data0).amount as u128;
+        let amount1 = unpack_token_account(acc_data1).amount as u128;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
@@ -268,7 +268,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
 
-        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap();
+        let amount0 = unpack_token_account(acc_data0);
         let _mint = amount0.mint;
         let id0 = &self.token_ids[0];
         let id1 = &self.token_ids[1];

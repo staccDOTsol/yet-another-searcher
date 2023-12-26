@@ -29,7 +29,7 @@ fn main() {
     let _cluster = Cluster::Mainnet;
 
     env_logger::init();
-    let owner_kp_path = "/root/.config/solana/id.json";
+    let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
     let owner = read_keypair_file(owner_kp_path).unwrap();
 
     // ** setup RPC connection
@@ -105,9 +105,9 @@ fn main() {
                 continue;
             }
             let acc_info = account.unwrap();
-            let amount =  spl_token::state::Account::unpack(&acc_info.data).unwrap().amount as i64;
+            let amount =  unpack_token_account(&acc_info.data).unwrap().amount as i64;
             if amount > 0 {
-                let mint = spl_token::state::Account::unpack(&acc_info.data).unwrap().mint;
+                let mint = unpack_token_account(&acc_info.data).unwrap().mint;
                 if !token_mints.contains(&mint) {
                     token_mints.push(mint);
                 }
@@ -142,7 +142,7 @@ fn main() {
                 Some(account) => {
                     let data = account.data;
 
-                    spl_token::state::Account::unpack(&data).unwrap().amount as i64
+                    unpack_token_account(&data).unwrap().amount as i64
                 }
                 None => -1_i64, // no ATA!
             };

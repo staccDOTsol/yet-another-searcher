@@ -64,7 +64,7 @@ fn main() {
 
     let owner_kp_path = match cluster {
         Cluster::Localnet => "../../mainnet_fork/localnet_owner.key",
-        Cluster::Mainnet => "/root/.config/solana/id.json",
+        Cluster::Mainnet => "/home/ubuntu/.config/solana/id.json",
         _ => panic!("shouldnt get here"),
     };
 
@@ -206,7 +206,7 @@ fn main() {
     // slide it out here
     let init_token_acc = derive_token_address(&owner.pubkey(), &usdc_mint);
     let init_token_balance =
-        spl_token::state::Account::unpack(&connection.get_account(&init_token_acc).unwrap().data).unwrap().amount as u128;
+        unpack_token_account(&connection.get_account(&init_token_acc).unwrap().data).unwrap().amount as u128;
     println!(
         "init token acc: {:?}, balance: {:#}",
         init_token_acc, init_token_balance

@@ -18,7 +18,7 @@ use anchor_client::{Client, Cluster, Program};
 use std::str::FromStr;
 
 use crate::monitor::pools::{PoolOperations, PoolType};
-use crate::serialize::token::{ Token, WrappedPubkey};
+use crate::serialize::token::{ Token, WrappedPubkey, unpack_token_account};
 use serde;
 use serde::{Deserialize, Serialize};
 
@@ -184,7 +184,7 @@ impl PoolOperations for SaberPool {
         accounts
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
+    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, _cluster: Cluster) {
         let ids: Vec<String> = self
             .get_mints()
             .iter()
@@ -205,14 +205,10 @@ impl PoolOperations for SaberPool {
         let acc_data0 = &acc_data0.unwrap().data;
         let acc_data1 = &acc_data1.unwrap().data;
 
-        let amount0 = spl_token::state::Account::unpack(acc_data0);
-        let amount1 = spl_token::state::Account::unpack(acc_data1);
-        if amount0.is_err() || amount1.is_err() {
-            println!("saber pool amount err: {:?} {:?}", amount0, amount1);
-            return;
-        }
-        let amount0 = amount0.unwrap().amount as u128;
-        let amount1 = amount1.unwrap().amount as u128;
+        let amount0 = unpack_token_account(acc_data0);
+        let amount1 = unpack_token_account(acc_data1);
+        let amount0 = amount0.amount as u128;
+        let amount1 = amount1.amount as u128;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
@@ -221,11 +217,9 @@ impl PoolOperations for SaberPool {
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
         let acc_data0 = data;
 
-        let amount0 = spl_token::state::Account::unpack(acc_data0);
-        if amount0.is_err() {
-            return;
-        }
-        let amount0 = amount0.unwrap();
+        let amount0 = unpack_token_account(acc_data0);
+       
+        let amount0 = amount0;
         let _mint = amount0.mint;
         let id0 = &self.token_ids[0];
         let id1 = &self.token_ids[1];

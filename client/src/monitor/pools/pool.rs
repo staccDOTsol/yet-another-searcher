@@ -68,7 +68,7 @@ pub trait PoolOperations: Debug + Send {
     fn get_name(&self) -> String;
     fn get_own_addr(&self) -> Pubkey;
     fn get_update_accounts(&self) -> Vec<Pubkey>;
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster);
+    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, cluster: Cluster);
     fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], cluster: Cluster);
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey;

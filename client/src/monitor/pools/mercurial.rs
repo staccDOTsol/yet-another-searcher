@@ -1,5 +1,5 @@
 use crate::monitor::pools::{PoolOperations, PoolType};
-use crate::serialize::token::{ Token, WrappedPubkey};
+use crate::serialize::token::{ Token, WrappedPubkey, unpack_token_account};
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use async_trait::async_trait;
@@ -68,7 +68,7 @@ impl PoolOperations for MercurialPool {
     ) -> (bool, Vec<Instruction>) {
         let swap_state_pda =
             Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
-            let owner_kp_path = "/root/.config/solana/id.json";
+            let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
             let owner2 = read_keypair_file(owner_kp_path).unwrap();
             let owner = owner2.try_pubkey().unwrap();
         let user_src = derive_token_address(&owner, &mint_in);
@@ -181,7 +181,7 @@ impl PoolOperations for MercurialPool {
         accounts
     }
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, _data: &[u8], _cluster: Cluster) {}
-    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) {
+    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, _cluster: Cluster) {
         let ids: Vec<String> = self
             .get_mints()
             .iter()
@@ -193,8 +193,8 @@ impl PoolOperations for MercurialPool {
         let acc_data0 = &accounts[0].as_ref().unwrap().data;
         let acc_data1 = &accounts[1].as_ref().unwrap().data;
 
-        let amount0 = spl_token::state::Account::unpack(acc_data0).unwrap().amount as u128;
-        let amount1 = spl_token::state::Account::unpack(acc_data1).unwrap().amount as u128;
+        let amount0 = unpack_token_account(acc_data0).amount as u128;
+        let amount1 = unpack_token_account(acc_data1).amount as u128;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
