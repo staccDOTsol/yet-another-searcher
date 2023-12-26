@@ -29,7 +29,7 @@ fn main() {
     let _cluster = Cluster::Mainnet;
 
     env_logger::init();
-    let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
+    let owner_kp_path = "/root/.config/solana/id.json";
     let owner = read_keypair_file(owner_kp_path).unwrap();
 
     // ** setup RPC connection

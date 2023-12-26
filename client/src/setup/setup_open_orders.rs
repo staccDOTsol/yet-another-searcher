@@ -32,7 +32,7 @@ fn main() {
 
     env_logger::init();
     // let owner_kp_path = "../../../mainnet.key";
-    let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
+    let owner_kp_path = "/root/.config/solana/id.json";
     let owner = read_keypair_file(owner_kp_path).unwrap();
     let oo_path = match cluster {
         Cluster::Localnet => "./serum_open_orders.json",

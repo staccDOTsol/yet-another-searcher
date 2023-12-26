@@ -188,7 +188,7 @@ async fn yellowstone( mut og_pools: &mut  Vec<Box< dyn PoolOperations>>,
         let start_mint: Pubkey = usdc_mint;
         
     let _min_swap_amount = 10_u128.pow(3_u32); // scaled! -- 1 USDC
-    let _owner_kp_path = "/home/ubuntu/.config/solana/id.json";
+    let _owner_kp_path = "/root/.config/solana/id.json";
     let rc_owner = owner;
     let src_ata = derive_token_address(&rc_owner.pubkey(), &start_mint);
 
@@ -261,7 +261,7 @@ let signers = [rc_owner_signer];
     }
 
 }
-#[tokio::main(worker_threads = 24)]
+#[tokio::main(worker_threads = 250)]
 
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut page_config = ShardedDb::new(Mutex::new(HashMap::new()));
@@ -279,7 +279,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let connection = Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized()));
 
-    let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
+    let owner_kp_path = "/root/.config/solana/id.json";
 
     // setup anchor things
     let owner = read_keypair_file(owner_kp_path).unwrap();
@@ -617,7 +617,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     
-    // batch 24 futures at once
+    // batch 250 futures at once
     let results = join_all(futures).await;
 
     for result in results {
@@ -727,7 +727,7 @@ let mut b: Arbitrager =Arbitrager {
 };
 let mut futures = vec![];
 loop {
-    if futures.len() < 24 {
+    if futures.len() < 250 {
 
             let mut arbitrager = b.clone();
             let token_mints = arbitrager.clone().token_mints.clone();
@@ -758,7 +758,7 @@ loop {
 else {
     println!("futures len... {:?}", futures.len());
 // Stream futures.
-let results = futures::stream::iter(futures).buffer_unordered(24).collect::<Vec<_>>().await;
+let results = futures::stream::iter(futures).buffer_unordered(250).collect::<Vec<_>>().await;
 futures = vec![];
 for result in results {
         if result.is_err() {

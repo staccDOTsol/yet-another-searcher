@@ -78,9 +78,9 @@ impl PoolOperations for AldrinPool {
     ) -> (bool, Vec<Instruction>) {
         let state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
-        let _owner_kp_path = "/home/ubuntu/.config/solana/id.json";
+        let _owner_kp_path = "/root/.config/solana/id.json";
         // setup anchor things
-        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
+        let owner3 = Arc::new(read_keypair_file("/root/.config/solana/id.json").unwrap());
         
         let owner = owner3.try_pubkey().unwrap()    ;
         let provider = Client::new_with_options(

@@ -51,7 +51,7 @@ fn main() -> Result<()> {
     //     "quoteMint":"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
     //     "lpMint":"FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m",
     //     "baseDecimals":6,"quoteDecimals":6,"lpDecimals":6,"version":4,
-    //     "programId":"675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+    //     "programId":"675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H250wFSUt1Mp8",
     //     "authority":"5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1",
     //     "openOrders":"CSCS9J8eVQ4vnWfWCx59Dz8oLGtcdQ5R53ea4V9o2eUp",
     //     "targetOrders":"3cji8XW5uhtsA757vELVFAeJpskyHwbnTSceMFY5GjVT",
@@ -67,7 +67,7 @@ fn main() -> Result<()> {
     //     "marketQuoteVault": "EBGFfeQ5dVwW4HxtShVbh8aCh2fKJ1r2qXBoa6teUve6",
     //     "marketBids": "CXMRrGEseppLPmzYJsx5vYwTkaDEag4A9LJvgrAeNpF",
     //     "marketAsks": "27BrDDYtv9NDQCALCNnDqe3BqjYkgiaQwKBbyqCA8p8B",
-    //     "marketEventQueue": "EkKZwBeKWPvhraYERfUNr2fdh1eazrbTrQXYkRZs24XB",
+    //     "marketEventQueue": "EkKZwBeKWPvhraYERfUNr2fdh1eazrbTrQXYkRZs250XB",
     // },
 
     let instr = amm_swap(
@@ -83,7 +83,7 @@ fn main() -> Result<()> {
         &Pubkey::from_str("DZjbn4XC8qoHKikZqzmhemykVzmossoayV9ffbsUqxVj")?,
         &Pubkey::from_str("CXMRrGEseppLPmzYJsx5vYwTkaDEag4A9LJvgrAeNpF")?,
         &Pubkey::from_str("27BrDDYtv9NDQCALCNnDqe3BqjYkgiaQwKBbyqCA8p8B")?,
-        &Pubkey::from_str("EkKZwBeKWPvhraYERfUNr2fdh1eazrbTrQXYkRZs24XB")?,
+        &Pubkey::from_str("EkKZwBeKWPvhraYERfUNr2fdh1eazrbTrQXYkRZs250XB")?,
 
         &Pubkey::from_str("7ssdQJxVAEBSigoJovgHcchwcEQFPPtYbyzLHDHEewKM")?,
         &Pubkey::from_str("EBGFfeQ5dVwW4HxtShVbh8aCh2fKJ1r2qXBoa6teUve6")?,
