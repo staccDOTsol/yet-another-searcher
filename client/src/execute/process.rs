@@ -106,6 +106,7 @@ impl Arbitrager {
                         if new_yield > max_yields[start_mint_idx] {
                             max_yields[start_mint_idx] = new_yield;
                             prev[start_mint_idx] = Some(mint_idx);
+                            println!("new yield: {}", new_yield);
                             heap.push((new_yield, start_mint_idx));
                         }
                     }
