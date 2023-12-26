@@ -80,6 +80,54 @@ impl Arbitrager {
         routes
     }
 
+    pub fn find_max_yield_path(&self, start_mint_idx: usize) -> Vec<usize> {
+        let mut max_yields = vec![0; self.token_mints.len()];
+        let mut prev = vec![None; self.token_mints.len()];
+        let mut heap = BinaryHeap::new();
+    
+        max_yields[start_mint_idx] = u128::MAX;
+        heap.push((u128::MAX, start_mint_idx));
+    
+        while let Some((yield_value, mint_idx)) = heap.pop() {
+            if yield_value != max_yields[mint_idx] {
+                continue;
+            }
+            if let Some(edges) = self.graph_edges.get(mint_idx) {
+                for &edge in edges {
+                   
+                if let Some(pools) = self.graph
+                .0
+                .get(&PoolIndex(edge))
+                .and_then(|p| p.0.get(&PoolIndex(start_mint_idx)))
+                {
+                    for pool in pools.1.iter() {
+                        let new_yield = pool.get_quote_with_amounts_scaled(1_000_000, &self.token_mints[edge], &self.token_mints[start_mint_idx]);
+        
+                        if new_yield > max_yields[start_mint_idx] {
+                            max_yields[start_mint_idx] = new_yield;
+                            prev[start_mint_idx] = Some(mint_idx);
+                            heap.push((new_yield, start_mint_idx));
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+    
+        let mut path = vec![];
+        let mut current = start_mint_idx;
+    
+        while let Some(prev_mint) = prev[current] {
+            path.push(current);
+            current = prev_mint;
+        }
+    
+        path.push(start_mint_idx);
+        path.reverse();
+    
+        path
+    }
     // Recursive function
     fn find_weights_recursive(&self, current_mint_idx: usize, start_mint_idx: usize, amount: u128, max_hops: usize, current_hop: usize, pool_path: Vec<PoolQuote>, path: Vec<usize>, balances: Vec<u128>) -> Vec<(usize, u128, Vec<PoolQuote>, Vec<usize>, Vec<u128>)> {
         if current_hop >= max_hops {
@@ -87,9 +135,9 @@ impl Arbitrager {
         }
 
         let mut routes = Vec::new();
-
-        if let Some(out_edges) = self.graph_edges.get(current_mint_idx) {
-            for mut edge in out_edges {
+        let max_yield = self.find_max_yield_path(current_mint_idx);
+        let mut edge = &max_yield.clone()[0];
+        
                 let timestamp = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() % (max_hops as u64 - 6);
                 if current_hop >= max_hops - timestamp as usize {
                     // mod timestamp by four 
@@ -134,8 +182,6 @@ impl Arbitrager {
                         }
                     }
                 }
-            }
-        }
 
         routes
     }
