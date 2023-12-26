@@ -731,16 +731,14 @@ let mut b: Arbitrager =Arbitrager {
         connection_url.to_string()),
     connection,
 };
-let mut futures = vec![];
 loop {
-    if futures.len() < 23 {
 
             let mut arbitrager = b.clone();
             let token_mints = arbitrager.clone().token_mints.clone();
             let graph_edges = arbitrager.clone().graph_edges.clone();
             let graph = arbitrager.clone().graph.clone();
-
-            let c = Arbitrager {
+            
+            let mut c = Arbitrager {
                 token_mints: token_mints.clone(),
                 graph_edges: graph_edges.clone(),
                 graph: graph.clone(),
@@ -749,38 +747,19 @@ loop {
                     connection_url.to_string()),
                 connection: Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized())),
                 };
-               
-                let future = tokio::spawn(
-                    c.optimized_search(
-                        start_mint_idx,
-                        init_token_balance
-                    )   
-                );
-            // delay tokio 138 ms
-            futures.push(future);
+   
 
-//stream next futuure
-        }
-else {
-    println!("futures len... {:?}", futures.len());
-// Stream futures.
-let results = futures::stream::iter(futures).buffer_unordered(23).collect::<Vec<_>>().await;
-futures = vec![];
-for result in results {
-        if result.is_err() {
-            continue;
-        }
-        let result = result.unwrap();
-        if result.is_err() {
-            continue;
-        }
-        let result = result.unwrap();
-        
+                  let result = c.find_yield(
+                        start_mint_idx,
+                        7,
+                        1_000_000 * 1.01 as u128,
+                    ).await;
+                      
             if result.is_none() {
                 continue;
             }
-            
-let ( arb_path, _, arb_pools, arbin_amounts) = result.unwrap();
+            let result = result.unwrap();
+let ( arb_path, arb_pools, arbin_amounts) = (result.nodes, result.pool_idxs, result.yields);
 
 //println!("arbkey: {:?}", arb_key);/* 
 let usdc_mint = usdc_mint.clone();
@@ -939,6 +918,4 @@ continue;
     println!("https://solscan.io/tx/{:?}", sig);
 }
 
-}
-}
 }
