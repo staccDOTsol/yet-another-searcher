@@ -167,7 +167,7 @@ impl Arbitrager {
                         // Add the new path to the queue if not already explored
                         let mut explored = self.state.try_lock().unwrap();
                         if !explored.contains(&new_path.nodes) {
-                            println!("Pushing path: {:?}", new_path.nodes);
+                            println!("Pushing path: {:?} {:?}", new_path.nodes, new_path.yields);
                             queue.push(new_path);
                         }
                     }
@@ -189,16 +189,15 @@ impl Arbitrager {
     async fn construct_new_path(&self, path: &Path, edge: usize, start_mint_idx: usize, max_hops: usize, max_output: u128) -> Path {
         let mut new_path = path.clone();
 
-        let mut seen: Vec<usize> = vec![];
     
         if path.total_length > max_hops - 1 {
-            let new_yield =  self.get_yield(path.last_node(), start_mint_idx, start_mint_idx, max_hops, 0, max_output, &mut seen).await;
+            let new_yield =  self.get_yield(path.last_node(), start_mint_idx, start_mint_idx, max_hops, 0, path.yields[path.yields.len()-1]).await;
             if new_yield.0 > 0  && (!path.contains_node(edge) || path.total_length <  2) {
                 new_path.extend(edge, new_yield.0, new_yield.1.unwrap());
             }
         }
         else {
-            let new_yield =  self.get_yield(path.last_node(), edge, start_mint_idx, max_hops, 0, max_output, &mut seen).await;
+            let new_yield =  self.get_yield(path.last_node(), edge, start_mint_idx, max_hops, 0, path.yields[path.yields.len()-1]).await;
             if new_yield.0 > 0 && (!path.contains_node(edge) || path.total_length <  2 ) {
                 new_path.extend(edge, new_yield.0, new_yield.1.unwrap());
             }
@@ -209,7 +208,7 @@ impl Arbitrager {
 
     #[async_recursion::async_recursion]
 
-    async fn get_yield(&self, from: usize, to: usize, start_mint_idx: usize, max_hops: usize, current_hops: usize, amount: u128, seen: &mut Vec<usize>) -> (u128, Option<PoolQuote>) {
+    async fn get_yield(&self, from: usize, to: usize, start_mint_idx: usize, max_hops: usize, current_hops: usize, amount: u128) -> (u128, Option<PoolQuote>) {
         if let Some(edges) = self.graph_edges.get(from) {
             if edges.contains(&to) {
                 return self.compute_yield(from, to, amount).await;
@@ -218,14 +217,11 @@ impl Arbitrager {
                 for &edge in edges {
                     let timestamp = Arbitrager::current_timestamp() % edges.len();
                     let edge = *edges.iter().nth(timestamp).unwrap();
-                    if !seen.contains(&edge) || (edge == start_mint_idx) {
-                        seen.push(edge);
-                        let result = self.find_yield_recursive(edge, to, start_mint_idx, max_hops, current_hops, amount, seen).await;
+                   
+                        let result = self.find_yield_recursive(edge, to, start_mint_idx, max_hops, current_hops, amount).await;
                         if result.0 > 0 {
                             return result;
                         }
-                        seen.pop();
-                    }
                 }
             }
         }
@@ -254,10 +250,10 @@ impl Arbitrager {
         }
         (new_balance, Some(pool.clone()))
     }
-    async fn find_yield_recursive(&self, edge: usize, to: usize, start_mint_idx: usize, max_hops: usize, current_hops: usize, amount: u128, seen: &mut Vec<usize>) -> (u128, Option<PoolQuote>) {
+    async fn find_yield_recursive(&self, edge: usize, to: usize, start_mint_idx: usize, max_hops: usize, current_hops: usize, amount: u128) -> (u128, Option<PoolQuote>) {
         let semaphore = Arc::new(Semaphore::new(250));
         let permit = semaphore.clone().acquire_owned().await.unwrap();
-        let future = self.get_yield(edge, to, start_mint_idx, max_hops, current_hops + 1, amount, seen)
+        let future = self.get_yield(edge, to, start_mint_idx, max_hops, current_hops + 1, amount)
             .then(move |result| {
                 drop(permit); // Release the permit
                 async move { result }

@@ -69,7 +69,7 @@ pub trait PoolOperations: Send {
     fn get_name(&self) -> String;
     fn get_own_addr(&self) -> Pubkey;
     fn get_update_accounts(&self) -> Vec<Pubkey>;
-    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, cluster: Cluster);
+    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster) -> bool;
     fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], cluster: Cluster);
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey;
@@ -124,7 +124,7 @@ impl PoolOperations for PoolQuote {
     fn get_update_accounts(&self) -> Vec<Pubkey> {
         self.0.borrow().get_update_accounts()
     }
-    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, cluster: Cluster) {
+    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster) -> bool {
         self.0.borrow_mut().set_update_accounts(accounts, cluster)
     }
     fn set_update_accounts2(&mut self, pubkey: Pubkey, data: &[u8], cluster: Cluster) {

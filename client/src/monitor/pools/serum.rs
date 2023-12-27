@@ -222,7 +222,7 @@ impl PoolOperations for SerumPool {
         vec![self.own_address.0, self.bids.0, self.asks.0]
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, cluster: Cluster) {
+    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, cluster: Cluster) -> bool{
         //self.accounts = accounts.clone();
 
         let oo_path = match cluster {
@@ -236,7 +236,7 @@ impl PoolOperations for SerumPool {
         for account in accounts.clone() {
             let flags = Market::account_flags(&account.clone().unwrap().data);
             if flags.is_err() {
-                return;
+                return false;
             }
             let flags = flags.unwrap();
             if flags.intersects(AccountFlag::Bids) {
@@ -246,9 +246,10 @@ impl PoolOperations for SerumPool {
                    // self.accounts[2] = (Some(account.clone().unwrap()))
             }
         }
+        return true
     }
 
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster)  {
         let flags = Market::account_flags(&data);
         if flags.is_err() {
             return;

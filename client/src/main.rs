@@ -1,4 +1,5 @@
 use client::serialize::token::unpack_token_account;
+use futures::future::join_all;
 use rand::Rng;
 use solana_client::nonblocking::rpc_client::RpcClient;
 use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
@@ -6,6 +7,7 @@ use anchor_client::solana_sdk::pubkey::Pubkey;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
 use solana_client::rpc_config::RpcSendTransactionConfig;
+use switchboard_solana::AccountInfo;
 use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
 use futures::stream::FuturesUnordered;
@@ -13,8 +15,10 @@ use futures::stream::StreamExt;
 use futures::Future;
 use rand::{seq::SliceRandom};
 
+use tokio::sync::Semaphore;
+use std::ops::Index;
+use std::sync::Arc;
 
-use futures::future::join_all;
 use log::{debug};
 use solana_address_lookup_table_program::instruction::{extend_lookup_table, create_lookup_table};
 use solana_address_lookup_table_program::state::AddressLookupTable;
@@ -39,7 +43,7 @@ use client::execute::process::{Arbitrager, get_arbitrage_instructions, calculate
 
 use serde::{Deserialize};
 
-use std::sync::{Arc, Mutex};
+use std::sync::{Mutex};
 
 
 use {
@@ -334,7 +338,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut token_mints = vec![];
     let mut pools = vec![];
 
-    let mut update_pks = HashMap::new();
+    let mut update_pks = vec![];
     let mut all_mint_idxs = vec![];
 
     let mut mint2idx = HashMap::new();
@@ -345,7 +349,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let _pool_count = 0;
     let _account_ptr = 0;
     println!("extracting pool + mints...");
-    let mut update_accounts: Vec<Account> = vec![];
+    let mut update_accounts = vec![];
     let mut tuas = vec![];
     let mut tupdate_pks = vec![];
     for pool_dir in pool_dirs.clone() {
@@ -361,14 +365,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
            
             let uas = pool.get_update_accounts();
-            tupdate_pks.extend(uas.clone());
-            tuas.extend(uas.clone());
+            tuas.push(uas.clone()[0]);
+            tuas.push(uas.clone()[1]);
+            tupdate_pks.extend(uas.clone().into_iter().map(|pk| {
+                pk
+            }));
         }
 
     }
     println!("getting update accounts... tuas length is {:?}", tuas.len());
 
-    let mut futures = vec![];
 let step = 70;
 let mut indexy = 0;
 let mut maybe_pools = vec![];
@@ -393,76 +399,169 @@ for pool_dir in pool_dirs.clone() {
 }
 
 let maybe_pools = maybe_pools.clone();
-    for chunk in tuas.chunks(100) {
-        let fut = program_async.get_multiple_accounts_with_commitment(&chunk, CommitmentConfig::finalized());
-        futures.push(fut);
-    }
-let mut cycles = 0;
-while !futures.is_empty() {
-    println!("futures is {:?}", futures.len());
-    let chunk_futures = futures.split_off(std::cmp::min(futures.len(), futures.len() - step));
-    let results = join_all(chunk_futures).await;
-    if futures.len() < step {
-        break 
-    }
-    cycles += 1;
-    for (i, result) in results.into_iter().enumerate() {
-            println!("futures {:?}", (cycles * step + i) * 100);
-            if let Ok(account_info) = result {
-              
-                let accounts = account_info.value;
-                for account in accounts {
-                    indexy += 1;
-                
-                    if account.is_none() {
-                        continue;
-                    }
-                    let account = account.unwrap();
-                    update_pks.insert(
-                        tupdate_pks[indexy].clone(),
-                        account.clone(),
-                    );
+let maybe_pools_clone = maybe_pools
+    .clone();
+let mut futures = vec![];
+let mut chunksss = vec![];
+for chunk in tuas.chunks(100) {
 
+    let fut = program_async.get_multiple_accounts_with_commitment(&chunk, CommitmentConfig::confirmed());
+    futures.push(fut);
+    chunksss.push(chunk);
+    if futures.len() == 100 {
+        println!("futures length is {:?} update_accounts length is {:?}", futures.len(), update_accounts.len());
+            
+        let results = join_all(futures).await;
+        futures = vec![];
 
-                }
-            }
-        }
-    }
-    println!("update accounts is {:?}", update_accounts.len());
-    println!("update pks is {:?}", update_pks.len());
-    println!("maybe pools is {:?}", maybe_pools.len());
-    let update_pks_set: HashSet<_> = update_pks.iter().map(|(pubkey, _)| pubkey.clone()).collect();
-
-    let mut indexy = 0;
-    for mut pool in maybe_pools {
-        indexy += 1;
-        let uas = pool.get_update_accounts();
-        let mut counter = 0;
-        let mut two_keys = vec![];
-        for pubkey in uas {
-            // get both update accounts
-            if update_pks_set.contains(&pubkey) {
-
-                if let Some(account) = update_pks.iter().find(|(pk, _)| pk == &&pubkey) {
-
-                    two_keys.push(Some(account.1));
-                }
-            }
-        }
-        if two_keys.len() != 2 {
+    // Directly use the slice as an iterator
+    let mut chunkyindex = 0;
+    for result in results {
+        let chunk2 = chunksss[chunkyindex].clone();
+        chunkyindex += 1;
+        if result.is_err() {
             continue;
         }
-
-        pool.set_update_accounts(two_keys, cluster.clone());
+        let accounts = result.unwrap().value;
         
-            let pool_mints = pool.get_mints();
-            if pool.can_trade(pool_mints[0].borrow(), pool_mints[1].borrow()) { 
-                pools.push(pool.clone());
-                println!("{} / {}", indexy, pools.len());
-            }
+        
+    let mut count = 0;
+            let mut two_keys = vec![];
+            for (i, account) in accounts.into_iter().enumerate() {
+                count += 1;
+                if account.clone().is_none() {
+                    count = 0;
+                    two_keys = vec![];
+                    println!("skipping account");
+                    continue;
+                }
+                two_keys.push((chunk2[i], account.clone()));
+                if count == 2 {
+                    count = 0;
+                        update_accounts.push(two_keys[0].1.clone().unwrap());
+                        update_accounts.push(two_keys[1].1.clone().unwrap());
+                        update_pks.push(two_keys[0].0);
+                        update_pks.push(two_keys[1].0);
+                        
+                        
+                        let mut maybe_pools_clone = maybe_pools_clone.clone();
+                        let mut pool = maybe_pools_clone
+                            .iter()
+                            .find(|pool| {
+                                pool.get_update_accounts().contains(&two_keys[0].0) && pool.get_update_accounts().contains(&two_keys[1].0)
+                            })
+                            ;
+                            if pool.is_none() {
+                                count = 0;
+                                two_keys = vec![];
+                                continue;
+                            }
+                            let mut pool = pool.unwrap();
+
+                        let mut pool = pool.clone_box();
             
+                        let eh  =pool.set_update_accounts(vec![two_keys[0].1.clone(), two_keys[1].1.clone()], Cluster::Mainnet);
+                          
+                        let mints = pool.get_mints();
+            
+                        if pool.can_trade(&mints[0], &mints[1]) {
+                        
+            
+                        pools.push(pool.clone());
+                        println!("added pool {:?} from {:?} total {:?}", pool.clone().get_own_addr(), pool.clone().get_name(), pools.clone().len());
+                        }
+                        else {
+                            let uas = pool.get_update_accounts();
+                            // now skip the chunks to these uas
+                            let mut uas = uas.clone();
+                            
+                            let ua_accounts = program_async.get_multiple_accounts_with_commitment(&uas, CommitmentConfig::confirmed()).await.unwrap().value;
+                                pool.set_update_accounts(ua_accounts, Cluster::Mainnet);
+
+                        if pool.can_trade(&mints[0], &mints[1]) {
+                        
+                            pools.push(pool.clone());
+                            println!("added pool {:?} from {:?} total {:?}", pool.clone().get_own_addr(), pool.clone().get_name(), pools.clone().len());
+                            }
+                            else {
+                                println!("skipping pool {:?} from {:?} total {:?}", pool.clone().get_own_addr(), pool.clone().get_name(), pools.clone().len());
+                            }
+                        }
+                    two_keys = vec![];
+                }   
+        
+            }
+               
+    }    }
+}
+
+        let results = join_all(futures).await;
+        futures = vec![];
+
+    // Directly use the slice as an iterator
+    let mut chunkyindex = 0;
+    for result in results {
+        let chunk = chunksss[chunkyindex].clone();
+        chunkyindex += 1;
+        if result.is_err() {
+            continue;
+        }
+        let accounts = result.unwrap().value;
+        
+        
+            let mut count = 0;
+            let mut two_keys = vec![];
+            for (i, account) in accounts.into_iter().enumerate() {
+                count += 1;
+                let maybe_pools = maybe_pools
+                    .clone();
+                let pool = maybe_pools
+                    .iter()
+                    .find(|pool| {
+                        pool.get_update_accounts().contains(&chunk[i])
+                    })
+                    .unwrap();
+                let mut pool = pool.clone_box();
+                if account.clone().is_none() {
+                    continue;
+                }
+                two_keys.push((chunk[i], account.clone()));
+                if count == 2 {
+                    count = 0;
+                    if two_keys.len() == 2 {
+                        update_accounts.push(two_keys[0].1.clone().unwrap());
+                        update_accounts.push(two_keys[1].1.clone().unwrap());
+                        update_pks.push(two_keys[0].0);
+                        update_pks.push(two_keys[1].0);
+                        let mut maybe_pools_clone = maybe_pools_clone.clone();
+                        let mut pool = maybe_pools_clone
+                            .iter()
+                            .find(|pool| {
+                                pool.get_update_accounts().contains(&two_keys[0].0) && pool.get_update_accounts().contains(&two_keys[1].0)
+                            })
+                            .unwrap();
+                        let mut pool = pool.clone_box();
+            
+                        pool.set_update_accounts(vec![two_keys[0].1.clone(), two_keys[1].1.clone()], Cluster::Mainnet);
+            
+                        let mints = pool.get_mints();
+            
+                        if pool.can_trade(&mints[0], &mints[1]) {
+                        
+            
+                        pools.push(pool.clone());
+                        println!("added pool {:?} from {:?} total {:?}", pool.clone().get_own_addr(), pool.clone().get_name(), pools.clone().len());
+                        }
+                    }
+                    two_keys = vec![];
+                }   
+        
+            }
+               
     }
-    
+
+    let mut indexy = 0;
+  
     println!("pool is {:?}", pools.clone().len());
 
     for pool in pools.clone() { 
@@ -519,9 +618,6 @@ while !futures.is_empty() {
     println!("getting pool amounts...");
 
 
-let update_accounts = update_pks.clone().into_iter().map(|(_, account)| {
-    account
-}).collect::<Vec<Account>>();
         println!("added {:?} update accounts", update_accounts.clone().len());
 
         let src_ata = derive_token_address(&rc_owner.pubkey(), &usdc_mint);
@@ -558,7 +654,7 @@ let update_accounts = update_pks.clone().into_iter().map(|(_, account)| {
         println!("chunk is {:?}", chunk.len());
         let update_pks = update_pks.clone()
         .iter()
-        .map(|(pk, _)| {
+        .map(|pk| {
             pk.to_string()
         })
         .collect::<Vec<String>>();
@@ -768,7 +864,7 @@ loop {
 
                   let result = c.find_yield(
                         start_mint_idx,
-                        7,
+                        9,
                         init_token_balance - 10000
                     ).await;
                       

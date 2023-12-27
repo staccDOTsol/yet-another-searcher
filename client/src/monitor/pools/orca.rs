@@ -287,7 +287,7 @@ if user_dst_acc.is_err() {
         true
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, _cluster: Cluster) {
+    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) -> bool {
         let ids: Vec<String> = self
             .get_mints()
             .iter()
@@ -297,13 +297,13 @@ if user_dst_acc.is_err() {
         let id1 = &ids[1];
 
         if accounts.len() < 2 {
-            return;
+            return false
         }
 
         let acc_data0 = &accounts[0].as_ref();
         let acc_data1 = &accounts[1].as_ref();
         if acc_data0.is_none() || acc_data1.is_none() {
-            return;
+            return false  
         }
         let acc_data0 = &acc_data0.unwrap().data;
         let acc_data1 = &acc_data1.unwrap().data;
@@ -313,9 +313,10 @@ if user_dst_acc.is_err() {
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
+        return true
     }
 
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster)  {
         let acc_data0 = data;
         let amount0 = unpack_token_account(acc_data0);
         

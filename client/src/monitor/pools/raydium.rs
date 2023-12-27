@@ -381,17 +381,17 @@ if user_dst_acc.is_err() {
         mint_out: &Pubkey,
         program: &Arc<RpcClient >
     ) -> u128 {
-        let mut pool_src_amount = self.pool_amounts.get(&self.quote_mint.0.to_string());
-        let mut pool_dst_amount = self.pool_amounts.get(&self.base_mint.0.to_string());
+        let mut coin_amount = self.pool_amounts.get(&self.base_mint.0.to_string());
+        let mut pc_amount = self.pool_amounts.get(&self.quote_mint.0.to_string());
         
-        if pool_src_amount.is_none() || pool_dst_amount.is_none() {
+        if coin_amount.is_none() || pc_amount.is_none() {
             return 0;
         }
-        let mut pool_src_amount = *pool_src_amount.unwrap();
-        let mut pool_dst_amount = *pool_dst_amount.unwrap();
+        let mut coin_amount = *coin_amount.unwrap();
+        let mut pc_amount = *pc_amount.unwrap();
         
         let idx0 = self.base_mint.0.to_string();
-        let swap_direction: SwapDirection = if idx0 == mint_out.to_string() {
+        let swap_direction: SwapDirection = if idx0 == mint_in.to_string() {
             SwapDirection::Coin2PC
             
         } else {
@@ -466,8 +466,8 @@ if user_dst_acc.is_err() {
         let total_coin_without_take_pnl;
            let atuplemaybe =
                 Calculator::calc_total_without_take_pnl(
-                    pool_src_amount as u64,
-                    pool_dst_amount as u64,
+                    pc_amount as u64,
+                    coin_amount as u64,
                     &open_orders,
                     &amm,
                     &Box::new(market_state),
@@ -486,12 +486,22 @@ if user_dst_acc.is_err() {
             .unwrap()
             .0;
         let swap_in_after_deduct_fee = U128::from(scaled_amount_in).checked_sub(swap_fee).unwrap();
-        let swap_amount_out = Calculator::swap_token_amount_base_in(
-            swap_in_after_deduct_fee,
-            total_pc_without_take_pnl.into(),
-            total_coin_without_take_pnl.into(),
-            swap_direction,
-        );
+        
+        let swap_amount_out = match swap_direction {
+            SwapDirection::Coin2PC => Calculator::swap_token_amount_base_in(
+                swap_in_after_deduct_fee,
+                total_pc_without_take_pnl.into(),
+                total_coin_without_take_pnl.into(),
+                swap_direction,
+            ),
+            SwapDirection::PC2Coin => Calculator::swap_token_amount_base_out(
+                swap_in_after_deduct_fee,
+                total_pc_without_take_pnl.into(),
+                total_coin_without_take_pnl.into(),
+                swap_direction,
+            ),
+        };
+        println!("raydium {} {} {} {}", swap_amount_out.as_u128(), total_pc_without_take_pnl, total_coin_without_take_pnl, swap_in_after_deduct_fee.as_u128());
         return swap_amount_out.as_u128();
         } else {
             let connection = program.clone();
@@ -597,8 +607,8 @@ if user_dst_acc.is_err() {
                 let total_coin_without_take_pnl;
                    let atuplemaybe =
                         Calculator::calc_total_without_take_pnl(
-                            pool_src_amount as u64,
-                            pool_dst_amount as u64,
+                            pc_amount as u64,
+                            coin_amount as u64,
                             &open_orders,
                             &amm,
                             &(market_state),
@@ -632,6 +642,7 @@ if user_dst_acc.is_err() {
                         swap_direction,
                     ),
                 };
+                println!("raydium {} {} {} {}", swap_amount_out.as_u128(), total_pc_without_take_pnl, total_coin_without_take_pnl, swap_in_after_deduct_fee.as_u128());
                 return swap_amount_out.as_u128();
         }
 
@@ -645,9 +656,11 @@ if user_dst_acc.is_err() {
             self.pool_amounts.get(&_mint_out.to_string()).is_none() {
             return false;
         }
-        self.pool_amounts.get(&_mint_in.to_string()).unwrap() > &10000000
-            && self.pool_amounts.get(&_mint_out.to_string()).unwrap() > &10000000
-
+       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &100  || 
+        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &100 {
+            return false;
+        }
+        return true;
         
     }fn get_name(&self) -> String {
         "Raydium".to_string()
@@ -660,35 +673,48 @@ if user_dst_acc.is_err() {
         vec![self.base_vault.0, self.quote_vault.0]
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, _cluster: Cluster) {
-        let ids: Vec<String> = self
-            .get_mints()
-            .iter()
-            .map(|mint| mint.to_string())
-            .collect();
-        let id0 = &ids[0];
-        let id1 = &ids[1];
+    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) -> bool {
+        
 
         let acc_data0 = &accounts[0].as_ref().unwrap().data;
         let acc_data1 = &accounts[1].as_ref().unwrap().data;
+        let un1 = unpack_token_account(acc_data0);
+        let un2 = unpack_token_account(acc_data1);
 
-        let amount0 = unpack_token_account(acc_data0).amount as u128;
-        let amount1 = unpack_token_account(acc_data1).amount as u128;
-        let connection = RpcClient::new(_cluster.url().to_string());
-        self.pool_amounts.insert(id0.clone(), amount0);
-        self.pool_amounts.insert(id1.clone(), amount1);
+        let mut amount0 = un1.amount as u128;
+        let mut amount1 = un2.amount as u128;
+        let id0 = un1.mint.to_string();
+        let id1 = un2.mint.to_string();
+        if id0 == self.base_mint.0.to_string() {
+            self.pool_amounts.insert(id0.clone(), amount0);
+            self.pool_amounts.insert(id1.clone(), amount1);
+        } else if id0 == self.quote_mint.0.to_string() {
+            self.pool_amounts.insert(id1.clone(), amount0);
+            self.pool_amounts.insert(id0.clone(), amount1);
+        } else {
+        }
+        if id1 == self.base_mint.0.to_string() {
+            self.pool_amounts.insert(id0.clone(), amount0);
+            self.pool_amounts.insert(id1.clone(), amount1);
+        } else if id1 == self.quote_mint.0.to_string() {
+            self.pool_amounts.insert(id1.clone(), amount0);
+            self.pool_amounts.insert(id0.clone(), amount1);
+        } else {
+            return false;
+        }
+        return true;
+       
        
     }
 
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster)  {
         let acc_data0 = data;
         let mut amount0 = unpack_token_account(acc_data0);
         
         let _mint = amount0.mint;
-        let _mint = amount0.mint;
         let id0 = self.base_mint.0.to_string();
         let id1 = self.quote_mint.0.to_string();
-        println!("raydium {} {} {} {}", _mint.to_string(), id0, id1, amount0.amount);
+        //println!("raydium {} {} {} {}", _mint.to_string(), id0, id1, amount0.amount);
 
  
                 if _mint.to_string() == id0 {
@@ -701,6 +727,9 @@ if user_dst_acc.is_err() {
                 .entry(id1.clone())
                 .and_modify(|e| *e = amount0.amount as u128)
                 .or_insert(amount0.amount as u128);
+        }
+        else {
+            panic!("invalid mint bro")
         }
     }
 

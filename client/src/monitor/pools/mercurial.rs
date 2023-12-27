@@ -182,8 +182,8 @@ impl PoolOperations for MercurialPool {
             .collect();
         accounts
     }
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, _data: &[u8], _cluster: Cluster) {}
-    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, _data: &[u8], _cluster: Cluster)  {}
+    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) -> bool {
         let ids: Vec<String> = self
             .get_mints()
             .iter()
@@ -200,6 +200,7 @@ impl PoolOperations for MercurialPool {
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
+        return true
     }
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey {

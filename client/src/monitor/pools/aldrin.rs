@@ -248,7 +248,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
         accounts
     }
 
-    fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, _cluster: Cluster) {
+    fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) -> bool {
         let ids: Vec<String> = self
             .get_mints()
             .iter()
@@ -265,9 +265,10 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
+        return true
     }
     
-    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {
+    fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster)  {
         let acc_data0 = data;
 
         let amount0 = unpack_token_account(acc_data0);
