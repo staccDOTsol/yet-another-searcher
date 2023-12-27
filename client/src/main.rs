@@ -456,8 +456,10 @@ while !futures.is_empty() {
         pool.set_update_accounts(two_keys, cluster.clone());
         
             let pool_mints = pool.get_mints();
+            if pool.can_trade(pool_mints[0].borrow(), pool_mints[1].borrow()) { 
                 pools.push(pool.clone());
                 println!("{} / {}", indexy, pools.len());
+            }
             
     }
     

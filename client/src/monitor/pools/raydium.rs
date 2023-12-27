@@ -395,10 +395,9 @@ if user_dst_acc.is_err() {
             SwapDirection::Coin2PC
             
         } else {
-            pool_dst_amount = *self.pool_amounts.get(&self.quote_mint.0.to_string()).unwrap();
-            pool_src_amount = *self.pool_amounts.get(&self.base_mint.0.to_string()).unwrap();
             SwapDirection::PC2Coin
-        };        ;
+        };        
+        ;
         let key = (self.open_orders.0, self.authority.0, self.market_id.0, self.id.0);
         if let Some(value) = self.cache.get(&key) {
             // If the result is in the cache, use it.
@@ -496,7 +495,11 @@ if user_dst_acc.is_err() {
         return swap_amount_out.as_u128();
         } else {
             let connection = program.clone();
-            let mut amm_open_orders_info = connection.get_account(&self.open_orders.0).unwrap();
+            let mut amm_open_orders_info = connection.get_account(&self.open_orders.0);
+            if amm_open_orders_info.is_err() {
+                return 0;
+            }
+            let mut amm_open_orders_info = amm_open_orders_info.unwrap();
             let mut amm_authority_info = connection.get_account(&self.authority.0).unwrap();
             let mut market_info = connection.get_account(&self.market_id.0).unwrap();
             let mut amm_info: Account = connection.get_account(&self.id.0).unwrap();
@@ -614,12 +617,21 @@ if user_dst_acc.is_err() {
                     .unwrap()
                     .0;
                 let swap_in_after_deduct_fee = U128::from(scaled_amount_in).checked_sub(swap_fee).unwrap();
-                let swap_amount_out = Calculator::swap_token_amount_base_in(
-                    swap_in_after_deduct_fee,
-                    total_pc_without_take_pnl.into(),
-                    total_coin_without_take_pnl.into(),
-                    swap_direction,
-                );
+                
+                let swap_amount_out = match swap_direction {
+                    SwapDirection::Coin2PC => Calculator::swap_token_amount_base_in(
+                        swap_in_after_deduct_fee,
+                        total_pc_without_take_pnl.into(),
+                        total_coin_without_take_pnl.into(),
+                        swap_direction,
+                    ),
+                    SwapDirection::PC2Coin => Calculator::swap_token_amount_base_out(
+                        swap_in_after_deduct_fee,
+                        total_pc_without_take_pnl.into(),
+                        total_coin_without_take_pnl.into(),
+                        swap_direction,
+                    ),
+                };
                 return swap_amount_out.as_u128();
         }
 
@@ -633,19 +645,8 @@ if user_dst_acc.is_err() {
             self.pool_amounts.get(&_mint_out.to_string()).is_none() {
             return false;
         }
-        let mints = self.get_mints();
-        let connection = RpcClient::new("https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718".to_string());
-        let test = self.get_quote_with_amounts_scaled(
-1000000,
-            &mints[0],
-            &mints[1],
-           &Arc::new(connection))
-            ;
-        if test == 0 {
-            return false;
-        }
-        self.pool_amounts.get(&_mint_in.to_string()).unwrap() > &0 
-            && self.pool_amounts.get(&_mint_out.to_string()).unwrap() > &0
+        self.pool_amounts.get(&_mint_in.to_string()).unwrap() > &10000000
+            && self.pool_amounts.get(&_mint_out.to_string()).unwrap() > &10000000
 
         
     }fn get_name(&self) -> String {
