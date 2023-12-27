@@ -1,6 +1,8 @@
 use crate::constants::*;
-use crate::monitor::pools::PoolOperations;
+use crate::monitor::pools::{PoolOperations, PoolType};
 use anchor_client::solana_sdk::pubkey::Pubkey;
+use solana_client::rpc_client::RpcClient;
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs;
 use std::ops::{DerefMut, Deref};
@@ -72,27 +74,26 @@ pub fn derive_token_address(owner: &Pubkey, mint: &Pubkey) -> Pubkey {
     pda
 }
 
-#[derive(Debug, Clone)]
-pub struct PoolQuote(pub Rc<Box<dyn PoolOperations>>);
+#[derive(Clone)]
+pub struct PoolQuote(pub Arc<RefCell<Box<dyn PoolOperations>>>);
 
 unsafe impl Send for PoolQuote {}
 
 unsafe impl Sync for PoolQuote {}
 
-
 impl PoolQuote {
-    pub fn new(quote: Rc<Box<dyn PoolOperations>>) -> Self {
+    pub fn new(quote: Arc<RefCell<Box<dyn PoolOperations>>>) -> Self {
         Self(quote)
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct PoolGraph(pub HashMap<PoolIndex, PoolEdge>);
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+#[derive(Clone, Copy, Eq, PartialEq, Hash)]
 pub struct PoolIndex(pub usize);
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct PoolEdge(pub HashMap<PoolIndex, Vec<PoolQuote>>);
 
 impl PoolGraph {

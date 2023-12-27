@@ -7,10 +7,21 @@ use crate::monitor::pools::math;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Cluster, Program};
 use async_trait::async_trait;
-use openbook_dex::critbit::SlabView;
-use openbook_dex::matching::OrderBookState;
+use num_traits::ToPrimitive;
 
+use serum_dex::critbit::SlabView;
+use serum_dex::matching::OrderBookState;
+use serum_dex::state::OpenOrders;
+use serum_dex::{
+    matching::Side,
+    state::{EventView, MarketState, ToAlignedBytes},
+};
+use raydium_amm::check_assert_eq;
+use raydium_amm::math::{SwapDirection, U128, Calculator, CheckedCeilDiv};
+use raydium_amm::processor::Processor;
+use raydium_amm::state::{AmmInfo, Loadable, AmmStatus};
 use serde;
+use solana_client::rpc_client::RpcClient;
 use solana_program::account_info::AccountInfo;
 use solana_program::stake_history::Epoch;
 use solana_sdk::program_pack::Pack;
@@ -63,7 +74,7 @@ fn account_info<'a>(pk: &'a Pubkey, account: &'a mut Account) -> AccountInfo<'a>
         Epoch::default(),
     )
 }
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct RaydiumPool {
     
@@ -97,6 +108,9 @@ pub struct RaydiumPool {
     pub accounts: Vec<Option<Account>>,
     #[serde(skip)]
     pub pool_amounts: HashMap<String, u128>,
+    #[serde(skip)]
+    pub cache: HashMap<(Pubkey, Pubkey, Pubkey, Pubkey), (Account, Account, Account, Account, AmmInfo, MarketState, Box<serum_dex::state::OpenOrders>, Account)>,
+
 }
 
 
@@ -210,14 +224,13 @@ impl PoolOperations for RaydiumPool {
     fn get_pool_type(&self) -> PoolType {
         PoolType::RaydiumPoolType
     }
-    
     fn swap_ix(
         &self,
         mint_in: Pubkey,
         mint_out: Pubkey,
         _start_bal: u128,
         pubkey: Pubkey,
-        program: Program<Arc<Keypair>>
+        program: &Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let user_src = derive_token_address(&pubkey, &mint_in);
@@ -230,12 +243,14 @@ impl PoolOperations for RaydiumPool {
         } else {
             CurveType::ConstantProduct
         };
+        let program_id = self.program_id.clone();
         let id = self.id.clone();
-        let authority = self.authority.clone();
+        let authority = Pubkey::from_str("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1").unwrap();
         let open_orders = self.open_orders.clone();
         let target_orders = self.target_orders.clone();
         let market_program_id = self.market_program_id.clone();
         let market_id = self.market_id.clone();
+        let market_id_acc = program.rpc().get_account(&market_id.0).unwrap();
         let market_bids = self.market_bids.clone();
         let market_asks = self.market_asks.clone();
         let market_event_queue = self.market_event_queue.clone();
@@ -277,16 +292,6 @@ impl PoolOperations for RaydiumPool {
                 let mut ixs = vec![];
                 let   swap_ix = swap_ix.unwrap();
 ixs.push(swap_ix);
-if user_src_acc.is_err() {
-    let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
-        &pubkey,
-        &pubkey,
-        &mint_in,
-        &spl_token::ID
-    );
-    ixs.insert(0, create_ata_ix);
-
-}
 if user_dst_acc.is_err() {
     // create ata
     let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
@@ -302,7 +307,7 @@ if user_dst_acc.is_err() {
                 return (false, ixs);
             } else {
                 let model_data_account = self.model_data_account.clone().unwrap();
-                  let  swap_ix = stable_swap(
+                  let  swap_ix: Result<Instruction, anchor_lang::prelude::ProgramError> = stable_swap(
                         &stableProgramID,
                         &id,
                         &authority,
@@ -366,143 +371,282 @@ if user_dst_acc.is_err() {
         amt1: u128, 
         amt2: u128
     ) -> u128 {
-        let mut pool_src_amount = 0;
-        let mut pool_dst_amount = 0;
-        let idx0 = self.base_mint.0.to_string();
-        let idx1 = self.quote_mint.0.to_string();
-        if mint_in.to_string() == idx0 {
-            pool_src_amount = scaled_amount_in;
-            pool_dst_amount = 0;
-        } else if mint_in.to_string() == idx1 {
-            pool_src_amount = 0;
-            pool_dst_amount = scaled_amount_in;
-        }
-        
-        // compute fees
-        let fees = Fees {
-            trade_fee_numerator: 0,
-            trade_fee_denominator: 1,
-            owner_trade_fee_numerator: 0,
-            owner_trade_fee_denominator: 1,
-            owner_withdraw_fee_numerator: 0,
-            owner_withdraw_fee_denominator: 0,
-            host_fee_numerator: 0,
-            host_fee_denominator: 0,
-        };
-
-        let ctype = if self.version != 1 {
-            CurveType::Stable
-        } else {
-            CurveType::ConstantProduct
-        };
-
-        // get quote -- works for either constant product or stable swap
-
-       let coin_token_amount_in = pool_src_amount;
-        let pc_token_amount_in = pool_dst_amount;
-        let coin_balance = amt1;
-        let pc_balance = amt2;
-        if (coin_token_amount_in == 0 && pc_token_amount_in == 0)
-            || (coin_token_amount_in > 0 && pc_token_amount_in > 0)
-        {
-            println!("Error: One and only one of token amounts must be non-zero");
-            return 0;
-        }
-        if coin_balance == 0 || pc_balance == 0 {
-            println!("Error: Can't swap in an empty pool");
-            return 0;
-        }
-        if coin_token_amount_in == 0 {
-            // pc to coin
-            let amount_in_no_fee = math::get_no_fee_amount(
-                pc_token_amount_in.try_into().unwrap(),
-                0,
-                1,
-            ).unwrap() as u128;
-            let estimated_coin_amount = math::checked_as_u64(math::checked_div(
-                math::checked_mul(coin_balance as u128, amount_in_no_fee).unwrap(),
-                math::checked_add(pc_balance as u128, amount_in_no_fee).unwrap(),
-            ).unwrap()).unwrap();
-            math::get_no_fee_amount(estimated_coin_amount, 3, 100).unwrap().into()
-        } else {
-            // coin to pc
-            let amount_in_no_fee = math::get_no_fee_amount(
-                coin_token_amount_in.try_into().unwrap(),
-                0,
-                1,
-            ).unwrap() as u128;
-            let estimated_pc_amount = math::checked_as_u64(math::checked_div(
-                math::checked_mul(pc_balance as u128, amount_in_no_fee).unwrap(),
-                math::checked_add(coin_balance as u128, amount_in_no_fee).unwrap(),
-            ).unwrap()).unwrap();
-            math::get_no_fee_amount(estimated_pc_amount, 3, 100).unwrap().into()
-        }
+        return 0;
     }
     
     fn get_quote_with_amounts_scaled(
-        & self,
+        &mut self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
+        program: &Arc<RpcClient >
     ) -> u128 {
-        let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
-        let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
+        let mut pool_src_amount = self.pool_amounts.get(&self.quote_mint.0.to_string());
+        let mut pool_dst_amount = self.pool_amounts.get(&self.base_mint.0.to_string());
         
         if pool_src_amount.is_none() || pool_dst_amount.is_none() {
             return 0;
         }
-        let pool_src_amount = *pool_src_amount.unwrap();
-        let pool_dst_amount = *pool_dst_amount.unwrap();
-
-
+        let mut pool_src_amount = *pool_src_amount.unwrap();
+        let mut pool_dst_amount = *pool_dst_amount.unwrap();
         
-        // compute fees
-        let fees = Fees {
-            trade_fee_numerator: 0,
-            trade_fee_denominator: 1,
-            owner_trade_fee_numerator: 0,
-            owner_trade_fee_denominator: 1,
-            owner_withdraw_fee_numerator: 0,
-            owner_withdraw_fee_denominator: 0,
-            host_fee_numerator: 0,
-            host_fee_denominator: 0,
-        };
-
-        let ctype = if self.version == 1 {
-            CurveType::Stable
+        let idx0 = self.base_mint.0.to_string();
+        let swap_direction: SwapDirection = if idx0 == mint_out.to_string() {
+            SwapDirection::Coin2PC
+            
         } else {
-            CurveType::ConstantProduct
-        };
+            pool_dst_amount = *self.pool_amounts.get(&self.quote_mint.0.to_string()).unwrap();
+            pool_src_amount = *self.pool_amounts.get(&self.base_mint.0.to_string()).unwrap();
+            SwapDirection::PC2Coin
+        };        ;
+        let key = (self.open_orders.0, self.authority.0, self.market_id.0, self.id.0);
+        if let Some(value) = self.cache.get(&key) {
+            // If the result is in the cache, use it.
 
-        // get quote -- works for either constant product or stable swap
+           let mut amm_open_orders_info = value.0.clone();
+          let  mut  amm_authority_info = value.1.clone();
+          let mut   market_info = value.2.clone();
+          let  mut  amm_info = value.3.clone();
+          let mut   amm = value.4.clone();
+          let  mut  market_state = value.5.clone();
+          let  mut  open_orders = value.6.clone();
+          let  mut  market_event_queue_info = value.7.clone();
 
-        let amt = get_pool_quote_with_amounts(
-            scaled_amount_in,
-            ctype,
-            100, // from sdk
-            &fees,
-            pool_src_amount,
-            pool_dst_amount,
-            None,
-        )
-        ;
-        if amt.is_err(){
-            println!("raydium error {} {} {} {}", scaled_amount_in, mint_in.to_string(), mint_out.to_string(), amt.err().unwrap());
-            return 0;
-        }
-        let amt = amt.unwrap();
-        if amt > 0 {
-            amt - 1
+        let amm_info = AccountInfo::new(
+            &self.id.0,
+            false,
+            false,
+            &mut amm_info.lamports,
+            &mut amm_info.data,
+            &amm_info.owner,
+            false,
+            Epoch::default(),
+        );
+        let amm_authority_info = AccountInfo::new(
+            &self.authority.0,
+            false,
+            false,
+            &mut amm_authority_info.lamports,
+            &mut amm_authority_info.data,
+            &amm_authority_info.owner,
+            false,
+            Epoch::default(),
+        );
+        let amm_open_orders_info = AccountInfo::new(
+            &self.open_orders.0,
+            false,
+            false,
+            &mut amm_open_orders_info.lamports,
+            &mut amm_open_orders_info.data,
+            &amm_open_orders_info.owner,
+            false,
+            Epoch::default(),
+        );
+        let market_info = AccountInfo::new(
+            &self.market_id.0,
+            false,
+            false,
+            &mut market_info.lamports,
+            &mut market_info.data,
+            &market_info.owner,
+            false,
+            Epoch::default(),
+        );
+
+        let market_event_queue_info = AccountInfo::new(
+            &self.market_event_queue.0,
+            false,
+            false,
+            &mut market_event_queue_info.lamports,
+            &mut market_event_queue_info.data,
+            &market_event_queue_info.owner,
+            false,
+            Epoch::default(),
+        );
+        let total_pc_without_take_pnl;
+        let total_coin_without_take_pnl;
+           let atuplemaybe =
+                Calculator::calc_total_without_take_pnl(
+                    pool_src_amount as u64,
+                    pool_dst_amount as u64,
+                    &open_orders,
+                    &amm,
+                    &Box::new(market_state),
+                    &market_event_queue_info,
+                    &amm_open_orders_info,
+                );
+                if atuplemaybe.clone().is_err() {
+                    println!("raydium err {}", atuplemaybe.clone().err().unwrap());
+                    return 0;
+                }
+                 (total_pc_without_take_pnl, total_coin_without_take_pnl) = atuplemaybe.unwrap();
+        let swap_fee = U128::from(scaled_amount_in)
+            .checked_mul(amm.fees.swap_fee_numerator.into())
+            .unwrap()
+            .checked_ceil_div(amm.fees.swap_fee_denominator.into())
+            .unwrap()
+            .0;
+        let swap_in_after_deduct_fee = U128::from(scaled_amount_in).checked_sub(swap_fee).unwrap();
+        let swap_amount_out = Calculator::swap_token_amount_base_in(
+            swap_in_after_deduct_fee,
+            total_pc_without_take_pnl.into(),
+            total_coin_without_take_pnl.into(),
+            swap_direction,
+        );
+        return swap_amount_out.as_u128();
         } else {
-            amt
+            let connection = program.clone();
+            let mut amm_open_orders_info = connection.get_account(&self.open_orders.0).unwrap();
+            let mut amm_authority_info = connection.get_account(&self.authority.0).unwrap();
+            let mut market_info = connection.get_account(&self.market_id.0).unwrap();
+            let mut amm_info: Account = connection.get_account(&self.id.0).unwrap();
+
+            let amm_info2 = AccountInfo::new(
+                &self.id.0,
+                false,
+                false,
+                &mut amm_info.lamports,
+                &mut amm_info.data,
+                &amm_info.owner,
+                false,
+                Epoch::default(),
+            );
+            let amm = AmmInfo::load_mut_checked(&amm_info2, &Pubkey::from_str("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8").unwrap()).unwrap();
+          
+        let amm_authority_info2 = AccountInfo::new(
+            &self.authority.0,
+            false,
+            false,
+            &mut amm_authority_info.lamports,
+            &mut amm_authority_info.data,
+            &amm_authority_info.owner,
+            false,
+            Epoch::default(),
+        );
+        let amm_open_orders_info2 = AccountInfo::new(
+            &self.open_orders.0,
+            false,
+            false,
+            &mut amm_open_orders_info.lamports,
+            &mut amm_open_orders_info.data,
+            &amm_open_orders_info.owner,
+            false,
+            Epoch::default(),
+        );
+        let market_info2 = AccountInfo::new(
+            &self.market_id.0,
+            false,
+            false,
+            &mut market_info.lamports,
+            &mut market_info.data,
+            &market_info.owner,
+            false,
+            Epoch::default(),
+        );
+        let  mut market_event_queue_info = connection.get_account(&self.market_event_queue.0).unwrap();
+    
+    
+                let (market_state, open_orders) = Processor::load_serum_market_order(
+                    &market_info2,
+                    &amm_open_orders_info2,
+                    &amm_authority_info2,
+                    &amm,
+                    false,
+                ).unwrap();
+                let mut market_event_queue_info = connection.get_account(&self.market_event_queue.0).unwrap();
+                let mut cache = self.cache.clone();
+                let mut amm_info: Account = connection.get_account(&self.id.0).unwrap();
+
+                cache.insert((self.open_orders.0, self.authority.0, self.market_id.0, self.id.0), (amm_open_orders_info.clone(), amm_authority_info.clone(), market_info.clone(), amm_info.clone(), *amm, *market_state, Box::new(*open_orders), market_event_queue_info.clone()));
+                self.cache = cache;
+                let amm_open_orders_info = AccountInfo::new(
+                    &self.open_orders.0,
+                    false,
+                    false,
+                    &mut amm_open_orders_info.lamports,
+                    &mut amm_open_orders_info.data,
+                    &amm_open_orders_info.owner,
+                    false,
+                    Epoch::default(),
+                );
+                let market_info = AccountInfo::new(
+                    &self.market_id.0,
+                    false,
+                    false,
+                    &mut market_info.lamports,
+                    &mut market_info.data,
+                    &market_info.owner,
+                    false,
+                    Epoch::default(),
+                );
+        
+                let market_event_queue_info = AccountInfo::new(
+                    &self.market_event_queue.0,
+                    false,
+                    false,
+                    &mut market_event_queue_info.lamports,
+                    &mut market_event_queue_info.data,
+                    &market_event_queue_info.owner,
+                    false,
+                    Epoch::default(),
+                );
+                let total_pc_without_take_pnl;
+                let total_coin_without_take_pnl;
+                   let atuplemaybe =
+                        Calculator::calc_total_without_take_pnl(
+                            pool_src_amount as u64,
+                            pool_dst_amount as u64,
+                            &open_orders,
+                            &amm,
+                            &(market_state),
+                            &market_event_queue_info,
+                            &amm_open_orders_info,
+                        );
+                        if atuplemaybe.clone().is_err() {
+                            println!("raydium err {}", atuplemaybe.clone().err().unwrap());
+                            return 0;
+                        }
+                         (total_pc_without_take_pnl, total_coin_without_take_pnl) = atuplemaybe.unwrap();
+                let swap_fee = U128::from(scaled_amount_in)
+                    .checked_mul(amm.fees.swap_fee_numerator.into())
+                    .unwrap()
+                    .checked_ceil_div(amm.fees.swap_fee_denominator.into())
+                    .unwrap()
+                    .0;
+                let swap_in_after_deduct_fee = U128::from(scaled_amount_in).checked_sub(swap_fee).unwrap();
+                let swap_amount_out = Calculator::swap_token_amount_base_in(
+                    swap_in_after_deduct_fee,
+                    total_pc_without_take_pnl.into(),
+                    total_coin_without_take_pnl.into(),
+                    swap_direction,
+                );
+                return swap_amount_out.as_u128();
         }
+
     }
 
 
 
-    fn can_trade(&self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
-        let quote = self.get_quote_with_amounts_scaled(1_000_000, _mint_in, _mint_out);
-        quote > 0
+    fn can_trade(&mut self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
+        if self.pool_amounts.get(&_mint_in.to_string()).is_none() ||
+
+            self.pool_amounts.get(&_mint_out.to_string()).is_none() {
+            return false;
+        }
+        let mints = self.get_mints();
+        let connection = RpcClient::new("https://jarrett-solana-7ba9.mainnet.rpcpool.com/8d890735-edf2-4a75-af84-92f7c9e31718".to_string());
+        let test = self.get_quote_with_amounts_scaled(
+1000000,
+            &mints[0],
+            &mints[1],
+           &Arc::new(connection))
+            ;
+        if test == 0 {
+            return false;
+        }
+        self.pool_amounts.get(&_mint_in.to_string()).unwrap() > &0 
+            && self.pool_amounts.get(&_mint_out.to_string()).unwrap() > &0
+
         
     }fn get_name(&self) -> String {
         "Raydium".to_string()
@@ -512,7 +656,7 @@ if user_dst_acc.is_err() {
         self.id.0
     }
     fn get_update_accounts(&self) -> Vec<Pubkey> {
-        vec![self.market_base_vault.0, self.market_quote_vault.0]
+        vec![self.base_vault.0, self.quote_vault.0]
     }
 
     fn set_update_accounts(&mut self, accounts: Vec<Option<&Account>>, _cluster: Cluster) {
@@ -529,9 +673,10 @@ if user_dst_acc.is_err() {
 
         let amount0 = unpack_token_account(acc_data0).amount as u128;
         let amount1 = unpack_token_account(acc_data1).amount as u128;
-     
+        let connection = RpcClient::new(_cluster.url().to_string());
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
+       
     }
 
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster) {

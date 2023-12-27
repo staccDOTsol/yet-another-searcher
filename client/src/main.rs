@@ -24,6 +24,7 @@ use solana_program::message::{VersionedMessage, v0};
 use solana_sdk::compute_budget::ComputeBudgetInstruction;
 use tokio::runtime::Runtime;
 use core::panic;
+use std::cell::RefCell;
 use redb::{ReadableTable, TableDefinition};
 use solana_sdk::program_pack::Pack;
  // 0.2.23
@@ -160,7 +161,7 @@ fn add_pool_to_graph<'a>(
     graph: &mut PoolGraph,
     idx0: PoolIndex,
     idx1: PoolIndex,
-    quote: &PoolQuote,
+    quote:&mut PoolQuote
 ) {
     let edges = graph
         .0
@@ -327,7 +328,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         pool_type: PoolType::SerumPoolType,
         dir_path: "../pools/openbook/".to_string(),
     };
-    pool_dirs.push(serum_dir);
+    //pool_dirs.push(serum_dir);
 
     // ** json pool -> pool object
     let mut token_mints = vec![];
@@ -455,10 +456,9 @@ while !futures.is_empty() {
         pool.set_update_accounts(two_keys, cluster.clone());
         
             let pool_mints = pool.get_mints();
-            if pool.can_trade(&pool_mints[0], &pool_mints[1]) {
                 pools.push(pool.clone());
                 println!("{} / {}", indexy, pools.len());
-            }
+            
     }
     
     println!("pool is {:?}", pools.clone().len());
@@ -487,7 +487,7 @@ while !futures.is_empty() {
         let mint1_idx = *mint2idx.get(&mints[1]).unwrap();
         let idx0: PoolIndex = PoolIndex(mint0_idx);
         let idx1: PoolIndex = PoolIndex(mint1_idx);
-        let mut pool_ptr = PoolQuote::new(pool.clone().into());
+        let mut pool_ptr = PoolQuote(Arc::new(RefCell::new(pool.clone_box())));
         add_pool_to_graph(&mut graph, idx0, idx1, &mut pool_ptr.clone());
         add_pool_to_graph(&mut graph, idx1, idx0, &mut pool_ptr);
 
@@ -606,8 +606,10 @@ let update_accounts = update_pks.clone().into_iter().map(|(_, account)| {
         cluster: Cluster::Custom(
             connection_url.to_string(),
             connection_url.to_string()),
-        connection: Arc::new(solana_client::nonblocking::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized()))
-    };
+        connection: Arc::new(solana_client::nonblocking::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized())),
+        state: Arc::new(Mutex::new(HashSet::new() as HashSet<Vec<usize>>)),
+        blacklist: Arc::new(Mutex::new(Vec::new())),
+        };
 
     // for edge in graph_edges, do edge_weight and add to weights
     
@@ -655,7 +657,10 @@ let update_accounts = update_pks.clone().into_iter().map(|(_, account)| {
         cluster: Cluster::Custom(
             connection_url.to_string(),
             connection_url.to_string()),
-        connection: Arc::new(solana_client::nonblocking::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized()))
+        connection: Arc::new(solana_client::nonblocking::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized())),
+        state: Arc::new(Mutex::new(HashSet::new())),
+
+        blacklist: Arc::new(Mutex::new(Vec::new())),
     };
                     doit(
                         &arbitrager.clone().token_mints,
@@ -683,6 +688,7 @@ async fn doit( token_mints: &Vec<Pubkey>,
 
     let mut usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
     let start_mint = usdc_mint;
+    
     let mut usdc_mints = vec![usdc_mint.clone()];//, Pubkey::from_str("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263").unwrap(), Pubkey::from_str("So11111111111111111111111111111111111111112").unwrap()];
     let mut mint_idxs = vec![mint2idx.get(&usdc_mint).unwrap().clone()];//,  mint2idx.get(&Pubkey::from_str("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263").unwrap()).unwrap().clone(),  mint2idx.get(&Pubkey::from_str("So11111111111111111111111111111111111111112").unwrap()).unwrap().clone()];
     // select a random number 1-3
@@ -711,6 +717,9 @@ async fn doit( token_mints: &Vec<Pubkey>,
                 connection_url.to_string(),
                 connection_url.to_string()),
             connection: Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized())),
+            state: Arc::new(Mutex::new(HashSet::new())),
+
+        blacklist: Arc::new(Mutex::new(Vec::new())),
             };
             
             
@@ -730,6 +739,9 @@ let mut b: Arbitrager =Arbitrager {
         connection_url.to_string(),
         connection_url.to_string()),
     connection,
+    state: Arc::new(Mutex::new(HashSet::new())),
+
+    blacklist: Arc::new(Mutex::new(Vec::new())),
 };
 loop {
 
@@ -746,12 +758,15 @@ loop {
                     connection_url.to_string(),
                     connection_url.to_string()),
                 connection: Arc::new(RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized())),
+                state: Arc::new(Mutex::new(HashSet::new())),
+
+        blacklist: Arc::new(Mutex::new(Vec::new())),
                 };
    
 
                   let result = c.find_yield(
                         start_mint_idx,
-                        4,
+                        7,
                         init_token_balance - 10000
                     ).await;
                       

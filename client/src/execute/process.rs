@@ -2,8 +2,9 @@ use anyhow::Error;
 use axum::extract::path;
 use chrono::Utc;
 use futures::future::join_all;
-use futures::lock::Mutex;
+use std::collections::HashSet;
 use rand::Rng;
+
 use rand::seq::SliceRandom;
 use solana_address_lookup_table_program::instruction::{extend_lookup_table, create_lookup_table};
 use solana_client::nonblocking::rpc_client::RpcClient;
@@ -15,7 +16,7 @@ use futures::stream::{FuturesUnordered, StreamExt};
 use futures::executor::LocalPool;
 use futures::task::LocalSpawnExt;
 use futures::stream::iter;
-use futures::future;
+use futures::{future, FutureExt};
 use anchor_client::solana_sdk::pubkey::Pubkey;
 
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
@@ -33,12 +34,13 @@ use solana_sdk::compute_budget::ComputeBudgetInstruction;
 use solana_sdk::signature::{read_keypair_file, Signature};
 use solana_transaction_status::UiTransactionEncoding;
 use switchboard_solana::get_ixn_discriminator;
+use tokio::sync::Semaphore;
 use std::cell::RefCell;
 use std::cmp::Reverse;
-use std::collections::{HashMap, HashSet, BinaryHeap};
+use std::collections::{HashMap, BinaryHeap};
 use std::f32::consts::E;
 use std::pin::Pin;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use solana_sdk::instruction::Instruction;
 use solana_sdk::transaction::{Transaction, VersionedTransaction};
@@ -65,9 +67,12 @@ pub struct Arbitrager {
     pub cluster: Cluster,
     // vv -- need to clone these explicitly -- vv
     pub connection: Arc<RpcClient>,
+    pub state: Arc<Mutex<HashSet<Vec<usize>>>>,
+    pub blacklist: Arc<Mutex<Vec<(usize, usize)>>>,
+
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct Path {
    pub nodes: Vec<usize>,
    pub pool_idxs: Vec<PoolQuote>,
@@ -78,11 +83,11 @@ pub struct Path {
 }
 
 impl Path {
-    fn new(start_mint_idx: usize) -> Self {
+    fn new(start_mint_idx: usize, amount: u128) -> Self {
         Self {
             nodes: vec![start_mint_idx],
             pool_idxs: vec![],
-            yields: vec![],
+            yields: vec![amount],
             total_yield: 0,
             total_length: 0,
             most_recent_yield: 0,
@@ -126,118 +131,152 @@ impl PartialEq for Path {
 }
 
 
-// Assuming each edge has an associated cost or weight.
-// This is a placeholder - replace it with your actual method to get the edge weight.
 impl Arbitrager {  
     pub async fn find_yield(&self, start_mint_idx: usize, max_hops: usize, max_output: u128) -> Option<Path> {
         let mut queue = BinaryHeap::new();
-        queue.push(Path::new(start_mint_idx));
-    
-        while let Some(path) = queue.pop() {
-            if Arbitrager::is_valid_path(&path, start_mint_idx, max_hops, max_output) {
-                println!("Found path: {:?}", path);
-                return Some(path);
-            }
-            else {
-                if path.total_length == max_hops - 1 {
-                    if let Some(edges) = self.graph_edges.get(path.last_node()) {
+        queue.push(Path::new(start_mint_idx, max_output));
 
-                        let futures = edges.iter()
-                        .filter(|&edge| edge == &start_mint_idx)  
-                        .map(|&edge| self.construct_new_path(&path, edge, start_mint_idx, max_hops, max_output))
-                        .collect::<Vec<_>>();
-                    
-        
-                        futures::future::join_all(futures).await
-                        .into_iter()
-                        .filter(|new_path| Arbitrager::is_valid_path(new_path, start_mint_idx, max_hops, max_output))
-                        .for_each(|new_path| queue.push(new_path));
+        while let Some(path) = queue.pop() {
+            if let Some(edges) = self.graph_edges.get(path.last_node()) {
+                let mut futures = FuturesUnordered::new();
+                for &edge in edges {
+                    let is_good_path = {
+                        let mut explored = self.state.try_lock().unwrap();
+                        let blacklist = self.blacklist.try_lock().unwrap();
+                        if blacklist.contains(&((path.last_node(), edge))) {
+                            false
+                        } else if explored.contains(&path.nodes) {
+                            false
+                        } else {
+                            explored.insert(path.nodes.clone());
+                            true
+                        }
+                    };
+    
+                    if is_good_path {
+                        let timestamp = Arbitrager::current_timestamp() % edges.len();
+                        let edge = edges.iter().nth(timestamp).unwrap();
+                        futures.push(self.construct_new_path(&path, *edge, start_mint_idx, max_hops, max_output)); // Pass the cloned_seen vector
                     }
                 }
-                
-            }
-    
-            if let Some(edges) = self.graph_edges.get(path.last_node()) {
-                let futures = edges.iter()
-                .filter(|&edge| !path.contains_node(*edge))
-                    .map(|&edge| self.construct_new_path(&path, edge, start_mint_idx, max_hops, max_output))
-                    .collect::<Vec<_>>();
-    
-                futures::future::join_all(futures).await
-                    .into_iter()
-                    .for_each(|new_path| queue.push(new_path));
+                while let Some(new_path) = futures.next().await {
+                    if Arbitrager::is_valid_path(&new_path, start_mint_idx, max_hops, max_output) {
+                        println!("Found path: {:?}", new_path.nodes);
+                        return Some(new_path);
+                    } else if !Arbitrager::is_invalid_path(&new_path, start_mint_idx, max_hops, max_output) {
+                        // Add the new path to the queue if not already explored
+                        let mut explored = self.state.try_lock().unwrap();
+                        if !explored.contains(&new_path.nodes) {
+                            println!("Pushing path: {:?}", new_path.nodes);
+                            queue.push(new_path);
+                        }
+                    }
+                }
             }
         }
-    
+
         None
     }
-    
-    fn is_valid_path(path: &Path, start_mint_idx: usize, max_hops: usize, max_output: u128) -> bool {
-        let last_node = path.last_node();
-        let total_yield = path.total_yield;
-        let total_length = path.total_length;
-        last_node == start_mint_idx && total_yield > 0 
 
+    fn is_valid_path(path: &Path, start_mint_idx: usize, _max_hops: usize, _max_output: u128) -> bool {
+        path.last_node() == start_mint_idx && path.total_yield > 0 && path.yields[path.yields.len()-1] as f64 <= path.yields[0] as f64 * 1.2 && path.yields[path.yields.len()-1] as f64
+         > path.yields[0] as f64 * 1.002 
+    }
+
+    fn is_invalid_path(path: &Path, start_mint_idx: usize, _max_hops: usize, _max_output: u128) -> bool {
+        path.total_length > _max_hops
     }
     async fn construct_new_path(&self, path: &Path, edge: usize, start_mint_idx: usize, max_hops: usize, max_output: u128) -> Path {
-        let new_yield = self.get_yield(path.last_node(), edge, start_mint_idx, max_hops, 0, max_output).await;
-        
         let mut new_path = path.clone();
-        if new_yield.0 > 0 && (!path.contains_node(edge) || path.total_length <  2 || edge == start_mint_idx) {
-            new_path.extend(edge, new_yield.0, new_yield.1.unwrap());
+
+        let mut seen: Vec<usize> = vec![];
+    
+        if path.total_length > max_hops - 1 {
+            let new_yield =  self.get_yield(path.last_node(), start_mint_idx, start_mint_idx, max_hops, 0, max_output, &mut seen).await;
+            if new_yield.0 > 0  && (!path.contains_node(edge) || path.total_length <  2) {
+                new_path.extend(edge, new_yield.0, new_yield.1.unwrap());
+            }
         }
+        else {
+            let new_yield =  self.get_yield(path.last_node(), edge, start_mint_idx, max_hops, 0, max_output, &mut seen).await;
+            if new_yield.0 > 0 && (!path.contains_node(edge) || path.total_length <  2 ) {
+                new_path.extend(edge, new_yield.0, new_yield.1.unwrap());
+            }
+        }
+    
         new_path
     }
-    
+
     #[async_recursion::async_recursion]
-    async fn get_yield(&self, from: usize, to: usize, start_mint_idx: usize, max_hops: usize, current_hops: usize, amount: u128) -> (u128, Option<PoolQuote>) {
+
+    async fn get_yield(&self, from: usize, to: usize, start_mint_idx: usize, max_hops: usize, current_hops: usize, amount: u128, seen: &mut Vec<usize>) -> (u128, Option<PoolQuote>) {
         if let Some(edges) = self.graph_edges.get(from) {
-            if current_hops == max_hops - 1 {
-                return self.find_yield_recursive(edges, start_mint_idx, start_mint_idx, max_hops, current_hops, amount).await;
-            }
             if edges.contains(&to) {
                 return self.compute_yield(from, to, amount).await;
             }
             if current_hops < max_hops {
-                return self.find_yield_recursive(edges, to, start_mint_idx, max_hops, current_hops, amount).await;
+                for &edge in edges {
+                    let timestamp = Arbitrager::current_timestamp() % edges.len();
+                    let edge = *edges.iter().nth(timestamp).unwrap();
+                    if !seen.contains(&edge) || (edge == start_mint_idx) {
+                        seen.push(edge);
+                        let result = self.find_yield_recursive(edge, to, start_mint_idx, max_hops, current_hops, amount, seen).await;
+                        if result.0 > 0 {
+                            return result;
+                        }
+                        seen.pop();
+                    }
+                }
             }
         }
         (0, None)
+    }    
+
+    async fn compute_yield(&self, from: usize, to: usize, amount: u128) -> (u128, Option<PoolQuote>) {
+        let mut pool = self.graph.0.get(&PoolIndex(from)).and_then(|p| p.0.get(&PoolIndex(to)));
+      
+        if pool.is_none(){
+            return (0, None);
+        }
+        let mut pool = pool.unwrap();
+        
+        let timestamp = Arbitrager::current_timestamp() % pool.len();
+        
+        let mut pool = pool.iter().nth(timestamp).unwrap().clone();
+        let connection: solana_client::rpc_client::RpcClient = solana_client::rpc_client::RpcClient::new(self.cluster.url().to_string());
+        let new_balance = pool.get_quote_with_amounts_scaled(amount, &self.token_mints[from], &self.token_mints[to], &Arc::new(connection));
+
+        if new_balance == 0 {
+            let mut blacklist = self.blacklist.try_lock().unwrap();
+            blacklist.push((from, to));
+            drop(blacklist);
+            return (0, None);
+        }
+        (new_balance, Some(pool.clone()))
+    }
+    async fn find_yield_recursive(&self, edge: usize, to: usize, start_mint_idx: usize, max_hops: usize, current_hops: usize, amount: u128, seen: &mut Vec<usize>) -> (u128, Option<PoolQuote>) {
+        let semaphore = Arc::new(Semaphore::new(250));
+        let permit = semaphore.clone().acquire_owned().await.unwrap();
+        let future = self.get_yield(edge, to, start_mint_idx, max_hops, current_hops + 1, amount, seen)
+            .then(move |result| {
+                drop(permit); // Release the permit
+                async move { result }
+            });
+    
+        let result = future.await;
+        if let ((yield_value, quote)) = result {
+            if yield_value > 0 {
+                return (yield_value, quote);
+            }
+        }
+    
+        (0, None)
     }
 
-async fn compute_yield(&self, from: usize, to: usize, amount: u128) ->  (u128, Option<PoolQuote>)  {
-    let pool = self.graph.0.get(&PoolIndex(from)).and_then(|p| p.0.get(&PoolIndex(to)));
-    match pool {
-        Some(pool) => {
-            let timestamp = Arbitrager::current_timestamp() % pool.len();
-            let new_balance = pool[timestamp].0.get_quote_with_amounts_scaled(amount, &self.token_mints[from], &self.token_mints[to]);
-            (new_balance, Some(pool[timestamp].clone()))
-        }
-        None => (0, None)
+
+    fn current_timestamp() -> usize {
+        std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as usize
     }
-}
-async fn find_yield_recursive(&self, edges: &HashSet<usize>, to: usize, start_mint_idx: usize, max_hops: usize, current_hops: usize, amount: u128) -> (u128, Option<PoolQuote>) {
-    let mut futures = Vec::new();
-    for _ in edges {
-        let timestamp = Arbitrager::current_timestamp() % edges.len();
-        let edge = *edges.iter().nth(timestamp).unwrap();
-        if edge == to || current_hops + 1 < max_hops {
-            futures.push(self.get_yield(edge, to, start_mint_idx, max_hops, current_hops + 1, amount));
-        }
-    }
-    let results = join_all(futures).await;
-    let mut result_0s = results.iter().map(|result| result.0).collect::<Vec<u128>>();
-    result_0s.sort();
-    let last = result_0s.last().copied().unwrap_or_default();
-    let result = results.into_iter().find(|result| result.0 == last);
-    match result {
-        Some(result) => result,
-        None => (0, None)
-    }
-}
-fn current_timestamp() -> usize {
-    std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as usize
-}
 }
 
 
@@ -294,11 +333,11 @@ pub  async  fn get_arbitrage_instructions<'a>(
             let pool3 = pool.clone();
             let token_mints = token_mints.clone();
             println!("getting quote with amounts scaled {} {} {} ", i, token_mints[mint_idx0].clone(), token_mints[mint_idx1].clone());
-            let swap_ix = pool3.0.swap_ix(token_mints[mint_idx0].clone(),
+            let swap_ix = pool3.swap_ix(token_mints[mint_idx0].clone(),
             token_mints[mint_idx1].clone(), swap_start_amount,
-            owner.clone().pubkey(), program);
+            owner.clone().pubkey(), &program);
             println!("swap ix is {:?}", swap_ix.1.len());
-             swap_start_amount = amounts[i];
+             swap_start_amount = amounts[i+1];
             if swap_start_amount == 0 {
                 return (vec![], false);
             }

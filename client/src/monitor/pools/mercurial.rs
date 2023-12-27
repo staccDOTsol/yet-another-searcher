@@ -4,6 +4,7 @@ use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use async_trait::async_trait;
 use serde;
+use solana_client::rpc_client::RpcClient;
 use solana_program::program_pack::Pack;
 use solana_sdk::signature::Keypair;
 use solana_sdk::signer::Signer;
@@ -64,7 +65,7 @@ impl PoolOperations for MercurialPool {
         mint_out: Pubkey,
         _start_bal: u128,
         owner: Pubkey,
-        program: Program<Arc<Keypair>>
+        program: &Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let swap_state_pda =
             Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
@@ -116,10 +117,11 @@ impl PoolOperations for MercurialPool {
         1 as u128 // TODO
     }
     fn get_quote_with_amounts_scaled(
-        & self,
+        &mut self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
+        program: &Arc<RpcClient >
     ) -> u128 {
         let fee_denom = 10_u128.pow(10);
 
@@ -162,7 +164,7 @@ impl PoolOperations for MercurialPool {
         "Mercurial".to_string()
     }
 
-    fn can_trade(&self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
+    fn can_trade(&mut self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
         for amount in self.pool_amounts.values() {
             if *amount == 0 {
                 return false;

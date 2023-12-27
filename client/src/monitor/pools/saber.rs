@@ -2,6 +2,7 @@ use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_lang::AnchorSerialize;
 use async_trait::async_trait;
+use solana_client::rpc_client::RpcClient;
 use solana_program::instruction::AccountMeta;
 use solana_sdk::program_pack::Pack;
 use switchboard_solana::get_ixn_discriminator;
@@ -68,7 +69,7 @@ impl PoolOperations for SaberPool {
         mint_out: Pubkey,
         _start_bal: u128,
         pubkey: Pubkey,
-        program: Program<Arc<Keypair>>
+        program: &Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
@@ -140,10 +141,11 @@ if user_dst_acc.is_err() {
     }
 
     fn get_quote_with_amounts_scaled(
-        & self,
+        &mut self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
+        program: &Arc<RpcClient >
     ) -> u128 {
         let calculator = Stable {
             amp: self.target_amp,
@@ -263,7 +265,7 @@ if user_dst_acc.is_err() {
         }
     }
 
-    fn can_trade(&self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
+    fn can_trade(&mut self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
         for amount in self.pool_amounts.values() {
             if *amount == 0 {
                 return false;

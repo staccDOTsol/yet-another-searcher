@@ -7,6 +7,7 @@ use anchor_client::{Client, Cluster, Program};
 use anchor_lang::AnchorSerialize;
 use async_trait::async_trait;
 use serde;
+use solana_client::rpc_client::RpcClient;
 use solana_program::instruction::AccountMeta;
 use solana_sdk::program_pack::Pack;
 use solana_sdk::signature::Keypair;
@@ -72,7 +73,7 @@ fn swap_ix(
         mint_out: Pubkey,
         _start_bal: u128,
         owner: Pubkey,
-        program: Program<Arc<Keypair>>
+        program: &Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let user_src = derive_token_address(&owner, &mint_in);
@@ -207,10 +208,11 @@ if user_dst_acc.is_err() {
         }
     }
     fn get_quote_with_amounts_scaled(
-        & self,
+        &mut self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
+        program: &Arc<RpcClient >
     ) -> u128 {
         let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
         let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
@@ -276,7 +278,7 @@ if user_dst_acc.is_err() {
         accounts
     }
 
-    fn can_trade(&self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
+    fn can_trade(&mut self, _mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
         for amount in self.pool_amounts.values() {
             if *amount == 0 {
                 return false;

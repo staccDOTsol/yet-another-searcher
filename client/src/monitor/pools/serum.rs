@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use bytemuck::bytes_of;
 use chrono::Utc;
-use solana_client::nonblocking::rpc_client::RpcClient;
+use solana_client::rpc_client::RpcClient;
 use solana_sdk::commitment_config::CommitmentConfig;
 use solana_sdk::signer::Signer;
 use solana_sdk::transaction::Transaction;
@@ -322,10 +322,11 @@ impl PoolOperations for SerumPool {
     amt2 as u128
     }
     fn get_quote_with_amounts_scaled(
-        & self,
+        &mut self,
         amount_in: u128,
         mint_in: &Pubkey,
         _mint_out: &Pubkey,
+        program: &Arc<RpcClient >
     ) -> u128 {
         let market_pk = self.own_address.0;
         let fee_tier = FeeTier::from_srm_and_msrm_balances(&market_pk, 0, 0);
@@ -404,7 +405,7 @@ impl PoolOperations for SerumPool {
         mint_out: Pubkey,
         start_bal: u128,
         owner: Pubkey,
-        program: Program<Arc<Keypair>>
+        program: &anchor_client::Program<Arc<switchboard_solana::Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let oos = &self.open_orders;
         if oos.is_none() {
@@ -590,7 +591,7 @@ let open_orders = blargorders;
         (true, vec![ix])
     }
 
-    fn can_trade(&self, mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
+    fn can_trade(&mut self, mint_in: &Pubkey, _mint_out: &Pubkey) -> bool {
         if self.accounts.len() < 3 {
             return false;
         }

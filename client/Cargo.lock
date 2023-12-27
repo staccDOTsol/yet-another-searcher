@@ -273,7 +273,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6c4fd6e43b2ca6220d2ef1641539e678bfc31b6cc393cf892b373b5997b6a39a"
 dependencies = [
  "anchor-lang",
- "serum_dex",
+ "serum_dex 0.4.0",
  "solana-program",
  "spl-associated-token-account 2.2.0",
  "spl-token 4.0.0",
@@ -477,6 +477,11 @@ name = "arrayvec"
 version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "96d30a06541fbafbc7f82ed10c06164cfbd2c401138f6addd8404629c4b16711"
+
+[[package]]
+name = "arrform"
+version = "0.1.1"
+source = "git+https://github.com/raydium-io/arrform#fdbb0cfe18eadbff99cc8cd63f1b5a43df70e665"
 
 [[package]]
 name = "ascii"
@@ -1310,6 +1315,7 @@ dependencies = [
  "proptest",
  "rand 0.8.5",
  "raydium-contract-instructions",
+ "raydium_amm",
  "rayon",
  "redb",
  "redis",
@@ -1317,6 +1323,7 @@ dependencies = [
  "round",
  "serde",
  "serde_json",
+ "serum_dex 0.5.10",
  "sha2 0.10.8",
  "solana-address-lookup-table-program",
  "solana-client",
@@ -1610,6 +1617,17 @@ name = "data-encoding"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7e962a19be5cfc3f3bf6dd8f61eb50107f356ad6270fbb3ed41476571db78be5"
+
+[[package]]
+name = "default-env"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f753eb82d29277e79efc625e84aecacfd4851ee50e05a8573a4740239a77bfd3"
+dependencies = [
+ "proc-macro2 0.4.30",
+ "quote 0.6.13",
+ "syn 0.15.44",
+]
 
 [[package]]
 name = "der"
@@ -3714,6 +3732,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "raydium_amm"
+version = "0.3.0"
+dependencies = [
+ "arrayref",
+ "arrform",
+ "base64 0.13.1",
+ "bincode",
+ "bytemuck",
+ "num-derive 0.3.3",
+ "num-traits",
+ "safe-transmute",
+ "serde",
+ "serde_json",
+ "serum_dex 0.5.10",
+ "solana-program",
+ "spl-associated-token-account 2.2.0",
+ "spl-token 4.0.0",
+ "thiserror",
+ "uint 0.9.5",
+]
+
+[[package]]
 name = "rayon"
 version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4311,6 +4351,32 @@ dependencies = [
  "safe-transmute",
  "serde",
  "solana-program",
+ "spl-token 3.5.0",
+ "static_assertions",
+ "thiserror",
+ "without-alloc",
+]
+
+[[package]]
+name = "serum_dex"
+version = "0.5.10"
+source = "git+https://github.com/raydium-io/openbook-dex#cff113afcec5bcf3c7aaace42d03b5d138d4328e"
+dependencies = [
+ "anchor-lang",
+ "arrayref",
+ "bincode",
+ "bytemuck",
+ "byteorder",
+ "default-env",
+ "enumflags2",
+ "field-offset",
+ "itertools 0.10.5",
+ "num-traits",
+ "num_enum 0.5.11",
+ "safe-transmute",
+ "serde",
+ "solana-program",
+ "solana-security-txt",
  "spl-token 3.5.0",
  "static_assertions",
  "thiserror",
@@ -5024,6 +5090,12 @@ dependencies = [
  "rustversion",
  "syn 2.0.42",
 ]
+
+[[package]]
+name = "solana-security-txt"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "468aa43b7edb1f9b7b7b686d5c3aeb6630dc1708e86e31343499dd5c4d775183"
 
 [[package]]
 name = "solana-streamer"

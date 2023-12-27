@@ -82,8 +82,10 @@ let prism = await Prism.init({
 }
 });
 function transformRaydium(data: any): any {
+  console.log(data)
     const transformedData = {
       id: data.ammId.toBase58(),
+      ammOwner : data.ammOwner.toBase58(),
       baseMint: data.coinMintAddress.toBase58(),
       quoteMint: data.pcMintAddress.toBase58(),
       lpMint: data.lpMintAddress.toBase58(),
@@ -92,7 +94,6 @@ function transformRaydium(data: any): any {
       lpDecimals: data.coinDecimals.toNumber(), // Assuming lpDecimals is the same as coinDecimals
       version: 4, // Assuming version is a constant
       programId: data.serumProgramId.toBase58(),
-      authority: data.ammOwner.toBase58(),
       openOrders: data.ammOpenOrders.toBase58(),
       targetOrders: data.ammTargetOrders.toBase58(),
       baseVault: data.poolCoinTokenAccount.toBase58(),
@@ -239,5 +240,12 @@ fs.writeFileSync("../pools/openbook/"+lp.ownAddress.toBase58()+".json", JSON.str
 }
     
 }
-
-main()
+async function main2(){
+  const raydium = JSON.parse(fs.readFileSync("./mainnet.json"))
+  const official = raydium.official 
+  let unOfficial = raydium.unOfficial
+  for (var pool of [...official, ...unOfficial]){
+    fs.writeFileSync("../pools/raydium/"+pool.id+".json", JSON.stringify(pool))
+  }
+}
+main2()
