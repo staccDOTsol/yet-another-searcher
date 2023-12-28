@@ -11,10 +11,10 @@ use solana_client::rpc_config::RpcSendTransactionConfig;
 
 
 
-use futures::stream::{StreamExt, FuturesUnordered};
+use futures::stream::{StreamExt};
 
 use rand::{seq::SliceRandom};
-use tokio::sync::Semaphore;
+
 
 
 
@@ -210,13 +210,9 @@ let _rc_owner_signer: &dyn solana_sdk::signature::Signer = &*rc_owner;
     println!("swap start amount = {}", swap_start_amount); // track what arbs we did with a larger size
     // let_init_token_acc = connection.get_account(&src_ata);
 
-    println!("searching for arbitrages...");
     // let_min_swap_amount = 10_u128.pow(4_u32); // scaled! -- 1 USDC
-    println!("searching for arbitrages2...");
     let mut client = GeyserGrpcClient::connect("https://jarrett-solana-7ba9.mainnet.rpcpool.com", Some("8d890735-edf2-4a75-af84-92f7c9e31718".to_string()), None).unwrap();
-    println!("searching for arbitrages3...");
     let (mut subscribe_tx, mut stream) = client.subscribe().await.unwrap();
-        println!("searching for arbitrages4...");
     let commitment: CommitmentLevel = CommitmentLevel::Confirmed;
     subscribe_tx
         .send(SubscribeRequest {
@@ -355,6 +351,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("extracting pool + mints...");
     let mut update_accounts = vec![];
     let mut tuas = vec![];
+    let mut tuastopools = HashMap::new();
     let mut tupdate_pks = vec![];
     for pool_dir in pool_dirs.clone() {
         debug!("pool dir: {:#?}", pool_dir);
@@ -376,6 +373,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let uas = pool.get_update_accounts();
             tuas.push(uas.clone()[0]);
             tuas.push(uas.clone()[1]);
+            tuastopools.insert(uas.clone()[0], pool.clone_box());
+            tuastopools.insert(uas.clone()[1], pool.clone_box());
             tupdate_pks.extend(uas.clone().into_iter());
         }
 
@@ -407,38 +406,43 @@ for pool_dir in pool_dirs.clone() {
 
 let maybe_pools = maybe_pools.clone();
 
-async fn process_data(tuas: &[Pubkey], program_async: &RpcClient, maybe_pools: &[Box<dyn PoolOperations>], pools: &mut Vec<Box<dyn PoolOperations>>, update_accounts: &mut Vec<solana_sdk::account::Account>, update_pks: &mut Vec<Pubkey>
+async fn process_data(
+    tuastopools: &HashMap<Pubkey, Box<dyn PoolOperations>>,
+    tuas: &[Pubkey], program_async: &RpcClient, maybe_pools: &[Box<dyn PoolOperations>], pools: &mut Vec<Box<dyn PoolOperations>>, update_accounts: &mut Vec<solana_sdk::account::Account>, update_pks: &mut Vec<Pubkey>
 ,graph_edges: &mut Vec<HashSet<Edge>>, graph: &mut PoolGraph, mint2idx: &mut HashMap<Pubkey, usize>, token_mints: &mut Vec<Pubkey>, all_mint_idxs: &mut Vec<usize>
 ) {
-
+let _chunkindex = 0;
     for chunk in tuas.chunks(100) {
         
        let result = program_async.get_multiple_accounts_with_commitment(chunk, CommitmentConfig::confirmed()).await;
        
         match result {
             Ok(response) => {
-                let accounts = response.value;
-                println!("accounts len is {:?}", accounts.len());
                 let mut two_keys = Vec::new();
                 let mut count = 0;
-                for (i, account) in accounts.into_iter().enumerate() {
-                    count += 1;
-                    if let Some(acc) = account {
-                       
-                        two_keys.push((chunk[i].clone(), acc));
-                        if two_keys.len() == 2 {
-                            // Process the two accounts
-                            process_accounts(program_async, graph_edges, graph, mint2idx, token_mints, all_mint_idxs, &two_keys, maybe_pools, pools, update_accounts, update_pks).await;
-                            two_keys.clear();
+                let accounts = response.value;
+                for (pubkey, account) in chunk.iter().zip(accounts.iter()) {
+                    match account {
+                        Some(account) => {
+                            let two_key = (*pubkey, account.clone());
+                            two_keys.push(two_key);
+                            count+=1;
+                            if two_keys.len() == 2 {
+                            process_accounts(tuastopools, graph_edges, graph, mint2idx, token_mints, all_mint_idxs, &two_keys, maybe_pools, pools, update_accounts, update_pks).await;
+                            two_keys = Vec::new();
+                            count = 0;
+                            }
+                            if count == 2 && two_keys.len() < 2 {
+                                two_keys = Vec::new();
+                                count = 0;
+                            }
+                        }
+                        None => {
+                            two_keys = Vec::new();
                             count = 0;
                         }
-                        if count == 2 && two_keys.len() < 2 {
-                            two_keys.clear();
-                            count = 0;
-                        }
-                    } else {
-                        println!("skipping account");
                     }
+
                 }
             },
             Err(_) => {
@@ -449,24 +453,13 @@ async fn process_data(tuas: &[Pubkey], program_async: &RpcClient, maybe_pools: &
     
 }
 
-async fn process_accounts(program_async: &RpcClient, graph_edges: &mut Vec<HashSet<Edge>>, graph: &mut PoolGraph, mint2idx: &mut HashMap<Pubkey, usize>, token_mints: &mut Vec<Pubkey>, all_mint_idxs: &mut Vec<usize>, 
-    two_keys: &[(Pubkey, solana_sdk::account::Account)], maybe_pools: &[Box<dyn PoolOperations>], pools: &mut Vec<Box<dyn PoolOperations>>, update_accounts: &mut Vec<solana_sdk::account::Account>, update_pks: &mut Vec<Pubkey>) {
+async fn process_accounts(tuastopools: &HashMap<Pubkey, Box<dyn PoolOperations>>, graph_edges: &mut Vec<HashSet<Edge>>, graph: &mut PoolGraph, mint2idx: &mut HashMap<Pubkey, usize>, token_mints: &mut Vec<Pubkey>, all_mint_idxs: &mut Vec<usize>,
+    two_keys: &[(Pubkey, solana_sdk::account::Account)], _maybe_pools: &[Box<dyn PoolOperations>], pools: &mut Vec<Box<dyn PoolOperations>>, update_accounts: &mut Vec<solana_sdk::account::Account>, update_pks: &mut Vec<Pubkey>) {
         
-                                let pool = maybe_pools
-                            .iter()
-                            .find(|pool| {
-                                pool.get_update_accounts().contains(&two_keys[0].0) && pool.get_update_accounts().contains(&two_keys[1].0)
-                            })
-                            ;
-                            if pool.is_none() {
-                                println!("pool is none");
-                                return;
-                            }
-                            let pool = pool.unwrap();
-
+                                let pool: &Box<dyn PoolOperations> = tuastopools.get(&two_keys[0].0).unwrap();
                         let mut pool = pool.clone_box();
             
-                        // let_eh  =pool.set_update_accounts(vec![two_keys[0].1.clone(), two_keys[1].1.clone()], Cluster::Mainnet);
+                        pool.set_update_accounts(vec![Some(two_keys[0].1.clone()), Some(two_keys[1].1.clone())], Cluster::Mainnet);
                           
                         let mints = pool.get_mints();
             
@@ -512,12 +505,14 @@ async fn process_accounts(program_async: &RpcClient, graph_edges: &mut Vec<HashS
                         yield_value: 0,
                         mint0idx: mints.clone()[0],
                         mint1idx: mints.clone()[1],
+                        yield_timestamp: 0,
                     };
                     let edge1: Edge = Edge {
                         from: mint1_idx,
                         to: mint0_idx,
                         yield_value: 0,
                         mint0idx: mints.clone()[1],
+                        yield_timestamp: 0,
                         mint1idx: mints.clone()[0],
                     };
                     // record graph edges if they dont already exist
@@ -533,83 +528,14 @@ async fn process_accounts(program_async: &RpcClient, graph_edges: &mut Vec<HashS
                         graph_edges[mint1_idx].insert(edge1);
                     }
                     pools.push(pool.clone_box());
+                    if pools.clone().len() % 1000 == 0 {
                         println!("added pool {:?} from {:?} total {:?}", pool.clone().get_own_addr(), pool.clone().get_name(), pools.clone().len());
-                        }
-                        else {
-                            let uas = pool.get_update_accounts();
-                            // now skip the chunks to these uas
-                            let uas = uas.clone();
-                            
-                            let ua_accounts = program_async.get_multiple_accounts_with_commitment(&uas, CommitmentConfig::confirmed()).await.unwrap().value;
-                                pool.set_update_accounts(ua_accounts, Cluster::Mainnet);
-
-                        if pool.can_trade(&mints[0], &mints[1]) {
-                        
-                            update_accounts.push(two_keys[0].1.clone());
-                            update_accounts.push(two_keys[1].1.clone());
-                            update_pks.push(two_keys[0].0);
-                            update_pks.push(two_keys[1].0);
-                        
-                        //  ** record pool println for graph
-                        // token: (mint = graph idx), (addr = get quote amount)
-                        let mut mint_idxs = vec![];
-                        for mint in mints.clone() {
-                            let idx;
-                            if !token_mints.contains(&mint) {
-                                idx = token_mints.len();
-                                mint2idx.insert(mint, idx);
-                                token_mints.push(mint);
-                                // graph_edges[idx] will always exist :)
-                                graph_edges.push(HashSet::new());
-                            } else {
-                                idx = *mint2idx.get(&mint).unwrap();
-                            }
-                            mint_idxs.push(idx);
-                        }
-                    let mint0_idx = *mint2idx.get(&mints.clone()[0]).unwrap();
-                    let mint1_idx = *mint2idx.get(&mints.clone()[1]).unwrap();
-                    let idx0: PoolIndex = PoolIndex(mint0_idx);
-                    let idx1: PoolIndex = PoolIndex(mint1_idx);
-                    let mut pool_ptr = PoolQuote::new(
-                        Arc::new(RefCell::new(pool.clone_box())));
-                    add_pool_to_graph(graph, idx0, idx1, &mut pool_ptr.clone());
-                    add_pool_to_graph(graph, idx1, idx0, &mut pool_ptr);
-
-                    all_mint_idxs.push(mint0_idx);
-                    all_mint_idxs.push(mint1_idx);
-                    let edge0: Edge = Edge {
-                        from: mint0_idx,
-                        to: mint1_idx,
-                        yield_value: 0,
-                        mint0idx: mints.clone()[0],
-                        mint1idx: mints.clone()[1],
-                    };
-                    let edge1: Edge = Edge {
-                        from: mint1_idx,
-                        to: mint0_idx,
-                        yield_value: 0,
-                        mint0idx: mints.clone()[1],
-                        mint1idx: mints.clone()[0],
-                    };
-                    // record graph edges if they dont already exist
-                    if !graph_edges[mint0_idx].
-                    iter()
-                    .any(|edge: &Edge | edge.mint0idx == mints.clone()[0]) {
-                        graph_edges[mint0_idx].insert(edge0);
                     }
-                    if !graph_edges[mint1_idx].
-                    iter()
-                    .any(|edge: &Edge | edge.mint1idx == mints.clone()[1]) {
-
-                        graph_edges[mint1_idx].insert(edge1);
-                    }
-                    pools.push(pool.clone_box());
-                        println!("added pool {:?} from {:?} total {:?}", pool.clone().get_own_addr(), pool.clone().get_name(), pools.clone().len());
-                        }
+                        
                     }
                 }   
         
-                process_data(&tuas, &program_async, &maybe_pools, &mut pools, &mut update_accounts, &mut update_pks, &mut graph_edges, &mut graph, &mut mint2idx, &mut token_mints, &mut all_mint_idxs).await;
+                process_data(&tuastopools, &tuas, &program_async, &maybe_pools, &mut pools, &mut update_accounts, &mut update_pks, &mut graph_edges, &mut graph, &mut mint2idx, &mut token_mints, &mut all_mint_idxs).await;
 
 
     // let_indexy = 0;
@@ -718,6 +644,7 @@ async fn process_accounts(program_async: &RpcClient, graph_edges: &mut Vec<HashS
         connection: Arc::new(solana_client::nonblocking::rpc_client::RpcClient::new_with_commitment(connection_url.to_string(), CommitmentConfig::finalized())),
         state: Arc::new(Mutex::new(HashSet::new() as HashSet<Vec<usize>>)),
         blacklist: Arc::new(Mutex::new(Vec::new())),
+        best_paths: Vec::new()
         };
 
     // for edge in graph_edges, do edge_weight and add to weights
@@ -770,6 +697,7 @@ async fn process_accounts(program_async: &RpcClient, graph_edges: &mut Vec<HashS
         state: Arc::new(Mutex::new(HashSet::new())),
 
         blacklist: Arc::new(Mutex::new(Vec::new())),
+        best_paths: Vec::new()
     };
                     doit(
                         &arbitrager.clone().token_mints,
@@ -798,8 +726,8 @@ async fn doit( token_mints: &Vec<Pubkey>,
     let mut usdc_mint = Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap();
     let _start_mint = usdc_mint;
     
-    let usdc_mints = [usdc_mint];//, Pubkey::from_str("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263").unwrap(), Pubkey::from_str("So11111111111111111111111111111111111111112").unwrap()];
-    let mint_idxs = [*mint2idx.get(&usdc_mint).unwrap()];//,  mint2idx.get(&Pubkey::from_str("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263").unwrap()).unwrap().clone(),  mint2idx.get(&Pubkey::from_str("So11111111111111111111111111111111111111112").unwrap()).unwrap().clone()];
+    let usdc_mints = [usdc_mint];//, Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap(), Pubkey::from_str("So11111111111111111111111111111111111111112").unwrap()];
+    let mint_idxs = [*mint2idx.get(&usdc_mint).unwrap()];//,  mint2idx.get(&Pubkey::from_str("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v").unwrap()).unwrap().clone(),  mint2idx.get(&Pubkey::from_str("So11111111111111111111111111111111111111112").unwrap()).unwrap().clone()];
     // select a random number 1-3
 //    let onetothree = rand::thread_rng().gen_range(0..0);
     let start_mint_idx = mint_idxs[0];
@@ -829,6 +757,7 @@ async fn doit( token_mints: &Vec<Pubkey>,
             state: Arc::new(Mutex::new(HashSet::new())),
 
         blacklist: Arc::new(Mutex::new(Vec::new())),
+        best_paths: Vec::new()
             };
             
             
@@ -851,6 +780,7 @@ let b: Arbitrager =Arbitrager {
     state: Arc::new(Mutex::new(HashSet::new())),
 
     blacklist: Arc::new(Mutex::new(Vec::new())),
+    best_paths: Vec::new()
 };
 loop {
 
@@ -870,6 +800,7 @@ loop {
                 state: Arc::new(Mutex::new(HashSet::new())),
 
         blacklist: Arc::new(Mutex::new(Vec::new())),
+        best_paths: Vec::new()
                 };
    
 

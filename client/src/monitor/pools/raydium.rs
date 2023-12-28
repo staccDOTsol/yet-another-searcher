@@ -386,129 +386,36 @@ if user_dst_acc.is_err() {
         if coin_amount.is_none() || pc_amount.is_none() {
             return 0;
         }
-        let coin_amount = *coin_amount.unwrap();
-        let pc_amount = *pc_amount.unwrap();
+        let mut coin_amount = *coin_amount.unwrap();
+        let mut pc_amount = *pc_amount.unwrap();
         
         let idx0 = self.base_mint.0.to_string();
-        let swap_direction: SwapDirection = if idx0 == mint_in.to_string() {
+        let swap_direction: SwapDirection = if idx0 == _mint_out.to_string() {
             SwapDirection::Coin2PC
             
         } else {
             SwapDirection::PC2Coin
         };        
-        ;
-        let key = (self.open_orders.0, self.authority.0, self.market_id.0, self.id.0);
-        if let Some(value) = self.cache.get(&key) {
-            // If the result is in the cache, use it.
-
-           let mut amm_open_orders_info = value.0.clone();
-          let  mut  amm_authority_info = value.1.clone();
-          let mut   market_info = value.2.clone();
-          let  mut  amm_info = value.3.clone();
-          let amm = value.4;
-          let  market_state = value.5;
-          let  open_orders = value.6.clone();
-          let  mut  market_event_queue_info = value.7.clone();
-
-        let _amm_info = AccountInfo::new(
-            &self.id.0,
-            false,
-            false,
-            &mut amm_info.lamports,
-            &mut amm_info.data,
-            &amm_info.owner,
-            false,
-            Epoch::default(),
-        );
-        let _amm_authority_info = AccountInfo::new(
-            &self.authority.0,
-            false,
-            false,
-            &mut amm_authority_info.lamports,
-            &mut amm_authority_info.data,
-            &amm_authority_info.owner,
-            false,
-            Epoch::default(),
-        );
-        let amm_open_orders_info = AccountInfo::new(
-            &self.open_orders.0,
-            false,
-            false,
-            &mut amm_open_orders_info.lamports,
-            &mut amm_open_orders_info.data,
-            &amm_open_orders_info.owner,
-            false,
-            Epoch::default(),
-        );
-        let _market_info = AccountInfo::new(
-            &self.market_id.0,
-            false,
-            false,
-            &mut market_info.lamports,
-            &mut market_info.data,
-            &market_info.owner,
-            false,
-            Epoch::default(),
-        );
-
-        let market_event_queue_info = AccountInfo::new(
-            &self.market_event_queue.0,
-            false,
-            false,
-            &mut market_event_queue_info.lamports,
-            &mut market_event_queue_info.data,
-            &market_event_queue_info.owner,
-            false,
-            Epoch::default(),
-        );
-        let total_pc_without_take_pnl;
-        let total_coin_without_take_pnl;
-           let atuplemaybe =
-                Calculator::calc_total_without_take_pnl(
-                    pc_amount as u64,
-                    coin_amount as u64,
-                    &open_orders,
-                    &amm,
-                    &Box::new(market_state),
-                    &market_event_queue_info,
-                    &amm_open_orders_info,
-                );
-                if atuplemaybe.clone().is_err() {
-                    return 0;
-                }
-                 (total_pc_without_take_pnl, total_coin_without_take_pnl) = atuplemaybe.unwrap();
-        let swap_fee = U128::from(scaled_amount_in)
-            .checked_mul(amm.fees.swap_fee_numerator.into())
-            .unwrap()
-            .checked_ceil_div(amm.fees.swap_fee_denominator.into())
-            .unwrap()
-            .0;
-        let swap_in_after_deduct_fee = U128::from(scaled_amount_in).checked_sub(swap_fee).unwrap();
         
-        let swap_amount_out = match swap_direction {
-            SwapDirection::Coin2PC => Calculator::swap_token_amount_base_in(
-                swap_in_after_deduct_fee,
-                total_pc_without_take_pnl.into(),
-                total_coin_without_take_pnl.into(),
-                swap_direction,
-            ),
-            SwapDirection::PC2Coin => Calculator::swap_token_amount_base_out(
-                swap_in_after_deduct_fee,
-                total_pc_without_take_pnl.into(),
-                total_coin_without_take_pnl.into(),
-                swap_direction,
-            ),
-        };
-        swap_amount_out.as_u128()
-        } else {
+        if swap_direction == SwapDirection::PC2Coin {
+
+            pc_amount = *self.pool_amounts.get(&self.base_mint.0.to_string()).unwrap();
+            coin_amount = *self.pool_amounts.get(&self.quote_mint.0.to_string()).unwrap();
+        }
+        else {
+            coin_amount = *self.pool_amounts.get(&self.base_mint.0.to_string()).unwrap();
+            pc_amount = *self.pool_amounts.get(&self.quote_mint.0.to_string()).unwrap();
+        }
             let connection = program.clone();
             let amm_open_orders_info = connection.get_account(&self.open_orders.0);
             if amm_open_orders_info.is_err() {
+                println!("err4 {:?}", amm_open_orders_info.err());
                 return 0;
             }
             let mut amm_open_orders_info = amm_open_orders_info.unwrap();
             let amm_authority_info = connection.get_account(&self.authority.0);
             if amm_authority_info.is_err() {
+                println!("err3 {:?}", amm_authority_info.err());
                 return 0;
             }
             let mut amm_authority_info = amm_authority_info.unwrap();
@@ -569,11 +476,8 @@ if user_dst_acc.is_err() {
                     false,
                 ).unwrap();
                 let mut market_event_queue_info = connection.get_account(&self.market_event_queue.0).unwrap();
-                let mut cache = self.cache.clone();
                 let amm_info: Account = connection.get_account(&self.id.0).unwrap();
 
-                cache.insert((self.open_orders.0, self.authority.0, self.market_id.0, self.id.0), (amm_open_orders_info.clone(), amm_authority_info.clone(), market_info.clone(), amm_info.clone(), *amm, *market_state, Box::new(*open_orders), market_event_queue_info.clone()));
-                self.cache = cache;
                 let amm_open_orders_info = AccountInfo::new(
                     &self.open_orders.0,
                     false,
@@ -608,20 +512,18 @@ if user_dst_acc.is_err() {
                 let total_pc_without_take_pnl;
                 let total_coin_without_take_pnl;
                    let atuplemaybe =
-                        Calculator::calc_total_without_take_pnl(
+                        Calculator::calc_total_without_take_pnl_no_orderbook(
                             pc_amount as u64,
                             coin_amount as u64,
                             &open_orders,
                             &amm,
-                            &(market_state),
-                            &market_event_queue_info,
-                            &amm_open_orders_info,
                         );
                         if atuplemaybe.clone().is_err() {
+                            println!("err1 {:?}", atuplemaybe.clone().err());
                             return 0;
                         }
                          (total_pc_without_take_pnl, total_coin_without_take_pnl) = atuplemaybe.unwrap();
-                let swap_fee = U128::from(scaled_amount_in)
+              let swap_fee = U128::from(scaled_amount_in)
                     .checked_mul(amm.fees.swap_fee_numerator.into())
                     .unwrap()
                     .checked_ceil_div(amm.fees.swap_fee_denominator.into())
@@ -643,8 +545,8 @@ if user_dst_acc.is_err() {
                         swap_direction,
                     ),
                 };
+                println!("mint in, mint out, id, amount in, amount out {} {} {} {} {}", mint_in.to_string(), _mint_out.to_string(), self.id.0.to_string(), scaled_amount_in, swap_amount_out.as_u128());
                 swap_amount_out.as_u128()
-        }
 
     }
 
@@ -656,8 +558,8 @@ if user_dst_acc.is_err() {
             self.pool_amounts.get(&_mint_out.to_string()).is_none() {
             return false;
         }
-       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &1_000_000  || 
-        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &1_000_000 {
+       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &1000_000_000  || 
+        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &1000_000_000 {
             return false;
         }
         true
