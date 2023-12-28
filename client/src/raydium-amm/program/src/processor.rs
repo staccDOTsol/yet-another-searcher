@@ -175,7 +175,7 @@ impl Processor {
         }
     }
 
-    fn load_orders<'a>(
+    pub fn load_orders<'a>(
         orders_account: &'a AccountInfo,
     ) -> Result<RefMut<'a, OpenOrders>, ProgramError> {
         let (_, data) = serum_dex::state::strip_header::<[u8; 0], u8>(orders_account, false)?;
@@ -246,7 +246,7 @@ impl Processor {
         }
     }
 
-    fn get_amm_orders(
+    pub fn get_amm_orders(
         open_orders: &OpenOrders,
         bids: RefMut<Slab>,
         asks: RefMut<Slab>,
