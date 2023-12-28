@@ -258,7 +258,11 @@ impl PoolOperations for RaydiumPool {
         let market_authority = self.market_authority.clone();
         let market_base_vault = self.market_base_vault.clone();
         let market_quote_vault = self.market_quote_vault.clone();
-        if ctype == CurveType::ConstantProduct {
+        let swap_direction: SwapDirection = if mint_in == self.base_mint.0 {
+            SwapDirection::Coin2PC
+        } else {
+            SwapDirection::PC2Coin
+        };
             let swap_ix =
                 amm_swap(
                     &ammProgramID,
@@ -304,62 +308,6 @@ if user_dst_acc.is_err() {
 }
 
                 (false, ixs)
-            } else {
-                let model_data_account = self.model_data_account.clone().unwrap();
-                  let  swap_ix: Result<Instruction, anchor_lang::prelude::ProgramError> = stable_swap(
-                        &stableProgramID,
-                        &id,
-                        &authority,
-                        &open_orders,
-                        &base_vault,
-                        &quote_vault,
-                        &model_data_account,
-                        &market_program_id,
-                        &market_id,
-                        &market_bids,
-                        &market_asks,
-                        &market_event_queue,
-                        &market_base_vault,
-                        &market_quote_vault,
-                        &market_authority,
-                        &user_src,
-                        &user_dst,
-                        &pubkey, 
-                        _start_bal as u64,
-                        0_u64
-                    );
-
-    
-            if swap_ix.is_err() {
-                return (false, vec![]);
-            }
-            let   swap_ix = swap_ix.unwrap();
-            let mut ixs = vec![];
-            ixs.push(swap_ix);
-            if user_src_acc.is_err() {
-                let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
-                    &pubkey,
-                    &pubkey,
-                    &mint_in,
-                    &spl_token::ID
-                );
-                ixs.insert(0, create_ata_ix);
-            
-            }
-            if user_dst_acc.is_err() {
-                // create ata
-                let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
-                    &pubkey,
-                    &pubkey,
-                    &mint_out,
-                    &spl_token::ID
-            
-                );
-                ixs.insert(0, create_ata_ix);
-            }
-            
-                            (false, ixs)
-            }        
 
     }
     async fn get_quote_with_amounts_scaled_new(
@@ -380,50 +328,62 @@ if user_dst_acc.is_err() {
         _mint_out: &Pubkey,
         program: &Arc<RpcClient >
     ) -> u128 {
-        let coin_amount = self.pool_amounts.get(&self.base_mint.0.to_string());
-        let pc_amount = self.pool_amounts.get(&self.quote_mint.0.to_string());
+        let pc_amount = self.pool_amounts.get(&self.base_mint.0.to_string());
+        let coin_amount = self.pool_amounts.get(&self.quote_mint.0.to_string());
         
         if coin_amount.is_none() || pc_amount.is_none() {
             return 0;
         }
-        let mut coin_amount = *coin_amount.unwrap();
-        let mut pc_amount = *pc_amount.unwrap();
+        let coin_amount = *coin_amount.unwrap();
+        let pc_amount = *pc_amount.unwrap();
         
         let idx0 = self.base_mint.0.to_string();
-        let swap_direction: SwapDirection = if idx0 == _mint_out.to_string() {
+        let swap_direction: SwapDirection = if idx0 != mint_in.to_string() {
             SwapDirection::Coin2PC
             
         } else {
             SwapDirection::PC2Coin
         };        
         
-        if swap_direction == SwapDirection::PC2Coin {
-
-            pc_amount = *self.pool_amounts.get(&self.base_mint.0.to_string()).unwrap();
-            coin_amount = *self.pool_amounts.get(&self.quote_mint.0.to_string()).unwrap();
-        }
-        else {
-            coin_amount = *self.pool_amounts.get(&self.base_mint.0.to_string()).unwrap();
-            pc_amount = *self.pool_amounts.get(&self.quote_mint.0.to_string()).unwrap();
-        }
             let connection = program.clone();
-            let amm_open_orders_info = connection.get_account(&self.open_orders.0);
-            if amm_open_orders_info.is_err() {
-                println!("err4 {:?}", amm_open_orders_info.err());
+            let mut account_infos = connection.get_multiple_accounts(
+                &[
+                    self.open_orders.0,
+                    self.authority.0,
+                    self.market_id.0,
+                    self.id.0,
+                    self.market_event_queue.0,
+                   // self.market_bids.0,
+                   // self.market_asks.0,
+                ]
+            ).unwrap();
+
+            let mut amm_open_orders_info = account_infos[0].clone();
+            if amm_open_orders_info.is_none() {
+                println!("err4");
                 return 0;
             }
             let mut amm_open_orders_info = amm_open_orders_info.unwrap();
-            let amm_authority_info = connection.get_account(&self.authority.0);
-            if amm_authority_info.is_err() {
-                println!("err3 {:?}", amm_authority_info.err());
+            let mut amm_authority_info = account_infos[1].clone();
+            if amm_authority_info.is_none() {
+                println!("err3");
                 return 0;
             }
             let mut amm_authority_info = amm_authority_info.unwrap();
-            
-            let mut market_info = connection.get_account(&self.market_id.0).unwrap();
-            let mut amm_info: Account = connection.get_account(&self.id.0).unwrap();
 
-            let amm_info2 = AccountInfo::new(
+            let mut market_info = account_infos[2].clone();
+            let mut amm_info =  account_infos[3].clone();
+            let mut market_event_queue_info = account_infos[4].clone();
+            let mut bids_info =  account_infos[5].clone();
+            let mut asks_info = account_infos[6].clone();
+            if market_info.is_none() || amm_info.is_none() || market_event_queue_info.is_none() {
+                println!("err2");
+                return 0;
+            }
+            let mut market_info = market_info.unwrap();
+            let mut amm_info = amm_info.unwrap();
+         
+            let mut amm_info2 = AccountInfo::new(
                 &self.id.0,
                 false,
                 false,
@@ -465,7 +425,6 @@ if user_dst_acc.is_err() {
             false,
             Epoch::default(),
         );
-        let  _market_event_queue_info = connection.get_account(&self.market_event_queue.0).unwrap();
     
     
                 let (market_state, open_orders) = Processor::load_serum_market_order(
@@ -475,19 +434,18 @@ if user_dst_acc.is_err() {
                     &amm,
                     false,
                 ).unwrap();
-                let mut market_event_queue_info = connection.get_account(&self.market_event_queue.0).unwrap();
-                let amm_info: Account = connection.get_account(&self.id.0).unwrap();
-
-                let amm_open_orders_info = AccountInfo::new(
-                    &self.open_orders.0,
-                    false,
-                    false,
-                    &mut amm_open_orders_info.lamports,
-                    &mut amm_open_orders_info.data,
-                    &amm_open_orders_info.owner,
-                    false,
-                    Epoch::default(),
-                );
+                // this is a u64; 4 make it into a u8; 32
+                let mut output = [0u8; 32];
+                let input = market_state.coin_mint;
+                for i in 0..4 {
+                    let num = input[i];
+                    let bytes = num.to_be_bytes(); // or to_le_bytes() for little endian
+                    let mut local_output = [0u8; 8];
+                    local_output.copy_from_slice(&bytes);
+                    output[i * 8..(i + 1) * 8].copy_from_slice(&local_output);
+                }
+            
+                
                 let _market_info = AccountInfo::new(
                     &self.market_id.0,
                     false,
@@ -499,16 +457,6 @@ if user_dst_acc.is_err() {
                     Epoch::default(),
                 );
         
-                let market_event_queue_info = AccountInfo::new(
-                    &self.market_event_queue.0,
-                    false,
-                    false,
-                    &mut market_event_queue_info.lamports,
-                    &mut market_event_queue_info.data,
-                    &market_event_queue_info.owner,
-                    false,
-                    Epoch::default(),
-                );
                 let total_pc_without_take_pnl;
                 let total_coin_without_take_pnl;
                    let atuplemaybe =
@@ -530,21 +478,15 @@ if user_dst_acc.is_err() {
                     .unwrap()
                     .0;
                 let swap_in_after_deduct_fee = U128::from(scaled_amount_in).checked_sub(swap_fee).unwrap();
-                
-                let swap_amount_out = match swap_direction {
-                    SwapDirection::Coin2PC => Calculator::swap_token_amount_base_in(
-                        swap_in_after_deduct_fee,
-                        total_pc_without_take_pnl.into(),
-                        total_coin_without_take_pnl.into(),
-                        swap_direction,
-                    ),
-                    SwapDirection::PC2Coin => Calculator::swap_token_amount_base_out(
-                        swap_in_after_deduct_fee,
-                        total_pc_without_take_pnl.into(),
-                        total_coin_without_take_pnl.into(),
-                        swap_direction,
-                    ),
-                };
+              
+              
+                let swap_amount_out = raydium_amm::math::Calculator::swap_token_amount_base_in(
+                    swap_in_after_deduct_fee,
+                    total_pc_without_take_pnl.into(),
+                    total_coin_without_take_pnl.into(),
+                    swap_direction,
+                );
+
                 println!("mint in, mint out, id, amount in, amount out {} {} {} {} {}", mint_in.to_string(), _mint_out.to_string(), self.id.0.to_string(), scaled_amount_in, swap_amount_out.as_u128());
                 swap_amount_out.as_u128()
 
