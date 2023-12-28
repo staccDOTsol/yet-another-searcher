@@ -656,8 +656,8 @@ if user_dst_acc.is_err() {
             self.pool_amounts.get(&_mint_out.to_string()).is_none() {
             return false;
         }
-       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &1_000_000_000  || 
-        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &1_000_000_000 {
+       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &1_000_000  || 
+        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &1_000_000 {
             return false;
         }
         true
@@ -674,33 +674,31 @@ if user_dst_acc.is_err() {
     }
 
     fn set_update_accounts(&mut self, accounts: Vec<Option<Account>>, _cluster: Cluster) -> bool {
-        
+        let ids: Vec<String> = self
+            .get_mints()
+            .iter()
+            .map(|mint| mint.to_string())
+            .collect();
+        let id0 = &ids[0];
+        let id1 = &ids[1];
 
-        let acc_data0 = &accounts[0].as_ref().unwrap().data;
-        let acc_data1 = &accounts[1].as_ref().unwrap().data;
-        let un1 = unpack_token_account(acc_data0);
-        let un2 = unpack_token_account(acc_data1);
-
-        let amount0 = un1.amount as u128;
-        let amount1 = un2.amount as u128;
-        let id0 = un1.mint.to_string();
-        let id1 = un2.mint.to_string();
-        if id0 == self.base_mint.0.to_string() {
-            self.pool_amounts.insert(id0.clone(), amount0);
-            self.pool_amounts.insert(id1.clone(), amount1);
-        } else if id0 == self.quote_mint.0.to_string() {
-            self.pool_amounts.insert(id1.clone(), amount0);
-            self.pool_amounts.insert(id0.clone(), amount1);
-        } 
-        if id1 == self.base_mint.0.to_string() {
-            self.pool_amounts.insert(id0.clone(), amount0);
-            self.pool_amounts.insert(id1.clone(), amount1);
-        } else if id1 == self.quote_mint.0.to_string() {
-            self.pool_amounts.insert(id1.clone(), amount0);
-            self.pool_amounts.insert(id0.clone(), amount1);
-        } else {
-            return false;
+        if accounts.len() < 2 {
+            return false
         }
+
+        let acc_data0 = &accounts[0].as_ref();
+        let acc_data1 = &accounts[1].as_ref();
+        if acc_data0.is_none() || acc_data1.is_none() {
+            return false  
+        }
+        let acc_data0 = &acc_data0.unwrap().data;
+        let acc_data1 = &acc_data1.unwrap().data;
+
+        let amount0 = unpack_token_account(acc_data0).amount as u128;
+        let amount1 = unpack_token_account(acc_data1).amount as u128;
+
+        self.pool_amounts.insert(id0.clone(), amount0);
+        self.pool_amounts.insert(id1.clone(), amount1);
         true
        
        

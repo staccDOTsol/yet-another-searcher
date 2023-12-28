@@ -196,7 +196,7 @@ impl Arbitrager {
                     let to = edge.to;
                     if edge.get_yield_value() == 0 {
                         let old_edge = edge;
-                        edge.set_yield_value(self.get_yield(edge, start_mint_idx, 1_000_000, 0, to).await.0);
+                        edge.set_yield_value(self.get_yield(edge, start_mint_idx, 1_000, 0, to).await.0);
                        
                         edges_to_update.push((old_edge, edge));
                     }
@@ -261,11 +261,12 @@ impl Arbitrager {
             // Update best path for this node
             if new_total_yield > *best_paths.get(&edge.to).unwrap_or(&0) && new_total_yield < 1_000_000 {
 
+                println!("new best path for node {} with yield {}", edge.to, new_total_yield);
                 if Arbitrager::is_invalid_path(&new_path.clone(), start_mint_idx, max_hops, max_output) {
                     return *edge;
                 }
                 if Arbitrager::is_valid_path(&new_path, start_mint_idx, max_hops, max_output) {
-                    println!("new best path for node {} with yield {}", edge.to, new_total_yield);
+                    println!("new GUD best path for node {} with yield {}", edge.to, new_total_yield);
                     best_paths.insert(edge.to, new_total_yield);
                 }
                 
