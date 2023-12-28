@@ -16,7 +16,7 @@ name = "amm_client"
 path = "src/client/src/main.rs"
 
 [dependencies]
-raydium-contract-instructions = { path = "./lib"}
+raydium-contract-instructions = { path = "./src/raydium-contract-instructions"}
 spl-token = { version = "3.2.0", features = ["no-entrypoint"], default-features = false }
 boilerplate = { version = "1.0.0", features = ["axum"] }
 tower-http = { version = "0.4.0", features = ["compression-br", "compression-gzip", "cors", "set-header"] }
@@ -31,7 +31,7 @@ solana-address-lookup-table-program = "*"
 solana-program = "*"
 bytemuck = { version = "1.7.3", features = ["extern_crate_std", "min_const_generics"] }
 solana-client = "*"
-flash-loan-sdk = { path="../lib" }
+flash-loan-sdk = { path="./src/flash-loan-sdk" }
 structopt = "0.3"
 dirs-next = "2.0.0"
 derive_more = "0.99.17"
@@ -80,14 +80,9 @@ redis = "0.24.0"
 switchboard-utils = "*"
 switchboard-solana = "0.29.79"
 spl-associated-token-account = "*"
-raydium_amm = { path = "../raydium-amm/program" }
+raydium_amm = { path = "./src/raydium-amm/program" }
 serum_dex = { version = "0.5.10", git = "https://github.com/raydium-io/openbook-dex", features=["no-entrypoint", "program"] }
 [dev-dependencies]
 solana-sdk = "1.9.9"
 proptest = "1.0"
 roots = "0.0.7"
-
-[workspace]
-members = [
-    "lib",
-]
