@@ -4,7 +4,7 @@ use solana_client::rpc_client::RpcClient;
 use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
 use solana_sdk::signature::Keypair;
-use solana_sdk::signer::Signer;
+
 
 
 use crate::monitor::pools::*;
@@ -152,11 +152,11 @@ impl PoolOperations for PoolQuote {
     }
     async fn get_quote_with_amounts_scaled_new(
         &self,
-        amount_in: u128,
-        mint_in: &Pubkey,
-        mint_out: &Pubkey,
-        amount: u128,
-        amount_out: u128,
+        _amount_in: u128,
+        _mint_in: &Pubkey,
+        _mint_out: &Pubkey,
+        _amount: u128,
+        _amount_out: u128,
     ) -> u128 {
         0
             

@@ -1,7 +1,7 @@
 use anchor_client::solana_sdk::program_error::ProgramError;
 use anchor_client::solana_sdk::program_option::COption;
 use anchor_client::solana_sdk::pubkey::Pubkey;
-use arrayref::{array_ref, array_refs};
+use arrayref::{array_refs};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use solana_program::program_pack::Pack;
 use spl_token::state::Account;
@@ -141,5 +141,5 @@ pub fn unpack_token_account(data: &[u8]) -> Account {
     if data.len() != 165 {
         return Account::default();
     }
-    return spl_token::state::Account::unpack_from_slice(data).unwrap();
+    spl_token::state::Account::unpack_from_slice(data).unwrap()
 }

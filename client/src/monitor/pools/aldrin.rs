@@ -3,7 +3,7 @@ use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::{Client, Cluster, Program};
 use async_trait::async_trait;
 use solana_client::rpc_client::RpcClient;
-use solana_sdk::program_pack::Pack;
+
 use solana_sdk::signature::Keypair;
 use solana_sdk::signer::Signer;
 use std::collections::HashMap;
@@ -74,8 +74,8 @@ impl PoolOperations for AldrinPool {
         _mint_in: Pubkey,
         mint_out: Pubkey,
         _start_bal: u128,
-        owner: Pubkey,
-        program: &Program<Arc<Keypair>>
+        _owner: Pubkey,
+        _program: &Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let state_pda = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
 
@@ -162,20 +162,20 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
     }
     async fn get_quote_with_amounts_scaled_new(
         & self,
-        scaled_amount_in: u128,
-        mint_in: &Pubkey,
-        mint_out: &Pubkey,
-        amt1: u128, 
-        amt2: u128
+        _scaled_amount_in: u128,
+        _mint_in: &Pubkey,
+        _mint_out: &Pubkey,
+        _amt1: u128, 
+        _amt2: u128
     ) -> u128 {
-        1 as u128 // TODO
+        1_u128 // TODO
     }
     fn get_quote_with_amounts_scaled(
         &mut self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        program: &Arc<RpcClient>
+        _program: &Arc<RpcClient>
     ) -> u128 {
         if !self.pool_amounts.contains_key(&mint_in.to_string())
             || !self.pool_amounts.contains_key(&mint_out.to_string())
@@ -265,7 +265,7 @@ let fee_pool_token_account = self.fee_pool_token_account.0;
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
-        return true
+        true
     }
     
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster)  {

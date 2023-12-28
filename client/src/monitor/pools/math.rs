@@ -14,7 +14,7 @@ where
         Ok(res)
     } else {
         msg!("Error: Overflow in {} + {}", arg1, arg2);
-        Err(anyhow!("Error: Overflow in {} + {}", arg1, arg2).into())
+        Err(anyhow!("Error: Overflow in {} + {}", arg1, arg2))
     }
 }
 
@@ -26,7 +26,7 @@ where
         Ok(res)
     } else {
         msg!("Error: Overflow in {} - {}", arg1, arg2);
-        Err(anyhow!("Error: Overflow in {} - {}", arg1, arg2).into())
+        Err(anyhow!("Error: Overflow in {} - {}", arg1, arg2))
     }
 }
 
@@ -38,7 +38,7 @@ where
         Ok(res)
     } else {
         msg!("Error: Overflow in {} / {}", arg1, arg2);
-        Err(anyhow!("Error: Overflow in {} / {}", arg1, arg2).into())
+        Err(anyhow!("Error: Overflow in {} / {}", arg1, arg2))
     }
 }
 
@@ -50,7 +50,7 @@ where
         Ok(res)
     } else {
         msg!("Error: Overflow in {} * {}", arg1, arg2);
-        Err(anyhow!("Error: Overflow in {} * {}", arg1, arg2).into())
+        Err(anyhow!("Error: Overflow in {} * {}", arg1, arg2))
     }
 }
 
@@ -62,7 +62,7 @@ where
         Ok(res)
     } else {
         msg!("Error: Overflow in {} ^ {}", arg, exp);
-        Err(anyhow!("Error: Overflow in {} ^ {}", arg, exp).into())
+        Err(anyhow!("Error: Overflow in {} ^ {}", arg, exp))
     }
 }
 
@@ -72,7 +72,7 @@ pub fn checked_powf(arg: f64, exp: f64) -> Result<f64, anyhow::Error> {
         Ok(res)
     } else {
         msg!("Error: Overflow in {} ^ {}", arg, exp);
-        Err(anyhow!("Error: Overflow in {} ^ {}", arg, exp).into())
+        Err(anyhow!("Error: Overflow in {} ^ {}", arg, exp))
     }
 }
 
@@ -87,7 +87,7 @@ pub fn checked_powi(arg: f64, exp: i32) -> Result<f64, anyhow::Error> {
         Ok(res)
     } else {
         msg!("Error: Overflow in {} ^ {}", arg, exp);
-        Err(anyhow!("Error: Overflow in {} ^ {}", arg, exp).into())
+        Err(anyhow!("Error: Overflow in {} ^ {}", arg, exp))
     }
 }
 
@@ -100,7 +100,7 @@ where
         Ok(res)
     } else {
         msg!("Error: Overflow in {} as u64", arg);
-        Err(anyhow!("Error: Overflow in {} as u64", arg).into())
+        Err(anyhow!("Error: Overflow in {} as u64", arg))
     }
 }
 
@@ -113,7 +113,7 @@ where
         Ok(res)
     } else {
         msg!("Error: Overflow in {} as u128", arg);
-        Err(anyhow!("Error: Overflow in {} as u128", arg).into())
+        Err(anyhow!("Error: Overflow in {} as u128", arg))
     }
 }
 

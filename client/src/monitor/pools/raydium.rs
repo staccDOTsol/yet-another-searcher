@@ -1,32 +1,31 @@
 
-use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
+
 use crate::monitor::pool_utils::serum::FeeTier;
 use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::token::{ WrappedPubkey, unpack_token_account};
-use crate::monitor::pools::math;
-use anchor_client::solana_sdk::signature::read_keypair_file;
+
+
 use anchor_client::{Cluster, Program};
 use async_trait::async_trait;
-use num_traits::ToPrimitive;
+
 
 use serum_dex::critbit::SlabView;
 use serum_dex::matching::OrderBookState;
-use serum_dex::state::OpenOrders;
+
 use serum_dex::{
-    matching::Side,
-    state::{EventView, MarketState, ToAlignedBytes},
+    state::{MarketState},
 };
-use raydium_amm::check_assert_eq;
+
 use raydium_amm::math::{SwapDirection, U128, Calculator, CheckedCeilDiv};
 use raydium_amm::processor::Processor;
-use raydium_amm::state::{AmmInfo, Loadable, AmmStatus};
+use raydium_amm::state::{AmmInfo};
 use serde;
 use solana_client::rpc_client::RpcClient;
 use solana_program::account_info::AccountInfo;
 use solana_program::stake_history::Epoch;
-use solana_sdk::program_pack::Pack;
+
 use solana_sdk::signature::Keypair;
-use solana_sdk::signer::Signer;
+
 use std::sync::{Arc, Mutex};
 
 
@@ -38,7 +37,7 @@ use raydium_contract_instructions::{
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use std::collections::HashMap;
-use std::fmt::Debug;
+
 
 use std::str::FromStr;
 
@@ -55,7 +54,7 @@ use solana_sdk::instruction::Instruction;
 
 
 use crate::monitor::pool_utils::base::CurveType;
-use crate::utils::{derive_token_address, store_amount_in_redis, get_amount_from_redis};
+use crate::utils::{derive_token_address};
 
 struct Iteration {
     amount_in: u64,
@@ -243,14 +242,14 @@ impl PoolOperations for RaydiumPool {
         } else {
             CurveType::ConstantProduct
         };
-        let program_id = self.program_id.clone();
+        let _program_id = self.program_id.clone();
         let id = self.id.clone();
         let authority = Pubkey::from_str("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1").unwrap();
         let open_orders = self.open_orders.clone();
         let target_orders = self.target_orders.clone();
         let market_program_id = self.market_program_id.clone();
         let market_id = self.market_id.clone();
-        let market_id_acc = program.rpc().get_account(&market_id.0).unwrap();
+        let _market_id_acc = program.rpc().get_account(&market_id.0).unwrap();
         let market_bids = self.market_bids.clone();
         let market_asks = self.market_asks.clone();
         let market_event_queue = self.market_event_queue.clone();
@@ -304,7 +303,7 @@ if user_dst_acc.is_err() {
     ixs.insert(0, create_ata_ix);
 }
 
-                return (false, ixs);
+                (false, ixs)
             } else {
                 let model_data_account = self.model_data_account.clone().unwrap();
                   let  swap_ix: Result<Instruction, anchor_lang::prelude::ProgramError> = stable_swap(
@@ -359,17 +358,17 @@ if user_dst_acc.is_err() {
                 ixs.insert(0, create_ata_ix);
             }
             
-                            return (false, ixs);
+                            (false, ixs)
             }        
 
     }
     async fn get_quote_with_amounts_scaled_new(
         & self,
-        scaled_amount_in: u128,
-        mint_in: &Pubkey,
-        mint_out: &Pubkey,
-        amt1: u128, 
-        amt2: u128
+        _scaled_amount_in: u128,
+        _mint_in: &Pubkey,
+        _mint_out: &Pubkey,
+        _amt1: u128, 
+        _amt2: u128
     ) -> u128 {
         return 0;
     }
@@ -378,17 +377,17 @@ if user_dst_acc.is_err() {
         &mut self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
-        mint_out: &Pubkey,
+        _mint_out: &Pubkey,
         program: &Arc<RpcClient >
     ) -> u128 {
-        let mut coin_amount = self.pool_amounts.get(&self.base_mint.0.to_string());
-        let mut pc_amount = self.pool_amounts.get(&self.quote_mint.0.to_string());
+        let coin_amount = self.pool_amounts.get(&self.base_mint.0.to_string());
+        let pc_amount = self.pool_amounts.get(&self.quote_mint.0.to_string());
         
         if coin_amount.is_none() || pc_amount.is_none() {
             return 0;
         }
-        let mut coin_amount = *coin_amount.unwrap();
-        let mut pc_amount = *pc_amount.unwrap();
+        let coin_amount = *coin_amount.unwrap();
+        let pc_amount = *pc_amount.unwrap();
         
         let idx0 = self.base_mint.0.to_string();
         let swap_direction: SwapDirection = if idx0 == mint_in.to_string() {
@@ -406,12 +405,12 @@ if user_dst_acc.is_err() {
           let  mut  amm_authority_info = value.1.clone();
           let mut   market_info = value.2.clone();
           let  mut  amm_info = value.3.clone();
-          let mut   amm = value.4.clone();
-          let  mut  market_state = value.5.clone();
-          let  mut  open_orders = value.6.clone();
+          let amm = value.4;
+          let  market_state = value.5;
+          let  open_orders = value.6.clone();
           let  mut  market_event_queue_info = value.7.clone();
 
-        let amm_info = AccountInfo::new(
+        let _amm_info = AccountInfo::new(
             &self.id.0,
             false,
             false,
@@ -421,7 +420,7 @@ if user_dst_acc.is_err() {
             false,
             Epoch::default(),
         );
-        let amm_authority_info = AccountInfo::new(
+        let _amm_authority_info = AccountInfo::new(
             &self.authority.0,
             false,
             false,
@@ -441,7 +440,7 @@ if user_dst_acc.is_err() {
             false,
             Epoch::default(),
         );
-        let market_info = AccountInfo::new(
+        let _market_info = AccountInfo::new(
             &self.market_id.0,
             false,
             false,
@@ -475,7 +474,6 @@ if user_dst_acc.is_err() {
                     &amm_open_orders_info,
                 );
                 if atuplemaybe.clone().is_err() {
-                    println!("raydium err {}", atuplemaybe.clone().err().unwrap());
                     return 0;
                 }
                  (total_pc_without_take_pnl, total_coin_without_take_pnl) = atuplemaybe.unwrap();
@@ -501,16 +499,20 @@ if user_dst_acc.is_err() {
                 swap_direction,
             ),
         };
-        println!("raydium {} {} {} {}", swap_amount_out.as_u128(), total_pc_without_take_pnl, total_coin_without_take_pnl, swap_in_after_deduct_fee.as_u128());
-        return swap_amount_out.as_u128();
+        swap_amount_out.as_u128()
         } else {
             let connection = program.clone();
-            let mut amm_open_orders_info = connection.get_account(&self.open_orders.0);
+            let amm_open_orders_info = connection.get_account(&self.open_orders.0);
             if amm_open_orders_info.is_err() {
                 return 0;
             }
             let mut amm_open_orders_info = amm_open_orders_info.unwrap();
-            let mut amm_authority_info = connection.get_account(&self.authority.0).unwrap();
+            let amm_authority_info = connection.get_account(&self.authority.0);
+            if amm_authority_info.is_err() {
+                return 0;
+            }
+            let mut amm_authority_info = amm_authority_info.unwrap();
+            
             let mut market_info = connection.get_account(&self.market_id.0).unwrap();
             let mut amm_info: Account = connection.get_account(&self.id.0).unwrap();
 
@@ -556,7 +558,7 @@ if user_dst_acc.is_err() {
             false,
             Epoch::default(),
         );
-        let  mut market_event_queue_info = connection.get_account(&self.market_event_queue.0).unwrap();
+        let  _market_event_queue_info = connection.get_account(&self.market_event_queue.0).unwrap();
     
     
                 let (market_state, open_orders) = Processor::load_serum_market_order(
@@ -568,7 +570,7 @@ if user_dst_acc.is_err() {
                 ).unwrap();
                 let mut market_event_queue_info = connection.get_account(&self.market_event_queue.0).unwrap();
                 let mut cache = self.cache.clone();
-                let mut amm_info: Account = connection.get_account(&self.id.0).unwrap();
+                let amm_info: Account = connection.get_account(&self.id.0).unwrap();
 
                 cache.insert((self.open_orders.0, self.authority.0, self.market_id.0, self.id.0), (amm_open_orders_info.clone(), amm_authority_info.clone(), market_info.clone(), amm_info.clone(), *amm, *market_state, Box::new(*open_orders), market_event_queue_info.clone()));
                 self.cache = cache;
@@ -582,7 +584,7 @@ if user_dst_acc.is_err() {
                     false,
                     Epoch::default(),
                 );
-                let market_info = AccountInfo::new(
+                let _market_info = AccountInfo::new(
                     &self.market_id.0,
                     false,
                     false,
@@ -616,7 +618,6 @@ if user_dst_acc.is_err() {
                             &amm_open_orders_info,
                         );
                         if atuplemaybe.clone().is_err() {
-                            println!("raydium err {}", atuplemaybe.clone().err().unwrap());
                             return 0;
                         }
                          (total_pc_without_take_pnl, total_coin_without_take_pnl) = atuplemaybe.unwrap();
@@ -642,8 +643,7 @@ if user_dst_acc.is_err() {
                         swap_direction,
                     ),
                 };
-                println!("raydium {} {} {} {}", swap_amount_out.as_u128(), total_pc_without_take_pnl, total_coin_without_take_pnl, swap_in_after_deduct_fee.as_u128());
-                return swap_amount_out.as_u128();
+                swap_amount_out.as_u128()
         }
 
     }
@@ -656,11 +656,11 @@ if user_dst_acc.is_err() {
             self.pool_amounts.get(&_mint_out.to_string()).is_none() {
             return false;
         }
-       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &100  || 
-        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &100 {
+       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &1_000_000_000  || 
+        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &1_000_000_000 {
             return false;
         }
-        return true;
+        true
         
     }fn get_name(&self) -> String {
         "Raydium".to_string()
@@ -681,8 +681,8 @@ if user_dst_acc.is_err() {
         let un1 = unpack_token_account(acc_data0);
         let un2 = unpack_token_account(acc_data1);
 
-        let mut amount0 = un1.amount as u128;
-        let mut amount1 = un2.amount as u128;
+        let amount0 = un1.amount as u128;
+        let amount1 = un2.amount as u128;
         let id0 = un1.mint.to_string();
         let id1 = un2.mint.to_string();
         if id0 == self.base_mint.0.to_string() {
@@ -691,8 +691,7 @@ if user_dst_acc.is_err() {
         } else if id0 == self.quote_mint.0.to_string() {
             self.pool_amounts.insert(id1.clone(), amount0);
             self.pool_amounts.insert(id0.clone(), amount1);
-        } else {
-        }
+        } 
         if id1 == self.base_mint.0.to_string() {
             self.pool_amounts.insert(id0.clone(), amount0);
             self.pool_amounts.insert(id1.clone(), amount1);
@@ -702,14 +701,14 @@ if user_dst_acc.is_err() {
         } else {
             return false;
         }
-        return true;
+        true
        
        
     }
 
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster)  {
         let acc_data0 = data;
-        let mut amount0 = unpack_token_account(acc_data0);
+        let amount0 = unpack_token_account(acc_data0);
         
         let _mint = amount0.mint;
         let id0 = self.base_mint.0.to_string();

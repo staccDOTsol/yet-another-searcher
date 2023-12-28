@@ -1,12 +1,12 @@
 use crate::constants::*;
-use crate::monitor::pools::{PoolOperations, PoolType};
+use crate::monitor::pools::{PoolOperations};
 use anchor_client::solana_sdk::pubkey::Pubkey;
-use solana_client::rpc_client::RpcClient;
+
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs;
-use std::ops::{DerefMut, Deref};
-use std::rc::Rc;
+
+
 use std::str::FromStr;
 use std::sync::Arc;
 
@@ -18,7 +18,7 @@ pub fn store_amount_in_redis(account: &String, amount: u64) -> redis::RedisResul
     let mut con = client.get_connection()?;
 
     // set a key-value pair
-    let _ : () = con.set(account, amount)?;
+    con.set(account, amount)?;
 
     Ok(())
 }    
@@ -89,12 +89,17 @@ impl PoolQuote {
 
 #[derive(Clone)]
 pub struct PoolGraph(pub HashMap<PoolIndex, PoolEdge>);
-
 #[derive(Clone, Copy, Eq, PartialEq, Hash)]
 pub struct PoolIndex(pub usize);
 
 #[derive(Clone)]
 pub struct PoolEdge(pub HashMap<PoolIndex, Vec<PoolQuote>>);
+
+impl Default for PoolGraph {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl PoolGraph {
     pub fn new() -> Self {

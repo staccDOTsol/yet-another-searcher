@@ -5,7 +5,7 @@ use anchor_client::solana_sdk::signature::read_keypair_file;
 use async_trait::async_trait;
 use serde;
 use solana_client::rpc_client::RpcClient;
-use solana_program::program_pack::Pack;
+
 use solana_sdk::signature::Keypair;
 use solana_sdk::signer::Signer;
 
@@ -64,8 +64,8 @@ impl PoolOperations for MercurialPool {
         mint_in: Pubkey,
         mint_out: Pubkey,
         _start_bal: u128,
-        owner: Pubkey,
-        program: &Program<Arc<Keypair>>
+        _owner: Pubkey,
+        _program: &Program<Arc<Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let swap_state_pda =
             Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
@@ -108,20 +108,20 @@ impl PoolOperations for MercurialPool {
     }
     async fn get_quote_with_amounts_scaled_new(
         & self,
-        scaled_amount_in: u128,
-        mint_in: &Pubkey,
-        mint_out: &Pubkey,
-        amt1: u128, 
-        amt2: u128
+        _scaled_amount_in: u128,
+        _mint_in: &Pubkey,
+        _mint_out: &Pubkey,
+        _amt1: u128, 
+        _amt2: u128
     ) -> u128 {
-        1 as u128 // TODO
+        1_u128 // TODO
     }
     fn get_quote_with_amounts_scaled(
         &mut self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        program: &Arc<RpcClient >
+        _program: &Arc<RpcClient >
     ) -> u128 {
         let fee_denom = 10_u128.pow(10);
 
@@ -200,7 +200,7 @@ impl PoolOperations for MercurialPool {
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
-        return true
+        true
     }
 
     fn mint_2_addr(&self, mint: &Pubkey) -> Pubkey {

@@ -1,20 +1,20 @@
-use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
-use anchor_client::solana_sdk::signature::read_keypair_file;
-use anchor_lang::AnchorSerialize;
+
+
+
 use async_trait::async_trait;
 use solana_client::rpc_client::RpcClient;
-use solana_program::instruction::AccountMeta;
-use solana_sdk::program_pack::Pack;
-use switchboard_solana::get_ixn_discriminator;
+
+
+
 use std::collections::HashMap;
-use solana_sdk::signature::{Signer, Keypair};
+use solana_sdk::signature::{Keypair};
 
 use std::fmt::Debug;
 
 use std::sync::{Arc, Mutex};
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
-use anchor_client::{Client, Cluster, Program};
+use anchor_client::{Cluster, Program};
 
 use std::str::FromStr;
 
@@ -34,7 +34,7 @@ use tmp::instruction as tmp_ix;
 
 use crate::constants::*;
 use crate::monitor::pool_utils::stable::Stable;
-use crate::utils::{derive_token_address, str2pubkey, store_amount_in_redis, get_amount_from_redis};
+use crate::utils::{derive_token_address, str2pubkey};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -94,8 +94,8 @@ impl PoolOperations for SaberPool {
                 else {
                     return (false, vec![]);
                 }
-        let pool_account = self.pool_account.0;
-        let authority = self.authority.0;
+        let _pool_account = self.pool_account.0;
+        let _authority = self.authority.0;
         let mut swap_ix = program
         .request()
         .accounts(tmp_accounts::SaberSwap{
@@ -145,7 +145,7 @@ if user_dst_acc.is_err() {
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        program: &Arc<RpcClient >
+        _program: &Arc<RpcClient >
     ) -> u128 {
         let calculator = Stable {
             amp: self.target_amp,
@@ -172,7 +172,7 @@ if user_dst_acc.is_err() {
         & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
-        mint_out: &Pubkey,
+        _mint_out: &Pubkey,
         amt1: u128, 
         amt2: u128
     ) -> u128 {
@@ -239,7 +239,7 @@ if user_dst_acc.is_err() {
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
-        return true;
+        true
     }
 
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster)  {

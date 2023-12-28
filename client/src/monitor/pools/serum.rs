@@ -2,24 +2,24 @@ use async_trait::async_trait;
 use bytemuck::bytes_of;
 use chrono::Utc;
 use solana_client::rpc_client::RpcClient;
-use solana_sdk::commitment_config::CommitmentConfig;
+
 use solana_sdk::signer::Signer;
-use solana_sdk::transaction::Transaction;
+
 use core::panic;
 use std::num::NonZeroU64;
-use std::rc::Rc;
+
 use std::sync::{Arc, Mutex};
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
 use crate::monitor::pools::PoolOperations;
 use crate::serialize::token::WrappedPubkey;
-use anchor_client::{Cluster, Client, Program};
+use anchor_client::{Cluster};
 use openbook_dex::matching::OrderType;
 use openbook_dex::matching::Side;
 use openbook_dex::state::AccountFlag;
 use serde;
 use serde::{Deserialize, Serialize};
-use solana_sdk::signature::{Keypair, read_keypair_file};
+use solana_sdk::signature::{read_keypair_file};
 use std::collections::HashMap;
 use std::fmt::Debug;
 
@@ -111,11 +111,7 @@ fn bid_iteration(iteration: &mut Iteration, fee_tier: &FeeTier, ob: &mut OrderBo
     let mut pc_qty_remaining = max_pc_qty;
 
     let done = loop {
-        let flag = match ob.asks.find_min() {
-            // min = best ask
-            Some(_) => false,
-            None => true,
-        };
+        let flag = ob.asks.find_min().is_none();
         if flag {
             break true;
         }
@@ -246,11 +242,11 @@ impl PoolOperations for SerumPool {
                    // self.accounts[2] = (Some(account.clone().unwrap()))
             }
         }
-        return true
+        true
     }
 
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster)  {
-        let flags = Market::account_flags(&data);
+        let flags = Market::account_flags(data);
         if flags.is_err() {
             return;
         }
@@ -312,22 +308,22 @@ impl PoolOperations for SerumPool {
 
     async fn get_quote_with_amounts_scaled_new(
         & self,
-        scaled_amount_in: u128,
-        mint_in: &Pubkey,
-        mint_out: &Pubkey,
+        _scaled_amount_in: u128,
+        _mint_in: &Pubkey,
+        _mint_out: &Pubkey,
         amt1: u128, 
         amt2: u128
     ) -> u128 {
-        let pool_src_amount = amt1;
-        let pool_dst_amount = amt2;
-    amt2 as u128
+        let _pool_src_amount = amt1;
+        let _pool_dst_amount = amt2;
+    amt2
     }
     fn get_quote_with_amounts_scaled(
         &mut self,
         amount_in: u128,
         mint_in: &Pubkey,
         _mint_out: &Pubkey,
-        program: &Arc<RpcClient >
+        _program: &Arc<RpcClient >
     ) -> u128 {
         let market_pk = self.own_address.0;
         let fee_tier = FeeTier::from_srm_and_msrm_balances(&market_pk, 0, 0);
@@ -358,8 +354,8 @@ impl PoolOperations for SerumPool {
         let asks_acc = &account_info(&self.asks.0, ask_acc);
 
         let m = Market::load(market_acc_info, &SERUM_PROGRAM_ID, true);
-        if !m.is_ok() {
-            println!("{}", "m is none");
+        if m.is_err() {
+            println!("m is none");
             return 0;
         }
         let mut market = m.unwrap();
@@ -403,10 +399,10 @@ impl PoolOperations for SerumPool {
     fn swap_ix(
         &self,
         mint_in: Pubkey,
-        mint_out: Pubkey,
+        _mint_out: Pubkey,
         start_bal: u128,
-        owner: Pubkey,
-        program: &anchor_client::Program<Arc<switchboard_solana::Keypair>>
+        _owner: Pubkey,
+        _program: &anchor_client::Program<Arc<switchboard_solana::Keypair>>
     ) -> (bool, Vec<Instruction>) {
         let oos = &self.open_orders;
         if oos.is_none() {
@@ -414,8 +410,8 @@ impl PoolOperations for SerumPool {
         }
         let oos = oos.clone().unwrap();
         let mut blargorders: Pubkey = Pubkey::from_str("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX").unwrap();
-        let mut open_orders =
-            (oos.get(&self.own_address.0.to_string()));
+        let open_orders =
+            oos.get(&self.own_address.0.to_string());
         if open_orders.is_none() {/*
             let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
             let owner = Arc::new(read_keypair_file(owner_kp_path.clone()).unwrap());
@@ -510,14 +506,14 @@ impl PoolOperations for SerumPool {
 let open_orders = blargorders;
         let _swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let _space = 3228;
-        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json".clone()).unwrap());
+        let owner3 = Arc::new(read_keypair_file("/home/ubuntu/.config/solana/id.json").unwrap());
 
         let owner = owner3.try_pubkey().unwrap();
 
         let base_ata = derive_token_address(&owner, &self.base_mint);
         let quote_ata = derive_token_address(&owner, &self.quote_mint);
 
-        let side = if *&mint_in == self.quote_mint.0 {
+        let side = if mint_in == self.quote_mint.0 {
             Side::Bid
         } else {
             Side::Ask

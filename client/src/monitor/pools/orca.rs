@@ -1,18 +1,18 @@
 use crate::monitor::pools::{PoolOperations, PoolType};
 use crate::serialize::pool::JSONFeeStructure;
 use crate::serialize::token::{ Token, WrappedPubkey, unpack_token_account};
-use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
-use anchor_client::solana_sdk::signature::read_keypair_file;
-use anchor_client::{Client, Cluster, Program};
-use anchor_lang::AnchorSerialize;
+
+
+use anchor_client::{Cluster, Program};
+
 use async_trait::async_trait;
 use serde;
 use solana_client::rpc_client::RpcClient;
-use solana_program::instruction::AccountMeta;
-use solana_sdk::program_pack::Pack;
+
+
 use solana_sdk::signature::Keypair;
-use solana_sdk::signer::Signer;
-use switchboard_solana::get_ixn_discriminator;
+
+
 use std::sync::{Arc, Mutex};
 
 type ShardedDb = Arc<Mutex<HashMap<String, Account>>>;
@@ -35,7 +35,7 @@ use tmp::instruction as tmp_ix;
 use crate::constants::*;
 use crate::monitor::pool_utils::base::CurveType;
 use crate::monitor::pool_utils::{fees::Fees, orca::get_pool_quote_with_amounts};
-use crate::utils::{derive_token_address, str2pubkey, get_amount_from_redis, store_amount_in_redis};
+use crate::utils::{derive_token_address, str2pubkey};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -92,9 +92,9 @@ fn swap_ix(
             return (false, vec![]);
         }
 
-let token_swap = self.address.0;
-let pool_mint= self.pool_token_mint.0;
-let fee_account = self.fee_account.0;
+let _token_swap = self.address.0;
+let _pool_mint= self.pool_token_mint.0;
+let _fee_account = self.fee_account.0;
 let mut swap_ix = program
 .request()
 .accounts(tmp_accounts::OrcaSwap {
@@ -145,7 +145,7 @@ if user_dst_acc.is_err() {
         & self,
         scaled_amount_in: u128,
         mint_in: &Pubkey,
-        mint_out: &Pubkey,
+        _mint_out: &Pubkey,
         amt1: u128, 
         amt2: u128
     ) -> u128 {
@@ -161,8 +161,8 @@ if user_dst_acc.is_err() {
             pool_dst_amount = amt1;
         }
 
-            let pool_amounts = [pool_src_amount, pool_dst_amount];
-            let percision_multipliers = [1, 1];
+            let _pool_amounts = [pool_src_amount, pool_dst_amount];
+            let _percision_multipliers = [1, 1];
 
 
         // compute fees
@@ -212,7 +212,7 @@ if user_dst_acc.is_err() {
         scaled_amount_in: u128,
         mint_in: &Pubkey,
         mint_out: &Pubkey,
-        program: &Arc<RpcClient >
+        _program: &Arc<RpcClient >
     ) -> u128 {
         let pool_src_amount = self.pool_amounts.get(&mint_in.to_string());
         let pool_dst_amount = self.pool_amounts.get(&mint_out.to_string());
@@ -313,7 +313,7 @@ if user_dst_acc.is_err() {
 
         self.pool_amounts.insert(id0.clone(), amount0);
         self.pool_amounts.insert(id1.clone(), amount1);
-        return true
+        true
     }
 
     fn set_update_accounts2(&mut self, _pubkey: Pubkey, data: &[u8], _cluster: Cluster)  {
