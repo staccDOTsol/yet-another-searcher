@@ -1,0 +1,6 @@
+[submodule "raydium-amm"]
+	path = raydium-amm
+	url = git@github.com:raydium-io/raydium-amm.git
+[submodule "client/src/raydium-contract-instructions"]
+	path = client/src/raydium-contract-instructions
+	url = git@github.com:raydium-io/raydium-contract-instructions.git
