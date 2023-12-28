@@ -9,7 +9,7 @@ use anchor_client::{Cluster, Program};
 use async_trait::async_trait;
 
 
-use serum_dex::critbit::SlabView;
+use serum_dex::critbit::{SlabView, LeafNode};
 use serum_dex::matching::OrderBookState;
 
 use serum_dex::{
@@ -18,7 +18,7 @@ use serum_dex::{
 
 use raydium_amm::math::{SwapDirection, U128, Calculator, CheckedCeilDiv};
 use raydium_amm::processor::Processor;
-use raydium_amm::state::{AmmInfo};
+use raydium_amm::state::{AmmInfo, AmmStatus};
 use serde;
 use solana_client::rpc_client::RpcClient;
 use solana_program::account_info::AccountInfo;
@@ -337,24 +337,24 @@ if user_dst_acc.is_err() {
         let coin_amount = *coin_amount.unwrap();
         let pc_amount = *pc_amount.unwrap();
         
-        let idx0 = self.base_mint.0.to_string();
-        let swap_direction: SwapDirection = if idx0 != mint_in.to_string() {
-            SwapDirection::Coin2PC
-            
-        } else {
-            SwapDirection::PC2Coin
-        };        
+        let swap_direction;
+        if mint_in == &self.base_mint.0 && _mint_out == &self.quote_mint.0 {
+            swap_direction = SwapDirection::Coin2PC
+        }else 
+        {
+            swap_direction = SwapDirection::PC2Coin
+        } 
         
             let connection = program.clone();
-            let mut account_infos = connection.get_multiple_accounts(
+            let account_infos = connection.get_multiple_accounts(
                 &[
                     self.open_orders.0,
                     self.authority.0,
                     self.market_id.0,
                     self.id.0,
                     self.market_event_queue.0,
-                   // self.market_bids.0,
-                   // self.market_asks.0,
+                    self.market_bids.0,
+                    self.market_asks.0,
                 ]
             ).unwrap();
 
@@ -374,15 +374,37 @@ if user_dst_acc.is_err() {
             let mut market_info = account_infos[2].clone();
             let mut amm_info =  account_infos[3].clone();
             let mut market_event_queue_info = account_infos[4].clone();
-            let mut bids_info =  account_infos[5].clone();
-            let mut asks_info = account_infos[6].clone();
-            if market_info.is_none() || amm_info.is_none() || market_event_queue_info.is_none() {
+            let mut market_bids_info = account_infos[5].clone();
+            let mut market_asks_info = account_infos[6].clone();
+            if market_info.is_none() || amm_info.is_none() || market_event_queue_info.is_none() || market_bids_info.is_none() || market_asks_info.is_none() {
                 println!("err2");
                 return 0;
             }
             let mut market_info = market_info.unwrap();
             let mut amm_info = amm_info.unwrap();
          
+            let mut market_bids_info = market_bids_info.unwrap();
+            let mut market_asks_info = market_asks_info.unwrap();
+            let mut market_bids_info = AccountInfo::new(
+                &self.market_bids.0,
+                false,
+                false,
+                &mut market_bids_info.lamports,
+                &mut market_bids_info.data,
+                &market_bids_info.owner,
+                false,
+                Epoch::default(),
+            );
+            let mut market_asks_info = AccountInfo::new(
+                &self.market_asks.0,
+                false,
+                false,
+                &mut market_asks_info.lamports,
+                &mut market_asks_info.data,
+                &market_asks_info.owner,
+                false,
+                Epoch::default(),
+            );
             let mut amm_info2 = AccountInfo::new(
                 &self.id.0,
                 false,
@@ -434,43 +456,71 @@ if user_dst_acc.is_err() {
                     &amm,
                     false,
                 ).unwrap();
-                // this is a u64; 4 make it into a u8; 32
-                let mut output = [0u8; 32];
-                let input = market_state.coin_mint;
-                for i in 0..4 {
-                    let num = input[i];
-                    let bytes = num.to_be_bytes(); // or to_le_bytes() for little endian
-                    let mut local_output = [0u8; 8];
-                    local_output.copy_from_slice(&bytes);
-                    output[i * 8..(i + 1) * 8].copy_from_slice(&local_output);
-                }
-            
                 
-                let _market_info = AccountInfo::new(
-                    &self.market_id.0,
+                let mut market_event_queue_info = market_event_queue_info.unwrap();
+                let mut market_event_queue_info = AccountInfo::new(
+                    &self.market_event_queue.0,
                     false,
                     false,
-                    &mut market_info.lamports,
-                    &mut market_info.data,
-                    &market_info.owner,
+                    &mut market_event_queue_info.lamports,
+                    &mut market_event_queue_info.data,
+                    &market_event_queue_info.owner,
                     false,
                     Epoch::default(),
                 );
-        
+                let enable_orderbook;
+                if AmmStatus::from_u64(amm.status).orderbook_permission() {
+                    enable_orderbook = true;
+                } else {
+                    enable_orderbook = false;
+                }
                 let total_pc_without_take_pnl;
                 let total_coin_without_take_pnl;
-                   let atuplemaybe =
+                let mut bids: Vec<LeafNode> = Vec::new();
+                let mut asks: Vec<LeafNode> = Vec::new();
+                if enable_orderbook {
+                    let (market_state, open_orders) = Processor::load_serum_market_order(
+                        &market_info2,
+                        &amm_open_orders_info2,
+                        &amm_authority_info2,
+                        &amm,
+                        false,
+                    ).unwrap();
+                    let bids_orders = market_state.load_bids_mut(&market_bids_info).unwrap();
+                    let asks_orders = market_state.load_asks_mut(&market_asks_info).unwrap();
+                    (bids, asks) = raydium_amm::processor::Processor::get_amm_orders(&open_orders, bids_orders, asks_orders).unwrap();
+                    let tuplemaybe = 
+                    raydium_amm::math::Calculator::calc_total_without_take_pnl(
+                        pc_amount as u64,
+                            coin_amount as u64,
+                            &open_orders,
+                            &amm,
+                            &market_state,
+                            &market_event_queue_info,
+                            &amm_open_orders_info2,
+                        );
+                        if tuplemaybe.is_err() {
+                            return 0;
+                        }
+                         (total_pc_without_take_pnl, total_coin_without_take_pnl) = tuplemaybe.unwrap();
+                } else {
+                    let open_orders = raydium_amm::processor::Processor::load_orders(&amm_open_orders_info2).unwrap();
+                    let tuplemaybe  =
                         Calculator::calc_total_without_take_pnl_no_orderbook(
                             pc_amount as u64,
                             coin_amount as u64,
                             &open_orders,
                             &amm,
                         );
-                        if atuplemaybe.clone().is_err() {
-                            println!("err1 {:?}", atuplemaybe.clone().err());
+                        if tuplemaybe.is_err() {
                             return 0;
                         }
-                         (total_pc_without_take_pnl, total_coin_without_take_pnl) = atuplemaybe.unwrap();
+                         (total_pc_without_take_pnl, total_coin_without_take_pnl) = tuplemaybe.unwrap();
+
+                }
+        
+
+                
               let swap_fee = U128::from(scaled_amount_in)
                     .checked_mul(amm.fees.swap_fee_numerator.into())
                     .unwrap()
@@ -479,16 +529,17 @@ if user_dst_acc.is_err() {
                     .0;
                 let swap_in_after_deduct_fee = U128::from(scaled_amount_in).checked_sub(swap_fee).unwrap();
               
-              
-                let swap_amount_out = raydium_amm::math::Calculator::swap_token_amount_base_in(
-                    swap_in_after_deduct_fee,
-                    total_pc_without_take_pnl.into(),
-                    total_coin_without_take_pnl.into(),
-                    swap_direction,
-                );
 
-                println!("mint in, mint out, id, amount in, amount out {} {} {} {} {}", mint_in.to_string(), _mint_out.to_string(), self.id.0.to_string(), scaled_amount_in, swap_amount_out.as_u128());
-                swap_amount_out.as_u128()
+                    let swap_amount_out = Calculator::swap_token_amount_base_in(
+                        swap_in_after_deduct_fee,
+                        total_pc_without_take_pnl.into(),
+                        total_coin_without_take_pnl.into(),
+                        swap_direction,
+                    )
+                    .as_u128();
+              
+                    swap_amount_out
+
 
     }
 

@@ -185,7 +185,7 @@ impl Path {
 
 impl Ord for Path {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.total_yield.cmp(&other.total_yield)
+        (self.most_recent_yield_usd as u64).cmp(&(other.most_recent_yield_usd as u64))
     }
 }
 
@@ -241,21 +241,25 @@ impl Arbitrager {
                     
                 }
             }
-        
+        let mut newpathy = None;
         while let Some(result) = futures.next().await {
             if let Some((new_path, new_total_yield, _edge)) = result {
                 if new_total_yield > max_output as u128 {
                     max_heap.push(new_path.clone());
-                    if new_path.clone().total_length > 3 && new_path.clone().most_recent_yield as f64 > max_output as f64 * 1.8 as f64 && new_path.clone().most_recent_yield as f64 <= max_output as f64 * 3.33 {
+                    if new_path.clone().last_node() == start_mint_idx && new_path.clone().most_recent_yield as f64 > max_output as f64 * 1.0 as f64  {
+                        newpathy =Some( new_path.clone() );
+                        println!("new path is {:?}", new_path.clone().nodes);
                         break;
                     }
-                    break;
                 }
             }
         }
-        if max_heap.clone().into_sorted_vec().into_iter().find(|p| p.last_node() == start_mint_idx).is_some() {
+        if newpathy.is_some(){
+            let new_path = newpathy.unwrap();
+        if new_path.clone().last_node() == start_mint_idx && new_path.clone().most_recent_yield as f64 > max_output as f64 * 1.0 as f64  {
             break;
         }
+    }
 
     }
 
@@ -285,7 +289,7 @@ impl Arbitrager {
         new_path.extend_with_edge(edge.to, yield_increase, quote.unwrap(), poolidx_1, edge);
         if !Arbitrager::is_invalid_path(&new_path, start_mint_idx, max_output) {
             let new_total_yield = new_path.most_recent_yield_usd;
-            println!("new total yielding path is {:?} {:?} {:?} {:?}", new_path.nodes, new_path.yields, new_path.total_yield, new_path.most_recent_yield_usd);
+           // println!("new total yielding path is {:?} {:?} {:?} {:?}", new_path.nodes, new_path.yields, new_path.total_yield, new_path.most_recent_yield_usd);
             Some((new_path, new_total_yield as u128, updated_edge))
         } else {
             None
@@ -313,15 +317,12 @@ async fn compute_yield_improvement(&self, edge: &Edge, path: &Path) -> (u128, Op
 
 async fn compute_yield(&self, edge: Edge, amount: u128, path: &Path) -> (u128, Option<PoolQuote>, Edge) {
     let from = edge.from;
-    let to = edge.to;
     let old_edge = path.last_edge;
     let old_edge_yield = old_edge.get_yield_value();
     let new_edge_yield = edge.get_yield_value();
-    let pool = self.graph.0.get(&PoolIndex(from)).and_then(|p| p.0.get(&PoolIndex(to)));
     let mut edge = edge;
-    if path.total_length >= 3 {
-        edge.to = path.nodes[0];
-    }
+    let to = edge.to;
+    let pool = self.graph.0.get(&PoolIndex(from)).and_then(|p| p.0.get(&PoolIndex(to)));
     if pool.is_none(){
         return (0, None, edge);
     }
@@ -563,8 +564,8 @@ pub     fn create_and_or_extend_luts(
                 );
                 let latest_blockhash = connection.get_latest_blockhash(); 
                 //println!("extending lut: {:?}", lut.key);
-               let hm = connection
-                    .send_and_confirm_transaction(&VersionedTransaction::try_new(
+               let hm: Result<solana_sdk::signature::Signature, solana_client::client_error::ClientError> = connection
+                    .send_transaction(&VersionedTransaction::try_new(
                             VersionedMessage::V0(v0::Message::try_compile(
                                 &payer.pubkey(),
                                 &[extend_ix],

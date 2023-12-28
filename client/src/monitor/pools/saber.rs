@@ -114,16 +114,6 @@ impl PoolOperations for SaberPool {
         .args(tmp_ix::SaberSwap {}) 
         .instructions()
         .unwrap();
-if user_src_acc.is_err() {
-    let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
-        &pubkey,
-        &pubkey,
-        &mint_in,
-        &spl_token::ID
-    );
-    swap_ix.insert(0, create_ata_ix);
-
-}
 if user_dst_acc.is_err() {
     // create ata
     let create_ata_ix = spl_associated_token_account::instruction::create_associated_token_account(
