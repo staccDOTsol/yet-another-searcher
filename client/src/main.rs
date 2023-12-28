@@ -785,7 +785,7 @@ loop {
             let graph_edges = arbitrager.clone().graph_edges.clone();
             let graph = arbitrager.clone().graph.clone();
             
-            let mut c = Arbitrager {
+            let c = Arbitrager {
                 token_mints: token_mints.clone(),
                 graph_edges: graph_edges.clone(),
                 graph: graph.clone(),
