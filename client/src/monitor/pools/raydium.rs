@@ -524,6 +524,7 @@ if user_dst_acc.is_err() {
               let swap_fee = U128::from(scaled_amount_in)
                     .checked_mul(amm.fees.swap_fee_numerator.into())
                     .unwrap()
+
                     .checked_ceil_div(amm.fees.swap_fee_denominator.into())
                     .unwrap()
                     .0;
@@ -551,8 +552,8 @@ if user_dst_acc.is_err() {
             self.pool_amounts.get(&_mint_out.to_string()).is_none() {
             return false;
         }
-       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &1000_000_000  || 
-        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &1000_000_000 {
+       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &1000_000  || 
+        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &1000_000 {
             return false;
         }
         true
