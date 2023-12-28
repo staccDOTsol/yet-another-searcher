@@ -31,7 +31,6 @@ use std::sync::{Arc, Mutex};
 
 use raydium_contract_instructions::{
     amm_instruction::{ID as ammProgramID, swap_base_in as amm_swap},
-    stable_instruction::{ID as stableProgramID, swap_base_in as stable_swap},
 };
 
 
@@ -53,7 +52,7 @@ use solana_sdk::instruction::Instruction;
 
 
 
-use crate::monitor::pool_utils::base::CurveType;
+
 use crate::utils::{derive_token_address};
 
 struct Iteration {

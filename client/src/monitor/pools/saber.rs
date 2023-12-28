@@ -75,7 +75,7 @@ impl PoolOperations for SaberPool {
 
         let user_src = derive_token_address(&pubkey, &mint_in);
         let user_dst = derive_token_address(&pubkey, &mint_out);
-        let user_src_acc = program.rpc().get_account(&user_src);
+        let _user_src_acc = program.rpc().get_account(&user_src);
         let user_dst_acc = program.rpc().get_account(&user_dst);
 
         let pool_src = self.tokens.get(&mint_in.to_string()).unwrap().addr.0;

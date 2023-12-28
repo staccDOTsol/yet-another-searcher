@@ -9,12 +9,12 @@ use std::collections::HashSet;
 use rand::seq::SliceRandom;
 use solana_address_lookup_table_program::instruction::{extend_lookup_table, create_lookup_table};
 use solana_client::nonblocking::rpc_client::RpcClient;
-use std::cmp::{max, Ordering, Reverse};
+use std::cmp::{Ordering, Reverse};
 
 
 
 use rayon::prelude::*;
-use futures::stream::{FuturesUnordered, StreamExt};
+use futures::stream::{StreamExt};
 
 
 
@@ -201,7 +201,7 @@ impl Path {
     }
 
     fn extend(&mut self, edge: usize, additional_yield: u128, pool_idx: PoolQuote, poolidx_1: u128) {
-        let poolidx_1 = poolidx_1 + 1;
+        let _poolidx_1 = poolidx_1 + 1;
        
         self.nodes.push(edge);
         self.pool_idxs.push(pool_idx.clone());
@@ -214,7 +214,7 @@ impl Path {
     }
     fn extend_with_edge(&mut self, to_node: usize, yield_value: u128, quote: PoolQuote, poolidx: u128, old_edge: Edge) {
         self.last_edge = old_edge;
-        let poolidx = poolidx + 1;
+        let _poolidx = poolidx + 1;
         // Update the current node to the destination of the new edge
         self.current_node = to_node;
         // Update the path's total yield, most recent yield, etc.
@@ -236,7 +236,7 @@ impl Path {
 
 }
 impl Arbitrager {
-    pub async fn find_yield(&self, start_mint_idx: usize, max_hops: usize, max_output: u128) -> Option<Path> {
+    pub async fn find_yield(&self, start_mint_idx: usize, _max_hops: usize, max_output: u128) -> Option<Path> {
     let mut max_heap = BinaryHeap::new();
     let graph_edges = self.graph_edges.clone();
 
@@ -247,9 +247,9 @@ impl Arbitrager {
 
 
 
-    while let Some(mut path2) = max_heap.pop() {
+    while let Some(path2) = max_heap.pop() {
 
-        let mut edges = graph_edges[path.current_node].clone();
+        let edges = graph_edges[path.current_node].clone();
         let mut futures = futures::stream::FuturesUnordered::new();
         let mut futures2 = futures::stream::FuturesUnordered::new();
    
@@ -346,12 +346,12 @@ impl Arbitrager {
         }
     }
 
-    fn is_invalid_path( path: &Path, start_mint_idx: usize, max_output: u128) -> bool {
+    fn is_invalid_path( path: &Path, _start_mint_idx: usize, _max_output: u128) -> bool {
         // Example logic; replace with your actual conditions
         path.total_length > 4 
     }
 
-fn is_valid_path(path: &Path, start_mint_idx: usize, max_output: u128) -> bool {
+fn is_valid_path(path: &Path, _start_mint_idx: usize, max_output: u128) -> bool {
     // Example logic; replace with your actual conditions
     (path.calculate_avg_yield() as f64 > max_output as f64 * 0.8 as f64 && path.calculate_avg_yield() as f64 <= max_output as f64 * 3.33) || path.nodes.len() < 3
 }
@@ -365,7 +365,7 @@ async fn compute_yield_improvement(&self, edge: &Edge, path: &Path) -> (u128, Op
     (new_yield, quote, *edge)
 }
 
-async fn compute_yield(&self, edge: Edge, amount: u128, path: &Path) -> (u128, Option<PoolQuote>, Edge) {
+async fn compute_yield(&self, edge: Edge, amount: u128, _path: &Path) -> (u128, Option<PoolQuote>, Edge) {
     let from = edge.from;
     let to = edge.to;
     let pool = self.graph.0.get(&PoolIndex(from)).and_then(|p| p.0.get(&PoolIndex(to)));
@@ -390,7 +390,7 @@ async fn compute_yield(&self, edge: Edge, amount: u128, path: &Path) -> (u128, O
     (0, None, edge)
     
 }
-async fn get_yield(&self, mut edge: Edge, start_mint_idx: usize, amount: u128, current_hops: usize, _to: usize) -> (u128, Option<PoolQuote>, Edge) {
+async fn get_yield(&self, mut edge: Edge, start_mint_idx: usize, amount: u128, _current_hops: usize, _to: usize) -> (u128, Option<PoolQuote>, Edge) {
     edge.from = start_mint_idx;
     let mut queue = BinaryHeap::new();
     let initial_path = Path { edges: vec![edge.clone()], total_length: 1,

@@ -78,7 +78,7 @@ fn swap_ix(
         let swap_state = Pubkey::from_str("8cjtn4GEw6eVhZ9r1YatfiU65aDEBf1Fof5sTuuH6yVM").unwrap();
         let user_src = derive_token_address(&owner, &mint_in);
         let user_dst = derive_token_address(&owner, &mint_out);
-        let user_src_acc = program.rpc().get_account(&user_src);
+        let _user_src_acc = program.rpc().get_account(&user_src);
         let user_dst_acc = program.rpc().get_account(&user_dst);
        
         let (authority_pda, _) =
