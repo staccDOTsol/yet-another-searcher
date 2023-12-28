@@ -1,8 +1,10 @@
 use crate::constants::*;
+use crate::execute::process::Arbitrager;
 use crate::monitor::pools::{PoolOperations};
 use anchor_client::solana_sdk::pubkey::Pubkey;
 
 use std::cell::RefCell;
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fs;
 
@@ -75,17 +77,48 @@ pub fn derive_token_address(owner: &Pubkey, mint: &Pubkey) -> Pubkey {
 }
 
 #[derive(Clone)]
-pub struct PoolQuote(pub Arc<RefCell<Box<dyn PoolOperations>>>);
+pub struct PoolQuote(
+    pub Arc<RefCell<Box<dyn PoolOperations>>>, 
+    pub u128, 
+    pub usize);
 
 unsafe impl Send for PoolQuote {}
 
 unsafe impl Sync for PoolQuote {}
 
-impl PoolQuote {
-    pub fn new(quote: Arc<RefCell<Box<dyn PoolOperations>>>) -> Self {
-        Self(quote)
+impl Ord for PoolQuote {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let self_name = self.0.borrow().get_name();
+        let other_name = other.0.borrow().get_name();
+        self_name.cmp(&other_name)
     }
 }
+impl PartialOrd for PoolQuote {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        let self_name = self.0.borrow().get_name();
+        let other_name = other.0.borrow().get_name();
+        Some(self_name.cmp(&other_name))
+    }
+}
+impl PartialEq for PoolQuote {
+    fn eq(&self, other: &Self) -> bool {
+        let self_name = self.0.borrow().get_name();
+        let other_name = other.0.borrow().get_name();
+        self_name == other_name
+    }
+}
+impl Eq for PoolQuote {}
+
+impl PoolQuote {
+    pub fn new(quote: Arc<RefCell<Box<dyn PoolOperations>>>) -> Self {
+        Self(quote, 0, 0)
+    }
+    pub fn set_weight(&mut self, weight: u128) {
+        self.1 = weight;
+        self.2 = Arbitrager::current_timestamp();
+    }
+}
+
 
 #[derive(Clone)]
 pub struct PoolGraph(pub HashMap<PoolIndex, PoolEdge>);

@@ -12,18 +12,6 @@ name = "main"
 path = "src/main.rs"
 
 [[bin]]
-name = "tmp"
-path = "src/tmp.rs"
-
-[[bin]]
-name = "setup_ata"
-path = "src/setup/setup_ata.rs"
-
-[[bin]]
-name = "setup_open_orders"
-path = "src/setup/setup_open_orders.rs"
-
-[[bin]]
 name = "amm_client"
 path = "src/client/src/main.rs"
 

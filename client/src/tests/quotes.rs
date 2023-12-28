@@ -50,7 +50,7 @@ fn test_all_pool_quotes(pool_dir: String, pool_type: PoolType) {
     );
 
     // let owner_kp_path = "/Users/vbetsun/.config/solana/uwuU3qc2RwN6CpzfBAhg6wAxiEx138jy5wB3Xvx18Rw.json";
-    let owner_kp_path = "../mainnet-fork/localnet_owner.key";
+    let owner_kp_path = "/home/ubuntu/.config/solana/id.json";
     // let owner_kp_path = "../program/target/deploy/tmp-keypair.json";
     // setup anchor things
     // println!("owner: {}", owner.pubkey());

@@ -379,7 +379,7 @@ mod tests {
         let swap_source_amount: u128 = 1_000;
         let swap_destination_amount: u128 = 50_000;
         let source_amount: u128 = 100;
-        let curve = ConstantProductCurve;
+        let curve = ConstantProductCurve::default();
         let fees = Fees::default();
         let swap_curve = SwapCurve {
             curve_type: CurveType::ConstantProduct,

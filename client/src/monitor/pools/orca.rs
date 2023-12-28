@@ -180,7 +180,7 @@ if user_dst_acc.is_err() {
         let amt = get_pool_quote_with_amounts(
             scaled_amount_in,
             ctype,
-            self.amp,
+            100,
             &fees,
             pool_src_amount,
             pool_dst_amount,
@@ -240,7 +240,7 @@ if user_dst_acc.is_err() {
         let amt = get_pool_quote_with_amounts(
             scaled_amount_in,
             ctype,
-            self.amp,
+            100,
             &fees,
             pool_src_amount,
             pool_dst_amount,

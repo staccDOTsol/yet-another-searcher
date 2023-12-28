@@ -1,8 +1,8 @@
-use crate::{
-    monitor::pool_utils,
-    monitor::pool_utils::base::{CurveType, SwapCurve},
-    monitor::pool_utils::fees::Fees,
-    monitor::pool_utils::{constant_product::ConstantProductCurve, stable::StableCurve},
+use crate::monitor::{
+    pool_utils,
+    pool_utils::base::{CurveType, SwapCurve},
+    pool_utils::fees::Fees,
+    pool_utils::{constant_product::ConstantProductCurve, stable::StableCurve},
 };
 use anyhow::Result;
 use core::panic;
@@ -15,9 +15,9 @@ pub fn get_pool_quote_with_amounts(
     fees: &Fees,
     input_token_pool_amount: u128,
     output_token_pool_amount: u128,
-    _slippage_percent: Option<[u128; 2]>,
+    slippage_percent: Option<[u128; 2]>,
 ) -> Result<u128> {
-    let quote;
+    let mut quote;
     let trade_direction = pool_utils::calculator::TradeDirection::AtoB;
 
     if curve_type == CurveType::ConstantProduct {
@@ -48,7 +48,7 @@ pub fn get_pool_quote_with_amounts(
             curve_type: CurveType::Stable,
             calculator: Arc::new(StableCurve { amp }),
         };
-        let iquote = swap_curve
+        let quote2 = swap_curve
             .swap(
                 amount_in,
                 input_token_pool_amount,
@@ -57,14 +57,20 @@ pub fn get_pool_quote_with_amounts(
                 fees,
             )
             ;
-            if iquote.is_none() {
-                return Ok(0)
+            if quote2.is_some() {
+quote = quote2.unwrap().destination_amount_swapped;
             }
-             quote = iquote.unwrap().destination_amount_swapped;
+            else {
+                quote = 0;
+            }
     } else {
         panic!("invalid curve type for swap: {:?}", curve_type);
     }
 
     // add slippage amount if its given
+    if let Some([num, denom]) = slippage_percent {
+        quote = quote * (denom - num) / denom
+    }
+
     Ok(quote)
 }

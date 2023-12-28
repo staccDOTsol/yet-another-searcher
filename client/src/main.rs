@@ -502,17 +502,13 @@ async fn process_accounts(tuastopools: &HashMap<Pubkey, Box<dyn PoolOperations>>
                     let edge0: Edge = Edge {
                         from: mint0_idx,
                         to: mint1_idx,
-                        yield_value: 0,
                         mint0idx: mints.clone()[0],
                         mint1idx: mints.clone()[1],
-                        yield_timestamp: 0,
                     };
                     let edge1: Edge = Edge {
                         from: mint1_idx,
                         to: mint0_idx,
-                        yield_value: 0,
                         mint0idx: mints.clone()[1],
-                        yield_timestamp: 0,
                         mint1idx: mints.clone()[0],
                     };
                     // record graph edges if they dont already exist

@@ -138,7 +138,7 @@ if user_dst_acc.is_err() {
         _program: &Arc<RpcClient >
     ) -> u128 {
         let calculator = Stable {
-            amp: self.target_amp,
+            amp: 100,
             fee_numerator: self.fee_numerator as u128,
             fee_denominator: self.fee_denominator as u128,
         };
@@ -167,7 +167,7 @@ if user_dst_acc.is_err() {
         amt2: u128
     ) -> u128 {
         let calculator = Stable {
-            amp: self.target_amp,
+            amp: 100,
             fee_numerator: self.fee_numerator as u128,
             fee_denominator: self.fee_denominator as u128,
         };

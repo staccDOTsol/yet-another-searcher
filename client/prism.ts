@@ -115,6 +115,7 @@ function transformRaydium(data: any): any {
     return transformedData;
   }
  async function transformSaber(input) {
+  console.log(input)
     let tokens = {}
     let fee_accounts = {}
     const stableSwap = await StableSwap.load(connection, new PublicKey(input.addresses.swapAccount));
@@ -149,6 +150,7 @@ function transformRaydium(data: any): any {
   }
 async function transformData(orca) {
     const poolParams = orca.pool.poolParams;
+    console.log(orca)
     let tokens = {};
 for (var tokenId in poolParams.tokenIds){
     let ata = await getAssociatedTokenAddress(new PublicKey("PoNA1qzqHWar3g8Hy9cxA2Ubi3hV7q84dtXAxD77CSD"), new PublicKey(poolParams.tokenIds[tokenId]))
@@ -197,8 +199,8 @@ for (var lp of Object.values(lps)){
     }
 
     else if (provider == "raydium"){
-        const toWrite = transformRaydium(lp);
-        fs.writeFileSync("../pools/raydium/"+lp.poolCoinTokenAccount.toBase58()+".json", JSON.stringify(toWrite))
+      //  const toWrite = transformRaydium(lp);
+      //  fs.writeFileSync("../pools/raydium/"+lp.poolCoinTokenAccount.toBase58()+".json", JSON.stringify(toWrite))
 
     }
 else     if (provider == "orca"){
@@ -248,4 +250,5 @@ async function main2(){
     fs.writeFileSync("../pools/raydium/"+pool.id+".json", JSON.stringify(pool))
   }
 }
+main()
 main2()

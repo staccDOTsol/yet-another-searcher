@@ -235,13 +235,7 @@ impl PoolOperations for RaydiumPool {
         let user_src = derive_token_address(&pubkey, &mint_in);
         let user_dst = derive_token_address(&pubkey, &mint_out);
 
-        let user_src_acc = program.rpc().get_account(&user_src);
         let user_dst_acc = program.rpc().get_account(&user_dst);
-        let ctype = if self.version == 1 {
-            CurveType::Stable
-        } else {
-            CurveType::ConstantProduct
-        };
         let _program_id = self.program_id.clone();
         let id = self.id.clone();
         let authority = Pubkey::from_str("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1").unwrap();
@@ -258,11 +252,6 @@ impl PoolOperations for RaydiumPool {
         let market_authority = self.market_authority.clone();
         let market_base_vault = self.market_base_vault.clone();
         let market_quote_vault = self.market_quote_vault.clone();
-        let swap_direction: SwapDirection = if mint_in == self.base_mint.0 {
-            SwapDirection::Coin2PC
-        } else {
-            SwapDirection::PC2Coin
-        };
             let swap_ix =
                 amm_swap(
                     &ammProgramID,
@@ -356,26 +345,31 @@ if user_dst_acc.is_err() {
                     self.market_bids.0,
                     self.market_asks.0,
                 ]
-            ).unwrap();
+            );
+            if account_infos.is_err() {
+                println!("err1");
+                return 0;
+            }
+            let account_infos = account_infos.unwrap();
 
-            let mut amm_open_orders_info = account_infos[0].clone();
+            let amm_open_orders_info = account_infos[0].clone();
             if amm_open_orders_info.is_none() {
                 println!("err4");
                 return 0;
             }
             let mut amm_open_orders_info = amm_open_orders_info.unwrap();
-            let mut amm_authority_info = account_infos[1].clone();
+            let  amm_authority_info = account_infos[1].clone();
             if amm_authority_info.is_none() {
                 println!("err3");
                 return 0;
             }
             let mut amm_authority_info = amm_authority_info.unwrap();
 
-            let mut market_info = account_infos[2].clone();
-            let mut amm_info =  account_infos[3].clone();
-            let mut market_event_queue_info = account_infos[4].clone();
-            let mut market_bids_info = account_infos[5].clone();
-            let mut market_asks_info = account_infos[6].clone();
+            let  market_info = account_infos[2].clone();
+            let  amm_info =  account_infos[3].clone();
+            let  market_event_queue_info = account_infos[4].clone();
+            let  market_bids_info = account_infos[5].clone();
+            let  market_asks_info = account_infos[6].clone();
             if market_info.is_none() || amm_info.is_none() || market_event_queue_info.is_none() || market_bids_info.is_none() || market_asks_info.is_none() {
                 println!("err2");
                 return 0;
@@ -385,7 +379,7 @@ if user_dst_acc.is_err() {
          
             let mut market_bids_info = market_bids_info.unwrap();
             let mut market_asks_info = market_asks_info.unwrap();
-            let mut market_bids_info = AccountInfo::new(
+            let  market_bids_info = AccountInfo::new(
                 &self.market_bids.0,
                 false,
                 false,
@@ -395,7 +389,7 @@ if user_dst_acc.is_err() {
                 false,
                 Epoch::default(),
             );
-            let mut market_asks_info = AccountInfo::new(
+            let  market_asks_info = AccountInfo::new(
                 &self.market_asks.0,
                 false,
                 false,
@@ -405,7 +399,7 @@ if user_dst_acc.is_err() {
                 false,
                 Epoch::default(),
             );
-            let mut amm_info2 = AccountInfo::new(
+            let  amm_info2 = AccountInfo::new(
                 &self.id.0,
                 false,
                 false,
@@ -448,17 +442,8 @@ if user_dst_acc.is_err() {
             Epoch::default(),
         );
     
-    
-                let (market_state, open_orders) = Processor::load_serum_market_order(
-                    &market_info2,
-                    &amm_open_orders_info2,
-                    &amm_authority_info2,
-                    &amm,
-                    false,
-                ).unwrap();
-                
                 let mut market_event_queue_info = market_event_queue_info.unwrap();
-                let mut market_event_queue_info = AccountInfo::new(
+                let  market_event_queue_info = AccountInfo::new(
                     &self.market_event_queue.0,
                     false,
                     false,
@@ -538,10 +523,7 @@ if user_dst_acc.is_err() {
                         swap_direction,
                     )
                     .as_u128();
-              
                     swap_amount_out
-
-
     }
 
 
@@ -552,8 +534,8 @@ if user_dst_acc.is_err() {
             self.pool_amounts.get(&_mint_out.to_string()).is_none() {
             return false;
         }
-       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &1000_000  || 
-        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &1000_000 {
+       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &1000_000_000  || 
+        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &1000_000_000 {
             return false;
         }
         true

@@ -28,7 +28,7 @@ pub struct Token {
 #[serde(transparent)]
 pub struct WrappedString(pub String);
 
-#[derive(Deserialize, PartialEq, Eq)]
+#[derive(Deserialize, PartialEq, Eq, Copy)]
 #[serde(from = "WrappedString")]
 pub struct WrappedPubkey(pub Pubkey);
 

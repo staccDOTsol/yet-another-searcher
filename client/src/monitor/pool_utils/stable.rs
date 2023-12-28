@@ -50,12 +50,13 @@ impl Stable {
             return 0;
         }
         let d = d.unwrap();
-        
-        let y = compute_new_destination_amount(leverage, x, d);
-        if y.is_none() {
+    if compute_new_destination_amount(leverage, x, d).is_none() {
             return 0;
         }
-        let y = y.unwrap();
+        let y = compute_new_destination_amount(leverage, x, d).unwrap();
+        if y > xp[1] {
+            return 0;
+        }
         let dy = xp[1] - y;
         let out_amount = dy.checked_div(percision_multipliers[1] as u128).unwrap();
 
