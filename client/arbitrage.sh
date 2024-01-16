@@ -1,5 +1,5 @@
 while :
 
 do
- ./target/release/main --cluster mainnet --flashing no --keypair /home/ubuntu/.config/solana/id.json	
+ ./target/release/main --cluster mainnet --flashing no --keypair /home/azureuser/7i.json	
 done

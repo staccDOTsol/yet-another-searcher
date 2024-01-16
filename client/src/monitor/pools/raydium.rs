@@ -533,8 +533,8 @@ if user_dst_acc.is_err() {
             self.pool_amounts.get(&_mint_out.to_string()).is_none() {
             return false;
         }
-       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &1000_000_000  || 
-        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &1000_000_000 {
+       if self.pool_amounts.get(&_mint_in.to_string()).unwrap() < &0  || 
+        self.pool_amounts.get(&_mint_out.to_string()).unwrap() < &0 {
             return false;
         }
         true

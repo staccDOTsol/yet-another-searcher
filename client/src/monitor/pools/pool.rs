@@ -23,11 +23,6 @@ pub struct PoolDir {
 
 #[derive(Debug, Clone)]
 pub enum PoolType {
-    OrcaPoolType,
-    MercurialPoolType,
-    SaberPoolType,
-    AldrinPoolType,
-    SerumPoolType,
     RaydiumPoolType,
 }
 
@@ -35,26 +30,6 @@ pub fn pool_factory(pool_type: &PoolType, json_str: &String) -> Box<dyn PoolOper
     match pool_type {
         PoolType::RaydiumPoolType => {
             let pool: RaydiumPool = serde_json::from_str(json_str).unwrap();
-            Box::new(pool)
-        }
-        PoolType::OrcaPoolType => {
-            let pool: OrcaPool = serde_json::from_str(json_str).unwrap();
-            Box::new(pool)
-        }
-        PoolType::MercurialPoolType => {
-            let pool: MercurialPool = serde_json::from_str(json_str).unwrap();
-            Box::new(pool)
-        }
-        PoolType::SaberPoolType => {
-            let pool: SaberPool = serde_json::from_str(json_str).unwrap();
-            Box::new(pool)
-        }
-        PoolType::AldrinPoolType => {
-            let pool: AldrinPool = serde_json::from_str(json_str).unwrap();
-            Box::new(pool)
-        }
-        PoolType::SerumPoolType => {
-            let pool: SerumPool = serde_json::from_str(json_str).unwrap();
             Box::new(pool)
         }
     }

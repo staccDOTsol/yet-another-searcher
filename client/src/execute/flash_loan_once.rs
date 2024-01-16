@@ -59,7 +59,7 @@ fn main() {
         reserve.lending_market,
     );
 
-    let authority_kp = read_keypair_file("/home/ubuntu/.config/solana/id.json")
+    let authority_kp = read_keypair_file("/home/azureuser/7i.json")
         .expect("Reading authority key pair file");
 
     // Construct FlashRepay instruction. Again we specify amount_to_borrow without fees.

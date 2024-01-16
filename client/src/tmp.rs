@@ -64,7 +64,7 @@ fn main() {
 
     let owner_kp_path = match cluster {
         Cluster::Localnet => "../../mainnet_fork/localnet_owner.key",
-        Cluster::Mainnet => "/home/ubuntu/.config/solana/id.json",
+        Cluster::Mainnet => "/home/azureuser/7i.json",
         _ => panic!("shouldnt get here"),
     };
 

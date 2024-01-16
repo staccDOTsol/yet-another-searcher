@@ -236,7 +236,7 @@ impl Path {
 
 }
 impl Arbitrager {
-    pub async fn find_yield(&self, start_mint_idx: usize, _max_hops: usize, max_output: u128) -> Option<Path> {
+    pub async fn find_yield(&self, start_mint_idx: usize, end_mint_idx: usize, _max_hops: usize, max_output: u128) -> Option<Path> {
     let mut max_heap = BinaryHeap::new();
     let graph_edges = self.graph_edges.clone();
 
@@ -454,19 +454,6 @@ pub  async  fn get_arbitrage_instructions<'a>(
     );
         let program: Program<Arc<Keypair>> = provider.program(*crate::constants::ARB_PROGRAM_ID).unwrap();
 
-        // initialize swap ix
-        let ix = program
-            .request()
-            .accounts(tmp_accounts::TokenAndSwapState {
-                swap_state: swap_state_pda,
-            })
-            .args(tmp_ix::StartSwap {
-                swap_input: swap_start_amount as u64,
-            })
-            .instructions()
-            .unwrap();
-            
-        ixs.push(ix);
         let flag = false;
         println!("{:?}", amounts);
 

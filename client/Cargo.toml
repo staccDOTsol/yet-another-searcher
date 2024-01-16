@@ -17,7 +17,6 @@ path = "src/client/src/main.rs"
 
 [dependencies]
 raydium-contract-instructions = { path = "./src/raydium-contract-instructions"}
-spl-token = { version = "3.2.0", features = ["no-entrypoint"], default-features = false }
 boilerplate = { version = "1.0.0", features = ["axum"] }
 tower-http = { version = "0.4.0", features = ["compression-br", "compression-gzip", "cors", "set-header"] }
 http = "*"
@@ -26,21 +25,13 @@ axum-server = "0.5.0"
 redb = "*"
 bincode = "*"
 base64 = "*"
-solana-transaction-status = "*"
 solana-address-lookup-table-program = "*"
-solana-program = "*"
 bytemuck = { version = "1.7.3", features = ["extern_crate_std", "min_const_generics"] }
-solana-client = "*"
-flash-loan-sdk = { path="./src/flash-loan-sdk" }
 structopt = "0.3"
 dirs-next = "2.0.0"
 derive_more = "0.99.17"
-solana-sdk = "*"
 async-trait = "*"
 async-recursion = "*"
-anchor-spl = { version = "0.29", features = ["dex"] }
-anchor-client = { version = "0.29", features = ["debug"] }
-anchor-lang = "0.29.0"
 tmp = { path = "../program/programs/tmp", features = ["no-entrypoint"]}
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -70,8 +61,8 @@ dyn-clone = "1.0"
 lazy_static = "1.4.0"
 futures = "0.3.29"
 maplit = "1.0.2"
-yellowstone-grpc-client = {  version = "=1.12.0+solana.1.17.6" }
-yellowstone-grpc-proto = {  version = "=1.11.0+solana.1.17.6" }
+yellowstone-grpc-client = { path = "../../yellowstone-grpc/yellowstone-grpc-client" }
+yellowstone-grpc-proto = { path = "../../yellowstone-grpc/yellowstone-grpc-proto" }
 hex = "0.4.3"
 bs58 = "0.5.0"
 rand = "0.8.5"
@@ -79,9 +70,35 @@ round = "0.1.2"
 redis = "0.24.0"
 switchboard-utils = "*"
 switchboard-solana = "0.29.79"
-spl-associated-token-account = "*"
 raydium_amm = { path = "./src/raydium-amm/program" }
 serum_dex = { version = "0.5.10", git = "https://github.com/raydium-io/openbook-dex", features=["no-entrypoint", "program"] }
+
+marginfi = { path = "../../marginfi-v2/programs/marginfi" , features = [
+    "mainnet-beta",
+    "client",
+    "no-entrypoint",
+] }
+reqwest = "0.11.23"
+solana-client = "^1.16.23"
+solana-sdk = "^1.16.23"
+solana-logger = "^1.16.23"
+solana-program = "^1.16.23"
+solana-program-test = "^1.16.23"
+solana-account-decoder = "^1.16.23"
+solana-measure = "^1.16.23"
+solana-metrics = "^1.16.23"
+solana-transaction-status = "^1.16.23"
+spl-token = "4.0.0"
+spl-associated-token-account = "2.2.0"
+
+anchor-lang = "0.28.0"
+anchor-spl = "0.28.0"
+anchor-client = "0.28.0"
+
+switchboard-v2 = "0.4.0"
+pyth-sdk-solana = "0.8.0"
+
+
 [dev-dependencies]
 solana-sdk = "1.9.9"
 proptest = "1.0"
