@@ -1,0 +1,88 @@
+name: Build plugin
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'v1.16'
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+    runs-on: ["${{ matrix.os }}"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set rust version
+        run: |
+          source ci/rust-version.sh
+          echo "RUST_STABLE=$rust_stable" | tee -a $GITHUB_ENV
+
+      - name: Set env vars
+        run: |
+          source ci/env.sh
+          echo "GEYSER_PLUGIN_NAME=$plugin_name" | tee -a $GITHUB_ENV
+          echo "GEYSER_PLUGIN_LIB=lib${plugin_lib_name}" | tee -a $GITHUB_ENV
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_STABLE }}
+          override: true
+          profile: minimal
+          components: clippy, rustfmt
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+              ~/.cargo/bin/
+              ~/.cargo/registry/index/
+              ~/.cargo/registry/cache/
+              ~/.cargo/git/db/
+              target
+          key: ${{ matrix.os }}-cargo-${{ hashFiles('rust-toolchain.toml') }}-${{ hashFiles('**/Cargo.lock') }}-0001
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsasl2-dev
+
+      - name: cargo tree
+        run: |
+          cargo tree
+          git checkout Cargo.lock
+          cargo tree --frozen
+
+      - name: cargo fmt
+        run: cargo fmt --all -- --check
+
+      - name: cargo deny check advisories
+        uses: EmbarkStudios/cargo-deny-action@v1
+        with:
+          command: check advisories
+
+      - name: cargo clippy
+        run: cargo clippy --workspace --all-targets --tests #-- --deny=warnings
+
+      - name: check features in `client`
+        run: cargo check -p yellowstone-grpc-client --all-targets --tests
+      - name: check features in `client-simple`
+        run: cargo check -p yellowstone-grpc-client-simple --all-targets --tests
+      - name: check features in `geyser`
+        run: cargo check -p yellowstone-grpc-geyser --all-targets --tests
+      - name: check features in `proto`
+        run: cargo check -p yellowstone-grpc-proto --all-targets --tests
+      - name: check features in `tools`
+        run: cargo check -p yellowstone-grpc-tools --all-targets --tests
+
+      - name: Build
+        run: ./ci/cargo-build-test.sh

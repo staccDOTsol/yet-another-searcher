@@ -61,8 +61,8 @@ dyn-clone = "1.0"
 lazy_static = "1.4.0"
 futures = "0.3.29"
 maplit = "1.0.2"
-yellowstone-grpc-client = { path = "../../yellowstone-grpc/yellowstone-grpc-client" }
-yellowstone-grpc-proto = { path = "../../yellowstone-grpc/yellowstone-grpc-proto" }
+yellowstone-grpc-client = { path = "external/yellowstone-grpc/yellowstone-grpc-client" }
+yellowstone-grpc-proto = { path = "external/yellowstone-grpc/yellowstone-grpc-proto" }
 hex = "0.4.3"
 bs58 = "0.5.0"
 rand = "0.8.5"
@@ -73,7 +73,7 @@ switchboard-solana = "0.29.79"
 raydium_amm = { path = "./src/raydium-amm/program" }
 serum_dex = { version = "0.5.10", git = "https://github.com/raydium-io/openbook-dex", features=["no-entrypoint", "program"] }
 
-marginfi = { path = "../../marginfi-v2/programs/marginfi" , features = [
+marginfi = { path = "external/marginfi-v2/programs/marginfi" , features = [
     "mainnet-beta",
     "client",
     "no-entrypoint",

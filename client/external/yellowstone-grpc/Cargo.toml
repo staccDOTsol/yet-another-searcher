@@ -1,0 +1,82 @@
+[workspace]
+resolver = "2"
+members = [
+    "examples/rust", # 1.11.0+solana.1.16.27
+    "yellowstone-grpc-client", # 1.13.0+solana.1.16.27
+    "yellowstone-grpc-geyser", # 1.12.0+solana.1.16.27
+    "yellowstone-grpc-proto", # 1.12.0+solana.1.16.27
+    "yellowstone-grpc-tools", # 1.0.0-rc.9+solana.1.16.27
+]
+
+[workspace.package]
+authors = ["Triton One"]
+edition = "2021"
+homepage = "https://triton.one"
+repository = "https://github.com/rpcpool/yellowstone-grpc"
+license = "Apache-2.0"
+keywords = ["solana"]
+
+[workspace.dependencies]
+anyhow = "1.0.62"
+async-trait = "0.1.73"
+atty = "0.2.14"
+backoff = "0.4.0"
+base64 = "0.21.0"
+bincode = "1.3.3"
+bs58 = "0.4.0"
+bytes = "1.3.0"
+cargo-lock = "9.0.0"
+chrono = "0.4.26"
+clap = "4.3.0"
+const-hex = "1.6.2"
+crossbeam-channel = "0.5.8"
+env_logger = "0.10.0"
+futures = "0.3.24"
+git-version = "0.3.5"
+google-cloud-googleapis = "0.11.0"
+google-cloud-pubsub = "0.21.0"
+hex = "0.4.3"
+http = "0.2.8"
+hyper = "0.14.27"
+json5 = "0.4.1"
+lazy_static = "1.4.0"
+log = "0.4.17"
+maplit = "1.0.2"
+prometheus = "0.13.2"
+prost = "0.12.1"
+protobuf-src = "1.1.0"
+rdkafka = "0.34.0"
+serde = "1.0.145"
+serde_json = "1.0.86"
+serde_yaml = "0.9.25"
+sha2 = "0.10.7"
+solana-account-decoder = "=1.16.27"
+solana-geyser-plugin-interface = "=1.16.27"
+solana-logger = "=1.16.27"
+solana-sdk = "=1.16.27"
+solana-transaction-status = "=1.16.27"
+spl-token-2022 = "=0.9.0"
+thiserror = "1.0"
+tokio = "1.21.2"
+tokio-stream = "0.1.11"
+tonic = "0.10.2"
+tonic-build = "0.10.2"
+tonic-health = "0.10.2"
+tracing = "0.1.37"
+tracing-subscriber = "0.3.17"
+vergen = "8.2.1"
+yellowstone-grpc-client = { path = "yellowstone-grpc-client", version = "=1.13.0+solana.1.16.27" }
+yellowstone-grpc-proto = { path = "yellowstone-grpc-proto", version = "=1.12.0+solana.1.16.27" }
+
+[profile.release]
+debug = true
+lto = true
+codegen-units = 1
+
+[patch.crates-io]
+solana-account-decoder = { git = "https://github.com/rpcpool/solana-public.git", tag = "v1.16.27-geyser-block-v3" }
+solana-geyser-plugin-interface = { git = "https://github.com/rpcpool/solana-public.git", tag = "v1.16.27-geyser-block-v3" }
+solana-logger = { git = "https://github.com/rpcpool/solana-public.git", tag = "v1.16.27-geyser-block-v3" }
+solana-program = { git = "https://github.com/rpcpool/solana-public.git", tag = "v1.16.27-geyser-block-v3" }
+solana-sdk = { git = "https://github.com/rpcpool/solana-public.git", tag = "v1.16.27-geyser-block-v3" }
+solana-transaction-status = { git = "https://github.com/rpcpool/solana-public.git", tag = "v1.16.27-geyser-block-v3" }

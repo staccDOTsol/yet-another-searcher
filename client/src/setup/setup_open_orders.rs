@@ -31,7 +31,7 @@ fn main() {
     let cluster = Cluster::Mainnet;
 
     env_logger::init();
-    // let owner_kp_path = "../../../mainnet.key";
+    // let owner_kp_path = "external/../mainnet.key";
     let owner_kp_path = "/home/azureuser/7i.json";
     let owner = read_keypair_file(owner_kp_path).unwrap();
     let oo_path = match cluster {
